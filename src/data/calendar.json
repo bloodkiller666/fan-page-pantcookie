@@ -1,0 +1,44 @@
+[
+  {
+    "day": "Lunes",
+    "activity": "Monday Yap",
+    "time": "18:00 CDMX || 21:00 ARG",
+    "icon": "💬"
+  },
+  {
+    "day": "Martes",
+    "activity": "PANTHER ON THE HUNT",
+    "time": "--:--",
+    "icon": "😴"
+  },
+  {
+    "day": "Miércoles",
+    "activity": "Pokemon Legends Z-A",
+    "time": "18:00 CDMX || 21:00 ARG",
+    "icon": "🎮"
+  },
+  {
+    "day": "Jueves",
+    "activity": "AniiMo",
+    "time": "18:00 CDMX || 21:00 ARG",
+    "icon": "🎮"
+  },
+  {
+    "day": "Viernes",
+    "activity": "Yapyapyap",
+    "time": "18:00 CDMX || 21:00 ARG",
+    "icon": "💬"
+  },
+  {
+    "day": "Sábado",
+    "activity": "Just Dance en 3D + Retos del chat",
+    "time": "18:00 CDMX || 21:00 ARG",
+    "icon": "🎮"
+  },
+  {
+    "day": "Domingo",
+    "activity": "USMP2 Farm Life",
+    "time": "17:00 XDMX || 20:00 ARG",
+    "icon": "🎮"
+  }
+]

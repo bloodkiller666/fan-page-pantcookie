@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --poke-pink: #fd219f;
+  --poke-blue: #3b4cca;
+  --poke-yellow: #ffde00;
+  --poke-green: #4dad5b;
+  --poke-bg: #fff5f9;
+  --poke-card: #ffffff;
+  --poke-text: #1a1a1a;
+}
+
+.dark {
+  --poke-bg: #1a0f16;
+  --poke-card: #2a1b25;
+  --poke-text: #ffffff;
+}
+
+[data-theme='pokemon'] {
+  font-family: 'Press Start 2P', cursive;
+}
+
+@layer base {
+  body {
+    @apply font-poppins bg-[var(--poke-bg)] text-[var(--poke-text)] transition-colors duration-300;
+  }
+}
+
+@layer components {
+
+  /* Pokemon Gamer Button Style */
+  .poke-button {
+    @apply relative px-8 py-3 rounded-xl font-black uppercase tracking-widest transition-all duration-200 border-4 border-black shadow-[4px_4px_0px_0px_black] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none flex items-center justify-center gap-2 overflow-hidden;
+  }
+
+  .poke-button-pink {
+    @apply poke-button bg-primary-pink text-white;
+  }
+
+  .poke-button-blue {
+    @apply poke-button bg-primary-blue text-white;
+  }
+
+  .poke-button-yellow {
+    @apply poke-button bg-pokemon-yellow text-black;
+  }
+
+  /* Pokemon Card Style */
+  .poke-card {
+    @apply bg-[var(--poke-card)] rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_black] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0px_0px_black] transition-all duration-300;
+  }
+
+  /* Legacy Class Adapters (To avoid massive code breakage while transitioning) */
+  .cyber-button {
+    @apply poke-button;
+  }
+}
+
+@layer utilities {
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+  }
+
+  .dark .glass-effect {
+    background: rgba(17, 24, 39, 0.7);
+  }
+
+  .glass-effect-card {
+    @apply poke-card;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[var(--poke-pink)] via-[var(--poke-blue)] to-[var(--poke-pink)];
+    background-size: 200% auto;
+    animation: textGradient 4s linear infinite;
+  }
+
+  @keyframes textGradient {
+    0% {
+      background-position: 0% central;
+    }
+
+    100% {
+      background-position: 200% central;
+    }
+  }
+
+  .bg-pattern {
+    background-image:
+      radial-gradient(circle at 2px 2px, rgba(0, 0, 0, 0.05) 1px, transparent 0);
+    background-size: 24px 24px;
+    background-color: var(--poke-bg);
+  }
+
+  .dark .bg-pattern {
+    background-image:
+      radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+  }
+
+  .dark .bg-radial-dark {
+    background: radial-gradient(circle at center, #1a0f16 0%, #0b0509 100%);
+  }
+
+  .neon-border {
+    @apply border-4 border-black;
+  }
+
+  .neon-text-pink {
+    @apply text-[var(--poke-pink)];
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .neon-text-pink {
+    text-shadow: 3px 3px 0px black;
+  }
+
+  .neon-text-blue {
+    @apply text-[var(--poke-blue)];
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .neon-text-blue {
+    text-shadow: 3px 3px 0px black;
+  }
+
+  .neon-text-yellow {
+    @apply text-[var(--poke-yellow)];
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Pokemon Card Utilities */
+  .poke-card-frame {
+    @apply relative p-4 rounded-[30px] border-[12px] shadow-[0_10px_30px_#00000080] overflow-hidden;
+    background-image: linear-gradient(135deg, #ffe46b 0%, #f6c814 50%, #ffe46b 100%);
+    border-color: #b38a12;
+    box-shadow: 0 10px 30px #00000080, inset 0 0 0 4px #fff2a8, inset 0 0 0 8px #b38a12;
+  }
+
+  .poke-card-inner {
+    @apply rounded-xl border-4 p-1 h-full shadow-inner;
+    border-color: #b38a12;
+    box-shadow: inset 0 2px 0 #fff2a8;
+    background-color: #ffde00;
+  }
+
+  .poke-image-box {
+    @apply relative w-full aspect-[4/3] bg-gradient-to-br from-gray-200 to-gray-400 border-4 border-[#808080] shadow-[inset_0_4px_8px_#0000004d] overflow-hidden;
+  }
+
+  .energy-icon {
+    @apply w-6 h-6 rounded-full border-2 border-black flex items-center justify-center text-[10px] font-black shadow-sm;
+  }
+
+  .energy-fire {
+    @apply bg-[#ff4422] text-white;
+  }
+
+  .energy-water {
+    @apply bg-[#3399ff] text-white;
+  }
+
+  .energy-electric {
+    @apply bg-[#ffcc33] text-black;
+  }
+
+  .energy-grass {
+    @apply bg-[#77cc55] text-white;
+  }
+
+  .energy-psychic {
+    @apply bg-[#ff5599] text-white;
+  }
+
+  .energy-normal {
+    @apply bg-[#aaaa99] text-black;
+  }
+
+  .poke-stat-label {
+    @apply text-[9px] font-black uppercase italic tracking-tighter text-gray-800;
+  }
+
+  .poke-flavor-text {
+    @apply text-[9px] italic border-t-2 border-[#b3a125] pt-1 mt-2 leading-tight text-gray-700 font-medium;
+  }
+}
+
+/* Poke-Gamer Specifics */
+.poke-container {
+  @apply container mx-auto px-4;
+}
+
+
+
+/* Scrollbar styling - Intense Color */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--poke-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--poke-pink);
+  border: 3px solid var(--poke-bg);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--poke-blue);
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+@keyframes pulse-subtle {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
