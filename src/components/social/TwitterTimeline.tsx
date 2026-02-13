@@ -20,83 +20,91 @@ export default function TwitterTimeline({
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
-    containerRef.current.innerHTML = '';
+    // Reiniciar estados al cambiar props
     setIsLoading(true);
     setHasError(false);
 
-    // Timeout de seguridad: Si en 5 segundos no ha cargado, mostrar opción de error/fallback
-    const timeoutId = setTimeout(() => {
-        setIsLoading(false);
-        // No marcamos error automáticamente, pero dejamos de mostrar "Cargando"
-        // para que el usuario vea el botón de fallback si el widget no apareció.
-    }, 5000);
-
-    const initWidget = () => {
-      if ((window as any).twttr && (window as any).twttr.widgets) {
-        (window as any).twttr.widgets.createTimeline(
-          {
-            sourceType: 'profile',
-            screenName: username
-          },
-          containerRef.current,
-          {
-            theme: theme,
-            height: height,
-            width: width,
-            chrome: 'noheader nofooter noborders transparent',
-            lang: 'es'
-          }
-        ).then((el: any) => {
-           clearTimeout(timeoutId);
-           setIsLoading(false);
-           if (!el) {
-               console.warn('Twitter widget returned null element');
-               setHasError(true);
-           }
-        }).catch((err: any) => {
-            clearTimeout(timeoutId);
-            console.error('Twitter widget error:', err);
-            setIsLoading(false);
-            setHasError(true);
-        });
-      }
-    };
-
+    // 1. Cargar el script de widgets.js si no existe
     const scriptId = 'twitter-wjs';
     if (!document.getElementById(scriptId)) {
       const script = document.createElement('script');
       script.id = scriptId;
       script.src = "https://platform.twitter.com/widgets.js";
       script.async = true;
-      script.onload = initWidget;
-      script.onerror = () => {
-          clearTimeout(timeoutId);
-          setIsLoading(false);
-          setHasError(true);
-      };
+      script.charset = "utf-8";
       document.body.appendChild(script);
-    } else {
-      setTimeout(initWidget, 100);
     }
 
-    return () => clearTimeout(timeoutId);
+    // 2. Función para escanear y transformar el anchor tag en widget
+    const tryLoadWidget = () => {
+        // @ts-ignore
+        if (window.twttr && window.twttr.widgets) {
+            // @ts-ignore
+            window.twttr.widgets.load(containerRef.current);
+        }
+    };
+
+    // Intentar cargar inmediatamente y periódicamente
+    tryLoadWidget();
+    const intervalId = setInterval(tryLoadWidget, 1000);
+
+    // 3. Detectar cuando el iframe se ha creado (éxito)
+    const checkIframe = setInterval(() => {
+        const iframe = containerRef.current?.querySelector('iframe');
+        if (iframe) {
+            setIsLoading(false);
+            clearInterval(checkIframe);
+            clearInterval(intervalId); // Dejar de intentar cargar
+        }
+    }, 500);
+
+    // 4. Timeout de seguridad (5 segundos)
+    const timeoutId = setTimeout(() => {
+        clearInterval(checkIframe);
+        clearInterval(intervalId);
+        setIsLoading(false);
+        // Si no hay iframe después de 5s, mostramos fallback
+        if (!containerRef.current?.querySelector('iframe')) {
+            setHasError(true);
+        }
+    }, 5000);
+
+    return () => {
+        clearInterval(checkIframe);
+        clearInterval(intervalId);
+        clearTimeout(timeoutId);
+    };
   }, [username, theme, height, width]);
 
   return (
-    <div className="w-full flex flex-col items-center justify-center twitter-feed-container relative min-h-[300px] bg-black/50 rounded-xl">
+    <div className="w-full flex flex-col items-center justify-center twitter-feed-container relative min-h-[300px] bg-black/50 rounded-xl overflow-hidden">
+      
+      {/* Estado de Carga */}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center text-gray-500 animate-pulse z-10 bg-black/80">
             <span className="text-sm font-bold uppercase tracking-widest">Conectando con X...</span>
         </div>
       )}
       
-      <div ref={containerRef} className={`w-full flex justify-center transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`} />
+      {/* Contenedor del Widget (Anchor Tag oficial de Twitter Publish) */}
+      <div ref={containerRef} className={`w-full flex justify-center transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+          <a 
+            className="twitter-timeline" 
+            data-theme={theme}
+            data-height={height}
+            data-width={width}
+            data-chrome="noheader nofooter noborders transparent"
+            data-lang="es"
+            href={`https://twitter.com/${username}?ref_src=twsrc%5Etfw`}
+          >
+            {/* Texto invisible mientras carga */}
+            <span className="opacity-0">Tweets by {username}</span>
+          </a>
+      </div>
 
-      {/* Fallback siempre visible si hay error o si el contenedor está vacío tras carga */}
-      {(!isLoading && (hasError || !containerRef.current?.firstChild)) && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-0">
+      {/* Fallback / Error UI (Se muestra si falla la carga o hay error 429) */}
+      {(!isLoading && (hasError || !containerRef.current?.querySelector('iframe'))) && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-20 bg-black">
               <FaTwitter className="text-4xl text-gray-600 mb-4" />
               <p className="text-gray-400 mb-4 font-bold text-sm uppercase tracking-wider">
                   No se pudo cargar el feed
