@@ -10,7 +10,8 @@ import ImageCarousel from '../components/home/ImageCarousel';
 import Hero from '../components/home/Hero';
 import { useLanguage } from '../context/LanguageContext';
 import WeeklyCalendar from '../components/home/WeeklyCalendar';
-import TwitterTimeline from '../components/social/TwitterTimeline';
+import YoutubeShorts from '../components/social/YoutubeShorts';
+import { FiYoutube } from 'react-icons/fi';
 
 const Home = () => {
     const { t } = useLanguage();
@@ -224,16 +225,16 @@ const Home = () => {
                 <div className="container mx-auto px-4 text-center">
                     <div className="mb-12">
                         <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter italic flex items-center justify-center gap-4">
-                            <FiTwitter className="text-[#1DA1F2]" />
-                            Últimas <span className="text-[#1DA1F2]">Novedades</span>
+                            <FiYoutube className="text-red-600" />
+                            Últimas <span className="text-red-600">Novedades</span>
                         </h2>
                         <p className="text-gray-400 mt-4 text-sm font-bold uppercase tracking-widest">
-                            Sigue a @ShuraHiwa en X
+                            Sigue a @ShuraHiwa en YouTube
                         </p>
                     </div>
                     
-                    <div className="max-w-xl mx-auto bg-black rounded-xl border-4 border-gray-800 overflow-hidden shadow-[0_0_20px_rgba(29,161,242,0.3)]">
-                        <TwitterTimeline username="ShuraHiwa" theme="dark" height={600} />
+                    <div className="max-w-4xl mx-auto bg-black rounded-xl border-4 border-gray-800 overflow-hidden shadow-[0_0_20px_rgba(255,0,0,0.3)] p-8">
+                        <YoutubeShorts />
                     </div>
                 </div>
             </section>
