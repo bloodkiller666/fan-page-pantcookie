@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { FaTwitter } from 'react-icons/fa';
-import Script from 'next/script'; // Importante usar el componente de Next
 
 interface TwitterTimelineProps {
   username: string;
@@ -10,61 +9,83 @@ interface TwitterTimelineProps {
 }
 
 export default function TwitterTimeline({ 
-  username = "ShuraHiwa", // El usuario que pusiste en publish
+  username = "ShuraHiwa", 
   theme = 'dark', 
-  height = 600 
+  height = 500 
 }: TwitterTimelineProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Esta función fuerza a Twitter a buscar el enlace y convertirlo en widget
-  const loadWidget = () => {
-    if ((window as any).twttr && (window as any).twttr.widgets) {
-      (window as any).twttr.widgets.load();
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    // Si el script ya estaba cargado (por navegación interna), forzamos carga
-    loadWidget();
-  }, [username]);
+    // 1. Forzar la carga del script manualmente
+    const scriptId = 'twitter-wjs';
+    let script = document.getElementById(scriptId) as HTMLScriptElement;
+
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.src = "https://platform.twitter.com/widgets.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    // 2. Función para renderizar el widget
+    const renderWidget = () => {
+      if ((window as any).twttr && (window as any).twttr.widgets) {
+        // Limpiamos el contenedor antes de renderizar para evitar duplicados
+        if (containerRef.current) {
+          containerRef.current.innerHTML = ''; 
+          (window as any).twttr.widgets.createTimeline(
+            { sourceType: 'profile', screenName: username },
+            containerRef.current,
+            { theme, height, chrome: 'transparent nofooter' }
+          ).then(() => {
+            setIsLoading(false);
+          });
+        }
+      }
+    };
+
+    // 3. Intentar renderizar cuando el script cargue
+    script.addEventListener('load', renderWidget);
+
+    // 4. Si el script ya estaba en la página, intentamos renderizar tras un breve delay
+    if ((window as any).twttr) {
+      const timer = setTimeout(renderWidget, 500);
+      return () => clearTimeout(timer);
+    }
+
+    return () => script.removeEventListener('load', renderWidget);
+  }, [username, theme, height]);
 
   return (
-    <div className="relative w-full flex flex-col items-center bg-black/20 rounded-xl p-4 border border-white/5">
+    <div className="w-full relative min-h-[300px] flex flex-col items-center">
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
-          <span className="text-xs font-bold animate-pulse text-primary">CARGANDO FEED...</span>
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/10 backdrop-blur-sm z-10 rounded-xl">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+          <span className="text-[10px] font-bold tracking-widest text-gray-400">SINCRONIZANDO CON X...</span>
         </div>
       )}
 
-      {/* El código exacto que te dio Twitter, pero adaptado a React */}
-      <a 
-        className="twitter-timeline" 
-        data-height={height}
-        data-theme={theme}
-        data-chrome="noheader nofooter noborders transparent"
-        href={`https://twitter.com/${username}?ref_src=twsrc%5Etfw`}
-      >
-        Tweets by @{username}
-      </a>
-
-      {/* Carga el script de forma optimizada */}
-      <Script 
-        src="https://platform.twitter.com/widgets.js" 
-        strategy="lazyOnload"
-        onLoad={loadWidget}
+      {/* Este es el contenedor donde el widget aparecerá mágicamente */}
+      <div 
+        ref={containerRef} 
+        className="w-full transition-opacity duration-1000"
+        style={{ opacity: isLoading ? 0 : 1 }}
       />
 
-      {/* Botón de Fallback en caso de que X bloquee la IP del usuario */}
-      {!isLoading && (
-        <div className="mt-4">
-           <a 
-            href={`https://twitter.com/${username}`}
+      {/* Fallback de seguridad si después de 8 segundos no hay nada */}
+      {!isLoading && !containerRef.current?.innerHTML && (
+        <div className="p-6 text-center border border-dashed border-white/10 rounded-xl">
+          <FaTwitter className="mx-auto text-2xl text-gray-600 mb-2" />
+          <p className="text-xs text-gray-500 mb-4">El feed está tardando en responder.</p>
+          <a 
+            href={`https://x.com/${username}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-gray-500 hover:text-primary transition-colors flex items-center gap-2"
+            className="text-xs font-bold text-primary hover:underline"
           >
-            <FaTwitter /> ¿No ves los tweets? Ver en X.com
+            VER PERFIL DIRECTO
           </a>
         </div>
       )}
