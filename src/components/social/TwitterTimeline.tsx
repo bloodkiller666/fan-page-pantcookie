@@ -1,91 +1,71 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaTwitter } from 'react-icons/fa';
 
 interface TwitterTimelineProps {
-  username: string;
+  username?: string;
   theme?: 'light' | 'dark';
   height?: number;
+  width?: number | string;
 }
 
 export default function TwitterTimeline({ 
-  username = "ShuraHiwa", 
-  theme = 'dark', 
-  height = 500 
+  username = "ShuraHiwa",
+  theme = 'dark',
+  height = 600,
+  width = '100%'
 }: TwitterTimelineProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
-    // 1. Forzar la carga del script manualmente
-    const scriptId = 'twitter-wjs';
-    let script = document.getElementById(scriptId) as HTMLScriptElement;
+    // 1. Forzamos la limpieza y carga del script cada vez que el componente se monta
+    const script = document.createElement('script');
+    script.src = "https://platform.twitter.com/widgets.js";
+    script.async = true;
+    document.body.appendChild(script);
 
-    if (!script) {
-      script = document.createElement('script');
-      script.id = scriptId;
-      script.src = "https://platform.twitter.com/widgets.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
+    // 2. Si en 6 segundos no hay nada dentro del widget, mostramos el botón de auxilio
+    const timer = setTimeout(() => {
+      const iframe = document.querySelector('.twitter-timeline-rendered');
+      if (!iframe) setShowFallback(true);
+    }, 6000);
 
-    // 2. Función para renderizar el widget
-    const renderWidget = () => {
-      if ((window as any).twttr && (window as any).twttr.widgets) {
-        // Limpiamos el contenedor antes de renderizar para evitar duplicados
-        if (containerRef.current) {
-          containerRef.current.innerHTML = ''; 
-          (window as any).twttr.widgets.createTimeline(
-            { sourceType: 'profile', screenName: username },
-            containerRef.current,
-            { theme, height, chrome: 'transparent nofooter' }
-          ).then(() => {
-            setIsLoading(false);
-          });
-        }
-      }
+    return () => {
+      script.remove();
+      clearTimeout(timer);
     };
-
-    // 3. Intentar renderizar cuando el script cargue
-    script.addEventListener('load', renderWidget);
-
-    // 4. Si el script ya estaba en la página, intentamos renderizar tras un breve delay
-    if ((window as any).twttr) {
-      const timer = setTimeout(renderWidget, 500);
-      return () => clearTimeout(timer);
-    }
-
-    return () => script.removeEventListener('load', renderWidget);
-  }, [username, theme, height]);
+  }, [username]);
 
   return (
-    <div className="w-full relative min-h-[300px] flex flex-col items-center">
-      {isLoading && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/10 backdrop-blur-sm z-10 rounded-xl">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
-          <span className="text-[10px] font-bold tracking-widest text-gray-400">SINCRONIZANDO CON X...</span>
-        </div>
-      )}
-
-      {/* Este es el contenedor donde el widget aparecerá mágicamente */}
+    <div className="w-full min-h-[500px] flex flex-col items-center justify-center bg-[#050505] rounded-2xl border border-white/5 p-4 overflow-hidden">
+      
+      {/* INYECCIÓN DIRECTA DE JS/HTML */}
       <div 
-        ref={containerRef} 
-        className="w-full transition-opacity duration-1000"
-        style={{ opacity: isLoading ? 0 : 1 }}
+        className="w-full flex justify-center"
+        dangerouslySetInnerHTML={{
+          __html: `
+            <a class="twitter-timeline" 
+               data-theme="dark" 
+               data-height="600" 
+               data-chrome="transparent nofooter noborders"
+               href="https://twitter.com/${username}?ref_src=twsrc%5Etfw">
+               Cargando posts de @${username}...
+            </a>
+          `
+        }}
       />
 
-      {/* Fallback de seguridad si después de 8 segundos no hay nada */}
-      {!isLoading && !containerRef.current?.innerHTML && (
-        <div className="p-6 text-center border border-dashed border-white/10 rounded-xl">
-          <FaTwitter className="mx-auto text-2xl text-gray-600 mb-2" />
-          <p className="text-xs text-gray-500 mb-4">El feed está tardando en responder.</p>
+      {/* Solo aparece si el JS de Twitter falla */}
+      {showFallback && (
+        <div className="text-center p-8 animate-in fade-in duration-700">
+          <FaTwitter className="text-4xl text-[#1DA1F2] mx-auto mb-4" />
+          <p className="text-sm text-gray-400 mb-6">X ha bloqueado la conexión directa.</p>
           <a 
             href={`https://x.com/${username}`}
             target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs font-bold text-primary hover:underline"
+            className="bg-[#1DA1F2] text-white px-6 py-2 rounded-full font-bold text-xs hover:bg-[#1a91da] transition-all"
           >
-            VER PERFIL DIRECTO
+            ABRIR PERFIL EN X
           </a>
         </div>
       )}
