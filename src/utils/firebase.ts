@@ -143,12 +143,14 @@ export const addWallMessage = async (username: string, country: string, text: st
 };
 
 export const subscribeToWallMessages = (callback: (messages: any[]) => void) => {
+    console.log("Setting up wall_messages listener...");
     const q = query(
         collection(db, 'wall_messages'),
         orderBy('timestamp', 'desc')
     );
 
     return onSnapshot(q, (snapshot) => {
+        console.log(`Snapshot received. Docs count: ${snapshot.docs.length}`);
         const messages = snapshot.docs.map(doc => {
             const data = doc.data();
             return {

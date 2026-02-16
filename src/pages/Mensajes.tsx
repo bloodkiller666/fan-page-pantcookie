@@ -47,7 +47,12 @@ const MensajesContent = () => {
 
   // Subscribe to Wall Messages
   useEffect(() => {
+    console.log("Subscribing to wall messages...");
     const unsubscribe = subscribeToWallMessages((newMessages) => {
+        console.log("Received new messages from Firebase:", newMessages);
+        if (newMessages.length === 0) {
+            console.log("No messages found in 'wall_messages' collection.");
+        }
         setMessages(newMessages.map(msg => ({
             id: msg.id,
             username: msg.username,

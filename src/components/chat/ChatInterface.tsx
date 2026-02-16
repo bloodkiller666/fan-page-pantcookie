@@ -7,13 +7,14 @@ import { useLanguage } from '../../context/LanguageContext';
 const ChatInterface = () => {
     const { t } = useLanguage();
     const [messages, setMessages] = useState<any[]>([
-        { id: 1, text: t('chat.welcome'), sender: 'bot', time: new Date(), fileUrl: null, fileName: null }
+        { id: 1, text: "¡Hola! Soy Pantcookie IA, la inteligencia artificial de la ShakeGang. 🍪🤖", sender: 'bot', time: new Date(), fileUrl: null, fileName: null }
     ]);
     const [inputValue, setInputValue] = useState('');
     const [status, setStatus] = useState('online');
     const [isTyping, setIsTyping] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [lastImageUploaded, setLastImageUploaded] = useState<string | null>(null);
     const [isSoundEnabled, setIsSoundEnabled] = useState(true);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -72,7 +73,7 @@ const ChatInterface = () => {
         addMessage(t('chat.resting'), 'bot');
     };
 
-    const addMessage = (text, sender, fileUrl = null, fileName = null) => {
+    const addMessage = (text: string | null, sender: 'user' | 'bot', fileUrl: string | null = null, fileName: string | null = null) => {
         setMessages(prev => [...prev, {
             id: Date.now(),
             text,
@@ -83,7 +84,7 @@ const ChatInterface = () => {
         }]);
     };
 
-    const handleSendMessage = async (e) => {
+    const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!inputValue.trim() || status === 'offline') return;
 
@@ -95,6 +96,8 @@ const ChatInterface = () => {
 
         // Bot Response simulation
         setIsTyping(true);
+        const imageUrlToSend = lastImageUploaded;
+        setLastImageUploaded(null); // Clear after sending
 
         try {
             const response = await fetch('/api/chat', {
@@ -102,7 +105,7 @@ const ChatInterface = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: userText }),
+                body: JSON.stringify({ message: userText, imageUrl: imageUrlToSend }),
             });
             if (!response.ok) {
                 setIsTyping(false);
@@ -138,7 +141,7 @@ const ChatInterface = () => {
         }
     };
 
-    const onEmojiClick = (emojiObject) => {
+    const onEmojiClick = (emojiObject: any) => {
         setInputValue(prev => {
             const newValue = prev + emojiObject.emoji;
             if (countWords(newValue) <= MAX_WORDS) {
@@ -148,50 +151,86 @@ const ChatInterface = () => {
         });
     };
 
-    const speakText = (text) => {
+    const speakText = (text: string) => {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        const voices = window.speechSynthesis.getVoices();
-        // Try to find a Spanish voice, preferably a female one or 'Google español' if available
-        const spanishVoice = voices.find(v => v.lang.toLowerCase().includes('es') || v.lang.toLowerCase().includes('spa'));
+        
+        // Limpiar emojis para que no los lea (Regex compatible con ES5)
+        // Usamos rangos hexadecimales estándar sin el flag 'u' para compatibilidad
+        const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
 
-        if (spanishVoice) {
-            utterance.voice = spanishVoice;
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        const voices = window.speechSynthesis.getVoices();
+        
+        // Priorizar voces de alta calidad (Microsoft, Google)
+        const preferredVoices = [
+            'Microsoft Elena', // Windows (Muy buena)
+            'Microsoft Laura', // Windows
+            'Google español',  // Chrome/Android
+            'Monica',          // Mac
+            'Paulina'          // Mac
+        ];
+
+        let selectedVoice: SpeechSynthesisVoice | undefined | null = null;
+        
+        // Buscar coincidencia exacta o parcial con las preferidas
+        for (const name of preferredVoices) {
+            selectedVoice = voices.find(v => v.name.includes(name));
+            if (selectedVoice) break;
         }
 
-        utterance.rate = 1.1; // Slightly faster
-        utterance.pitch = 1.1; // Slightly higher
+        // Fallback: Cualquier voz en español
+        if (!selectedVoice) {
+            selectedVoice = voices.find(v => v.lang.toLowerCase().includes('es') || v.lang.toLowerCase().includes('spa'));
+        }
+
+        if (selectedVoice) {
+            utterance.voice = selectedVoice;
+            // Ajustar tono y velocidad según la voz para que suene menos robot
+            if (selectedVoice.name.includes('Microsoft')) {
+                utterance.rate = 1.05; // Ligeramente más rápido
+                utterance.pitch = 1.0; // Tono natural
+            } else {
+                utterance.rate = 1.1;
+                utterance.pitch = 1.1;
+            }
+        }
+
         window.speechSynthesis.speak(utterance);
     };
 
-    const handleFileChange = async (e) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file || status === 'offline') return;
 
+        // Validar tamaño (max 5MB para no saturar base64)
+        if (file.size > 5 * 1024 * 1024) {
+            addMessage("La imagen es muy pesada (máx 5MB). 🍪", 'bot');
+            return;
+        }
+
         setIsUploading(true);
-        const formData = new FormData();
-        formData.append('file', file);
-
+        
         try {
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-            });
-
-            const data = await response.json();
-            if (data.url) {
-                addMessage(null, 'user', data.url, file.name);
-                resetTimers();
-            } else {
-                alert('Error al subir el archivo');
-            }
+            // Convertir a Base64 para enviar a la IA (Privacidad: No se sube a la nube)
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                setLastImageUploaded(base64String);
+                
+                // Mostrar preview local en el chat (Blob URL efímero)
+                const localPreviewUrl = URL.createObjectURL(file);
+                addMessage(null, 'user', localPreviewUrl, file.name);
+                setIsUploading(false);
+                
+                // Limpiar input
+                if (fileInputRef.current) fileInputRef.current.value = '';
+            };
+            reader.readAsDataURL(file);
         } catch (error) {
-            console.error('Upload Error:', error);
-            alert('Error crítico al subir el archivo');
-        } finally {
+            console.error('Error reading file:', error);
             setIsUploading(false);
-            if (fileInputRef.current) fileInputRef.current.value = '';
+            addMessage("No pude procesar la imagen. 🍪", 'bot');
         }
     };
 
@@ -285,15 +324,23 @@ const ChatInterface = () => {
                                 {msg.text && <p className="mb-3 break-words leading-relaxed">{msg.text}</p>}
                                 {msg.fileUrl && (
                                     <div className="mb-3">
-                                        <a
-                                            href={msg.fileUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center gap-2 p-2 bg-black/10 dark:bg-white/10 rounded-lg hover:bg-black/20 transition-colors underline"
-                                        >
-                                            <FiPaperclip />
-                                            <span className="truncate max-w-[150px]">{msg.fileName || 'Archivo'}</span>
-                                        </a>
+                                        {(msg.fileName?.match(/\.(jpg|jpeg|png|gif|webp)$/i) || msg.fileUrl.startsWith('blob:') || msg.fileUrl.startsWith('data:image')) ? (
+                                            <img 
+                                                src={msg.fileUrl} 
+                                                alt="Uploaded content" 
+                                                className="max-w-full rounded-lg mb-2 max-h-60 object-contain border border-black/10 dark:border-white/10"
+                                            />
+                                        ) : (
+                                            <a
+                                                href={msg.fileUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-2 p-2 bg-black/10 dark:bg-white/10 rounded-lg hover:bg-black/20 transition-colors underline"
+                                            >
+                                                <FiPaperclip />
+                                                <span className="truncate max-w-[150px]">{msg.fileName || 'Archivo'}</span>
+                                            </a>
+                                        )}
                                     </div>
                                 )}
                                 <span suppressHydrationWarning className={`absolute bottom-1 right-2 text-[10px] ${msg.sender === 'user' ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>

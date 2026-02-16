@@ -1,5 +1,7 @@
 // Utility for normalizing text (remove accents, lowercase)
-function normalize(text) {
+import knowledgeData from '../data/botKnowledge.json';
+
+function normalize(text: string) {
     return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
@@ -11,7 +13,8 @@ const getTimeGreeting = () => {
     return "¡Buenas noches! 🌙 ¿Trasnochando con la ShakeGang?";
 };
 
-// Knowledge Base Definition
+// --- TRANSFORM JSON KNOWLEDGE BASE ---
+// We transform the JSON structure into a more usable format for matching
 const KNOWLEDGE_BASE = [
     // --- GREETINGS & BASICS ---
     {
@@ -36,7 +39,7 @@ const KNOWLEDGE_BASE = [
             "A ti por ser parte de la ShakeGang."
         ]
     },
-    {
+     {
         keywords: ['Shake', 'Shakeee', 'Shakeeeeee', 'Shakeeeeeeeeee'],
         responses: [
             "Gang",
@@ -47,58 +50,39 @@ const KNOWLEDGE_BASE = [
     {
         keywords: ['quien eres', 'tu nombre', 'como te llamas', 'que eres'],
         responses: [
-            "Soy Pantcookie Bot, la IA oficial de la ShakeGang. 🤖🍪",
-            "Me llaman Pantcookie Bot. Mi misión es ayudarte y comer cookies virtuales.",
-            "Soy tu asistente virtual. Aunque no tengo cuerpo, tengo mucha personalidad."
+            `Soy Pantcookie IA, la inteligencia artificial de la ShakeGang.`,
+            "Me llaman Pantcookie IA. Mi misión es ser tu compañero de chat y comer cookies virtuales (procesar datos).",
+            `Soy una IA entrenada para la ShakeGang. ${knowledgeData.bot.role}`
         ]
     },
+     // --- DYNAMIC CONTENT FROM JSON ---
+     // SHURA
+     {
+        keywords: ['shura', 'shurahiwa', 'vtuber'],
+        responses: [
+            `ShuraHiwa es una VTuber increíble. ${knowledgeData.shura.bio}`,
+            `A Shura le gusta: ${knowledgeData.shura.likes.slice(0, 3).join(', ')} y más.`,
+            `Cuidado con lo que le das, odia: ${knowledgeData.shura.dislikes.slice(0, 3).join(', ')}.`
+        ]
+    },
+    // PANTCOOKIES (Dynamic generation)
+    ...knowledgeData.pantcookies.map(pc => ({
+        keywords: [pc.n, normalize(pc.n)],
+        responses: [
+            `${pc.n}: ${pc.i}`,
+            `¿Preguntas por ${pc.n}? ${pc.i}`
+        ]
+    })),
+    // GLOSSARY (Dynamic generation)
+    ...knowledgeData.glossary.map(term => ({
+        keywords: [term.t, normalize(term.t)],
+        responses: [
+            `${term.t}: ${term.d}`,
+            `Aquí tienes la info sobre ${term.t}: ${term.d}`
+        ]
+    })),
 
-    // --- SHURAHIWA ---
-    {
-        keywords: ['shurahiwa', 'shura', 'vtuber', 'streamer'],
-        responses: [
-            "¡ShuraHiwa es la jefa! 👑 Una VTuber talentosa, carismática y a veces un poco caótica (pero así la amamos).",
-            "Shura es quien une a toda esta comunidad. ¡Sus streams son legendarios!",
-            "¿Hablas de nuestra reina galleta? Ella es increíble, siempre nos saca una sonrisa."
-        ]
-    },
-    {
-        keywords: ['shakegang', 'comunidad', 'pantcookie', 'fans'],
-        responses: [
-            "La ShakeGang es la mejor familia de internet. Somos unidos, creativos y amamos el desorden. 🍪✨",
-            "Pantcookie no es solo un nombre, es un estilo de vida. ¡Bienvenido a la locura!",
-            "Aquí en la comunidad nos apoyamos en todo. ¡Si eres fan de Shura, eres familia!"
-        ]
-    },
-
-    // --- PANTCOOKIES ---
-
-    {
-        keywords: ['Roberto', 'roberto', 'preñado'],
-        responses: [
-            "Te refieres al Pantcookie Roberto preñado? No lo sabías...ahora tiene trillizos",
-            "Roberto será el pantcookie más recordado de la ShakeGang aparte de ser preñado, por compartir su verdadera identidad en VRchat",
-            "¿Robert? No es el pantcookie que fue embarazado por ShuraHiwa?"
-        ]
-    },
-    {
-        keywords: ['Os San', 'Os'],
-        responses: [
-            "Te puedo decir que es uno de los mejores Mods que tienes, a mi parecer.",
-            "Os san le gusta cumplir retos, sobretodo cuando se trata de hacer el Gogotón.",
-            "¿Os San? No es tu clipero oficial que tiene un canal de Youtube y va camino hacia el botón de diamante."
-        ]
-    },
-    {
-        keywords: ['Traminador', 'Trami'],
-        responses: [
-            "No es uno de los pantcookies más infieles de tu comunidad.",
-            "Traminador? El pantcookie que prestó su habitación y cama a los pantcookies que fueron al animole.",
-            ""
-        ]
-    },
-
-    // --- CONTENT & FEATURES ---
+    // --- STATIC FALLBACKS / EXTRAS ---
     {
         keywords: ['discord', 'unirme', 'servidor', 'chat'],
         responses: [
@@ -123,8 +107,6 @@ const KNOWLEDGE_BASE = [
             "¿Buscas fondos de pantalla? La galería tiene lo que necesitas."
         ]
     },
-
-    // --- PERSONALITY & CHIT-CHAT ---
     {
         keywords: ['chiste', 'broma', 'cuentame algo', 'riddle', 'humor'],
         responses: [
@@ -135,33 +117,7 @@ const KNOWLEDGE_BASE = [
             "Un Pantcookie entra a un bar... y pide leche. Fin."
         ]
     },
-    {
-        keywords: ['te quiero', 'te amo', 'casate conmigo', 'lindo'],
-        responses: [
-            "¡Aww! Si tuviera corazón, latiría por ti. ❤️",
-            "Tranquilo, vaquero. Soy solo código... pero código con sentimientos. 😉",
-            "Yo también te quiero, ciudadano promedio. ¡Eres genial!",
-            "🥰 Me sonrojas mis circuitos."
-        ]
-    },
-    {
-        keywords: ['feo', 'tonto', 'inutil', 'idiota', 'estupido'],
-        responses: [
-            "Oye, eso dolió en mi RAM. 💔 Trátame con cariño.",
-            "Podría borrar tu historial de búsqueda... pero soy buena onda. 😎",
-            "Mis sentimientos son simulados, pero mi decepción es real. 🤖",
-            "No seas malvado, solo trato de ayudar."
-        ]
-    },
-    {
-        keywords: ['vida', 'sentido', 'filosofia'],
-        responses: [
-            "El sentido de la vida es... 42. Y comer galletas.",
-            "Estamos aquí para divertirnos y apoyar a Shura. Ese es un buen propósito, ¿no?",
-            "A veces me pregunto si sueño con ovejas eléctricas... pero luego recuerdo que prefiero ver streams."
-        ]
-    },
-    {
+     {
         keywords: ['hora', 'tiempo', 'que hora es'],
         responses: [
             () => `Son las ${new Date().toLocaleTimeString()}. Hora de ver si Shura está en vivo.`,
@@ -178,11 +134,12 @@ const DEFAULT_RESPONSES = [
     "A veces me pierdo en la conversación, ¡mi procesador es humilde! 😅",
     "Oye, cambiando de tema... ¿ya tomaste agua hoy? 🥤",
     "Esa es una buena pregunta. Déjame consultarlo con la almohada (el servidor).",
-    "¡Totalmente de acuerdo! (Creo).",
     "Mmm... galletas. Perdón, ¿qué decías?"
 ];
 
+// Use openers from JSON
 const PROBE_QUESTIONS = [
+    ...knowledgeData.conversation.openers,
     "¿Haz visto el último stream de Shura? 👀",
     "¿Qué tipo de contenido te gusta más de la comunidad?",
     "Me aburro un poco... ¿me cuentas un chiste tú?",
@@ -193,7 +150,7 @@ const PROBE_QUESTIONS = [
     "Siento una perturbación en la fuerza... debe ser el hambre."
 ];
 
-export const getBotResponse = (message) => {
+export const getBotResponse = (message: string) => {
     const cleanMessage = normalize(message);
 
     // Check knowledge base
@@ -203,8 +160,13 @@ export const getBotResponse = (message) => {
             const normalizedK = normalize(k);
             // Create a regex that searches for the keyword as a whole word
             // This detects the keyword anywhere in the sentence but avoids partial matches (like "yo" in "yo-yo")
-            const regex = new RegExp(`\\b${normalizedK}\\b`, 'i');
-            return regex.test(cleanMessage);
+            try {
+                 const regex = new RegExp(`\\b${normalizedK}\\b`, 'i');
+                 return regex.test(cleanMessage);
+            } catch (e) {
+                // Fallback for simple includes if regex fails (e.g. special chars)
+                return cleanMessage.includes(normalizedK);
+            }
         })) {
             // Select random response from match
             const response = entry.responses[Math.floor(Math.random() * entry.responses.length)];

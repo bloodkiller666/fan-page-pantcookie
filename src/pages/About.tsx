@@ -247,7 +247,7 @@ const About = () => {
         type: 'electric',
         image: 'https://ik.imagekit.io/7zy1frxsr/Fotos/pantcake.png?updatedAt=1769060919997',
         number: '002',
-        species: 'Comunidad Fiel',
+        species: 'Pantcakes',
         height: 'Varia',
         weight: 'Varia',
         cardColor: 'from-[#0070ff] via-[#ffde00] to-[#ff8a00]',
