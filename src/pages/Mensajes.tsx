@@ -13,6 +13,12 @@ const COUNTRIES = [
   "Panamá", "Paraguay", "Perú", "Puerto Rico", "República Dominicana", "Uruguay", "Venezuela", "Otro"
 ];
 
+const MAX_WORDS = 2000;
+
+const countWords = (str: string) => {
+  return str.trim() === '' ? 0 : str.trim().split(/\s+/).length;
+};
+
 interface Message {
   id: number;
   username: string;
@@ -310,7 +316,12 @@ const MensajesContent = () => {
                   <div className="relative">
                     <textarea
                       value={messageText}
-                      onChange={(e) => setMessageText(e.target.value)}
+                      onChange={(e) => {
+                        const newValue = e.target.value;
+                        if (countWords(newValue) <= MAX_WORDS) {
+                          setMessageText(newValue);
+                        }
+                      }}
                       className={`w-full bg-white dark:bg-black border-4 ${errors.message ? 'border-red-500' : 'border-black'} rounded-xl py-4 px-4 text-[var(--poke-text)] placeholder-gray-400 focus:outline-none transition-all h-40 resize-none font-medium text-sm`}
                       placeholder="Escribe algo genial..."
                     />
@@ -327,6 +338,11 @@ const MensajesContent = () => {
                         <EmojiPicker onEmojiClick={handleEmojiClick} theme={Theme.DARK} width={300} height={400} />
                       </div>
                     )}
+                  </div>
+                  <div className="flex justify-end mt-1">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                      {MAX_WORDS - countWords(messageText)} palabras restantes
+                    </span>
                   </div>
                   {errors.message && <p className="text-red-500 text-xs mt-1 font-bold uppercase tracking-tight">{errors.message}</p>}
                 </div>

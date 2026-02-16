@@ -1,0 +1,350 @@
+'use client';
+import { useEffect, useRef, useState, useCallback } from 'react';
+
+export default function ShuraRunGame() {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
+    const [score, setScore] = useState(0);
+    const [highScore, setHighScore] = useState(0);
+    const GRAVITY = 0.5;
+    const JUMP_FORCE = -15;
+    const INITIAL_SPEED = 3;
+    const MAX_SPEED = 15;
+    const INITIAL_OBSTACLE_INTERVAL = 1800;
+    const requestRef = useRef<number | null>(null);
+    const isPlayingRef = useRef(false);
+    const scoreRef = useRef(0);
+    const speedRef = useRef(INITIAL_SPEED);
+    const lastTimeRef = useRef(0);
+    const lastObstacleTimeRef = useRef(0);
+    const playerRef = useRef({ 
+        x: 50, 
+        y: 200, 
+        width: 40, 
+        height: 40, 
+        dy: 0, 
+        grounded: true 
+    });
+    
+    const obstaclesRef = useRef<Array<{
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        type: 'hater' | 'ingredient';
+        markedForDeletion: boolean;
+    }>>([]);
+
+    useEffect(() => {
+        const savedScore = localStorage.getItem('shuraRunHighScore');
+        if (savedScore) setHighScore(parseInt(savedScore));
+    }, []);
+
+    const gameOver = useCallback(() => {
+        isPlayingRef.current = false;
+        setGameState('gameover');
+        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        const currentHigh = parseInt(localStorage.getItem('shuraRunHighScore') || '0');
+        if (scoreRef.current > currentHigh) {
+            localStorage.setItem('shuraRunHighScore', scoreRef.current.toString());
+            setHighScore(scoreRef.current);
+        }
+    }, []);
+
+    const gameLoop = useCallback((time: number) => {
+        if (!isPlayingRef.current) return;
+
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        if (!lastTimeRef.current) lastTimeRef.current = time;
+        const deltaTime = time - lastTimeRef.current;
+        lastTimeRef.current = time;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const player = playerRef.current;
+        player.dy += GRAVITY;
+        player.y += player.dy;
+        const groundLevel = canvas.height - 20;
+        if (player.y + player.height > groundLevel) {
+            player.y = groundLevel - player.height;
+            player.dy = 0;
+            player.grounded = true;
+        } else {
+            player.grounded = false;
+        }
+
+        const speedIncrease = Math.floor(scoreRef.current / 100) * 0.5;
+        speedRef.current = Math.min(INITIAL_SPEED + speedIncrease, MAX_SPEED);
+        const currentInterval = (INITIAL_SPEED * INITIAL_OBSTACLE_INTERVAL) / speedRef.current;
+
+        // Spawn Obstacles
+        if (time - lastObstacleTimeRef.current > currentInterval) {
+            const isHater = Math.random() > 0.4;
+            obstaclesRef.current.push({
+                x: canvas.width,
+                y: isHater ? groundLevel - 40 : groundLevel - 40 - (Math.random() * 50),
+                width: 40,
+                height: 40,
+                type: isHater ? 'hater' : 'ingredient',
+                markedForDeletion: false
+            });
+            lastObstacleTimeRef.current = time;
+        }
+
+        obstaclesRef.current.forEach(obs => {
+            obs.x -= speedRef.current;
+            
+            if (
+                player.x < obs.x + obs.width &&
+                player.x + player.width > obs.x &&
+                player.y < obs.y + obs.height &&
+                player.y + player.height > obs.y
+            ) {
+                if (obs.type === 'hater') {
+                    gameOver();
+                    return;
+                } else if (obs.type === 'ingredient' && !obs.markedForDeletion) {
+                    obs.markedForDeletion = true;
+                    scoreRef.current += 50; // Bonus score
+                    setScore(scoreRef.current);
+                }
+            }
+
+            // Remove off-screen
+            if (obs.x + obs.width < 0) {
+                obs.markedForDeletion = true;
+                if (obs.type === 'hater') {
+                    scoreRef.current += 10; // Score for surviving
+                    setScore(scoreRef.current);
+                }
+            }
+        });
+
+        obstaclesRef.current = obstaclesRef.current.filter(obs => !obs.markedForDeletion);
+        ctx.fillStyle = '#87CEEB';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#4ade80';
+        ctx.fillRect(0, groundLevel, canvas.width, 20);
+
+        ctx.fillStyle = '#3b82f6';
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+        ctx.fillStyle = 'white';
+        ctx.fillRect(player.x + 25, player.y + 10, 10, 10);
+        ctx.fillStyle = 'black';
+        ctx.fillRect(player.x + 30, player.y + 12, 4, 4);
+
+        obstaclesRef.current.forEach(obs => {
+            if (obs.type === 'hater') {
+                ctx.fillStyle = '#ef4444';
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+                // Angry face
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.moveTo(obs.x + 10, obs.y + 15);
+                ctx.lineTo(obs.x + 30, obs.y + 15);
+                ctx.stroke();
+            } else {
+                ctx.fillStyle = '#eab308';
+                ctx.beginPath();
+                ctx.arc(obs.x + 20, obs.y + 20, 15, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.font = '20px Arial';
+                ctx.fillText('🥞', obs.x + 5, obs.y + 25);
+            }
+        });
+
+        ctx.fillStyle = 'black';
+        ctx.font = 'bold 20px Arial';
+        ctx.fillText(`Score: ${scoreRef.current}`, 20, 40);
+
+        if (isPlayingRef.current) {
+            requestRef.current = requestAnimationFrame(gameLoop);
+        }
+    }, [gameOver]);
+
+    const jump = useCallback(() => {
+        if (isPlayingRef.current && playerRef.current.grounded) {
+            playerRef.current.dy = JUMP_FORCE;
+            playerRef.current.grounded = false;
+        }
+    }, []);
+
+    const cutJump = useCallback(() => {
+        if (isPlayingRef.current && playerRef.current.dy < -3) {
+            playerRef.current.dy *= 0.4;
+        }
+    }, []);
+
+    const fastFall = useCallback(() => {
+        if (isPlayingRef.current && !playerRef.current.grounded) {
+            // Push down instantly but smoother
+            playerRef.current.dy = Math.max(playerRef.current.dy + 2, 12);
+        }
+    }, []);
+
+    const startGame = () => {
+        setGameState('playing');
+        setScore(0);
+        scoreRef.current = 0;
+        speedRef.current = INITIAL_SPEED;
+        playerRef.current = { x: 50, y: 200, width: 40, height: 40, dy: 0, grounded: true };
+        obstaclesRef.current = [];
+        
+        lastTimeRef.current = 0;
+        lastObstacleTimeRef.current = performance.now();
+    };
+
+    useEffect(() => {
+        if (gameState === 'playing') {
+            isPlayingRef.current = true;
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+            requestRef.current = requestAnimationFrame(gameLoop);
+        } else {
+            isPlayingRef.current = false;
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        }
+
+        return () => {
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+            isPlayingRef.current = false;
+        };
+    }, [gameState, gameLoop]);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.code === 'Space' || e.code === 'ArrowUp') {
+                e.preventDefault();
+                if (gameState === 'playing') jump();
+                else startGame();
+            }
+            if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                if (gameState === 'playing') fastFall();
+            }
+        };
+
+        const handleKeyUp = (e: KeyboardEvent) => {
+            if (e.code === 'Space' || e.code === 'ArrowUp') {
+                if (gameState === 'playing') cutJump();
+            }
+        };
+        
+        const handleTouchStart = (e: TouchEvent) => {
+             if (gameState === 'playing') jump();
+             else startGame();
+        };
+
+        const handleTouchEnd = (e: TouchEvent) => {
+            if (gameState === 'playing') cutJump();
+        };
+
+        const handleMouseDown = (e: MouseEvent) => {
+            if (gameState === 'playing') jump();
+        };
+
+        const handleMouseUp = (e: MouseEvent) => {
+            if (gameState === 'playing') cutJump();
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+        window.addEventListener('touchstart', handleTouchStart);
+        window.addEventListener('touchend', handleTouchEnd);
+        window.addEventListener('mousedown', handleMouseDown);
+        window.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchend', handleTouchEnd);
+            window.removeEventListener('mousedown', handleMouseDown);
+            window.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [gameState, jump, cutJump, fastFall]);
+
+    return (
+        <div className="flex flex-col items-center justify-center w-full max-w-4xl mx-auto p-4 select-none">
+            <div className="mb-4 flex justify-between w-full max-w-lg text-white font-bold uppercase tracking-wider">
+                <div>Score: <span className="text-pokemon-yellow">{score}</span></div>
+                <div>High Score: <span className="text-pokemon-pink">{highScore}</span></div>
+            </div>
+
+            <div 
+                className="relative rounded-2xl overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] bg-slate-800 touch-none"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    if (gameState === 'playing') jump();
+                }}
+                onMouseDown={(e) => {
+                    if (gameState === 'playing') jump();
+                }}
+                onMouseUp={(e) => {
+                    if (gameState === 'playing') cutJump();
+                }}
+                onTouchStart={(e) => {
+                    if (gameState === 'playing') jump();
+                }}
+                onTouchEnd={(e) => {
+                    if (gameState === 'playing') cutJump();
+                }}
+            >
+                <canvas 
+                    ref={canvasRef} 
+                    width={800} 
+                    height={400} 
+                    className="w-full max-w-full h-auto block bg-[#87CEEB]"
+                />
+                
+                {gameState === 'start' && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white p-6 text-center z-10">
+                        <h2 className="text-4xl md:text-6xl font-black text-pokemon-yellow mb-4 uppercase italic tracking-tighter transform -rotate-3">Shura Run</h2>
+                        <p className="mb-8 text-gray-300 font-medium text-lg">
+                            Presiona <span className="bg-white text-black px-2 rounded">ESPACIO</span> o TOCA para saltar. 
+                            <br/> 
+                            <span className="text-sm mt-2 block opacity-80">Esquiva los cuadrados rojos (Haters) y come Pantcakes 🥞.</span>
+                        </p>
+                        <button 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                startGame();
+                            }}
+                            className="bg-pokemon-pink hover:bg-pink-600 text-white font-black text-xl py-4 px-10 rounded-full border-4 border-white shadow-[0_0_20px_rgba(236,72,153,0.5)] transition-transform hover:scale-110 active:scale-95 animate-pulse"
+                        >
+                            ¡JUGAR AHORA!
+                        </button>
+                    </div>
+                )}
+
+                {gameState === 'gameover' && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white p-6 text-center z-10 animate-fade-in">
+                        <h2 className="text-5xl font-black text-red-500 mb-2 uppercase tracking-tighter">¡Game Over!</h2>
+                        <div className="text-2xl mb-8 font-bold">
+                            Puntaje: <span className="text-pokemon-yellow">{score}</span>
+                            <br/>
+                            <span className="text-sm text-gray-400 font-normal uppercase tracking-widest">Mejor: {highScore}</span>
+                        </div>
+                        <button 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                startGame();
+                            }}
+                            className="bg-pokemon-blue hover:bg-blue-600 text-white font-black text-xl py-4 px-10 rounded-full border-4 border-white shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-transform hover:scale-110 active:scale-95"
+                        >
+                            REINTENTAR
+                        </button>
+                    </div>
+                )}
+            </div>
+            
+            <div className="mt-6 text-xs text-gray-400 uppercase tracking-widest font-bold">
+                [ Espacio / Tap ] para saltar
+            </div>
+        </div>
+    );
+}

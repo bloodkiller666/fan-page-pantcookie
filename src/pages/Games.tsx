@@ -4,17 +4,18 @@ import { useSearchParams } from 'next/navigation';
 import { gsap } from 'gsap';
 import PuzzleGame from '../components/game/PuzzleGame';
 import TriviaGame from '../components/game/trivia/TriviaGame';
+import ShuraRunGame from '../components/game/shura-run/ShuraRunGame';
 import { useLanguage } from '../context/LanguageContext';
 
 const GamesContent = () => {
     const { t } = useLanguage();
-    const [selected, setSelected] = useState<'puzzle' | 'trivia' | null>(null); // 'puzzle' | 'trivia' | null
+    const [selected, setSelected] = useState<'puzzle' | 'trivia' | 'shuraRun' | null>(null);
     const searchParams = useSearchParams();
 
     useEffect(() => {
         const game = searchParams?.get('game');
-        if (game === 'puzzle' || game === 'trivia') {
-            setSelected(game);
+        if (game === 'puzzle' || game === 'trivia' || game === 'shuraRun') {
+            setSelected(game as 'puzzle' | 'trivia' | 'shuraRun');
         }
     }, [searchParams]);
     const containerRef = useRef(null);
@@ -34,7 +35,11 @@ const GamesContent = () => {
                         Game Systems Online // Pantcookie
                     </div>
                     <h1 className="text-6xl md:text-8xl font-black neon-text-pink mb-6 uppercase italic tracking-tighter">
-                        {selected ? (selected === 'puzzle' ? t('games.options.puzzleTitle') : t('games.options.triviaTitle')) : t('games.title')}
+                        {selected ? (
+                            selected === 'puzzle' ? t('games.options.puzzleTitle') : 
+                            selected === 'trivia' ? t('games.options.triviaTitle') : 
+                            t('games.options.shuraRunTitle')
+                        ) : t('games.title')}
                     </h1>
                     <p className="text-xl text-gray-400 dark:text-gray-400 max-w-2xl mx-auto font-medium tracking-wide uppercase text-xs tracking-[0.2em]">
                         {!selected ? t('games.subtitle') : ''}
@@ -42,42 +47,72 @@ const GamesContent = () => {
                 </div>
 
                 {!selected && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
                         {/* Puzzle Card */}
-                        <div className="poke-card p-10 group relative overflow-hidden">
-                            <h2 className="text-3xl font-black mb-6 uppercase tracking-tighter neon-text-pink">{t('games.options.puzzleTitle')}</h2>
-                            <p className="text-gray-600 dark:text-gray-400 mb-10 font-medium leading-relaxed uppercase text-xs tracking-widest">
-                                {t('home.features.gamesDesc')}
-                            </p>
+                        <div className="poke-card p-10 group relative overflow-hidden flex flex-col justify-between">
+                            <div>
+                                <h2 className="text-3xl font-black mb-6 uppercase tracking-tighter neon-text-pink">{t('games.options.puzzleTitle')}</h2>
+                                <p className="text-gray-600 dark:text-gray-400 mb-10 font-medium leading-relaxed uppercase text-xs tracking-widest">
+                                    {t('home.features.gamesDesc')}
+                                </p>
+                            </div>
                             <button
                                 onClick={() => setSelected('puzzle')}
-                                className="poke-button-pink w-full"
+                                className="poke-button-pink w-full mt-auto"
                             >
                                 {t('games.options.playPuzzle')}
                             </button>
                         </div>
 
                         {/* Trivia Card */}
-                        <div className="poke-card p-10 group relative overflow-hidden">
-                            <h2 className="text-3xl font-black mb-6 uppercase tracking-tighter neon-text-blue">{t('games.options.triviaTitle')}</h2>
-                            <p className="text-gray-600 dark:text-gray-400 mb-10 font-medium leading-relaxed uppercase text-xs tracking-widest">
-                                {t('games.options.triviaDesc')}
-                            </p>
+                        <div className="poke-card p-10 group relative overflow-hidden flex flex-col justify-between">
+                            <div>
+                                <h2 className="text-3xl font-black mb-6 uppercase tracking-tighter neon-text-blue">{t('games.options.triviaTitle')}</h2>
+                                <p className="text-gray-600 dark:text-gray-400 mb-10 font-medium leading-relaxed uppercase text-xs tracking-widest">
+                                    {t('games.options.triviaDesc')}
+                                </p>
+                            </div>
                             <button
                                 onClick={() => setSelected('trivia')}
-                                className="poke-button-blue w-full"
+                                className="poke-button-blue w-full mt-auto"
                             >
                                 {t('games.options.playTrivia')}
+                            </button>
+                        </div>
+
+                        {/* Shura Run Card */}
+                        <div className="poke-card p-10 group relative overflow-hidden flex flex-col justify-between">
+                            <div>
+                                <h2 className="text-3xl font-black mb-6 uppercase tracking-tighter neon-text-yellow">{t('games.options.shuraRunTitle')}</h2>
+                                <p className="text-gray-600 dark:text-gray-400 mb-10 font-medium leading-relaxed uppercase text-xs tracking-widest">
+                                    {t('games.options.shuraRunDesc')}
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setSelected('shuraRun')}
+                                className="poke-button-yellow w-full mt-auto"
+                            >
+                                {t('games.options.playShuraRun')}
                             </button>
                         </div>
                     </div>
                 )}
 
                 {/* Selected Game */}
-                {(selected === 'puzzle' || selected === 'trivia') && (
+                {(selected === 'puzzle' || selected === 'trivia' || selected === 'shuraRun') && (
                     <div className="mt-8 animate-fade-in-up">
+                        {/* Back Button */}
+                        <button 
+                            onClick={() => setSelected(null)}
+                            className="mb-8 px-6 py-2 rounded-xl border-2 border-gray-600 text-gray-400 hover:text-white hover:border-white transition-colors uppercase text-xs font-bold tracking-widest"
+                        >
+                            ← {t('common.backToSelection')}
+                        </button>
+                        
                         <div className="relative">
-                            {selected === 'puzzle' ? <PuzzleGame /> : <TriviaGame />}
+                            {selected === 'puzzle' && <PuzzleGame />}
+                            {selected === 'trivia' && <TriviaGame />}
+                            {selected === 'shuraRun' && <ShuraRunGame />}
                         </div>
                     </div>
                 )}

@@ -6,7 +6,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 import Link from 'next/link';
 import { FiImage, FiTarget, FiInfo, FiTwitter } from 'react-icons/fi';
-import ImageCarousel from '../components/home/ImageCarousel';
 import Hero from '../components/home/Hero';
 import { useLanguage } from '../context/LanguageContext';
 import WeeklyCalendar from '../components/home/WeeklyCalendar';
@@ -18,7 +17,6 @@ const Home = () => {
     const [showInteractiveCalendar, setShowInteractiveCalendar] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const calendarRef = useRef<HTMLElement>(null);
-    const carouselRef = useRef<HTMLElement>(null);
     const featuresRef = useRef<HTMLElement>(null);
     const socialRef = useRef<HTMLElement>(null);
 
@@ -34,18 +32,6 @@ const Home = () => {
                     trigger: calendarRef.current,
                     start: 'top 80%',
                     end: 'bottom 20%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
-
-            // Carousel Section Parallax/Reveal
-            gsap.from(carouselRef.current, {
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                scrollTrigger: {
-                    trigger: carouselRef.current,
-                    start: 'top 80%',
                     toggleActions: 'play none none reverse'
                 }
             });
@@ -150,21 +136,6 @@ const Home = () => {
                             </div>
                         )}
                     </div>
-                </div>
-            </section>
-
-            {/* Carousel Section */}
-            <section ref={carouselRef} className="py-24 container mx-auto px-4 relative">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white uppercase tracking-tighter italic">
-                        Mejores <span className="neon-text-blue">Momentos</span>
-                    </h2>
-                    <p className="text-lg text-gray-500 dark:text-gray-400 mt-4 max-w-2xl mx-auto uppercase tracking-widest text-xs font-bold">
-                        {t('home.specialMomentsDesc')}
-                    </p>
-                </div>
-                <div className="max-w-5xl mx-auto rounded-3xl overflow-hidden shadow-[12px_12px_0px_0px_black] border-4 border-black">
-                    <ImageCarousel />
                 </div>
             </section>
 

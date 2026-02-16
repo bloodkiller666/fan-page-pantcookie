@@ -154,9 +154,7 @@ const ChatInterface = () => {
     const speakText = (text: string) => {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
-        
-        // Limpiar emojis para que no los lea (Regex compatible con ES5)
-        // Usamos rangos hexadecimales estándar sin el flag 'u' para compatibilidad
+
         const cleanText = text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
 
         const utterance = new SpeechSynthesisUtterance(cleanText);
@@ -164,11 +162,11 @@ const ChatInterface = () => {
         
         // Priorizar voces de alta calidad (Microsoft, Google)
         const preferredVoices = [
-            'Microsoft Elena', // Windows (Muy buena)
-            'Microsoft Laura', // Windows
-            'Google español',  // Chrome/Android
-            'Monica',          // Mac
-            'Paulina'          // Mac
+            'Microsoft Elena',
+            'Microsoft Laura',
+            'Google español',
+            'Monica',
+            'Paulina'
         ];
 
         let selectedVoice: SpeechSynthesisVoice | undefined | null = null;
@@ -412,9 +410,6 @@ const ChatInterface = () => {
                             disabled={isOffline}
                             className="w-full py-2.5 px-4 bg-gray-100 dark:bg-black/20 rounded-xl text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-pink/50 disabled:opacity-50 disabled:cursor-not-allowed border border-black/5 dark:border-white/5"
                         />
-                        <div className="absolute right-3 bottom-[-18px] text-[10px] text-gray-500 dark:text-gray-400">
-                            {MAX_WORDS - countWords(inputValue)} palabras restantes
-                        </div>
                     </div>
                 </form>
 

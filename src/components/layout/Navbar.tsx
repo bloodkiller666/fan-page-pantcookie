@@ -63,6 +63,7 @@ const Navbar = () => {
             subItems: [
                 { label: t('nav.gamesPuzzle'), path: '/games?game=puzzle', icon: FiTarget },
                 { label: t('nav.gamesTrivia'), path: '/games?game=trivia', icon: FiTarget },
+                { label: t('nav.gamesShuraRun'), path: '/games?game=shuraRun', icon: MdCatchingPokemon },
             ]
         },
         { path: '/chat', label: t('nav.chat'), icon: FiMessageSquare },
