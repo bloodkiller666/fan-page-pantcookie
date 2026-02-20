@@ -22,8 +22,8 @@ export default function YoutubeFeedPlayer() {
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const API_KEY = 'AIzaSyBTsljyBnsCk-sdDTAWRH9pqdAZN2HSYiY';
-  const CHANNEL_ID = 'UC9jHOiM5W_HVOIG6Jv4Ax0w';
+  const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || '';
+  const CHANNEL_ID = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID || '';
 
   useEffect(() => {
     const fetchVideos = async () => {
