@@ -14,8 +14,9 @@ const ChatInterface = () => {
     const [isTyping, setIsTyping] = useState(false);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
-    const [lastImageUploaded, setLastImageUploaded] = useState<string | null>(null);
+    const [pendingImage, setPendingImage] = useState<{ url: string, base64: string, name: string } | null>(null);
     const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+    const [botIntensity, setBotIntensity] = useState(0.8); // 0.2 (Serio) - 1.0 (Caótico)
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     // Timers refs
@@ -86,18 +87,22 @@ const ChatInterface = () => {
 
     const handleSendMessage = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!inputValue.trim() || status === 'offline') return;
+        if ((!inputValue.trim() && !pendingImage) || status === 'offline') return;
 
         const userText = inputValue;
+        const imageToSend = pendingImage;
+        
         setInputValue('');
+        setPendingImage(null);
         setShowEmojiPicker(false);
-        addMessage(userText, 'user');
+        
+        // Add message to UI
+        addMessage(userText || null, 'user', imageToSend?.url, imageToSend?.name);
+        
         resetTimers(); // Reset timers on user action
 
         // Bot Response simulation
         setIsTyping(true);
-        const imageUrlToSend = lastImageUploaded;
-        setLastImageUploaded(null); // Clear after sending
 
         try {
             const response = await fetch('/api/chat', {
@@ -105,7 +110,11 @@ const ChatInterface = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: userText, imageUrl: imageUrlToSend }),
+                body: JSON.stringify({ 
+                    message: userText, 
+                    imageUrl: imageToSend?.base64,
+                    intensity: botIntensity // Enviar intensidad actual
+                }),
             });
             if (!response.ok) {
                 setIsTyping(false);
@@ -124,6 +133,13 @@ const ChatInterface = () => {
                 addMessage("No pude entender la respuesta del servidor. 🍪", 'bot');
                 return;
             }
+
+            // Actualizar intensidad si el bot lo solicita
+            if (data.newIntensity !== undefined) {
+                setBotIntensity(data.newIntensity);
+                console.log("Nueva intensidad del bot:", data.newIntensity);
+            }
+
             if (data.response === "EXIT") {
                 addMessage(t('chat.exitMessage'), 'bot');
                 if (isSoundEnabled) speakText(t('chat.exitMessage'));
@@ -214,11 +230,14 @@ const ChatInterface = () => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result as string;
-                setLastImageUploaded(base64String);
-                
-                // Mostrar preview local en el chat (Blob URL efímero)
                 const localPreviewUrl = URL.createObjectURL(file);
-                addMessage(null, 'user', localPreviewUrl, file.name);
+                
+                setPendingImage({
+                    url: localPreviewUrl,
+                    base64: base64String,
+                    name: file.name
+                });
+                
                 setIsUploading(false);
                 
                 // Limpiar input
@@ -400,6 +419,30 @@ const ChatInterface = () => {
 
                 <form onSubmit={handleSendMessage} className="flex-1 flex gap-2">
                     <div className="flex-1 relative">
+                        {pendingImage && (
+                            <div className="absolute bottom-full left-0 mb-2 p-2 bg-white/90 dark:bg-[#202c33]/90 backdrop-blur-sm rounded-xl shadow-lg border border-black/10 dark:border-white/10 flex items-center gap-3 animate-fade-in-up z-10">
+                                <img 
+                                    src={pendingImage.url} 
+                                    alt="Preview" 
+                                    className="h-16 w-16 object-cover rounded-lg border border-black/5 dark:border-white/5" 
+                                />
+                                <div className="flex flex-col gap-1 pr-2">
+                                    <span className="text-xs font-medium text-gray-700 dark:text-gray-200 truncate max-w-[120px]">
+                                        {pendingImage.name}
+                                    </span>
+                                    <button 
+                                        type="button"
+                                        onClick={() => {
+                                            setPendingImage(null);
+                                            if (fileInputRef.current) fileInputRef.current.value = '';
+                                        }}
+                                        className="text-[10px] text-red-500 hover:text-red-600 font-semibold uppercase tracking-wider text-left hover:underline"
+                                    >
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                         <input
                             ref={inputRef}
                             type="text"
@@ -413,7 +456,7 @@ const ChatInterface = () => {
                     </div>
                 </form>
 
-                {inputValue.trim() ? (
+                {inputValue.trim() || pendingImage ? (
                     <button
                         onClick={handleSendMessage}
                         disabled={isOffline}

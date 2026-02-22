@@ -51,9 +51,8 @@ const MusicPlayer = () => {
 
     const vimeoSrc = useMemo(() => {
         if (!vimeoId) return '';
-        // Only autoplay if we're actually playing music
         return `https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=${isPlaying ? 1 : 0}&loop=1&muted=1&autopause=0&api=1`;
-    }, [vimeoId]); // Crucial: ONLY reload if ID changes, NOT on every play/pause toggle
+    }, [vimeoId]);
 
     useEffect(() => {
         if (audioRef.current) {
@@ -248,11 +247,8 @@ const MusicPlayer = () => {
         return Number(timestamp) || 0;
     };
 
-    // Lyrics logic
     const currentLyricIndex = currentSong.lyrics.findLastIndex(l => parseTimestamp(l.time) <= currentTime);
 
-    // Auto-scroll lyrics
-    // Auto-scroll lyrics - Position at top
     useEffect(() => {
         if (currentLyricIndex !== -1 && lyricsContainerRef.current) {
             const activeLyric = lyricsContainerRef.current.children[currentLyricIndex];
@@ -321,14 +317,14 @@ const MusicPlayer = () => {
 
                 {/* Album Cover Section */}
                 <div className={`flex flex-col items-center transition-all duration-700 ${!showLyrics ? 'mb-4' : ''}`}>
-                    <div className="relative group">
+                    <div className="relative group w-full flex justify-center">
                         {/* Glowing Ring behind cover */}
-                        <div className={`absolute -inset-4 bg-gradient-to-tr from-[#ff00ff] to-[#00ffff] rounded-full blur-2xl transition-opacity duration-1000 ${isPlaying ? 'opacity-30 animate-pulse' : 'opacity-0'}`} />
+                        <div className={`absolute -inset-4 bg-gradient-to-tr from-[#ff00ff] to-[#00ffff] rounded-2xl blur-2xl transition-opacity duration-1000 ${isPlaying ? 'opacity-30 animate-pulse' : 'opacity-0'}`} />
 
                         <img
                             src={currentSong.coverUrl}
                             alt={currentSong.title}
-                            className={`object-cover rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-700 ${showLyrics ? 'w-72 h-72 md:w-96 md:h-96' : 'w-48 h-48 md:w-64 md:h-64'} ${isPlaying ? 'scale-105 rotate-1' : 'scale-100'}`}
+                            className={`object-cover rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-700 aspect-video ${showLyrics ? 'w-full max-w-lg' : 'w-72 md:w-96'} ${isPlaying ? 'scale-105 rotate-1' : 'scale-100'}`}
                         />
                     </div>
 
