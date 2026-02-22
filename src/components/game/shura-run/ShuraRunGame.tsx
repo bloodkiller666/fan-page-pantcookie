@@ -1,11 +1,14 @@
 'use client';
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { submitGameScore } from '../../../utils/supabaseScoreService';
+import Leaderboard from '../Leaderboard';
 
 export default function ShuraRunGame() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
+    const [playerName, setPlayerName] = useState('');
     const GRAVITY = 0.5;
     const JUMP_FORCE = -15;
     const INITIAL_SPEED = 3;
@@ -38,9 +41,11 @@ export default function ShuraRunGame() {
     useEffect(() => {
         const savedScore = localStorage.getItem('shuraRunHighScore');
         if (savedScore) setHighScore(parseInt(savedScore));
+        const savedName = localStorage.getItem('playerName');
+        if (savedName) setPlayerName(savedName);
     }, []);
 
-    const gameOver = useCallback(() => {
+    const gameOver = useCallback(async () => {
         isPlayingRef.current = false;
         setGameState('gameover');
         if (requestRef.current) cancelAnimationFrame(requestRef.current);
@@ -49,6 +54,10 @@ export default function ShuraRunGame() {
             localStorage.setItem('shuraRunHighScore', scoreRef.current.toString());
             setHighScore(scoreRef.current);
         }
+        
+        // Submit to Supabase if we have a name
+        const name = localStorage.getItem('playerName') || 'Anonymous';
+        await submitGameScore('shura_run', name, scoreRef.current);
     }, []);
 
     const gameLoop = useCallback((time: number) => {
@@ -188,6 +197,17 @@ export default function ShuraRunGame() {
     }, []);
 
     const startGame = () => {
+        if (!playerName.trim()) {
+            // Prompt if empty? Or just alert
+            const name = prompt('¡Escribe tu nombre para jugar!', playerName);
+            if (name) {
+                setPlayerName(name);
+                localStorage.setItem('playerName', name);
+            } else {
+                return;
+            }
+        }
+        
         setGameState('playing');
         setScore(0);
         scoreRef.current = 0;
@@ -344,6 +364,13 @@ export default function ShuraRunGame() {
             
             <div className="mt-6 text-xs text-gray-400 uppercase tracking-widest font-bold">
                 [ Espacio / Tap ] para saltar
+            </div>
+
+            <div className="mt-8 w-full">
+                <Leaderboard 
+                    game="shura-run"
+                    currentPlayer={playerName}
+                />
             </div>
         </div>
     );

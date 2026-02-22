@@ -6,7 +6,7 @@ import Timer from './Timer';
 import PlayerInput from './PlayerInput';
 import Leaderboard from './Leaderboard';
 import { getRandomPuzzleImage } from '../../utils/imageSelector';
-import { submitScore } from '../../utils/localScoreService';
+import { submitGameScore } from '../../utils/supabaseScoreService';
 import { FiRefreshCw } from 'react-icons/fi';
 import { useLanguage } from '../../context/LanguageContext';
 import { useGameSounds } from '../../hooks/useGameSounds';
@@ -58,8 +58,8 @@ const PuzzleGame = () => {
         setGameState('completed');
         playVictory();
 
-        // Submit score to Firebase
-        const result = await submitScore(playerName.trim(), elapsedTime, difficulty);
+        // Submit score to Supabase
+        const result = await submitGameScore('puzzle', playerName.trim(), elapsedTime, difficulty);
 
         if (result.success) {
             console.log('Score submitted successfully!');

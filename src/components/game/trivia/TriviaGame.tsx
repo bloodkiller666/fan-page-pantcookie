@@ -8,7 +8,7 @@ import Leaderboard from '../Leaderboard';
 import { FiUsers, FiCpu, FiGlobe, FiArrowLeft } from 'react-icons/fi';
 import { MdCatchingPokemon } from 'react-icons/md';
 import { useGameSounds } from '../../../hooks/useGameSounds';
-import { submitTriviaScore } from '../../../utils/localScoreService';
+import { submitGameScore } from '../../../utils/supabaseScoreService';
 
 const TIMER_PER_QUESTION = 15;
 const TOTAL_QUESTIONS = 20;
@@ -58,8 +58,8 @@ const TriviaGame = () => {
   const { t } = useLanguage();
   const { playSelect, playCorrect, playIncorrect, playVictory, playCountdown } = useGameSounds();
   const [playerName, setPlayerName] = useState('');
-  const [category, setCategory] = useState(null); // null, 'music', 'pantcookie', 'shurahiwa'
-  const [gameMode, setGameMode] = useState(null); // null, 'timed', 'untimed'
+  const [category, setCategory] = useState<string | null>(null); // null, 'music', 'pantcookie', 'shurahiwa'
+  const [gameMode, setGameMode] = useState<'timed' | 'untimed' | null>(null); // null, 'timed', 'untimed'
   const [started, setStarted] = useState(false);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [countValue, setCountValue] = useState(3);
@@ -334,7 +334,9 @@ const TriviaGame = () => {
       setGameOver(true);
       playVictory();
       // Submit score
-      await submitTriviaScore(playerName, score, category);
+      if (category && gameMode) {
+        await submitGameScore('trivia', playerName, score, category, { mode: gameMode });
+      }
       return;
     }
     setIndex(i => i + 1);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { subscribeToLeaderboard, subscribeToTriviaLeaderboard } from '../../utils/localScoreService';
+import { getGameLeaderboard, GameType } from '../../utils/supabaseScoreService';
 import { FiAward, FiClock, FiUser, FiZap } from 'react-icons/fi';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -23,19 +23,38 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: L
     const [loading, setLoading] = useState(true);
 
     const activeFilter = game === 'puzzle' ? difficulty : category;
+    const gameType = (game === 'shura-run' ? 'shura_run' : game) as GameType;
 
     useEffect(() => {
-        if (!activeFilter) return;
-        setLoading(true);
+        // if (game === 'puzzle' && !activeFilter) return; // Puzzle needs difficulty
+        // Trivia might allow null category? The original code had: if (!activeFilter) return;
+        if (game === 'puzzle' && !activeFilter) return;
+        if (game === 'trivia' && !activeFilter) return;
+        
+        const fetchScores = async () => {
+            setLoading(true);
+            try {
+                const data = await getGameLeaderboard(gameType, activeFilter, 10);
+                const mappedScores: Score[] = data.map(s => ({
+                    id: s.id,
+                    playerName: s.player_name,
+                    time: s.game_type === 'puzzle' ? s.score : undefined,
+                    score: s.game_type !== 'puzzle' ? s.score : undefined
+                }));
+                setScores(mappedScores);
+            } catch (error) {
+                console.error("Failed to fetch leaderboard", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        const subFn = game === 'puzzle' ? subscribeToLeaderboard : subscribeToTriviaLeaderboard;
-        const unsubscribe = subFn(activeFilter, (newScores) => {
-            setScores(newScores);
-            setLoading(false);
-        }, 10);
-
-        return () => unsubscribe();
-    }, [activeFilter, game]);
+        fetchScores();
+        
+        // Refresh every 30 seconds or set up realtime later
+        const interval = setInterval(fetchScores, 30000);
+        return () => clearInterval(interval);
+    }, [activeFilter, gameType]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
