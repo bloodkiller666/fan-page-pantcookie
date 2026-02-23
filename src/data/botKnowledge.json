@@ -69,7 +69,7 @@
         },
         {
             "n": "Os San",
-            "i": "Moderador de Shura. Clipero oficial de la ShakeGang."
+            "i": "Moderador de Shura. Clipero de la ShakeGang. Es el desarrrollador de la wiki de Shura."
         },
         {
             "n": "Traminador",
@@ -97,11 +97,15 @@
         },
         {
             "n": "Cris",
-            "i": "Es moderador peruano con más clave. Es pituco."
+            "i": "Es moderador peruano con más clave. Es pituco aunque lo niegue."
         },
         {
             "n": "Mr.Pantsu",
             "i": "El hackeado. Entre los más fieles de Shura."
+        },
+        {
+            "n": "Hans Landa",
+            "i": "Le gusta participar en las actividades que realiza Shura en directo. Se lleva bien con Shuwa y los pantcookies"
         }
     ],
     "glossary": [
@@ -137,8 +141,12 @@
             "¿Viste el último stream?"
         ],
         "facts": [
-            "Panteras no son michis...",
-            "ShuraHiwa es la única que te puede darte amor y cariño a la vez"
+            "La torta de chilaquiles es una de las mejores tortas de México",
+            "Más pantcookies tiene a Motoperro de kamioshi que a ShuraHiwa",
+            "Las panteras son jagueares, pero con melanismo",
+            "A pesar de que es una pantera, usa tinte para el cabello",
+            "Nintendo se compra o se emula",
+            "En la GANG no se habla de nalguito"
         ]
     }
 }
