@@ -16,10 +16,12 @@ const VideoPlayer = ({ query = '' }) => {
 
     // List of video filenames from Cloudinary
     const videoList = [
-        { id: 'La_creadora_de_la_grasa_yrci3z', title: 'La Creadora de la Grasa' },
+        { id: 'La_creadora_de_la_grasa_yrci3z', title: 'Bautizada como que...' },
         { id: 'Shura_descuido_v2syi0', title: 'Shura Descuido' },
-        { id: 'vod-2363747114-offset-2196_bnqebg', title: 'Vod Offset 2196' },
-        { id: 'video-1080_jlejtp', title: 'Video 1080' }
+        { id: 'vod-2363747114-offset-2196_bnqebg', title: 'Vuela alto Vomori' },
+        { id: 'video-1080_jlejtp', title: 'Vomori vs Rihsuri' },
+        { id: 'ULTIMA_CHARLA_CON_MAMA_HIWA_0_t3pihy', title: 'Charlando con Mama Hiwa' },
+        { id: 'Atrapado_con_las_patas_en_la_masa_rubfeo', title: 'El mayor atraco' }
     ];
 
     const videos = useMemo(() => videoList.map((video, index) => ({
