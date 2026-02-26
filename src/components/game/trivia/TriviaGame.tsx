@@ -15,9 +15,9 @@ const TOTAL_QUESTIONS = 20;
 
 // Constantes para los nuevos modos
 const INSANE_MODE_QUESTIONS = 20;
-const INSANE_MODE_TIMER = 7; // Segundos tras reproducir
+const INSANE_MODE_TIMER = 11; // Segundos tras reproducir
 const CHAOS_MODE_QUESTIONS = 100;
-const CHAOS_MODE_TIMER = 120; // Segundos totales
+const CHAOS_MODE_TIMER = 420; // Segundos totales
 
 const getPointsByRemainingTime = (remaining, isCorrect) => {
   if (!isCorrect) return -2;
@@ -80,7 +80,7 @@ const TriviaGame = () => {
   const [scoreChange, setScoreChange] = useState<number | null>(null);
   const [showRules, setShowRules] = useState(false);
   const [pendingMode, setPendingMode] = useState(null);
-  
+
   // Stats for Chaos Mode
   const [chaosStats, setChaosStats] = useState({ correct: 0, incorrect: 0 });
 
@@ -94,14 +94,14 @@ const TriviaGame = () => {
   // Memoize questions based on selected category
   const questions = useMemo(() => {
     if (!category || !triviaQuestions[category]) return [];
-    
+
     // Logic for Music Modes
     if (category === 'music') {
-        if (gameMode === 'insane') {
-            return pickQuestions(triviaQuestions[category], INSANE_MODE_QUESTIONS);
-        } else if (gameMode === 'chaos') {
-            return pickQuestions(triviaQuestions[category], CHAOS_MODE_QUESTIONS); // Or all available if less than 100
-        }
+      if (gameMode === 'insane') {
+        return pickQuestions(triviaQuestions[category], INSANE_MODE_QUESTIONS);
+      } else if (gameMode === 'chaos') {
+        return pickQuestions(triviaQuestions[category], CHAOS_MODE_QUESTIONS); // Or all available if less than 100
+      }
     }
 
     return pickQuestions(triviaQuestions[category], TOTAL_QUESTIONS);
@@ -114,14 +114,14 @@ const TriviaGame = () => {
     // Only auto-play for non-music categories or normal modes. 
     // Insane/Chaos logic handles audio differently (manual play)
     if (category === 'music' && (gameMode === 'insane' || gameMode === 'chaos')) {
-        // Reset audio state for new question
-        if (audioRef.current) {
-            audioRef.current.pause();
-            audioRef.current.currentTime = 0;
-            setIsAudioPlaying(false);
-        }
-        setHasPlayedAudio(false);
-        return; 
+      // Reset audio state for new question
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setIsAudioPlaying(false);
+      }
+      setHasPlayedAudio(false);
+      return;
     }
 
     if (!current || !started || gameOver || !current.audioUrl) return;
@@ -199,19 +199,19 @@ const TriviaGame = () => {
   // Timer Logic
   useEffect(() => {
     if (!started || gameOver || (answered && gameMode !== 'chaos') || gameMode === 'untimed') return;
-    
+
     // Chaos Mode: Global Timer (doesn't reset per question)
     if (gameMode === 'chaos') {
-         // Logic handled separately or we use 'remaining' as global time
-         // If this effect runs, it decrements 'remaining'. 
-         // For Chaos, 'remaining' should be initialized to 120 and decrement until 0.
+      // Logic handled separately or we use 'remaining' as global time
+      // If this effect runs, it decrements 'remaining'. 
+      // For Chaos, 'remaining' should be initialized to 120 and decrement until 0.
     } else if (gameMode === 'insane') {
-        // Insane Mode: Timer only starts after audio play (if enabled) or maybe not?
-        // Requirement: "si el jugador no logra decifrar el acertijo y reproduce la canción... se encenderá un contador de 7 segundos"
-        if (!hasPlayedAudio) return; // No timer until audio is played
+      // Insane Mode: Timer only starts after audio play (if enabled) or maybe not?
+      // Requirement: "si el jugador no logra decifrar el acertijo y reproduce la canción... se encenderá un contador de 7 segundos"
+      if (!hasPlayedAudio) return; // No timer until audio is played
     } else {
-        // Normal Timed Mode
-        setRemaining(TIMER_PER_QUESTION);
+      // Normal Timed Mode
+      setRemaining(TIMER_PER_QUESTION);
     }
 
     const interval = setInterval(() => {
@@ -244,18 +244,18 @@ const TriviaGame = () => {
     setAnswered(false);
     setSelectedAnswers([]);
     setChaosStats({ correct: 0, incorrect: 0 });
-    
+
     // Initialize Timer based on Mode
     if (pendingMode === 'chaos') {
-        setRemaining(CHAOS_MODE_TIMER);
+      setRemaining(CHAOS_MODE_TIMER);
     } else if (pendingMode === 'insane') {
-        setRemaining(0); // Timer inactive initially
-        setHasPlayedAudio(false);
+      setRemaining(0); // Timer inactive initially
+      setHasPlayedAudio(false);
     } else {
-        setRemaining(TIMER_PER_QUESTION);
+      setRemaining(TIMER_PER_QUESTION);
     }
-    
-    setIsCountingDown(false); 
+
+    setIsCountingDown(false);
   }, [pendingMode]);
 
   const startGame = (mode) => {
@@ -266,31 +266,31 @@ const TriviaGame = () => {
   const confirmStartGame = () => {
     setShowRules(false);
     if (pendingMode) {
-        playSelect();
-        setGameMode(pendingMode);
-        setIsCountingDown(true);
-        setCountValue(3); 
+      playSelect();
+      setGameMode(pendingMode);
+      setIsCountingDown(true);
+      setCountValue(3);
     }
   };
-  
+
   // Manual Play for Music Modes
   const handleManualPlay = () => {
-      if (!current?.audioUrl || isAudioPlaying) return;
-      
-      const audio = new Audio(current.audioUrl);
-      audioRef.current = audio;
-      audio.volume = 0.5;
-      
-      audio.play().then(() => {
-          setIsAudioPlaying(true);
-          
-          if (gameMode === 'insane') {
-              setHasPlayedAudio(true);
-              setRemaining(INSANE_MODE_TIMER); // Start 7s countdown
-          }
-      }).catch(e => console.error(e));
-      
-      audio.onended = () => setIsAudioPlaying(false);
+    if (!current?.audioUrl || isAudioPlaying) return;
+
+    const audio = new Audio(current.audioUrl);
+    audioRef.current = audio;
+    audio.volume = 0.5;
+
+    audio.play().then(() => {
+      setIsAudioPlaying(true);
+
+      if (gameMode === 'insane') {
+        setHasPlayedAudio(true);
+        setRemaining(INSANE_MODE_TIMER); // Start 7s countdown
+      }
+    }).catch(e => console.error(e));
+
+    audio.onended = () => setIsAudioPlaying(false);
   };
 
   // Countdown logic
@@ -370,22 +370,22 @@ const TriviaGame = () => {
     }
 
     let pts = 0;
-    
+
     // Scoring Logic per Mode
     if (gameMode === 'insane') {
-        if (isCorrect) {
-            pts = hasPlayedAudio ? 3 : 5;
-        } else {
-            pts = 0; // No penalty mentioned for incorrect, but usually 0.
-        }
+      if (isCorrect) {
+        pts = hasPlayedAudio ? 3 : 5;
+      } else {
+        pts = 0; // No penalty mentioned for incorrect, but usually 0.
+      }
     } else if (gameMode === 'chaos') {
-        if (isCorrect) {
-            pts = 10;
-            setChaosStats(prev => ({ ...prev, correct: prev.correct + 1 }));
-        } else {
-            pts = -3;
-            setChaosStats(prev => ({ ...prev, incorrect: prev.incorrect + 1 }));
-        }
+      if (isCorrect) {
+        pts = 10;
+        setChaosStats(prev => ({ ...prev, correct: prev.correct + 1 }));
+      } else {
+        pts = -3;
+        setChaosStats(prev => ({ ...prev, incorrect: prev.incorrect + 1 }));
+      }
     } else if (gameMode === 'timed') {
       if (isCorrect) {
         pts = getPointsByRemainingTime(remaining, true);
@@ -415,32 +415,32 @@ const TriviaGame = () => {
     }
 
     setTimeout(() => {
-        setFeedback(null);
-        if (gameMode === 'chaos') {
-            nextQuestion(); // Auto-advance in Chaos Mode? Or manual? Usually rapid fire implies auto.
-        }
+      setFeedback(null);
+      if (gameMode === 'chaos') {
+        nextQuestion(); // Auto-advance in Chaos Mode? Or manual? Usually rapid fire implies auto.
+      }
     }, 1000);
   };
 
   const handleTimeout = () => {
     if (answered) return;
-    
+
     if (gameMode === 'chaos') {
-        // Chaos Mode Timeout = Game Over
-        setGameOver(true);
-        playVictory(); // Or failure sound?
-        return;
+      // Chaos Mode Timeout = Game Over
+      setGameOver(true);
+      playVictory(); // Or failure sound?
+      return;
     }
 
     // Insane Mode Timeout (7s passed)
     if (gameMode === 'insane') {
-        setAnswered(true);
-        setScoreChange(0); // 0 points if time runs out
-        playIncorrect();
-        setShowCorrectAnswer(true);
-        return;
+      setAnswered(true);
+      setScoreChange(0); // 0 points if time runs out
+      playIncorrect();
+      setShowCorrectAnswer(true);
+      return;
     }
-    
+
     setAnswered(true);
     setScoreChange(0);
     playIncorrect();
@@ -458,16 +458,16 @@ const TriviaGame = () => {
       }
       return;
     }
-    
+
     // Chaos Mode Success Condition (Completed all questions in time)
     if (gameMode === 'chaos' && index + 1 >= CHAOS_MODE_QUESTIONS) {
-         setGameOver(true);
-         playVictory();
-         // Submit score
-         if (category && gameMode) {
-            await submitGameScore('trivia', playerName, score, category, { mode: gameMode });
-         }
-         return;
+      setGameOver(true);
+      playVictory();
+      // Submit score
+      if (category && gameMode) {
+        await submitGameScore('trivia', playerName, score, category, { mode: gameMode });
+      }
+      return;
     }
 
     setIndex(i => i + 1);
@@ -476,11 +476,11 @@ const TriviaGame = () => {
     setShowCorrectAnswer(false);
     setScoreChange(null);
     setHasPlayedAudio(false); // Reset insane mode audio flag
-    
+
     // Chaos Mode: Timer continues running, don't reset.
     if (gameMode !== 'chaos') {
-         // Reset timer for other modes if needed (Insane handles it via audio)
-         if (gameMode === 'timed') setRemaining(TIMER_PER_QUESTION);
+      // Reset timer for other modes if needed (Insane handles it via audio)
+      if (gameMode === 'timed') setRemaining(TIMER_PER_QUESTION);
     }
   };
 
@@ -496,7 +496,7 @@ const TriviaGame = () => {
     setShowCorrectAnswer(false);
     setScoreChange(null);
     if (audioRef.current) {
-        audioRef.current.pause();
+      audioRef.current.pause();
     }
   };
 
@@ -565,80 +565,80 @@ const TriviaGame = () => {
 
   if (!started && !isCountingDown) {
     if (category === 'music') {
-        return (
-             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors text-center animate-fade-in relative">
-                <button onClick={() => setCategory(null)} className="absolute top-8 left-8 text-gray-400 hover:text-gray-600 dark:hover:text-white transition">
-                  <FiArrowLeft size={24} />
-                </button>
-        
-                <h3 className="text-2xl font-bold mb-8 neon-text-pink uppercase tracking-widest">
-                  {t('games.options.chooseMode')} (Música)
+      return (
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors text-center animate-fade-in relative">
+          <button onClick={() => setCategory(null)} className="absolute top-8 left-8 text-gray-400 hover:text-gray-600 dark:hover:text-white transition">
+            <FiArrowLeft size={24} />
+          </button>
+
+          <h3 className="text-2xl font-bold mb-8 neon-text-pink uppercase tracking-widest">
+            {t('games.options.chooseMode')} (Música)
+          </h3>
+
+          <div className="flex flex-col md:flex-row gap-6 justify-center max-w-2xl mx-auto">
+            <button
+              onClick={() => startGame('insane')}
+              className="flex-1 p-8 rounded-2xl border-4 border-red-600/30 hover:border-red-600 bg-red-600/5 hover:bg-red-600/10 transition-all group relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-2 py-1 font-bold uppercase">Hardcore</div>
+              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">🔥</div>
+              <h4 className="text-xl font-bold mb-2 text-red-600">Modo Insano</h4>
+              <p className="text-sm text-gray-500">
+                Adivina con solo el acertijo (5pts).<br />
+                Si reproduces la canción (3pts + 7s timer).
+              </p>
+            </button>
+
+            <button
+              onClick={() => startGame('chaos')}
+              className="flex-1 p-8 rounded-2xl border-4 border-purple-600/30 hover:border-purple-600 bg-purple-600/5 hover:bg-purple-600/10 transition-all group relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 bg-purple-600 text-white text-[10px] px-2 py-1 font-bold uppercase">Speedrun</div>
+              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">⚡</div>
+              <h4 className="text-xl font-bold mb-2 text-purple-600">Modo Caos</h4>
+              <p className="text-sm text-gray-500">
+                100 canciones en 120s.<br />
+                +10pts Correcto / -3pts Incorrecto.
+              </p>
+            </button>
+          </div>
+
+          {/* Rules Modal */}
+          {showRules && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-primary-blue/20">
+                <h3 className="text-2xl font-bold text-primary-blue mb-4 text-center">
+                  🧠 Reglas Musicales
                 </h3>
-        
-                <div className="flex flex-col md:flex-row gap-6 justify-center max-w-2xl mx-auto">
-                  <button
-                    onClick={() => startGame('insane')}
-                    className="flex-1 p-8 rounded-2xl border-4 border-red-600/30 hover:border-red-600 bg-red-600/5 hover:bg-red-600/10 transition-all group relative overflow-hidden"
-                  >
-                     <div className="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-2 py-1 font-bold uppercase">Hardcore</div>
-                    <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">🔥</div>
-                    <h4 className="text-xl font-bold mb-2 text-red-600">Modo Insano</h4>
-                    <p className="text-sm text-gray-500">
-                        Adivina con solo el acertijo (5pts).<br/>
-                        Si reproduces la canción (3pts + 7s timer).
-                    </p>
-                  </button>
-        
-                  <button
-                    onClick={() => startGame('chaos')}
-                    className="flex-1 p-8 rounded-2xl border-4 border-purple-600/30 hover:border-purple-600 bg-purple-600/5 hover:bg-purple-600/10 transition-all group relative overflow-hidden"
-                  >
-                    <div className="absolute top-0 right-0 bg-purple-600 text-white text-[10px] px-2 py-1 font-bold uppercase">Speedrun</div>
-                    <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">⚡</div>
-                    <h4 className="text-xl font-bold mb-2 text-purple-600">Modo Caos</h4>
-                    <p className="text-sm text-gray-500">
-                        100 canciones en 120s.<br/>
-                        +10pts Correcto / -3pts Incorrecto.
-                    </p>
-                  </button>
+                <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-8 text-left">
+                  {pendingMode === 'insane' ? (
+                    <>
+                      <p>1. Lee el acertijo e intenta adivinar sin escuchar.</p>
+                      <p>2. Si aciertas directo: <span className="text-green-500 font-bold">5 puntos</span>.</p>
+                      <p>3. Si usas el reproductor: <span className="text-yellow-500 font-bold">3 puntos</span> y tendrás solo <span className="text-red-500 font-bold">7 segundos</span> para responder.</p>
+                    </>
+                  ) : (
+                    <>
+                      <p>1. Carrera contra el reloj: 120 segundos totales.</p>
+                      <p>2. Adivina tantas como puedas (Total 100).</p>
+                      <p>3. Correcta: <span className="text-green-500 font-bold">+10 pts</span>. Incorrecta: <span className="text-red-500 font-bold">-3 pts</span>.</p>
+                      <p>4. Puedes usar el reproductor sin penalización.</p>
+                    </>
+                  )}
                 </div>
-        
-                {/* Rules Modal */}
-                {showRules && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-primary-blue/20">
-                            <h3 className="text-2xl font-bold text-primary-blue mb-4 text-center">
-                                🧠 Reglas Musicales
-                            </h3>
-                            <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-8 text-left">
-                                {pendingMode === 'insane' ? (
-                                    <>
-                                        <p>1. Lee el acertijo e intenta adivinar sin escuchar.</p>
-                                        <p>2. Si aciertas directo: <span className="text-green-500 font-bold">5 puntos</span>.</p>
-                                        <p>3. Si usas el reproductor: <span className="text-yellow-500 font-bold">3 puntos</span> y tendrás solo <span className="text-red-500 font-bold">7 segundos</span> para responder.</p>
-                                    </>
-                                ) : (
-                                    <>
-                                        <p>1. Carrera contra el reloj: 120 segundos totales.</p>
-                                        <p>2. Adivina tantas como puedas (Total 100).</p>
-                                        <p>3. Correcta: <span className="text-green-500 font-bold">+10 pts</span>. Incorrecta: <span className="text-red-500 font-bold">-3 pts</span>.</p>
-                                        <p>4. Puedes usar el reproductor sin penalización.</p>
-                                    </>
-                                )}
-                            </div>
-                            <button
-                                onClick={confirmStartGame}
-                                className="w-full btn-modern bg-primary-blue text-white shadow-lg hover:bg-blue-600 py-3 rounded-xl font-bold text-lg"
-                            >
-                                ¡A darle!
-                            </button>
-                        </div>
-                    </div>
-                )}
+                <button
+                  onClick={confirmStartGame}
+                  className="w-full btn-modern bg-primary-blue text-white shadow-lg hover:bg-blue-600 py-3 rounded-xl font-bold text-lg"
+                >
+                  ¡A darle!
+                </button>
               </div>
-        );
+            </div>
+          )}
+        </div>
+      );
     }
-  
+
     return (
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors text-center animate-fade-in relative">
         <button onClick={() => setCategory(null)} className="absolute top-8 left-8 text-gray-400 hover:text-gray-600 dark:hover:text-white transition">
@@ -671,27 +671,27 @@ const TriviaGame = () => {
 
         {/* Rules Modal */}
         {showRules && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-primary-blue/20">
-                    <h3 className="text-2xl font-bold text-primary-blue mb-4 text-center">
-                        🧠 Reglas de Trivia
-                    </h3>
-                    <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-8 text-left">
-                        <p>1. Selecciona la respuesta correcta antes de que se acabe el tiempo (si eliges modo con tiempo).</p>
-                        <p>2. Cada respuesta correcta suma puntos. ¡Las rachas dan bonificación!</p>
-                        <p>3. Diviértete y demuestra cuánto sabes de la ShakeGang.</p>
-                        {pendingMode === 'timed' && (
-                             <p className="text-sm font-bold text-primary-pink">⚠️ Modo Con Tiempo: Tienes {TIMER_PER_QUESTION} segundos por pregunta.</p>
-                        )}
-                    </div>
-                    <button
-                        onClick={confirmStartGame}
-                        className="w-full btn-modern bg-primary-blue text-white shadow-lg hover:bg-blue-600 py-3 rounded-xl font-bold text-lg"
-                    >
-                        Continuar
-                    </button>
-                </div>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-primary-blue/20">
+              <h3 className="text-2xl font-bold text-primary-blue mb-4 text-center">
+                🧠 Reglas de Trivia
+              </h3>
+              <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-8 text-left">
+                <p>1. Selecciona la respuesta correcta antes de que se acabe el tiempo (si eliges modo con tiempo).</p>
+                <p>2. Cada respuesta correcta suma puntos. ¡Las rachas dan bonificación!</p>
+                <p>3. Diviértete y demuestra cuánto sabes de la ShakeGang.</p>
+                {pendingMode === 'timed' && (
+                  <p className="text-sm font-bold text-primary-pink">⚠️ Modo Con Tiempo: Tienes {TIMER_PER_QUESTION} segundos por pregunta.</p>
+                )}
+              </div>
+              <button
+                onClick={confirmStartGame}
+                className="w-full btn-modern bg-primary-blue text-white shadow-lg hover:bg-blue-600 py-3 rounded-xl font-bold text-lg"
+              >
+                Continuar
+              </button>
             </div>
+          </div>
         )}
       </div>
     );
@@ -839,60 +839,60 @@ const TriviaGame = () => {
 
               {/* BARRA DE TIEMPO / JUGADOR DE MUSICA */}
               {gameMode === 'insane' ? (
-                 <div className="mb-8">
-                     <div className="flex flex-col items-center gap-4">
-                        <button 
-                            onClick={handleManualPlay}
-                            disabled={hasPlayedAudio || isAudioPlaying || answered}
-                            className={`px-8 py-4 rounded-xl font-black uppercase tracking-widest text-white shadow-[4px_4px_0px_0px_black] transition-all
+                <div className="mb-8">
+                  <div className="flex flex-col items-center gap-4">
+                    <button
+                      onClick={handleManualPlay}
+                      disabled={hasPlayedAudio || isAudioPlaying || answered}
+                      className={`px-8 py-4 rounded-xl font-black uppercase tracking-widest text-white shadow-[4px_4px_0px_0px_black] transition-all
                                 ${hasPlayedAudio ? 'bg-gray-500 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 active:translate-y-1 active:shadow-none animate-pulse'}
                             `}
-                        >
-                            {isAudioPlaying ? 'Reproduciendo...' : hasPlayedAudio ? 'Pista Usada' : '▶ Escuchar Pista (-2 pts)'}
-                        </button>
-                        
-                        {hasPlayedAudio && !answered && (
-                            <div className="w-full bg-black border-4 border-black rounded-xl h-8 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden relative mt-2">
-                                <motion.div 
-                                    className="h-full bg-red-500"
-                                    initial={{ width: "100%" }}
-                                    animate={{ width: `${(remaining / INSANE_MODE_TIMER) * 100}%` }}
-                                    transition={{ ease: "linear", duration: 1 }}
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-xs">
-                                    {remaining}s
-                                </div>
-                            </div>
-                        )}
-                     </div>
-                 </div>
+                    >
+                      {isAudioPlaying ? 'Reproduciendo...' : hasPlayedAudio ? 'Pista Usada' : '▶ Escuchar Pista (-2 pts)'}
+                    </button>
+
+                    {hasPlayedAudio && !answered && (
+                      <div className="w-full bg-black border-4 border-black rounded-xl h-8 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden relative mt-2">
+                        <motion.div
+                          className="h-full bg-red-500"
+                          initial={{ width: "100%" }}
+                          animate={{ width: `${(remaining / INSANE_MODE_TIMER) * 100}%` }}
+                          transition={{ ease: "linear", duration: 1 }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-xs">
+                          {remaining}s
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
               ) : gameMode === 'chaos' ? (
-                 <div className="mb-8">
-                     <div className="w-full bg-black border-4 border-black rounded-xl h-12 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden relative">
-                          <motion.div 
-                                className="h-full bg-purple-600"
-                                initial={{ width: "100%" }}
-                                animate={{ width: `${(remaining / CHAOS_MODE_TIMER) * 100}%` }}
-                                transition={{ ease: "linear", duration: 1 }}
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-lg">
-                                TIEMPO TOTAL: {remaining}s
-                            </div>
-                     </div>
-                     <div className="flex justify-center gap-4 mt-2 text-xs font-bold uppercase">
-                        <span className="text-green-500">Correctas: {chaosStats.correct}</span>
-                        <span className="text-red-500">Incorrectas: {chaosStats.incorrect}</span>
-                     </div>
-                      <div className="flex justify-center mt-4">
-                        <button 
-                            onClick={handleManualPlay}
-                            disabled={isAudioPlaying || answered}
-                            className="text-xs text-purple-400 hover:text-purple-300 underline"
-                        >
-                            {isAudioPlaying ? 'Reproduciendo...' : '▶ Escuchar Canción'}
-                        </button>
-                     </div>
-                 </div>
+                <div className="mb-8">
+                  <div className="w-full bg-black border-4 border-black rounded-xl h-12 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden relative">
+                    <motion.div
+                      className="h-full bg-purple-600"
+                      initial={{ width: "100%" }}
+                      animate={{ width: `${(remaining / CHAOS_MODE_TIMER) * 100}%` }}
+                      transition={{ ease: "linear", duration: 1 }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-lg">
+                      TIEMPO TOTAL: {remaining}s
+                    </div>
+                  </div>
+                  <div className="flex justify-center gap-4 mt-2 text-xs font-bold uppercase">
+                    <span className="text-green-500">Correctas: {chaosStats.correct}</span>
+                    <span className="text-red-500">Incorrectas: {chaosStats.incorrect}</span>
+                  </div>
+                  <div className="flex justify-center mt-4">
+                    <button
+                      onClick={handleManualPlay}
+                      disabled={isAudioPlaying || answered}
+                      className="text-xs text-purple-400 hover:text-purple-300 underline"
+                    >
+                      {isAudioPlaying ? 'Reproduciendo...' : '▶ Escuchar Canción'}
+                    </button>
+                  </div>
+                </div>
               ) : gameMode === 'timed' && (
                 <div className="w-full bg-black border-4 border-black rounded-xl h-12 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden mb-8 relative">
                   {/* Progress Bar */}
@@ -918,42 +918,42 @@ const TriviaGame = () => {
               {index === 0 && !answered && (
                 <div className="mb-10 p-4 border-4 border-black bg-white dark:bg-black rounded-2xl shadow-[4px_4px_0px_0px_black] flex flex-wrap justify-center gap-6 text-[10px] uppercase tracking-[0.2em] font-black">
                   {gameMode === 'insane' ? (
-                       <>
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
-                            <span>Acertijo: 5pts</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-black" />
-                            <span>Con Audio: 3pts</span>
-                        </div>
-                       </>
+                    <>
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
+                        <span>Acertijo: 5pts</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-black" />
+                        <span>Con Audio: 3pts</span>
+                      </div>
+                    </>
                   ) : gameMode === 'chaos' ? (
-                       <>
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
-                            <span>Correcto: +10pts</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-red-500 border-2 border-black" />
-                            <span>Incorrecto: -3pts</span>
-                        </div>
-                       </>
+                    <>
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
+                        <span>Correcto: +10pts</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-red-500 border-2 border-black" />
+                        <span>Incorrecto: -3pts</span>
+                      </div>
+                    </>
                   ) : (
-                      <>
-                          <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
-                            <span>{t('games.options.legendCorrect')}: {gameMode === 'timed' ? 'UP TO 5pts' : '5pts'}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-black" />
-                            <span>{t('games.options.legendPartial')}: 1pt</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-red-500 border-2 border-black" />
-                            <span>{t('games.options.legendIncorrect')}: {gameMode === 'timed' ? '-2pts' : '0pts'}</span>
-                          </div>
-                      </>
+                    <>
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
+                        <span>{t('games.options.legendCorrect')}: {gameMode === 'timed' ? 'UP TO 5pts' : '5pts'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-black" />
+                        <span>{t('games.options.legendPartial')}: 1pt</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-red-500 border-2 border-black" />
+                        <span>{t('games.options.legendIncorrect')}: {gameMode === 'timed' ? '-2pts' : '0pts'}</span>
+                      </div>
+                    </>
                   )}
                 </div>
               )}

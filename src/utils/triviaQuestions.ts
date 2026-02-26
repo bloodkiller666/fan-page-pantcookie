@@ -770,27 +770,43 @@ export const triviaQuestions = {
     },
     {
       id: 397,
-      difficulty: '',
-      question: '',
-      options: ['', '', '', ''],
-      correctIndex: 3,
-      audioUrl: ''
+      difficulty: 'medium',
+      question: 'Soy un sonido que parece venir de una cuerda pequeña y alegre, una señal que viaja por el aire buscando sintonizar con alguien que se mueve en una onda distinta a la de los demás. No eres una extraña, eres la pieza que faltaba en mi radio personal para que la melodía por fin tenga sentido.',
+      options: ['Hey Soul Sister', 'Riptide', 'I\'m Yours', 'Drops of Jupiter'],
+      correctIndex: 0,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Train%20-%20Hey%2C%20Soul%20Sister%20(Official%20Video).mp3'
     },
     {
       id: 398,
-      difficulty: '',
-      question: '',
-      options: ['', '', '', ''],
+      difficulty: 'medium',
+      question: 'Una pregunta que se repite cada vez que algo extraño sucede en las sombras. Seguimos el rastro de un enigma que nadie más se atreve a resolver, esperando que un grupo de amigos y un acompañante un tanto miedoso desenmascaren la verdad antes de que termine el episodio.',
+      options: ['Teen Titans', 'I\'m Just a Kid', 'Ghostbusters', 'What\'s New Scooby-Doo'],
       correctIndex: 3,
-      audioUrl: ''
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/What\'s%20New%20Scooby-Doo%20(Intro%20Completo)%20(By_%20Simple%20Plan)%20(Subtitulado%20al%20Espa%C3%B1ol%20%20Lyrics).mp3'
     },
     {
       id: 399,
-      difficulty: '',
-      question: '',
-      options: ['', '', '', ''],
-      correctIndex: 3,
-      audioUrl: ''
+      difficulty: 'medium',
+      question: 'Un camino largo que se divide por un momento, pero cuyos rastros volverán a cruzarse en otro horizonte. Es el recuento de cada kilómetro recorrido hombro a hombro, una promesa escrita en el asfalto que asegura que la distancia es solo una pausa antes de volver a contar las historias que quedaron pendientes.',
+      options: ['I\'ll Be Missing You', 'See You Again', 'When I See You Smile', 'One Sweet Day'],
+      correctIndex: 1,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Wiz%20Khalifa%20-%20See%20You%20Again%20ft.%20Charlie%20Puth%20%5BOfficial%20Video%5D%20Furious%207%20Soundtrack.mp3'
+    },
+    {
+      id: 400,
+      difficulty: 'hard',
+      question: 'Un lugar donde el joven cansado puede encontrar un techo y una nueva dirección. Es una mano extendida que promete que no hay necesidad de sentirse solo cuando el mundo exterior parece darte la espalda; solo tienes que cruzar la puerta, dejar el orgullo fuera y unirte a un grupo donde todos son bienvenidos por igual.',
+      options: ['YMCA', 'Rasputin', 'Moscou', 'Macho Man'],
+      correctIndex: 0,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/YMCA.mp3'
+    },
+    {
+      id: 401,
+      difficulty: 'medium',
+      question: 'Una mano de grafito se extiende desde el vacío para arrastrarte a un mundo donde las leyes de la física no existen. Es una carrera contra el tiempo y contra figuras que no perdonan, donde la única forma de sobrevivir es aceptar el desafío de entregarse por completo a alguien que solo vive en trazos y sombras.',
+      options: ['Sledgehammer', 'The Sun Always Shines on T.V.', 'Take On Me', 'Back On Track'],
+      correctIndex: 2,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/a-ha%20-%20Take%20On%20Me%20(Lyrics).mp3'
     },
   ],
   shurahiwa: [
