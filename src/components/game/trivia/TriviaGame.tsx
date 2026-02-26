@@ -17,7 +17,7 @@ const TOTAL_QUESTIONS = 20;
 const INSANE_MODE_QUESTIONS = 20;
 const INSANE_MODE_TIMER = 11; // Segundos tras reproducir
 const CHAOS_MODE_QUESTIONS = 100;
-const CHAOS_MODE_TIMER = 420; // Segundos totales
+const CHAOS_MODE_TIMER = 480; // Segundos totales
 
 const getPointsByRemainingTime = (remaining, isCorrect) => {
   if (!isCorrect) return -2;
