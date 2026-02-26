@@ -325,7 +325,7 @@ export const triviaQuestions = {
       difficulty: 'medium',
       question: 'Soy una descarga de energía que rescata el sonido de los años 80, con un ritmo tan frenético que muchos me confundieron con una obra de The Police. Mi esencia es una mezcla de reggae-rock y funk, impulsada por una batería explosiva y un falsete que canta sobre una conexión tan intensa que parece divina. Represento la sensación de haber estado atrapado fuera de un paraíso al que, finalmente, mi autor ha logrado entrar.',
       options: ['The Lazy Song', 'Count On Me', 'Locked Out Of Heaven', 'APT.'],
-      correctIndex: 3,
+      correctIndex: 2,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Bruno%20Mars%20-%20Locked%20Out%20Of%20Heaven.mp3'
     },
     {

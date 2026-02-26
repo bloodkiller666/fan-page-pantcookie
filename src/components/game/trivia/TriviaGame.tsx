@@ -17,7 +17,7 @@ const TOTAL_QUESTIONS = 20;
 const INSANE_MODE_QUESTIONS = 20;
 const INSANE_MODE_TIMER = 11; // Segundos tras reproducir
 const CHAOS_MODE_QUESTIONS = 100;
-const CHAOS_MODE_TIMER = 480; // Segundos totales
+const CHAOS_MODE_TIMER = 2400; // Segundos totales
 
 const getPointsByRemainingTime = (remaining, isCorrect) => {
   if (!isCorrect) return -2;
@@ -822,7 +822,7 @@ const TriviaGame = () => {
                     {category}
                   </div>
                   <div className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-bold">
-                    {index + 1}/{TOTAL_QUESTIONS}
+                    {index + 1}/{gameMode === 'chaos' ? CHAOS_MODE_QUESTIONS : TOTAL_QUESTIONS}
                   </div>
                 </div>
 
@@ -887,7 +887,9 @@ const TriviaGame = () => {
                     <button
                       onClick={handleManualPlay}
                       disabled={isAudioPlaying || answered}
-                      className="text-xs text-purple-400 hover:text-purple-300 underline"
+                      className={`px-6 py-2 rounded-lg font-black uppercase tracking-widest text-white shadow-[2px_2px_0px_0px_black] transition-all text-xs
+                        ${answered ? 'bg-gray-500 cursor-not-allowed opacity-50' : 'bg-purple-600 hover:bg-purple-500 active:translate-y-0.5 active:shadow-none'}
+                      `}
                     >
                       {isAudioPlaying ? 'Reproduciendo...' : '▶ Escuchar Canción'}
                     </button>
