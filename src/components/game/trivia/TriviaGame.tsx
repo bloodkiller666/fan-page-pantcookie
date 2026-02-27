@@ -1049,126 +1049,126 @@ const TriviaGame = () => {
               </button>
             </div>
           </div>
-
-          <div className="md:col-span-1">
-            <Leaderboard category={category} currentPlayer={playerName} game="trivia" />
-          </div>
         </div>
 
-        {/* PAUSE MENU OVERLAY */}
-        <AnimatePresence>
-          {showPauseMenu && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
-            >
-              <motion.div
-                initial={{ scale: 0.9, y: 20 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-sm w-full p-8 border-4 border-black"
-              >
-                <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">PAUSA</h3>
-                <div className="flex flex-col gap-4">
-                  <button
-                    onClick={() => setShowPauseMenu(false)}
-                    className="w-full py-4 bg-primary-blue text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                  >
-                    Continuar
-                  </button>
-                  <button
-                    onClick={() => setShowRestartConfirm(true)}
-                    className="w-full py-4 bg-yellow-500 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                  >
-                    Reiniciar
-                  </button>
-                  <button
-                    onClick={() => setShowExitConfirm(true)}
-                    className="w-full py-4 bg-red-600 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                  >
-                    Salir
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-
-          {/* RESTART CONFIRMATION */}
-          {showRestartConfirm && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
-            >
-              <motion.div
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
-              >
-                <p className="text-xl font-black mb-6 dark:text-white uppercase italic">¿Estás seguro de reiniciar?</p>
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => {
-                      setShowRestartConfirm(false);
-                      setShowPauseMenu(false);
-                      setIsCountingDown(true);
-                      setCountValue(3);
-                    }}
-                    className="flex-1 py-3 bg-green-500 text-white font-black uppercase rounded-xl border-2 border-black"
-                  >
-                    Sí
-                  </button>
-                  <button
-                    onClick={() => setShowRestartConfirm(false)}
-                    className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
-                  >
-                    No
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-
-          {/* EXIT CONFIRMATION */}
-          {showExitConfirm && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
-            >
-              <motion.div
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
-              >
-                <p className="text-xl font-black mb-6 dark:text-white uppercase italic">¿Estás seguro de salir?</p>
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => {
-                      setShowExitConfirm(false);
-                      setShowPauseMenu(false);
-                      resetToSelection();
-                    }}
-                    className="flex-1 py-3 bg-red-600 text-white font-black uppercase rounded-xl border-2 border-black"
-                  >
-                    Sí
-                  </button>
-                  <button
-                    onClick={() => setShowExitConfirm(false)}
-                    className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
-                  >
-                    No
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="md:col-span-1">
+          <Leaderboard category={category} currentPlayer={playerName} game="trivia" />
+        </div>
       </div>
+
+      {/* PAUSE MENU OVERLAY */}
+      <AnimatePresence>
+        {showPauseMenu && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-sm w-full p-8 border-4 border-black"
+            >
+              <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">PAUSA</h3>
+              <div className="flex flex-col gap-4">
+                <button
+                  onClick={() => setShowPauseMenu(false)}
+                  className="w-full py-4 bg-primary-blue text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
+                >
+                  Continuar
+                </button>
+                <button
+                  onClick={() => setShowRestartConfirm(true)}
+                  className="w-full py-4 bg-yellow-500 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
+                >
+                  Reiniciar
+                </button>
+                <button
+                  onClick={() => setShowExitConfirm(true)}
+                  className="w-full py-4 bg-red-600 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
+                >
+                  Salir
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* RESTART CONFIRMATION */}
+        {showRestartConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
+            >
+              <p className="text-xl font-black mb-6 dark:text-white uppercase italic">¿Estás seguro de reiniciar?</p>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    setShowRestartConfirm(false);
+                    setShowPauseMenu(false);
+                    setIsCountingDown(true);
+                    setCountValue(3);
+                  }}
+                  className="flex-1 py-3 bg-green-500 text-white font-black uppercase rounded-xl border-2 border-black"
+                >
+                  Sí
+                </button>
+                <button
+                  onClick={() => setShowRestartConfirm(false)}
+                  className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
+                >
+                  No
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* EXIT CONFIRMATION */}
+        {showExitConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
+            >
+              <p className="text-xl font-black mb-6 dark:text-white uppercase italic">¿Estás seguro de salir?</p>
+              <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    setShowExitConfirm(false);
+                    setShowPauseMenu(false);
+                    resetToSelection();
+                  }}
+                  className="flex-1 py-3 bg-red-600 text-white font-black uppercase rounded-xl border-2 border-black"
+                >
+                  Sí
+                </button>
+                <button
+                  onClick={() => setShowExitConfirm(false)}
+                  className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
+                >
+                  No
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
