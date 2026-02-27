@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, onSnapshot, where, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, onSnapshot, where, serverTimestamp, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -163,6 +163,52 @@ export const subscribeToWallMessages = (callback: (messages: any[]) => void) => 
     }, (error) => {
         console.error("Error subscribing to wall messages:", error);
     });
+};
+
+// --- ADMIN FUNCTIONS ---
+
+// Get all wall messages (no limit, for admin dashboard)
+export const getAllWallMessages = async () => {
+    try {
+        const q = query(
+            collection(db, 'wall_messages'),
+            orderBy('timestamp', 'desc')
+        );
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+                timestamp: data.timestamp?.toDate ? data.timestamp.toDate() : new Date()
+            };
+        });
+    } catch (error) {
+        console.error("Error fetching all messages:", error);
+        return [];
+    }
+};
+
+// Delete a wall message
+export const deleteWallMessage = async (messageId: string) => {
+    try {
+        await deleteDoc(doc(db, 'wall_messages', messageId));
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting message:", error);
+        return { success: false, error };
+    }
+};
+
+// Update a wall message (e.g. moderate content)
+export const updateWallMessage = async (messageId: string, newData: any) => {
+    try {
+        await updateDoc(doc(db, 'wall_messages', messageId), newData);
+        return { success: true };
+    } catch (error) {
+        console.error("Error updating message:", error);
+        return { success: false, error };
+    }
 };
 
 export { db };
