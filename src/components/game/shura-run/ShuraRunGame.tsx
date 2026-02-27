@@ -10,6 +10,8 @@ export default function ShuraRunGame() {
     const [highScore, setHighScore] = useState(0);
     const [playerName, setPlayerName] = useState('');
     const [updateMessage, setUpdateMessage] = useState<string | null>(null);
+    const [isPaused, setIsPaused] = useState(false);
+    const [showPauseMenu, setShowPauseMenu] = useState(false);
     const GRAVITY = 0.5;
     const JUMP_FORCE = -15;
     const INITIAL_SPEED = 3;
@@ -17,6 +19,7 @@ export default function ShuraRunGame() {
     const INITIAL_OBSTACLE_INTERVAL = 1800;
     const requestRef = useRef<number | null>(null);
     const isPlayingRef = useRef(false);
+    const isPausedRef = useRef(false);
     const scoreRef = useRef(0);
     const speedRef = useRef(INITIAL_SPEED);
     const lastTimeRef = useRef(0);
@@ -67,7 +70,7 @@ export default function ShuraRunGame() {
     }, []);
 
     const gameLoop = useCallback((time: number) => {
-        if (!isPlayingRef.current) return;
+        if (!isPlayingRef.current || isPausedRef.current) return;
 
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -225,7 +228,24 @@ export default function ShuraRunGame() {
 
         lastTimeRef.current = 0;
         lastObstacleTimeRef.current = performance.now();
+        setIsPaused(false);
+        isPausedRef.current = false;
+        setShowPauseMenu(false);
     };
+
+    const togglePause = useCallback(() => {
+        if (gameState !== 'playing') return;
+
+        const newPaused = !isPausedRef.current;
+        setIsPaused(newPaused);
+        isPausedRef.current = newPaused;
+        setShowPauseMenu(newPaused);
+
+        if (!newPaused) {
+            lastTimeRef.current = performance.now();
+            requestRef.current = requestAnimationFrame(gameLoop);
+        }
+    }, [gameState, gameLoop]);
 
     useEffect(() => {
         if (gameState === 'playing') {
@@ -252,31 +272,39 @@ export default function ShuraRunGame() {
             }
             if (e.code === 'ArrowDown') {
                 e.preventDefault();
-                if (gameState === 'playing') fastFall();
+                if (gameState === 'playing' && !isPausedRef.current) fastFall();
+            }
+            if (e.code === 'KeyP' || e.code === 'Escape') {
+                e.preventDefault();
+                togglePause();
             }
         };
 
         const handleKeyUp = (e: KeyboardEvent) => {
             if (e.code === 'Space' || e.code === 'ArrowUp') {
-                if (gameState === 'playing') cutJump();
+                if (gameState === 'playing' && !isPausedRef.current) cutJump();
             }
         };
 
         const handleTouchStart = (e: TouchEvent) => {
-            if (gameState === 'playing') jump();
+            if (gameState === 'playing') {
+                if (!isPausedRef.current) jump();
+            }
             else startGame();
         };
 
         const handleTouchEnd = (e: TouchEvent) => {
-            if (gameState === 'playing') cutJump();
+            if (gameState === 'playing' && !isPausedRef.current) cutJump();
         };
 
         const handleMouseDown = (e: MouseEvent) => {
-            if (gameState === 'playing') jump();
+            if (gameState === 'playing') {
+                if (!isPausedRef.current) jump();
+            }
         };
 
         const handleMouseUp = (e: MouseEvent) => {
-            if (gameState === 'playing') cutJump();
+            if (gameState === 'playing' && !isPausedRef.current) cutJump();
         };
 
         window.addEventListener('keydown', handleKeyDown);
@@ -294,11 +322,11 @@ export default function ShuraRunGame() {
             window.removeEventListener('mousedown', handleMouseDown);
             window.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [gameState, jump, cutJump, fastFall]);
+    }, [gameState, jump, cutJump, fastFall, togglePause]);
 
     return (
         <div className="flex flex-col items-center justify-center w-full max-w-4xl mx-auto p-4 select-none">
-            <div className="mb-4 flex justify-between w-full max-w-lg text-white font-bold uppercase tracking-wider">
+            <div className="mb-4 flex justify-between w-full max-w-lg text-gray-800 dark:text-white font-bold uppercase tracking-wider">
                 <div>Score: <span className="text-pokemon-yellow">{score}</span></div>
                 <div>High Score: <span className="text-pokemon-pink">{highScore}</span></div>
             </div>
@@ -307,19 +335,19 @@ export default function ShuraRunGame() {
                 className="relative rounded-2xl overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] bg-slate-800 touch-none"
                 onClick={(e) => {
                     e.stopPropagation();
-                    if (gameState === 'playing') jump();
+                    if (gameState === 'playing' && !isPausedRef.current) jump();
                 }}
                 onMouseDown={(e) => {
-                    if (gameState === 'playing') jump();
+                    if (gameState === 'playing' && !isPausedRef.current) jump();
                 }}
                 onMouseUp={(e) => {
-                    if (gameState === 'playing') cutJump();
+                    if (gameState === 'playing' && !isPausedRef.current) cutJump();
                 }}
                 onTouchStart={(e) => {
-                    if (gameState === 'playing') jump();
+                    if (gameState === 'playing' && !isPausedRef.current) jump();
                 }}
                 onTouchEnd={(e) => {
-                    if (gameState === 'playing') cutJump();
+                    if (gameState === 'playing' && !isPausedRef.current) cutJump();
                 }}
             >
                 <canvas
@@ -373,6 +401,44 @@ export default function ShuraRunGame() {
                         >
                             REINTENTAR
                         </button>
+                    </div>
+                )}
+
+                {/* PAUSE MENU OVERLAY */}
+                {showPauseMenu && (
+                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+                        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-xs w-full p-8 border-4 border-black animate-fade-in-up">
+                            <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">PAUSA</h3>
+                            <div className="flex flex-col gap-4">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        togglePause();
+                                    }}
+                                    className="w-full py-4 bg-pokemon-blue text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
+                                >
+                                    Continuar
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        startGame();
+                                    }}
+                                    className="w-full py-4 bg-pokemon-yellow text-black font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
+                                >
+                                    Reiniciar
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setGameState('start');
+                                    }}
+                                    className="w-full py-4 bg-red-600 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
+                                >
+                                    Salir
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>

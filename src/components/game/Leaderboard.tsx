@@ -82,9 +82,11 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: L
 
             <div className="mb-4 text-center">
                 <span className="inline-block bg-gradient-to-r from-primary-pink to-primary-blue text-white px-4 py-2 rounded-full text-sm font-semibold capitalize">
-                    {game === 'puzzle'
-                        ? t(`games.difficultyOptions.${difficulty}`)
-                        : (category ? (category.includes(':') ? category.split(':')[1].toUpperCase() : (category.charAt(0).toUpperCase() + category.slice(1))) : '')}
+                    {game === 'shura-run'
+                        ? 'Runners'
+                        : (game === 'puzzle'
+                            ? t(`games.difficultyOptions.${difficulty}`)
+                            : (category ? (category.includes(':') ? category.split(':')[1].toUpperCase() : (category.charAt(0).toUpperCase() + category.slice(1))) : ''))}
                 </span>
             </div>
 

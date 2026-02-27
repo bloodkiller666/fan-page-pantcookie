@@ -62,11 +62,20 @@ export const submitGameScore = async (
         return { success: true, updated: false, ignored: true };
       }
 
-      // 3. Delete old record if we are updating
-      const { error: deleteError } = await supabase
+      // 3. Delete old records if we are updating (cleans up any potential duplicates too)
+      let deleteQuery = supabase
         .from('game_scores')
         .delete()
-        .eq('id', existingScore.id);
+        .eq('player_name', playerName)
+        .eq('game_type', gameType);
+
+      if (difficulty) {
+        deleteQuery = deleteQuery.eq('difficulty', difficulty);
+      } else {
+        deleteQuery = deleteQuery.is('difficulty', null);
+      }
+
+      const { error: deleteError } = await deleteQuery;
 
       if (deleteError) throw deleteError;
     }
