@@ -22,7 +22,7 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: L
     const [scores, setScores] = useState<Score[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const activeFilter = game === 'puzzle' ? difficulty : category;
+    const activeFilter = (game === 'puzzle' || game === 'shura-run') ? difficulty : category;
     const gameType = (game === 'shura-run' ? 'shura_run' : game) as GameType;
 
     useEffect(() => {
@@ -30,11 +30,15 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: L
         // Trivia might allow null category? The original code had: if (!activeFilter) return;
         if (game === 'puzzle' && !activeFilter) return;
         if (game === 'trivia' && !activeFilter) return;
-        
+
         const fetchScores = async () => {
             setLoading(true);
             try {
                 const data = await getGameLeaderboard(gameType, activeFilter, 10);
+                // Also fetch mode-specific if this is music and no mode is specified yet? 
+                // Wait, if activeFilter is just 'music', it won't find 'music:timed'.
+                // So if activeFilter is 'music', we might want to default to 'music:timed' or show a selector.
+                // For now, let's just make sure it maps correctly.
                 const mappedScores: Score[] = data.map(s => ({
                     id: s.id,
                     playerName: s.player_name,
@@ -50,7 +54,7 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: L
         };
 
         fetchScores();
-        
+
         // Refresh every 30 seconds or set up realtime later
         const interval = setInterval(fetchScores, 30000);
         return () => clearInterval(interval);
@@ -80,7 +84,7 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: L
                 <span className="inline-block bg-gradient-to-r from-primary-pink to-primary-blue text-white px-4 py-2 rounded-full text-sm font-semibold capitalize">
                     {game === 'puzzle'
                         ? t(`games.difficultyOptions.${difficulty}`)
-                        : (category ? (category.charAt(0).toUpperCase() + category.slice(1)) : '')}
+                        : (category ? (category.includes(':') ? category.split(':')[1].toUpperCase() : (category.charAt(0).toUpperCase() + category.slice(1))) : '')}
                 </span>
             </div>
 

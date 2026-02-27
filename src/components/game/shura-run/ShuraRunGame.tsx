@@ -9,6 +9,7 @@ export default function ShuraRunGame() {
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
     const [playerName, setPlayerName] = useState('');
+    const [updateMessage, setUpdateMessage] = useState<string | null>(null);
     const GRAVITY = 0.5;
     const JUMP_FORCE = -15;
     const INITIAL_SPEED = 3;
@@ -20,15 +21,15 @@ export default function ShuraRunGame() {
     const speedRef = useRef(INITIAL_SPEED);
     const lastTimeRef = useRef(0);
     const lastObstacleTimeRef = useRef(0);
-    const playerRef = useRef({ 
-        x: 50, 
-        y: 200, 
-        width: 40, 
-        height: 40, 
-        dy: 0, 
-        grounded: true 
+    const playerRef = useRef({
+        x: 50,
+        y: 200,
+        width: 40,
+        height: 40,
+        dy: 0,
+        grounded: true
     });
-    
+
     const obstaclesRef = useRef<Array<{
         x: number;
         y: number;
@@ -54,10 +55,15 @@ export default function ShuraRunGame() {
             localStorage.setItem('shuraRunHighScore', scoreRef.current.toString());
             setHighScore(scoreRef.current);
         }
-        
+
         // Submit to Supabase if we have a name
         const name = localStorage.getItem('playerName') || 'Anonymous';
-        await submitGameScore('shura_run', name, scoreRef.current);
+        const result = await submitGameScore('shura_run', name, scoreRef.current);
+
+        if (result.success && result.updated) {
+            setUpdateMessage('¡Actualizando puntuación! Nuevo récord detectado.');
+            setTimeout(() => setUpdateMessage(null), 3000);
+        }
     }, []);
 
     const gameLoop = useCallback((time: number) => {
@@ -105,7 +111,7 @@ export default function ShuraRunGame() {
 
         obstaclesRef.current.forEach(obs => {
             obs.x -= speedRef.current;
-            
+
             if (
                 player.x < obs.x + obs.width &&
                 player.x + player.width > obs.x &&
@@ -191,14 +197,12 @@ export default function ShuraRunGame() {
 
     const fastFall = useCallback(() => {
         if (isPlayingRef.current && !playerRef.current.grounded) {
-            // Push down instantly but smoother
             playerRef.current.dy = Math.max(playerRef.current.dy + 2, 12);
         }
     }, []);
 
     const startGame = () => {
         if (!playerName.trim()) {
-            // Prompt if empty? Or just alert
             const name = prompt('¡Escribe tu nombre para jugar!', playerName);
             if (name) {
                 setPlayerName(name);
@@ -207,14 +211,18 @@ export default function ShuraRunGame() {
                 return;
             }
         }
-        
+
+        // Load high score
+        const savedHigh = localStorage.getItem('shuraRunHighScore');
+        setHighScore(savedHigh ? parseInt(savedHigh) : 0);
+
         setGameState('playing');
         setScore(0);
         scoreRef.current = 0;
         speedRef.current = INITIAL_SPEED;
         playerRef.current = { x: 50, y: 200, width: 40, height: 40, dy: 0, grounded: true };
         obstaclesRef.current = [];
-        
+
         lastTimeRef.current = 0;
         lastObstacleTimeRef.current = performance.now();
     };
@@ -253,10 +261,10 @@ export default function ShuraRunGame() {
                 if (gameState === 'playing') cutJump();
             }
         };
-        
+
         const handleTouchStart = (e: TouchEvent) => {
-             if (gameState === 'playing') jump();
-             else startGame();
+            if (gameState === 'playing') jump();
+            else startGame();
         };
 
         const handleTouchEnd = (e: TouchEvent) => {
@@ -295,7 +303,7 @@ export default function ShuraRunGame() {
                 <div>High Score: <span className="text-pokemon-pink">{highScore}</span></div>
             </div>
 
-            <div 
+            <div
                 className="relative rounded-2xl overflow-hidden border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.5)] bg-slate-800 touch-none"
                 onClick={(e) => {
                     e.stopPropagation();
@@ -314,22 +322,23 @@ export default function ShuraRunGame() {
                     if (gameState === 'playing') cutJump();
                 }}
             >
-                <canvas 
-                    ref={canvasRef} 
-                    width={800} 
-                    height={400} 
+                <canvas
+                    ref={canvasRef}
+                    width={800}
+                    height={400}
                     className="w-full max-w-full h-auto block bg-[#87CEEB]"
                 />
-                
+
                 {gameState === 'start' && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white p-6 text-center z-10">
                         <h2 className="text-4xl md:text-6xl font-black text-pokemon-yellow mb-4 uppercase italic tracking-tighter transform -rotate-3">Shura Run</h2>
+
                         <p className="mb-8 text-gray-300 font-medium text-lg">
-                            Presiona <span className="bg-white text-black px-2 rounded">ESPACIO</span> o TOCA para saltar. 
-                            <br/> 
+                            Presiona <span className="bg-white text-black px-2 rounded">ESPACIO</span> o TOCA para saltar.
+                            <br />
                             <span className="text-sm mt-2 block opacity-80">Esquiva los cuadrados rojos (Haters) y come Pantcakes 🥞.</span>
                         </p>
-                        <button 
+                        <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 startGame();
@@ -343,13 +352,19 @@ export default function ShuraRunGame() {
 
                 {gameState === 'gameover' && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white p-6 text-center z-10 animate-fade-in">
-                        <h2 className="text-5xl font-black text-red-500 mb-2 uppercase tracking-tighter">¡Game Over!</h2>
+                        {updateMessage ? (
+                            <div className="mb-8 p-4 bg-pokemon-yellow text-black font-bold rounded-xl animate-bounce border-2 border-black">
+                                {updateMessage}
+                            </div>
+                        ) : (
+                            <h2 className="text-5xl font-black text-red-500 mb-2 uppercase tracking-tighter">¡Game Over!</h2>
+                        )}
                         <div className="text-2xl mb-8 font-bold">
                             Puntaje: <span className="text-pokemon-yellow">{score}</span>
-                            <br/>
+                            <br />
                             <span className="text-sm text-gray-400 font-normal uppercase tracking-widest">Mejor: {highScore}</span>
                         </div>
-                        <button 
+                        <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 startGame();
@@ -361,14 +376,14 @@ export default function ShuraRunGame() {
                     </div>
                 )}
             </div>
-            
+
             <div className="mt-6 text-xs text-gray-400 uppercase tracking-widest font-bold">
                 [ Espacio / Tap ] para saltar
             </div>
 
             <div className="mt-8 w-full">
-                <Leaderboard 
-                    game="shura-run"
+                <Leaderboard
+                    game="shura_run"
                     currentPlayer={playerName}
                 />
             </div>

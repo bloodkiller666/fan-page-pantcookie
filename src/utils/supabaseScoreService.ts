@@ -28,6 +28,50 @@ export const submitGameScore = async (
   metadata?: any
 ) => {
   try {
+    // 1. Check for existing score for this player/game/difficulty
+    let query = supabase
+      .from('game_scores')
+      .select('*')
+      .eq('player_name', playerName)
+      .eq('game_type', gameType);
+
+    if (difficulty) {
+      query = query.eq('difficulty', difficulty);
+    } else {
+      query = query.is('difficulty', null);
+    }
+
+    const { data: existingScores, error: fetchError } = await query;
+
+    if (fetchError) throw fetchError;
+
+    const existingScore = existingScores && existingScores.length > 0 ? existingScores[0] : null;
+
+    // 2. Compare scores
+    let shouldUpdate = false;
+    if (existingScore) {
+      // For puzzle, lower score is better
+      if (gameType === 'puzzle') {
+        if (score < existingScore.score) shouldUpdate = true;
+      } else {
+        // For others, higher score is better
+        if (score > existingScore.score) shouldUpdate = true;
+      }
+
+      if (!shouldUpdate) {
+        return { success: true, updated: false, ignored: true };
+      }
+
+      // 3. Delete old record if we are updating
+      const { error: deleteError } = await supabase
+        .from('game_scores')
+        .delete()
+        .eq('id', existingScore.id);
+
+      if (deleteError) throw deleteError;
+    }
+
+    // 4. Insert new score
     const { data, error } = await supabase
       .from('game_scores')
       .insert([
@@ -43,7 +87,7 @@ export const submitGameScore = async (
       .single();
 
     if (error) throw error;
-    return { success: true, data };
+    return { success: true, updated: !!existingScore, data };
   } catch (error) {
     console.error('Error submitting score to Supabase:', error);
     return { success: false, error };

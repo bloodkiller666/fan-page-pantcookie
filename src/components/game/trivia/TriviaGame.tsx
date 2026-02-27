@@ -68,6 +68,7 @@ const TriviaGame = () => {
   const [gameMode, setGameMode] = useState<'timed' | 'untimed' | 'insane' | 'chaos' | null>(null); // Added 'insane' and 'chaos'
   const [started, setStarted] = useState(false);
   const [isCountingDown, setIsCountingDown] = useState(false);
+  const [updateMessage, setUpdateMessage] = useState<string | null>(null);
   const [countValue, setCountValue] = useState(3);
   const [feedback, setFeedback] = useState<{ type: 'correct' | 'incorrect' | 'timeout'; text: string } | null>(null);
   const [index, setIndex] = useState(0);
@@ -454,7 +455,13 @@ const TriviaGame = () => {
       playVictory();
       // Submit score
       if (category && gameMode) {
-        await submitGameScore('trivia', playerName, score, category, { mode: gameMode });
+        const scoreDifficulty = category === 'music' ? `${category}:${gameMode}` : category;
+        const result = await submitGameScore('trivia', playerName, score, scoreDifficulty, { mode: gameMode });
+
+        if (result.success && result.updated) {
+          setUpdateMessage('¡Actualizando puntuación! Nuevo récord detectado.');
+          setTimeout(() => setUpdateMessage(null), 3500);
+        }
       }
       return;
     }
@@ -465,7 +472,13 @@ const TriviaGame = () => {
       playVictory();
       // Submit score
       if (category && gameMode) {
-        await submitGameScore('trivia', playerName, score, category, { mode: gameMode });
+        const scoreDifficulty = category === 'music' ? `${category}:${gameMode}` : category;
+        const result = await submitGameScore('trivia', playerName, score, scoreDifficulty, { mode: gameMode });
+
+        if (result.success && result.updated) {
+          setUpdateMessage('¡Actualizando puntuación! Nuevo récord detectado.');
+          setTimeout(() => setUpdateMessage(null), 3500);
+        }
       }
       return;
     }
@@ -780,7 +793,7 @@ const TriviaGame = () => {
             </div>
           </div>
           <div className="md:col-span-1">
-            <Leaderboard category={category} currentPlayer={playerName} game="trivia" />
+            <Leaderboard category={category === 'music' ? `${category}:${gameMode}` : category} currentPlayer={playerName} game="trivia" />
           </div>
         </div>
       </div>
@@ -817,6 +830,18 @@ const TriviaGame = () => {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-blue/5 rounded-full blur-3xl -z-0 pointer-events-none" />
 
             <div className="relative z-10">
+              <AnimatePresence>
+                {updateMessage && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 bg-pokemon-yellow text-black px-6 py-2 rounded-full font-black text-sm border-4 border-black shadow-[4px_4px_0px_0px_black] z-[100] whitespace-nowrap"
+                  >
+                    {updateMessage}
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <div className="flex items-center justify-between mb-8">
                 <button
                   onClick={() => setShowPauseMenu(true)}
@@ -1052,7 +1077,7 @@ const TriviaGame = () => {
         </div>
 
         <div className="md:col-span-1">
-          <Leaderboard category={category} currentPlayer={playerName} game="trivia" />
+          <Leaderboard category={category === 'music' ? `${category}:${gameMode}` : (category || undefined)} currentPlayer={playerName} game="trivia" />
         </div>
       </div>
 
