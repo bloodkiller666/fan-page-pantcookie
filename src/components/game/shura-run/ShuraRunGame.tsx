@@ -12,6 +12,7 @@ export default function ShuraRunGame() {
     const [updateMessage, setUpdateMessage] = useState<string | null>(null);
     const [isPaused, setIsPaused] = useState(false);
     const [showPauseMenu, setShowPauseMenu] = useState(false);
+    const [showExitConfirm, setShowExitConfirm] = useState(false);
     const GRAVITY = 0.5;
     const JUMP_FORCE = -15;
     const INITIAL_SPEED = 3;
@@ -231,6 +232,14 @@ export default function ShuraRunGame() {
         setIsPaused(false);
         isPausedRef.current = false;
         setShowPauseMenu(false);
+        setShowExitConfirm(false);
+
+        // Ensure loop restarts if already in playing state
+        if (gameState === 'playing') {
+            lastTimeRef.current = performance.now();
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+            requestRef.current = requestAnimationFrame(gameLoop);
+        }
     };
 
     const togglePause = useCallback(() => {
@@ -431,11 +440,42 @@ export default function ShuraRunGame() {
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        setGameState('start');
+                                        setShowExitConfirm(true);
                                     }}
                                     className="w-full py-4 bg-red-600 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                                 >
                                     Salir
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* EXIT CONFIRMATION MODAL */}
+                {showExitConfirm && (
+                    <div className="absolute inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
+                        <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center">
+                            <h3 className="text-2xl font-black mb-6 dark:text-white uppercase italic">¿Deseas salir?</h3>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setGameState('start');
+                                        setShowExitConfirm(false);
+                                        setShowPauseMenu(false);
+                                    }}
+                                    className="flex-1 py-4 bg-green-500 text-white font-black uppercase rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
+                                >
+                                    SÍ
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShowExitConfirm(false);
+                                    }}
+                                    className="flex-1 py-4 bg-red-500 text-white font-black uppercase rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
+                                >
+                                    NO
                                 </button>
                             </div>
                         </div>

@@ -63,21 +63,17 @@ export const submitGameScore = async (
       }
 
       // 3. Delete old records if we are updating (cleans up any potential duplicates too)
-      let deleteQuery = supabase
+      const { error: deleteError } = await supabase
         .from('game_scores')
         .delete()
         .eq('player_name', playerName)
-        .eq('game_type', gameType);
+        .eq('game_type', gameType)
+        .eq('difficulty', difficulty || null);
 
-      if (difficulty) {
-        deleteQuery = deleteQuery.eq('difficulty', difficulty);
-      } else {
-        deleteQuery = deleteQuery.is('difficulty', null);
+      if (deleteError) {
+        console.error('Error deleting old scores:', deleteError);
+        throw deleteError;
       }
-
-      const { error: deleteError } = await deleteQuery;
-
-      if (deleteError) throw deleteError;
     }
 
     // 4. Insert new score
@@ -88,7 +84,7 @@ export const submitGameScore = async (
           player_name: playerName,
           game_type: gameType,
           score: score,
-          difficulty: difficulty,
+          difficulty: difficulty || null,
           metadata: metadata,
         },
       ])

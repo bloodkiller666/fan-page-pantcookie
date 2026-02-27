@@ -326,8 +326,14 @@ const ChatInterface = () => {
                 {/* Scrollable Messages Area */}
                 <div
                     ref={scrollContainerRef}
-                    className="absolute inset-0 overflow-y-auto p-4 space-y-2 z-10 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scroll-smooth"
+                    className="absolute inset-0 overflow-y-auto p-4 space-y-2 z-10 scrollbar-hide scroll-smooth"
+                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
+                    <style jsx>{`
+                        div::-webkit-scrollbar {
+                            display: none;
+                        }
+                    `}</style>
                     {/* Security Message Mock */}
                     <div className="flex justify-center mb-4">
                         <div className="bg-[#fff5c4] dark:bg-[#182229]/80 backdrop-blur-sm text-gray-800 dark:text-[#ffde00] text-[10px] px-3 py-1.5 rounded-lg shadow-md border border-yellow-500/20 text-center max-w-[80%] font-medium">
