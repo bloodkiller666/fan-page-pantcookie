@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiX, FiCheck, FiCpu, FiCalendar, FiImage, FiYoutube, FiInfo, FiSmartphone } from 'react-icons/fi';
+import { FiX, FiCheck, FiCpu, FiCalendar, FiImage, FiYoutube, FiInfo, FiMusic, FiSmartphone, FiVideo, FiMessageSquare } from 'react-icons/fi';
+import { FaGamepad } from "react-icons/fa";
 import { MdCatchingPokemon } from 'react-icons/md';
 
 export default function UpdateModal() {
@@ -81,9 +82,29 @@ export default function UpdateModal() {
                                     desc="Fotos y fanarts en alta calidad con un visor moderno."
                                 />
                                 <FeatureItem 
+                                    icon={<FiVideo className="text-orange-500" size={24} />}
+                                    title="Videos Mejorado"
+                                    desc="Videos con un reproductor moderno con ajuste de calidad y con pantalla completa."
+                                />
+                                <FeatureItem 
+                                    icon={<FiMusic className="text-blue-500" size={24} />}
+                                    title="Música Mejorado"
+                                    desc="Reproductor estilo Spotify con video de fondo, lyrics incorporados y cinco estilos de barras sonoras."
+                                />
+                                <FeatureItem 
+                                    icon={<FaGamepad className="text-purple-500" size={24} />}
+                                    title="Integración de Juegos"
+                                    desc="Tres juegos integrados: Puzzle, Preguntados y Shura Run"
+                                />
+                                <FeatureItem 
                                     icon={<FiCpu className="text-green-500" size={24} />}
                                     title="Pantcookie IA"
                                     desc="Interactúa con la nueva inteligencia artificial de la comunidad."
+                                />
+                                <FeatureItem 
+                                    icon={<FiMessageSquare className="text-purple-500" size={24} />}
+                                    title="Mensajes Mejorado"
+                                    desc="Puedes escribir tu mensaje y subir tu arte, leerlo en una sección aparte con estilo Padlet."
                                 />
                                 <FeatureItem 
                                     icon={<FiInfo className="text-yellow-500" size={24} />}
