@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useGameSounds } from '../../hooks/useGameSounds';
 
-const PuzzleBoard = ({ image, difficulty, onComplete }) => {
+const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { image: string, difficulty: string, onComplete: () => void, isCompleted?: boolean }) => {
     const { t } = useLanguage();
     const { playSelect, playSwap, playIncorrect, playCorrect } = useGameSounds();
     const [tiles, setTiles] = useState<number[]>([]);
-    const [selectedTileIndex, setSelectedTileIndex] = useState(null);
+    const [selectedTileIndex, setSelectedTileIndex] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     // Difficulty mapping
@@ -57,7 +57,9 @@ const PuzzleBoard = ({ image, difficulty, onComplete }) => {
         return arr;
     };
 
-    const handleTileClick = (index) => {
+    const handleTileClick = (index: number) => {
+        if (isCompleted) return;
+
         // Prevent moving tiles that are already in correct position
         const tileNumber = tiles[index];
         if (tileNumber === index) {
@@ -147,7 +149,7 @@ const PuzzleBoard = ({ image, difficulty, onComplete }) => {
     return (
         <div className="flex flex-col items-center">
             <div
-                className="grid gap-[2px] bg-gray-800 p-2 rounded-xl shadow-2xl neon-border overflow-hidden"
+                className={`grid transition-all duration-500 bg-gray-800 p-2 rounded-xl shadow-2xl neon-border overflow-hidden ${isCompleted ? 'gap-0 border-4 border-primary-pink' : 'gap-[2px]'}`}
                 style={{
                     gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
                     width: 'min(800px, 95vw)', // Much larger max width
@@ -164,23 +166,25 @@ const PuzzleBoard = ({ image, difficulty, onComplete }) => {
                             onClick={() => handleTileClick(index)}
                             className={`
                                 relative transition-all duration-200 overflow-hidden
-                                ${isCorrectPosition
-                                    ? 'z-0 opacity-100 cursor-default ring-1 ring-green-500/50'
-                                    : 'cursor-pointer hover:brightness-110 hover:sepia-[.5]'
+                                ${isCompleted 
+                                    ? 'z-0 opacity-100 cursor-default' 
+                                    : isCorrectPosition
+                                        ? 'z-0 opacity-100 cursor-default ring-1 ring-green-500/50'
+                                        : 'cursor-pointer hover:brightness-110 hover:sepia-[.5]'
                                 }
-                                ${isSelected ? 'z-10 ring-4 ring-primary-pink shadow-[0_0_15px_rgba(255,0,255,0.6)] scale-95 rounded-lg' : ''}
+                                ${isSelected && !isCompleted ? 'z-10 ring-4 ring-primary-pink shadow-[0_0_15px_rgba(255,0,255,0.6)] scale-95 rounded-lg' : ''}
                             `}
                             style={getTileStyle(tileNumber)}
                         >
                             {/* Locked Indicator */}
-                            {isCorrectPosition && (
+                            {isCorrectPosition && !isCompleted && (
                                 <div className="absolute inset-0 ring-inset ring-2 ring-green-400/30 pointer-events-none">
                                     <div className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full shadow-[0_0_5px_rgba(0,255,0,0.8)]"></div>
                                 </div>
                             )}
 
                             {/* Selection Overlay */}
-                            {isSelected && (
+                            {isSelected && !isCompleted && (
                                 <div className="absolute inset-0 bg-primary-pink/20 pointer-events-none"></div>
                             )}
                         </div>
@@ -188,13 +192,15 @@ const PuzzleBoard = ({ image, difficulty, onComplete }) => {
                 })}
             </div>
 
-            <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm flex items-center gap-2">
-                <span>Haz clic en una pieza y luego en otra para intercambiarlas.</span>
-                <span className="flex items-center gap-1 text-green-500">
-                    <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                    Piezas correctas se bloquean.
-                </span>
-            </p>
+            {!isCompleted && (
+                <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm flex items-center gap-2">
+                    <span>Haz clic en una pieza y luego en otra para intercambiarlas.</span>
+                    <span className="flex items-center gap-1 text-green-500">
+                        <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                        Piezas correctas se bloquean.
+                    </span>
+                </p>
+            )}
         </div>
     );
 };

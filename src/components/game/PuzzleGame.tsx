@@ -25,6 +25,7 @@ const PuzzleGame = () => {
     const [showPauseMenu, setShowPauseMenu] = useState(false);
     const [showRestartConfirm, setShowRestartConfirm] = useState(false);
     const [showExitConfirm, setShowExitConfirm] = useState(false);
+    const [showVictoryScreen, setShowVictoryScreen] = useState(false);
 
     useEffect(() => {
         // Load player name from localStorage
@@ -60,6 +61,7 @@ const PuzzleGame = () => {
     const handlePuzzleComplete = async () => {
         setIsTimerRunning(false);
         setGameState('completed');
+        setShowVictoryScreen(false); // Do not show victory screen immediately
         playVictory();
 
         // Submit score to Supabase
@@ -77,6 +79,7 @@ const PuzzleGame = () => {
         setElapsedTime(0);
         setIsTimerRunning(false);
         setCurrentImage('');
+        setShowVictoryScreen(false);
     };
 
     const restartGame = () => {
@@ -86,6 +89,7 @@ const PuzzleGame = () => {
         setGameState('playing');
         setElapsedTime(0);
         setIsTimerRunning(true);
+        setShowVictoryScreen(false);
     };
 
     const changeDifficulty = (newDifficulty) => {
@@ -95,6 +99,7 @@ const PuzzleGame = () => {
         }
         setDifficulty(newDifficulty);
         setGameState('setup'); // Force back to setup to ensure clean state
+        setShowVictoryScreen(false);
     };
 
     return (
@@ -142,16 +147,27 @@ const PuzzleGame = () => {
                         )}
 
                         {/* Puzzle Board */}
-                        {gameState === 'playing' && (
-                            <PuzzleBoard
-                                image={currentImage}
-                                difficulty={difficulty}
-                                onComplete={handlePuzzleComplete}
-                            />
+                        {(gameState === 'playing' || (gameState === 'completed' && !showVictoryScreen)) && (
+                            <div className="flex flex-col items-center animate-fade-in relative">
+                                <PuzzleBoard
+                                    image={currentImage}
+                                    difficulty={difficulty}
+                                    onComplete={handlePuzzleComplete}
+                                    isCompleted={gameState === 'completed'}
+                                />
+                                {gameState === 'completed' && (
+                                    <button
+                                        onClick={() => setShowVictoryScreen(true)}
+                                        className="mt-6 px-8 py-4 bg-primary-blue text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all animate-pulse"
+                                    >
+                                        Continuar
+                                    </button>
+                                )}
+                            </div>
                         )}
 
                         {/* Completion Message */}
-                        {gameState === 'completed' && (
+                        {gameState === 'completed' && showVictoryScreen && (
                             <div className="text-center py-12 animate-fade-in-up">
                                 <div className="mb-6">
                                     <div className="text-6xl mb-4">🎉</div>
@@ -171,7 +187,7 @@ const PuzzleGame = () => {
 
                                 <button
                                     onClick={resetGame}
-                                    className="btn-modern bg-primary-pink text-white shadow-lg hover:bg-pink-600 mx-auto"
+                                    className="px-8 py-3 bg-primary-pink text-white font-bold rounded-xl shadow-lg hover:bg-pink-600 hover:scale-105 transition-all flex items-center gap-2 mx-auto uppercase tracking-wider"
                                 >
                                     <FiRefreshCw className="w-5 h-5" />
                                     {t('games.puzzle.playAgain')}

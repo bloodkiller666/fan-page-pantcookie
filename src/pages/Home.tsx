@@ -11,6 +11,7 @@ import { useLanguage } from '../context/LanguageContext';
 import WeeklyCalendar from '../components/home/WeeklyCalendar';
 import YoutubeShorts from '../components/social/YoutubeShorts';
 import { FiYoutube } from 'react-icons/fi';
+import UpdateModal from '../components/home/UpdateModal';
 
 const Home = () => {
     const { t } = useLanguage();
@@ -91,6 +92,7 @@ const Home = () => {
 
     return (
         <div ref={containerRef} className="min-h-screen bg-pattern transition-colors duration-300">
+            <UpdateModal />
             <Hero />
 
             <section ref={calendarRef} className="py-24 bg-[var(--poke-bg)] border-y-4 border-black relative overflow-hidden">
