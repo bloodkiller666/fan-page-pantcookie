@@ -94,7 +94,7 @@ const PuzzleGame = () => {
 
     const changeDifficulty = (newDifficulty) => {
         if (gameState === 'playing') {
-            const confirm = window.confirm('¿Estás seguro? Perderás el progreso actual.');
+            const confirm = window.confirm(t('common.progressLostWarning'));
             if (!confirm) return;
         }
         setDifficulty(newDifficulty);
@@ -140,7 +140,7 @@ const PuzzleGame = () => {
                                         }}
                                         className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-xs font-black uppercase tracking-widest transition-all border-2 border-black shadow-[2px_2px_0px_0px_black] active:translate-y-0.5 active:shadow-none"
                                     >
-                                        Pausa
+                                        {t('games.puzzle.pause')}
                                     </button>
                                 )}
                             </div>
@@ -160,7 +160,7 @@ const PuzzleGame = () => {
                                         onClick={() => setShowVictoryScreen(true)}
                                         className="mt-6 px-8 py-4 bg-primary-blue text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all animate-pulse"
                                     >
-                                        Continuar
+                                        {t('games.puzzle.continue')}
                                     </button>
                                 )}
                             </div>
@@ -221,19 +221,19 @@ const PuzzleGame = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-primary-pink/20">
                         <h3 className="text-2xl font-bold text-primary-pink mb-4 text-center">
-                            🧩 Reglas del Puzzle
+                            {t('games.puzzle.rulesTitle')}
                         </h3>
                         <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-8">
-                            <p>1. Arrastra las piezas para completar la imagen original.</p>
-                            <p>2. Completa el rompecabezas en el menor tiempo posible para entrar al ranking.</p>
-                            <p>3. Puedes cambiar la dificultad, pero perderás tu progreso actual.</p>
-                            <p className="text-sm italic text-gray-500">¡Buena suerte, galleta! 🍪</p>
+                            <p>{t('games.puzzle.rule1')}</p>
+                            <p>{t('games.puzzle.rule2')}</p>
+                            <p>{t('games.puzzle.rule3')}</p>
+                            <p className="text-sm italic text-gray-500">{t('games.puzzle.ruleLuck')}</p>
                         </div>
                         <button
                             onClick={confirmStartGame}
                             className="w-full btn-modern bg-primary-pink text-white shadow-lg hover:bg-pink-600 py-3 rounded-xl font-bold text-lg"
                         >
-                            Continuar
+                            {t('games.puzzle.continue')}
                         </button>
                     </div>
                 </div>
@@ -254,7 +254,7 @@ const PuzzleGame = () => {
                             exit={{ scale: 0.9, opacity: 0 }}
                             className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-sm w-full p-8 border-4 border-black"
                         >
-                            <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">PAUSA</h3>
+                            <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">{t('games.puzzle.pause')}</h3>
                             <div className="flex flex-col gap-4">
                                 <button
                                     onClick={() => {
@@ -263,19 +263,19 @@ const PuzzleGame = () => {
                                     }}
                                     className="w-full py-4 bg-primary-blue text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                                 >
-                                    Continuar
+                                    {t('games.puzzle.continue')}
                                 </button>
                                 <button
                                     onClick={() => setShowRestartConfirm(true)}
                                     className="w-full py-4 bg-yellow-500 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                                 >
-                                    Reiniciar
+                                    {t('games.puzzle.restart')}
                                 </button>
                                 <button
                                     onClick={() => setShowExitConfirm(true)}
                                     className="w-full py-4 bg-red-600 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                                 >
-                                    Salir
+                                    {t('games.puzzle.exit')}
                                 </button>
                             </div>
                         </motion.div>
@@ -295,7 +295,7 @@ const PuzzleGame = () => {
                             animate={{ scale: 1 }}
                             className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
                         >
-                            <p className="text-xl font-black mb-6 dark:text-white uppercase italic">¿Estás seguro de reiniciar?</p>
+                            <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.restartConfirm')}</p>
                             <div className="flex gap-4">
                                 <button
                                     onClick={() => {
@@ -305,13 +305,13 @@ const PuzzleGame = () => {
                                     }}
                                     className="flex-1 py-3 bg-green-500 text-white font-black uppercase rounded-xl border-2 border-black"
                                 >
-                                    Sí
+                                    {t('games.puzzle.yes')}
                                 </button>
                                 <button
                                     onClick={() => setShowRestartConfirm(false)}
                                     className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
                                 >
-                                    No
+                                    {t('games.puzzle.no')}
                                 </button>
                             </div>
                         </motion.div>
@@ -331,7 +331,7 @@ const PuzzleGame = () => {
                             animate={{ scale: 1 }}
                             className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
                         >
-                            <p className="text-xl font-black mb-6 dark:text-white uppercase italic">¿Estás seguro de salir?</p>
+                            <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.exitConfirm')}</p>
                             <div className="flex gap-4">
                                 <button
                                     onClick={() => {
@@ -341,13 +341,13 @@ const PuzzleGame = () => {
                                     }}
                                     className="flex-1 py-3 bg-red-600 text-white font-black uppercase rounded-xl border-2 border-black"
                                 >
-                                    Sí
+                                    {t('games.puzzle.yes')}
                                 </button>
                                 <button
                                     onClick={() => setShowExitConfirm(false)}
                                     className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
                                 >
-                                    No
+                                    {t('games.puzzle.no')}
                                 </button>
                             </div>
                         </motion.div>

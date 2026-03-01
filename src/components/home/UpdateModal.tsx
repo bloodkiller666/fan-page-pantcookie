@@ -1,14 +1,19 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiCheck, FiCpu, FiCalendar, FiImage, FiYoutube, FiInfo, FiMusic, FiSmartphone, FiVideo, FiMessageSquare } from 'react-icons/fi';
 import { FaGamepad } from "react-icons/fa";
+import { BiWorld } from "react-icons/bi";
+import { MdSecurity } from "react-icons/md";
 import { MdCatchingPokemon } from 'react-icons/md';
 
 export default function UpdateModal() {
     const [isOpen, setIsOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
         const hasSeenUpdate = localStorage.getItem('update_3_4_3_seen');
         if (!hasSeenUpdate) {
             // Small delay to appear after page load
@@ -22,9 +27,9 @@ export default function UpdateModal() {
         localStorage.setItem('update_3_4_3_seen', 'true');
     };
 
-    if (!isOpen) return null;
+    if (!mounted) return null;
 
-    return (
+    return createPortal(
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
@@ -37,16 +42,15 @@ export default function UpdateModal() {
                     >
                         {/* Header */}
                         <div className="bg-gradient-to-r from-primary-pink to-purple-600 p-6 text-white text-center relative overflow-hidden border-b-4 border-black">
-                            <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('/pattern.png')] bg-repeat"></div>
                             <div className="relative z-10">
                                 <span className="inline-block px-3 py-1 bg-black/20 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest mb-2 border border-white/30 shadow-sm">
                                     Novedades
                                 </span>
                                 <h2 className="text-3xl font-black uppercase italic tracking-tighter drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
-                                    Actualización 3.4.3
+                                    Actualización 3.4.4
                                 </h2>
                             </div>
-                            <button 
+                            <button
                                 onClick={handleClose}
                                 className="absolute top-4 right-4 p-2 bg-black/20 hover:bg-black/40 rounded-full transition-colors text-white"
                             >
@@ -61,55 +65,70 @@ export default function UpdateModal() {
                             </p>
 
                             <div className="grid gap-3">
-                                <FeatureItem 
+                                <FeatureItem
                                     icon={<MdCatchingPokemon className="text-red-500" size={24} />}
                                     title="Estilo Pokémon"
                                     desc="Nueva interfaz inspirada en la Pokédex y estética gamer retro."
                                 />
-                                <FeatureItem 
+                                <FeatureItem
                                     icon={<FiCalendar className="text-blue-500" size={24} />}
                                     title="Calendario Semanal"
                                     desc="Consulta los horarios de stream de ShuraHiwa directamente."
                                 />
-                                <FeatureItem 
+                                <FeatureItem
                                     icon={<FiYoutube className="text-red-600" size={24} />}
                                     title="Integración YouTube"
                                     desc="Los últimos 3 videos y shorts disponibles en la home."
                                 />
-                                <FeatureItem 
+                                <FeatureItem
                                     icon={<FiImage className="text-purple-500" size={24} />}
                                     title="Galería Mejorada"
                                     desc="Fotos y fanarts en alta calidad con un visor moderno."
                                 />
-                                <FeatureItem 
+                                <FeatureItem
                                     icon={<FiVideo className="text-orange-500" size={24} />}
                                     title="Videos Mejorado"
                                     desc="Videos con un reproductor moderno con ajuste de calidad y con pantalla completa."
                                 />
-                                <FeatureItem 
+                                <FeatureItem
                                     icon={<FiMusic className="text-blue-500" size={24} />}
                                     title="Música Mejorado"
                                     desc="Reproductor estilo Spotify con video de fondo, lyrics incorporados y cinco estilos de barras sonoras."
                                 />
-                                <FeatureItem 
+                                <FeatureItem
                                     icon={<FaGamepad className="text-purple-500" size={24} />}
                                     title="Integración de Juegos"
                                     desc="Tres juegos integrados: Puzzle, Preguntados y Shura Run"
                                 />
-                                <FeatureItem 
+                                <FeatureItem
                                     icon={<FiCpu className="text-green-500" size={24} />}
                                     title="Pantcookie IA"
                                     desc="Interactúa con la nueva inteligencia artificial de la comunidad."
                                 />
-                                <FeatureItem 
+                                <FeatureItem
                                     icon={<FiMessageSquare className="text-purple-500" size={24} />}
                                     title="Mensajes Mejorado"
                                     desc="Puedes escribir tu mensaje y subir tu arte, leerlo en una sección aparte con estilo Padlet."
                                 />
-                                <FeatureItem 
+                                <FeatureItem
                                     icon={<FiInfo className="text-yellow-500" size={24} />}
                                     title="Sobre De"
                                     desc="Conoce más sobre ShuraHiwa y la historia de los Pantcookies."
+                                />
+                                <FeatureItem
+                                    icon={<BiWorld className="text-lightgreen -500" size={24} />}
+                                    title="Idiomas"
+                                    desc="Tiene cuatro idiomas: Español, Inglés, Francés y Japonés"
+                                />
+                                <FeatureItem
+                                    icon={<FiSmartphone className="text-lightskyblue-500" size={24} />}
+                                    title="Responsive"
+                                    desc="Se adapta a cualquier dispositivo (Celular, Tablet y Laptop)"
+                                />
+                                <FeatureItem
+                                    icon={<MdSecurity className="text-firebrick -500" size={24} />}
+                                    title="Seguridad y Privacidad"
+                                    desc="Términos y condiciones, política de privacidad y cookies"
                                 />
                             </div>
                         </div>
@@ -127,7 +146,8 @@ export default function UpdateModal() {
                     </motion.div>
                 </div>
             )}
-        </AnimatePresence>
+        </AnimatePresence>,
+        document.body
     );
 }
 

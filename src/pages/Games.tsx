@@ -36,9 +36,9 @@ const GamesContent = () => {
                     </div>
                     <h1 className="text-6xl md:text-8xl font-black neon-text-pink mb-6 uppercase italic tracking-tighter">
                         {selected ? (
-                            selected === 'puzzle' ? t('games.options.puzzleTitle') : 
-                            selected === 'trivia' ? t('games.options.triviaTitle') : 
-                            t('games.options.shuraRunTitle')
+                            selected === 'puzzle' ? t('games.options.puzzleTitle') :
+                                selected === 'trivia' ? t('games.options.triviaTitle') :
+                                    t('games.options.shuraRunTitle')
                         ) : t('games.title')}
                     </h1>
                     <p className="text-xl text-gray-400 dark:text-gray-400 max-w-2xl mx-auto font-medium tracking-wide uppercase text-xs tracking-[0.2em]">
@@ -102,13 +102,13 @@ const GamesContent = () => {
                 {(selected === 'puzzle' || selected === 'trivia' || selected === 'shuraRun') && (
                     <div className="mt-8 animate-fade-in-up">
                         {/* Back Button */}
-                        <button 
+                        <button
                             onClick={() => setSelected(null)}
                             className="mb-8 px-6 py-2 rounded-xl border-2 border-gray-600 text-gray-400 hover:text-white hover:border-white transition-colors uppercase text-xs font-bold tracking-widest"
                         >
                             ← {t('common.backToSelection')}
                         </button>
-                        
+
                         <div className="relative">
                             {selected === 'puzzle' && <PuzzleGame />}
                             {selected === 'trivia' && <TriviaGame />}

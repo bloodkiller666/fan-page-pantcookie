@@ -5,6 +5,7 @@ import { FaUser, FaImage, FaPaperPlane, FaTrash, FaGlobeAmericas, FaSmile, FaChe
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { addWallMessage, subscribeToWallMessages } from '../utils/firebase';
+import { useLanguage } from '../context/LanguageContext';
 
 // Simple list of countries (can be fetched from API in future)
 const COUNTRIES = [
@@ -30,6 +31,7 @@ interface Message {
 }
 
 const MensajesContent = () => {
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'write' | 'read' | 'view'>('write'); // Fixed typing
@@ -55,19 +57,19 @@ const MensajesContent = () => {
   useEffect(() => {
     console.log("Subscribing to wall messages...");
     const unsubscribe = subscribeToWallMessages((newMessages) => {
-        console.log("Received new messages from Firebase:", newMessages);
-        if (newMessages.length === 0) {
-            console.log("No messages found in 'wall_messages' collection.");
-        }
-        setMessages(newMessages.map(msg => ({
-            id: msg.id,
-            username: msg.username,
-            country: msg.country,
-            text: msg.text,
-            image: msg.imageUrl,
-            timestamp: msg.timestamp instanceof Date ? msg.timestamp.toLocaleString() : new Date(msg.timestamp).toLocaleString(),
-            color: getRandomColor() // Note: Color is local-only for now, could be saved if needed
-        })));
+      console.log("Received new messages from Firebase:", newMessages);
+      if (newMessages.length === 0) {
+        console.log("No messages found in 'wall_messages' collection.");
+      }
+      setMessages(newMessages.map(msg => ({
+        id: msg.id,
+        username: msg.username,
+        country: msg.country,
+        text: msg.text,
+        image: msg.imageUrl,
+        timestamp: msg.timestamp instanceof Date ? msg.timestamp.toLocaleString() : new Date(msg.timestamp).toLocaleString(),
+        color: getRandomColor() // Note: Color is local-only for now, could be saved if needed
+      })));
     });
     return () => unsubscribe();
   }, []);
@@ -124,7 +126,7 @@ const MensajesContent = () => {
       // Simulate file analysis
       setTimeout(() => {
         if (file.size > 10 * 1024 * 1024) { // 10MB
-          setErrors((prev) => ({ ...prev, image: 'El archivo es demasiado grande (máx. 10MB)' }));
+          setErrors((prev) => ({ ...prev, image: t('wall.imageSizeError') }));
           setSelectedImage(null);
           setImagePreview(null);
         } else {
@@ -148,9 +150,9 @@ const MensajesContent = () => {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!username.trim()) newErrors.username = 'Falta el usuario';
-    if (!country.trim()) newErrors.country = 'Falta el país';
-    if (!messageText.trim()) newErrors.message = 'Falta el mensaje';
+    if (!username.trim()) newErrors.username = t('wall.usernameError');
+    if (!country.trim()) newErrors.country = t('wall.countryError');
+    if (!messageText.trim()) newErrors.message = t('wall.messageError');
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -161,19 +163,19 @@ const MensajesContent = () => {
     formData.append('file', file);
 
     try {
-        const response = await fetch('/api/upload', {
-            method: 'POST',
-            body: formData,
-        });
-        const data = await response.json();
-        if (data.success) {
-            return data.url;
-        } else {
-            throw new Error(data.error || 'Upload failed');
-        }
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      if (data.success) {
+        return data.url;
+      } else {
+        throw new Error(data.error || 'Upload failed');
+      }
     } catch (error) {
-        console.error("Upload error:", error);
-        return null;
+      console.error("Upload error:", error);
+      return null;
     }
   };
 
@@ -184,25 +186,25 @@ const MensajesContent = () => {
     setIsLoading(true);
 
     try {
-        let imageUrl: string | null = null;
-        if (selectedImage) {
-            imageUrl = await uploadImage(selectedImage);
-            if (!imageUrl) {
-                setErrors({ ...errors, image: 'Error al subir la imagen' });
-                setIsLoading(false);
-                return;
-            }
+      let imageUrl: string | null = null;
+      if (selectedImage) {
+        imageUrl = await uploadImage(selectedImage);
+        if (!imageUrl) {
+          setErrors({ ...errors, image: t('wall.imageUploadError') });
+          setIsLoading(false);
+          return;
         }
+      }
 
-        await addWallMessage(username, country, messageText, imageUrl);
+      await addWallMessage(username, country, messageText, imageUrl);
 
-        setIsDirty(false);
-        setShowSuccessModal(true);
+      setIsDirty(false);
+      setShowSuccessModal(true);
     } catch (error) {
-        console.error("Error sending message:", error);
-        setErrors({ ...errors, form: 'Error al enviar el mensaje. Intenta de nuevo.' });
+      console.error("Error sending message:", error);
+      setErrors({ ...errors, form: t('wall.submitError') });
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -249,7 +251,7 @@ const MensajesContent = () => {
         {/* Header & Tabs */}
         <div className="text-center mb-10">
           <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic neon-text-pink mb-8">
-            Muro de Pantcookies
+            {t('wall.title')}
           </h1>
 
           <div className="flex justify-center gap-6 mb-10">
@@ -257,13 +259,13 @@ const MensajesContent = () => {
               onClick={() => handleTabChange('write')}
               className={`${activeTab === 'write' ? 'poke-button-pink' : 'poke-button bg-white dark:bg-gray-800 text-gray-400 border-gray-300'}`}
             >
-              <FaPaperPlane className="inline mr-2" /> Escribir
+              <FaPaperPlane className="inline mr-2" /> {t('wall.write')}
             </button>
             <button
               onClick={() => handleTabChange('read')}
               className={`${activeTab === 'read' ? 'poke-button-blue' : 'poke-button bg-white dark:bg-gray-800 text-gray-400 border-gray-300'}`}
             >
-              <FaImage className="inline mr-2" /> Leer
+              <FaImage className="inline mr-2" /> {t('wall.read')}
             </button>
           </div>
         </div>
@@ -277,7 +279,7 @@ const MensajesContent = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Username */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-pokemon-pink mb-3">Usuario</label>
+                  <label className="block text-xs font-black uppercase tracking-widest text-pokemon-pink mb-3">{t('wall.usernameLabel')}</label>
                   <div className="relative">
                     <FaUser className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <input
@@ -285,7 +287,7 @@ const MensajesContent = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       className={`w-full bg-white dark:bg-black border-4 ${errors.username ? 'border-red-500' : 'border-black'} rounded-xl py-4 pl-12 pr-4 text-[var(--poke-text)] placeholder-gray-400 focus:outline-none transition-all font-black uppercase text-xs tracking-wider`}
-                      placeholder="Tu nombre de Pantcookie"
+                      placeholder={t('wall.usernamePlaceholder')}
                     />
                   </div>
                   {errors.username && <p className="text-red-500 text-xs mt-1 font-bold uppercase tracking-tight">{errors.username}</p>}
@@ -293,7 +295,7 @@ const MensajesContent = () => {
 
                 {/* Country Dropdown */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-pokemon-blue mb-3">País</label>
+                  <label className="block text-xs font-black uppercase tracking-widest text-pokemon-blue mb-3">{t('wall.countryLabel')}</label>
                   <div className="relative">
                     <FaGlobeAmericas className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
                     <select
@@ -301,7 +303,7 @@ const MensajesContent = () => {
                       onChange={(e) => setCountry(e.target.value)}
                       className={`w-full bg-white dark:bg-black border-4 ${errors.country ? 'border-red-500' : 'border-black'} rounded-xl py-4 pl-12 pr-4 text-[var(--poke-text)] placeholder-gray-400 focus:outline-none transition-all appearance-none cursor-pointer font-black uppercase text-xs tracking-wider`}
                     >
-                      <option value="" className="bg-[var(--poke-bg)]">Selecciona tu país</option>
+                      <option value="" className="bg-[var(--poke-bg)]">{t('wall.countryPlaceholder')}</option>
                       {COUNTRIES.map(c => (
                         <option key={c} value={c} className="bg-[var(--poke-bg)]">{c}</option>
                       ))}
@@ -312,7 +314,7 @@ const MensajesContent = () => {
 
                 {/* Message */}
                 <div className="relative">
-                  <label className="block text-xs font-black uppercase tracking-widest text-pokemon-pink mb-3">Mensaje</label>
+                  <label className="block text-xs font-black uppercase tracking-widest text-pokemon-pink mb-3">{t('wall.messageLabel')}</label>
                   <div className="relative">
                     <textarea
                       value={messageText}
@@ -323,7 +325,7 @@ const MensajesContent = () => {
                         }
                       }}
                       className={`w-full bg-white dark:bg-black border-4 ${errors.message ? 'border-red-500' : 'border-black'} rounded-xl py-4 px-4 text-[var(--poke-text)] placeholder-gray-400 focus:outline-none transition-all h-40 resize-none font-medium text-sm`}
-                      placeholder="Escribe algo genial..."
+                      placeholder={t('wall.messagePlaceholder')}
                     />
                     <button
                       type="button"
@@ -341,7 +343,7 @@ const MensajesContent = () => {
                   </div>
                   <div className="flex justify-end mt-1">
                     <span className="text-[10px] font-black uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                      {MAX_WORDS - countWords(messageText)} palabras restantes
+                      {MAX_WORDS - countWords(messageText)} {t('wall.wordsLeft')}
                     </span>
                   </div>
                   {errors.message && <p className="text-red-500 text-xs mt-1 font-bold uppercase tracking-tight">{errors.message}</p>}
@@ -349,7 +351,7 @@ const MensajesContent = () => {
 
                 {/* Image Upload */}
                 <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-[#00ffff] mb-2">Imagen (Opcional, máx 10MB)</label>
+                  <label className="block text-xs font-black uppercase tracking-widest text-[#00ffff] mb-2">{t('wall.imageLabel')}</label>
 
                   {!imagePreview ? (
                     <div className="relative border border-dashed border-white/20 rounded-lg p-6 bg-black/20 hover:bg-black/40 transition-all text-center cursor-pointer group">
@@ -363,26 +365,26 @@ const MensajesContent = () => {
                       {isLoading ? (
                         <div className="flex flex-col items-center justify-center gap-2 text-[#00ffff]">
                           <div className="w-8 h-8 border-2 border-[#00ffff] border-t-transparent rounded-full animate-spin"></div>
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Analizando...</span>
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em]">{t('wall.imageAnalyzing')}</span>
                         </div>
                       ) : (
                         <div className="flex flex-col items-center justify-center gap-2 text-gray-500 group-hover:text-[#00ffff] transition-colors">
                           <FaImage size={24} />
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em]">{selectedImage ? selectedImage.name : 'Subir Archivo'}</span>
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em]">{selectedImage ? selectedImage.name : t('wall.imageUpload')}</span>
                         </div>
                       )}
                     </div>
                   ) : (
                     <div className="relative mt-4 w-full h-48 rounded-lg overflow-hidden border border-white/10 group shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-                      <Image src={imagePreview} alt="Vista previa" fill className="object-cover" />
+                      <Image src={imagePreview} alt={t('wall.altUpload')} fill className="object-cover" />
                       {/* Hover Delete Action */}
                       <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <button
                           type="button"
                           onClick={removeImage}
-                          aria-label="Eliminar imagen"
+                          aria-label={t('wall.deleteImage')}
                           className="bg-red-600 hover:bg-red-700 text-white rounded-full p-3 shadow-[0_0_15px_rgba(220,38,38,0.5)] transform hover:scale-110 transition-transform"
-                          title="Eliminar imagen"
+                          title={t('wall.deleteImage')}
                         >
                           <FaTrash size={20} />
                         </button>
@@ -398,7 +400,7 @@ const MensajesContent = () => {
                   disabled={isLoading}
                   className="poke-button-pink w-full py-5 text-sm"
                 >
-                  <FaPaperPlane /> {isLoading ? 'Procesando...' : 'Publicar'}
+                  <FaPaperPlane /> {isLoading ? t('wall.submitLoading') : t('wall.submitBase')}
                 </button>
               </form>
             </div>
@@ -410,10 +412,10 @@ const MensajesContent = () => {
               {messages.length === 0 ? (
                 <div className="text-center py-20 flex flex-col items-center text-gray-400">
                   <FaImage size={64} className="mb-4 opacity-50" />
-                  <p className="text-2xl italic">El muro está vacío...</p>
-                  <p className="mt-2">¡Sé el primero en escribir un mensaje!</p>
+                  <p className="text-2xl italic">{t('wall.emptyWall')}</p>
+                  <p className="mt-2">{t('wall.emptySub')}</p>
                   <button onClick={() => handleTabChange('write')} className="mt-6 text-pink-400 hover:text-pink-300 font-bold underline">
-                    Ir a escribir
+                    {t('wall.emptyGoWrite')}
                   </button>
                 </div>
               ) : (
@@ -437,20 +439,20 @@ const MensajesContent = () => {
                           </div>
                         </div>
                         {/* Circle Badge or something */}
-                        <button onClick={() => handleDelete(msg.id)} aria-label="Borrar mensaje" className="text-white/20 hover:text-red-500 transition-colors">
+                        <button onClick={() => handleDelete(msg.id)} aria-label={t('wall.deleteMessage')} className="text-white/20 hover:text-red-500 transition-colors">
                           <FaTrash size={12} />
                         </button>
                       </div>
 
                       {msg.image && (
                         <div className="rounded-lg overflow-hidden shadow-md mb-4 border-4 border-black relative group/img">
-                          <Image 
-                            src={msg.image} 
-                            alt="User upload" 
-                            width={0} 
-                            height={0} 
-                            sizes="100vw" 
-                            className="w-full h-auto object-cover transition-all duration-500" 
+                          <Image
+                            src={msg.image}
+                            alt="User upload"
+                            width={0}
+                            height={0}
+                            sizes="100vw"
+                            className="w-full h-auto object-cover transition-all duration-500"
                           />
                         </div>
                       )}
@@ -481,21 +483,21 @@ const MensajesContent = () => {
             <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <FaCheckCircle className="text-green-500 text-5xl" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-2">¡Enviado!</h3>
-            <p className="text-gray-300 mb-8">Se ha enviado correctamente su mensaje.</p>
+            <h3 className="text-2xl font-bold text-white mb-2">{t('wall.successTitle')}</h3>
+            <p className="text-gray-300 mb-8">{t('wall.successDesc')}</p>
 
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => handleCloseSuccessModal(true)}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-colors shadow-lg"
               >
-                Ver mensaje
+                {t('wall.successView')}
               </button>
               <button
                 onClick={() => handleCloseSuccessModal(false)}
                 className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition-colors"
               >
-                Escribir otro
+                {t('wall.successWriteAnother')}
               </button>
             </div>
           </div>

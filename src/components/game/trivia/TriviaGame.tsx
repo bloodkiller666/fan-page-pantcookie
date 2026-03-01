@@ -411,11 +411,11 @@ const TriviaGame = () => {
 
     if (!isCorrect) {
       playIncorrect();
-      setFeedback({ type: 'incorrect', text: 'Incorrecto' });
+      setFeedback({ type: 'incorrect', text: t('games.trivia.incorrectFeedback') });
       setShowCorrectAnswer(true);
     } else {
       playCorrect();
-      setFeedback({ type: 'correct', text: gameMode === 'timed' && remaining > 10 ? 'Excelente' : 'Correcto' });
+      setFeedback({ type: 'correct', text: gameMode === 'timed' && remaining > 10 ? t('games.trivia.excellent') : t('games.trivia.correctFeedback') });
     }
 
     setTimeout(() => {
@@ -459,7 +459,7 @@ const TriviaGame = () => {
         const result = await submitGameScore('trivia', playerName, score, scoreDifficulty, { mode: gameMode });
 
         if (result.success && result.updated) {
-          setUpdateMessage('¡Actualizando puntuación! Nuevo récord detectado.');
+          setUpdateMessage(t('games.trivia.scoreUpdating'));
           setTimeout(() => setUpdateMessage(null), 3500);
         }
       }
@@ -476,7 +476,7 @@ const TriviaGame = () => {
         const result = await submitGameScore('trivia', playerName, score, scoreDifficulty, { mode: gameMode });
 
         if (result.success && result.updated) {
-          setUpdateMessage('¡Actualizando puntuación! Nuevo récord detectado.');
+          setUpdateMessage(t('games.trivia.scoreUpdating'));
           setTimeout(() => setUpdateMessage(null), 3500);
         }
       }
@@ -540,7 +540,7 @@ const TriviaGame = () => {
                 <FiUsers className="w-8 h-8 text-primary-blue" />
               </div>
               <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">PantCookie</h4>
-              <p className="text-xs text-center text-gray-500 dark:text-gray-400">Preguntas sobre la comunidad</p>
+              <p className="text-xs text-center text-gray-500 dark:text-gray-400">{t('games.trivia.categoryPantcookie')}</p>
             </div>
           </button>
 
@@ -554,7 +554,7 @@ const TriviaGame = () => {
                 <FiCpu className="w-8 h-8 text-primary-pink" />
               </div>
               <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">ShuraHiwa</h4>
-              <p className="text-xs text-center text-gray-500 dark:text-gray-400">Todo sobre tu VTuber favorita</p>
+              <p className="text-xs text-center text-gray-500 dark:text-gray-400">{t('games.trivia.categoryShura')}</p>
             </div>
           </button>
 
@@ -567,8 +567,8 @@ const TriviaGame = () => {
               <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <FiGlobe className="w-8 h-8 text-purple-500" />
               </div>
-              <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Canciones</h4>
-              <p className="text-xs text-center text-gray-500 dark:text-gray-400">Adivina la canción o el artista</p>
+              <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{t('games.trivia.categoryMusicTitle')}</h4>
+              <p className="text-xs text-center text-gray-500 dark:text-gray-400">{t('games.trivia.categoryMusic')}</p>
             </div>
           </button>
         </div>
@@ -595,10 +595,9 @@ const TriviaGame = () => {
             >
               <div className="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-2 py-1 font-bold uppercase">Hardcore</div>
               <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">🔥</div>
-              <h4 className="text-xl font-bold mb-2 text-red-600">Modo Insano</h4>
-              <p className="text-sm text-gray-500">
-                Adivina con solo el acertijo (5pts).<br />
-                Si reproduces la canción (3pts + 7s timer).
+              <h4 className="text-xl font-bold mb-2 text-red-600">{t('games.trivia.insaneMode')}</h4>
+              <p className="text-sm text-gray-500 whitespace-pre-line">
+                {t('games.trivia.insaneModeDesc')}
               </p>
             </button>
 
@@ -608,10 +607,9 @@ const TriviaGame = () => {
             >
               <div className="absolute top-0 right-0 bg-purple-600 text-white text-[10px] px-2 py-1 font-bold uppercase">Speedrun</div>
               <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">⚡</div>
-              <h4 className="text-xl font-bold mb-2 text-purple-600">Modo Caos</h4>
-              <p className="text-sm text-gray-500">
-                100 canciones en 120s.<br />
-                +10pts Correcto / -3pts Incorrecto.
+              <h4 className="text-xl font-bold mb-2 text-purple-600">{t('games.trivia.chaosMode')}</h4>
+              <p className="text-sm text-gray-500 whitespace-pre-line">
+                {t('games.trivia.chaosModeDesc')}
               </p>
             </button>
           </div>
@@ -621,28 +619,28 @@ const TriviaGame = () => {
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-primary-blue/20">
                 <h3 className="text-2xl font-bold text-primary-blue mb-4 text-center">
-                  🧠 Reglas Musicales
+                  🧠 {t('games.trivia.musicRulesTitle')}
                 </h3>
                 <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-8 text-left">
                   {pendingMode === 'insane' ? (
                     <>
-                      <p>1. Lee el acertijo e intenta adivinar sin escuchar.</p>
-                      <p>2. Si aciertas directo: <span className="text-green-500 font-bold">5 puntos</span>.</p>
-                      <p>3. Si usas el reproductor: <span className="text-yellow-500 font-bold">3 puntos</span> y tendrás solo <span className="text-red-500 font-bold">11 segundos</span> para responder.</p>
+                      <p>{t('games.trivia.musicInsane1')}</p>
+                      <p dangerouslySetInnerHTML={{ __html: t('games.trivia.musicInsane2') }} />
+                      <p dangerouslySetInnerHTML={{ __html: t('games.trivia.musicInsane3') }} />
                       <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center gap-3 border border-blue-200 dark:border-blue-800">
                         <FiHeadphones className="w-6 h-6 text-primary-blue animate-pulse" />
-                        <p className="text-xs font-bold text-primary-blue">Recomendado: Usa audífonos para una mejor experiencia.</p>
+                        <p className="text-xs font-bold text-primary-blue">{t('games.trivia.headphonesRecommended')}</p>
                       </div>
                     </>
                   ) : (
                     <>
-                      <p>1. Carrera contra el reloj: 2400 segundos totales.</p>
-                      <p>2. Adivina tantas como puedas (Total 100).</p>
-                      <p>3. Correcta: <span className="text-green-500 font-bold">+10 pts</span>. Incorrecta: <span className="text-red-500 font-bold">-3 pts</span>.</p>
-                      <p>4. Puedes usar el reproductor sin penalización.</p>
+                      <p>{t('games.trivia.musicChaos1')}</p>
+                      <p>{t('games.trivia.musicChaos2')}</p>
+                      <p dangerouslySetInnerHTML={{ __html: t('games.trivia.musicChaos3') }} />
+                      <p>{t('games.trivia.musicChaos4')}</p>
                       <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center gap-3 border border-blue-200 dark:border-blue-800">
                         <FiHeadphones className="w-6 h-6 text-primary-blue animate-pulse" />
-                        <p className="text-xs font-bold text-primary-blue">Recomendado: Usa audífonos para una mejor experiencia.</p>
+                        <p className="text-xs font-bold text-primary-blue">{t('games.trivia.headphonesRecommended')}</p>
                       </div>
                     </>
                   )}
@@ -651,7 +649,7 @@ const TriviaGame = () => {
                   onClick={confirmStartGame}
                   className="w-full btn-modern bg-primary-blue text-white shadow-lg hover:bg-blue-600 py-3 rounded-xl font-bold text-lg"
                 >
-                  ¡A darle!
+                  {t('games.trivia.go')}
                 </button>
               </div>
             </div>
@@ -686,7 +684,7 @@ const TriviaGame = () => {
           >
             <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">♾️</div>
             <h4 className="text-xl font-bold mb-2">{t('games.options.untimedMode')}</h4>
-            <p className="text-sm text-gray-500">Sin prisas, solo diversión</p>
+            <p className="text-sm text-gray-500">{t('games.options.untimedDesc')}</p>
           </button>
         </div>
 
@@ -695,21 +693,21 @@ const TriviaGame = () => {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-primary-blue/20">
               <h3 className="text-2xl font-bold text-primary-blue mb-4 text-center">
-                🧠 Reglas de Trivia
+                🧠 {t('games.trivia.rulesTitle')}
               </h3>
               <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-8 text-left">
-                <p>1. Selecciona la respuesta correcta antes de que se acabe el tiempo (si eliges modo con tiempo).</p>
-                <p>2. Cada respuesta correcta suma puntos. ¡Las rachas dan bonificación!</p>
-                <p>3. Diviértete y demuestra cuánto sabes de la ShakeGang.</p>
+                <p>{t('games.trivia.rule1')}</p>
+                <p>{t('games.trivia.rule2')}</p>
+                <p>{t('games.trivia.rule3')}</p>
                 {pendingMode === 'timed' && (
-                  <p className="text-sm font-bold text-primary-pink">⚠️ Modo Con Tiempo: Tienes {TIMER_PER_QUESTION} segundos por pregunta.</p>
+                  <p className="text-sm font-bold text-primary-pink">⚠️ {t('games.trivia.timedWarning').replace('{time}', TIMER_PER_QUESTION.toString())}</p>
                 )}
               </div>
               <button
                 onClick={confirmStartGame}
                 className="w-full btn-modern bg-primary-blue text-white shadow-lg hover:bg-blue-600 py-3 rounded-xl font-bold text-lg"
               >
-                Continuar
+                {t('games.puzzle.continue')}
               </button>
             </div>
           </div>
@@ -721,10 +719,10 @@ const TriviaGame = () => {
   if (isCountingDown) {
     const getStatusMessage = (value) => {
       switch (value) {
-        case 3: return 'Prepárate';
-        case 2: return 'Concentrate';
-        case 1: return 'Listos';
-        case 0: return 'A jugar';
+        case 3: return t('games.trivia.countdownReady');
+        case 2: return t('games.trivia.countdownSet');
+        case 1: return t('games.trivia.countdownSteady');
+        case 0: return t('games.trivia.countdownGo');
         default: return '';
       }
     };
@@ -776,7 +774,7 @@ const TriviaGame = () => {
           <div className="md:col-span-3">
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center animate-fade-in-up">
               <h1 className="text-4xl md:text-6xl font-black neon-text-pink mb-6 uppercase italic tracking-tighter">
-                FIN DE JUEGO
+                {t('games.shuraRun.gameOver')}
               </h1>
               <h2 className="text-3xl font-bold text-primary-pink mb-2">{playerName}</h2>
               <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
@@ -847,7 +845,7 @@ const TriviaGame = () => {
                   onClick={() => setShowPauseMenu(true)}
                   className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-xs font-black uppercase tracking-widest transition-all border-2 border-black shadow-[2px_2px_0px_0px_black] active:translate-y-0.5 active:shadow-none"
                 >
-                  Regresar
+                  {t('games.trivia.back')}
                 </button>
 
                 <div className="flex items-center gap-4">
@@ -881,7 +879,7 @@ const TriviaGame = () => {
                                 ${hasPlayedAudio ? 'bg-gray-500 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 active:translate-y-1 active:shadow-none animate-pulse'}
                             `}
                     >
-                      {isAudioPlaying ? 'Reproduciendo...' : hasPlayedAudio ? 'Pista Usada' : '▶ Escuchar Pista (-2 pts)'}
+                      {isAudioPlaying ? t('games.trivia.audioPlaying') : hasPlayedAudio ? t('games.trivia.audioUsed') : t('games.trivia.playTrack')}
                     </button>
 
                     {hasPlayedAudio && !answered && (
@@ -909,12 +907,12 @@ const TriviaGame = () => {
                       transition={{ ease: "linear", duration: 1 }}
                     />
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-lg">
-                      TIEMPO TOTAL: {remaining}s
+                      {t('games.trivia.totalTime')}: {remaining}s
                     </div>
                   </div>
                   <div className="flex justify-center gap-4 mt-2 text-xs font-bold uppercase">
-                    <span className="text-green-500">Correctas: {chaosStats.correct}</span>
-                    <span className="text-red-500">Incorrectas: {chaosStats.incorrect}</span>
+                    <span className="text-green-500">{t('games.trivia.chaosCorrect')}: {chaosStats.correct}</span>
+                    <span className="text-red-500">{t('games.trivia.chaosIncorrect')}: {chaosStats.incorrect}</span>
                   </div>
                   <div className="flex justify-center mt-4">
                     <button
@@ -924,7 +922,7 @@ const TriviaGame = () => {
                         ${answered ? 'bg-gray-500 cursor-not-allowed opacity-50' : 'bg-purple-600 hover:bg-purple-500 active:translate-y-0.5 active:shadow-none'}
                       `}
                     >
-                      {isAudioPlaying ? 'Reproduciendo...' : '▶ Escuchar Canción'}
+                      {isAudioPlaying ? t('games.trivia.audioPlaying') : t('games.trivia.playSong')}
                     </button>
                   </div>
                 </div>
@@ -956,22 +954,22 @@ const TriviaGame = () => {
                     <>
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
-                        <span>Acertijo: 5pts</span>
+                        <span>{t('games.trivia.legendInsaneRight')}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-black" />
-                        <span>Con Audio: 3pts</span>
+                        <span>{t('games.trivia.legendInsaneAudio')}</span>
                       </div>
                     </>
                   ) : gameMode === 'chaos' ? (
                     <>
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
-                        <span>Correcto: +10pts</span>
+                        <span>{t('games.trivia.legendChaosRight')}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="w-3 h-3 rounded-full bg-red-500 border-2 border-black" />
-                        <span>Incorrecto: -3pts</span>
+                        <span>{t('games.trivia.legendChaosWrong')}</span>
                       </div>
                     </>
                   ) : (
@@ -1045,10 +1043,10 @@ const TriviaGame = () => {
             {showCorrectAnswer && (
               <div className={`mb-6 p-4 rounded-xl border-l-4 ${selectedAnswers.length === 0 && gameMode === 'timed' ? 'bg-yellow-500/10 border-yellow-500' : 'bg-red-500/10 border-red-500'} animate-fade-in`}>
                 <p className="font-bold mb-1">
-                  {selectedAnswers.length === 0 && gameMode === 'timed' ? '⏰ ¡Tiempo agotado!' : '❌ Incorrecto'}
+                  {selectedAnswers.length === 0 && gameMode === 'timed' ? t('games.trivia.timeUp') : t('games.trivia.incorrect')}
                 </p>
                 <p className="text-sm opacity-90">
-                  Respuesta correcta: <span className="font-bold">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span>
+                  {t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span>
                 </p>
               </div>
             )}
@@ -1061,7 +1059,7 @@ const TriviaGame = () => {
                   className={`poke-button-blue ${selectedAnswers.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
                 >
                   <MdCatchingPokemon className="animate-spin-slow mr-2" />
-                  {t('Enviar Respuesta')}
+                  {t('games.trivia.submitAnswer')}
                 </button>
               )}
 
@@ -1096,25 +1094,25 @@ const TriviaGame = () => {
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-sm w-full p-8 border-4 border-black"
             >
-              <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">PAUSA</h3>
+              <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">{t('games.puzzle.pause')}</h3>
               <div className="flex flex-col gap-4">
                 <button
                   onClick={() => setShowPauseMenu(false)}
                   className="w-full py-4 bg-primary-blue text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                 >
-                  Continuar
+                  {t('games.puzzle.continue')}
                 </button>
                 <button
                   onClick={() => setShowRestartConfirm(true)}
                   className="w-full py-4 bg-yellow-500 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                 >
-                  Reiniciar
+                  {t('games.puzzle.restart')}
                 </button>
                 <button
                   onClick={() => setShowExitConfirm(true)}
                   className="w-full py-4 bg-red-600 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                 >
-                  Salir
+                  {t('games.puzzle.exit')}
                 </button>
               </div>
             </motion.div>
@@ -1134,7 +1132,7 @@ const TriviaGame = () => {
               animate={{ scale: 1 }}
               className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
             >
-              <p className="text-xl font-black mb-6 dark:text-white uppercase italic">¿Estás seguro de reiniciar?</p>
+              <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.restartConfirm')}</p>
               <div className="flex gap-4">
                 <button
                   onClick={() => {
@@ -1145,13 +1143,13 @@ const TriviaGame = () => {
                   }}
                   className="flex-1 py-3 bg-green-500 text-white font-black uppercase rounded-xl border-2 border-black"
                 >
-                  Sí
+                  {t('games.puzzle.yes')}
                 </button>
                 <button
                   onClick={() => setShowRestartConfirm(false)}
                   className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
                 >
-                  No
+                  {t('games.puzzle.no')}
                 </button>
               </div>
             </motion.div>
@@ -1171,7 +1169,7 @@ const TriviaGame = () => {
               animate={{ scale: 1 }}
               className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
             >
-              <p className="text-xl font-black mb-6 dark:text-white uppercase italic">¿Estás seguro de salir?</p>
+              <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.exitConfirm')}</p>
               <div className="flex gap-4">
                 <button
                   onClick={() => {
@@ -1181,13 +1179,13 @@ const TriviaGame = () => {
                   }}
                   className="flex-1 py-3 bg-red-600 text-white font-black uppercase rounded-xl border-2 border-black"
                 >
-                  Sí
+                  {t('games.puzzle.yes')}
                 </button>
                 <button
                   onClick={() => setShowExitConfirm(false)}
                   className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
                 >
-                  No
+                  {t('games.puzzle.no')}
                 </button>
               </div>
             </motion.div>

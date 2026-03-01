@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { translations } from '../utils/translations';
 
 interface LanguageContextType {
@@ -12,6 +12,20 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
     const [language, setLanguage] = useState('es');
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        const savedLang = localStorage.getItem('pantcookie_lang');
+        if (savedLang) {
+            setLanguage(savedLang);
+        }
+        setMounted(true);
+    }, []);
+
+    const handleSetLanguage = (lang: string) => {
+        setLanguage(lang);
+        localStorage.setItem('pantcookie_lang', lang);
+    };
 
     const t = (path: string) => {
         const keys = path.split('.');
@@ -37,8 +51,8 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     };
 
     return (
-        <LanguageContext.Provider value={{ language, setLanguage, t }}>
-            {children}
+        <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
+            {mounted ? children : <div className="min-h-screen bg-black" />}
         </LanguageContext.Provider>
     );
 };

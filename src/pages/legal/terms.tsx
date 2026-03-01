@@ -19,43 +19,42 @@ export default function Terms() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           <section className="poke-card p-8">
-            <h2 className="text-2xl font-black uppercase tracking-tighter mb-4">Aceptación de Uso</h2>
+            <h2 className="text-2xl font-black uppercase tracking-tighter mb-4">{t('legal.terms.acceptanceTitle')}</h2>
             <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              Al acceder y utilizar este sitio, aceptas estos Términos y Condiciones de Uso.
-              Si no estás de acuerdo con alguno de ellos, te pedimos que no utilices la Fan Page Pantcookie.
+              {t('legal.terms.acceptanceDesc')}
             </p>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">Uso del Sitio</h2>
+            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.usageTitle')}</h2>
             <ul className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed space-y-2">
-              <li>El uso del sitio debe realizarse de manera responsable y respetuosa, tanto con la comunidad como con ShuraHiwa. En particular:</li>
-              <li>1. No se permite el envío de spam, el acoso a otros usuarios ni la realización de actividades ilícitas.</li>
-              <li>2. Los juegos, rankings y contenidos interactivos tienen fines recreativos; no está permitido el uso de trampas, manipulaciones o cualquier práctica que altere su funcionamiento.</li>
+              <li>{t('legal.terms.usageDesc1')}</li>
+              <li>{t('legal.terms.usagePoint1')}</li>
+              <li>{t('legal.terms.usagePoint2')}</li>
             </ul>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">Propiedad Intelectual</h2>
+            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.intellectualTitle')}</h2>
             <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              Todo el contenido pertenece a sus respectivos autores originales. Este sitio es un proyecto no oficial, creado por fans, y no reclama la propiedad sobre marcas, imágenes, música u otros materiales referenciados.
+              {t('legal.terms.intellectualDesc')}
             </p>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">Cambios y contacto</h2>
+            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.changesTitle')}</h2>
             <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              Nos reservamos el derecho de modificar estos Términos y Condiciones en cualquier momento. Cualquier actualización será publicada en esta misma página. Para consultas o aclaraciones, puedes utilizar los canales de contacto de la comunidad.
+              {t('legal.terms.changesDesc')}
             </p>
           </section>
 
           <section className="poke-card p-8">
-            <h2 className="text-2xl font-black uppercase tracking-tighter mb-4">Contenido del Usuario</h2>
+            <h2 className="text-2xl font-black uppercase tracking-tighter mb-4">{t('legal.terms.userContentTitle')}</h2>
             <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              Al enviar mensajes, puntajes, comentarios u otro contenido, garantizas que tienes el derecho de compartirlo y que dicho contenido no infringe derechos de terceros. Asimismo, aceptas que sea mostrado dentro del sitio conforme a su finalidad.
+              {t('legal.terms.userContentDesc')}
             </p>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">Cookies y Analítica</h2>
+            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.cookiesTitle')}</h2>
             <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              Utilizamos cookies funcionales y métricas analíticas básicas con el objetivo de mejorar la experiencia del usuario y el funcionamiento del sitio. No vendemos ni comercializamos datos personales.
+              {t('legal.terms.cookiesDesc')}
             </p>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">Moderación de contenido</h2>
+            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.moderationTitle')}</h2>
             <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              Nos reservamos el derecho de revisar, moderar, ocultar o eliminar cualquier contenido enviado por los usuarios que no cumpla con estas normas o que afecte negativamente a la comunidad.
+              {t('legal.terms.moderationDesc')}
             </p>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">Uso recreativo del contenido</h2>
+            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.recreationalTitle')}</h2>
             <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              Los juegos, rankings, clasificaciones y demás contenidos interactivos del sitio tienen fines exclusivamente recreativos y comunitarios. No poseen valor comercial, económico ni competitivo oficial.
+              {t('legal.terms.recreationalDesc')}
             </p>
           </section>
         </div>

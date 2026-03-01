@@ -2,8 +2,10 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { submitGameScore } from '../../../utils/supabaseScoreService';
 import Leaderboard from '../Leaderboard';
+import { useLanguage } from '../../../context/LanguageContext';
 
 export default function ShuraRunGame() {
+    const { t } = useLanguage();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
     const [score, setScore] = useState(0);
@@ -65,7 +67,7 @@ export default function ShuraRunGame() {
         const result = await submitGameScore('shura_run', name, scoreRef.current);
 
         if (result.success && result.updated) {
-            setUpdateMessage('¡Actualizando puntuación! Nuevo récord detectado.');
+            setUpdateMessage(t('games.shuraRun.updatingScore'));
             setTimeout(() => setUpdateMessage(null), 3000);
         }
     }, []);
@@ -179,7 +181,7 @@ export default function ShuraRunGame() {
 
         ctx.fillStyle = 'black';
         ctx.font = 'bold 20px Arial';
-        ctx.fillText(`Score: ${scoreRef.current}`, 20, 40);
+        ctx.fillText(`${t('games.shuraRun.score')}: ${scoreRef.current}`, 20, 40);
 
         if (isPlayingRef.current) {
             requestRef.current = requestAnimationFrame(gameLoop);
@@ -207,7 +209,7 @@ export default function ShuraRunGame() {
 
     const startGame = () => {
         if (!playerName.trim()) {
-            const name = prompt('¡Escribe tu nombre para jugar!', playerName);
+            const name = prompt(t('common.enterName'), playerName);
             if (name) {
                 setPlayerName(name);
                 localStorage.setItem('playerName', name);
@@ -336,8 +338,8 @@ export default function ShuraRunGame() {
     return (
         <div className="flex flex-col items-center justify-center w-full max-w-4xl mx-auto p-4 select-none">
             <div className="mb-4 flex justify-between w-full max-w-lg text-gray-800 dark:text-white font-bold uppercase tracking-wider">
-                <div>Score: <span className="text-pokemon-yellow">{score}</span></div>
-                <div>High Score: <span className="text-pokemon-pink">{highScore}</span></div>
+                <div>{t('games.shuraRun.score')}: <span className="text-pokemon-yellow">{score}</span></div>
+                <div>{t('games.shuraRun.highScore')}: <span className="text-pokemon-pink">{highScore}</span></div>
             </div>
 
             <div
@@ -371,9 +373,9 @@ export default function ShuraRunGame() {
                         <h2 className="text-4xl md:text-6xl font-black text-pokemon-yellow mb-4 uppercase italic tracking-tighter transform -rotate-3">Shura Run</h2>
 
                         <p className="mb-8 text-gray-300 font-medium text-lg">
-                            Presiona <span className="bg-white text-black px-2 rounded">ESPACIO</span> o TOCA para saltar.
+                            {t('games.shuraRun.tapToJump')}
                             <br />
-                            <span className="text-sm mt-2 block opacity-80">Esquiva los cuadrados rojos (Haters) y come Pantcakes 🥞.</span>
+                            <span className="text-sm mt-2 block opacity-80">{t('games.shuraRun.instructions')}</span>
                         </p>
                         <button
                             onClick={(e) => {
@@ -382,7 +384,7 @@ export default function ShuraRunGame() {
                             }}
                             className="bg-pokemon-pink hover:bg-pink-600 text-white font-black text-xl py-4 px-10 rounded-full border-4 border-white shadow-[0_0_20px_rgba(236,72,153,0.5)] transition-transform hover:scale-110 active:scale-95 animate-pulse"
                         >
-                            ¡JUGAR AHORA!
+                            {t('games.shuraRun.playNow')}
                         </button>
                     </div>
                 )}
@@ -394,12 +396,12 @@ export default function ShuraRunGame() {
                                 {updateMessage}
                             </div>
                         ) : (
-                            <h2 className="text-5xl font-black text-red-500 mb-2 uppercase tracking-tighter">¡Game Over!</h2>
+                            <h2 className="text-5xl font-black text-red-500 mb-2 uppercase tracking-tighter">{t('games.shuraRun.gameOver')}</h2>
                         )}
                         <div className="text-2xl mb-8 font-bold">
-                            Puntaje: <span className="text-pokemon-yellow">{score}</span>
+                            {t('common.score')}: <span className="text-pokemon-yellow">{score}</span>
                             <br />
-                            <span className="text-sm text-gray-400 font-normal uppercase tracking-widest">Mejor: {highScore}</span>
+                            <span className="text-sm text-gray-400 font-normal uppercase tracking-widest">{t('games.shuraRun.best')}: {highScore}</span>
                         </div>
                         <button
                             onClick={(e) => {
@@ -408,7 +410,7 @@ export default function ShuraRunGame() {
                             }}
                             className="bg-pokemon-blue hover:bg-blue-600 text-white font-black text-xl py-4 px-10 rounded-full border-4 border-white shadow-[0_0_20px_rgba(59,130,246,0.5)] transition-transform hover:scale-110 active:scale-95"
                         >
-                            REINTENTAR
+                            {t('games.shuraRun.retry')}
                         </button>
                     </div>
                 )}
@@ -417,7 +419,7 @@ export default function ShuraRunGame() {
                 {showPauseMenu && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
                         <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-xs w-full p-8 border-4 border-black animate-fade-in-up">
-                            <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">PAUSA</h3>
+                            <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">{t('games.puzzle.pause')}</h3>
                             <div className="flex flex-col gap-4">
                                 <button
                                     onClick={(e) => {
@@ -426,7 +428,7 @@ export default function ShuraRunGame() {
                                     }}
                                     className="w-full py-4 bg-pokemon-blue text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                                 >
-                                    Continuar
+                                    {t('games.puzzle.continue')}
                                 </button>
                                 <button
                                     onClick={(e) => {
@@ -435,7 +437,7 @@ export default function ShuraRunGame() {
                                     }}
                                     className="w-full py-4 bg-pokemon-yellow text-black font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                                 >
-                                    Reiniciar
+                                    {t('games.puzzle.restart')}
                                 </button>
                                 <button
                                     onClick={(e) => {
@@ -444,7 +446,7 @@ export default function ShuraRunGame() {
                                     }}
                                     className="w-full py-4 bg-red-600 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                                 >
-                                    Salir
+                                    {t('games.puzzle.exit')}
                                 </button>
                             </div>
                         </div>
@@ -455,7 +457,7 @@ export default function ShuraRunGame() {
                 {showExitConfirm && (
                     <div className="absolute inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
                         <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center">
-                            <h3 className="text-2xl font-black mb-6 dark:text-white uppercase italic">¿Deseas salir?</h3>
+                            <h3 className="text-2xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.exitConfirm')}</h3>
                             <div className="flex gap-4">
                                 <button
                                     onClick={(e) => {
@@ -466,7 +468,7 @@ export default function ShuraRunGame() {
                                     }}
                                     className="flex-1 py-4 bg-green-500 text-white font-black uppercase rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                                 >
-                                    SÍ
+                                    {t('games.puzzle.yes')}
                                 </button>
                                 <button
                                     onClick={(e) => {
@@ -475,7 +477,7 @@ export default function ShuraRunGame() {
                                     }}
                                     className="flex-1 py-4 bg-red-500 text-white font-black uppercase rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
                                 >
-                                    NO
+                                    {t('games.puzzle.no')}
                                 </button>
                             </div>
                         </div>
@@ -484,7 +486,7 @@ export default function ShuraRunGame() {
             </div>
 
             <div className="mt-6 text-xs text-gray-400 uppercase tracking-widest font-bold">
-                [ Espacio / Tap ] para saltar
+                {t('games.shuraRun.tapToJump')}
             </div>
 
             <div className="mt-8 w-full">
