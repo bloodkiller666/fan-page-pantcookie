@@ -15,10 +15,10 @@ const Hero = () => {
     const titleRef = useRef<HTMLHeadingElement>(null);
     const subtitleRef = useRef<HTMLParagraphElement>(null);
     const buttonsRef = useRef<HTMLDivElement>(null);
-    const bgRef = useRef<HTMLDivElement>(null);
+    const bgRef = useRef<HTMLVideoElement>(null);
 
-    // Reverted to local file since it couldn't be uploaded to Cloudinary (size limit)
-    const bgImage = '/Fotos/SHBD24_2.gif';
+    // Cloudflare R2 Video Loop
+    const bgVideo = 'https://pub-ed644fbc43ed4c4788d9c013963a7b8e.r2.dev/%E3%80%90%20PancitoMerge%20%E3%80%91Cozy%20Game%20mexicanoooo%20%F0%9F%A5%90%E2%9D%A4%EF%B8%8F_%F0%9F%A9%B9%20-%20Shura%20Hiwa%20Ch.%20(720p%2C%20h264%2C%20youtube).mp4';
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -75,17 +75,20 @@ const Hero = () => {
             ref={heroRef}
             className="relative min-h-screen flex items-center justify-center text-white overflow-hidden py-20"
         >
-            {/* Dynamic Background Image */}
-            <div
+            {/* Dynamic Background Video */}
+            <video
                 ref={bgRef}
-                className="absolute inset-0 z-0 scale-105"
+                className="absolute inset-0 z-0 w-full h-full object-cover scale-105"
+                autoPlay
+                loop
+                muted
+                playsInline
                 style={{
-                    backgroundImage: `url('${bgImage}')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
                     filter: 'brightness(0.4) contrast(1.2)'
                 }}
-            />
+            >
+                <source src={bgVideo} type="video/mp4" />
+            </video>
 
             {/* Poke-Gamer Accents */}
             <div className="absolute inset-0 bg-pattern opacity-10 pointer-events-none" />

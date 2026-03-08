@@ -7,10 +7,11 @@ import Timer from './Timer';
 import PlayerInput from './PlayerInput';
 import Leaderboard from './Leaderboard';
 import { getRandomPuzzleImage } from '../../utils/imageSelector';
-import { submitGameScore } from '../../utils/supabaseScoreService';
+import { submitGameScore, checkExistingScore } from '../../utils/supabaseScoreService';
 import { FiRefreshCw } from 'react-icons/fi';
 import { useLanguage } from '../../context/LanguageContext';
 import { useGameSounds } from '../../hooks/useGameSounds';
+import ScoreOverwriteModal from './ScoreOverwriteModal';
 
 const PuzzleGame = () => {
     const { t } = useLanguage();
@@ -26,6 +27,8 @@ const PuzzleGame = () => {
     const [showRestartConfirm, setShowRestartConfirm] = useState(false);
     const [showExitConfirm, setShowExitConfirm] = useState(false);
     const [showVictoryScreen, setShowVictoryScreen] = useState(false);
+    const [showOverwriteModal, setShowOverwriteModal] = useState(false);
+    const [pendingScoreData, setPendingScoreData] = useState<{ score: number, oldScore: number } | null>(null);
 
     useEffect(() => {
         // Load player name from localStorage
@@ -64,6 +67,21 @@ const PuzzleGame = () => {
         setShowVictoryScreen(false); // Do not show victory screen immediately
         playVictory();
 
+        // 1. Check if we should show overwrite modal
+        // For puzzle, lower score (time) is better
+        const check = await checkExistingScore('puzzle', playerName.trim(), difficulty);
+
+        if (check.exists && check.score !== null) {
+            if (elapsedTime < check.score) {
+                setPendingScoreData({ score: elapsedTime, oldScore: check.score });
+                setShowOverwriteModal(true);
+                return;
+            } else {
+                // Not a better score
+                return;
+            }
+        }
+
         // Submit score to Supabase
         const result = await submitGameScore('puzzle', playerName.trim(), elapsedTime, difficulty);
 
@@ -72,6 +90,16 @@ const PuzzleGame = () => {
         } else {
             console.error('Failed to submit score:', result.error);
         }
+    };
+
+    const confirmOverwrite = async () => {
+        if (!pendingScoreData) return;
+        setShowOverwriteModal(false);
+        const result = await submitGameScore('puzzle', playerName.trim(), pendingScoreData.score, difficulty);
+        if (result.success) {
+            console.log('Score submitted successfully!');
+        }
+        setPendingScoreData(null);
     };
 
     const resetGame = () => {
@@ -353,6 +381,16 @@ const PuzzleGame = () => {
                         </motion.div>
                     </motion.div>
                 )}
+                {/* Overwrite Confirmation Modal */}
+                <ScoreOverwriteModal
+                    isOpen={showOverwriteModal}
+                    onConfirm={confirmOverwrite}
+                    onCancel={() => setShowOverwriteModal(false)}
+                    playerName={playerName}
+                    gameType="puzzle"
+                    oldScore={pendingScoreData?.oldScore || 0}
+                    newScore={pendingScoreData?.score || 0}
+                />
             </AnimatePresence>
         </div>
     );

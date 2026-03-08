@@ -8,7 +8,8 @@ import Leaderboard from '../Leaderboard';
 import { FiUsers, FiCpu, FiGlobe, FiArrowLeft, FiHeadphones } from 'react-icons/fi';
 import { MdCatchingPokemon } from 'react-icons/md';
 import { useGameSounds } from '../../../hooks/useGameSounds';
-import { submitGameScore } from '../../../utils/supabaseScoreService';
+import { submitGameScore, checkExistingScore } from '../../../utils/supabaseScoreService';
+import ScoreOverwriteModal from '../ScoreOverwriteModal';
 
 const TIMER_PER_QUESTION = 15;
 const TOTAL_QUESTIONS = 20;
@@ -84,6 +85,8 @@ const TriviaGame = () => {
   const [showPauseMenu, setShowPauseMenu] = useState(false);
   const [showRestartConfirm, setShowRestartConfirm] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [showOverwriteModal, setShowOverwriteModal] = useState(false);
+  const [pendingScoreData, setPendingScoreData] = useState<{ score: number, oldScore: number } | null>(null);
 
   // Stats for Chaos Mode
   const [chaosStats, setChaosStats] = useState({ correct: 0, incorrect: 0 });
@@ -450,29 +453,30 @@ const TriviaGame = () => {
 
   const nextQuestion = async () => {
     playSelect();
-    if (index + 1 >= questions.length || (gameMode !== 'chaos' && index + 1 >= TOTAL_QUESTIONS)) {
+    if (index + 1 >= questions.length || (gameMode !== 'chaos' && index + 1 >= TOTAL_QUESTIONS) || (gameMode === 'chaos' && index + 1 >= CHAOS_MODE_QUESTIONS)) {
       setGameOver(true);
       playVictory();
-      // Submit score
+
+      // Submit score logic
       if (category && gameMode) {
         const scoreDifficulty = category === 'music' ? `${category}:${gameMode}` : category;
-        const result = await submitGameScore('trivia', playerName, score, scoreDifficulty, { mode: gameMode });
 
-        if (result.success && result.updated) {
-          setUpdateMessage(t('games.trivia.scoreUpdating'));
-          setTimeout(() => setUpdateMessage(null), 3500);
+        // 1. Check if we should show overwrite modal
+        const check = await checkExistingScore('trivia', playerName, scoreDifficulty);
+
+        if (check.exists && check.score !== null) {
+          // If new score is better (higher for trivia), ask to overwrite
+          if (score > check.score) {
+            setPendingScoreData({ score, oldScore: check.score });
+            setShowOverwriteModal(true);
+            return;
+          } else {
+            // If not better, just ignore (existing service logic already handles this, but good to be explicit here)
+            return;
+          }
         }
-      }
-      return;
-    }
 
-    // Chaos Mode Success Condition (Completed all questions in time)
-    if (gameMode === 'chaos' && index + 1 >= CHAOS_MODE_QUESTIONS) {
-      setGameOver(true);
-      playVictory();
-      // Submit score
-      if (category && gameMode) {
-        const scoreDifficulty = category === 'music' ? `${category}:${gameMode}` : category;
+        // 2. If no existing score, just submit
         const result = await submitGameScore('trivia', playerName, score, scoreDifficulty, { mode: gameMode });
 
         if (result.success && result.updated) {
@@ -511,6 +515,23 @@ const TriviaGame = () => {
     if (audioRef.current) {
       audioRef.current.pause();
     }
+    setShowOverwriteModal(false);
+    setPendingScoreData(null);
+  };
+
+  const confirmOverwrite = async () => {
+    if (!pendingScoreData || !category || !gameMode) return;
+
+    setShowOverwriteModal(false);
+    const scoreDifficulty = category === 'music' ? `${category}:${gameMode}` : category;
+
+    const result = await submitGameScore('trivia', playerName, pendingScoreData.score, scoreDifficulty, { mode: gameMode });
+
+    if (result.success) {
+      setUpdateMessage(t('games.trivia.scoreUpdating'));
+      setTimeout(() => setUpdateMessage(null), 3500);
+    }
+    setPendingScoreData(null);
   };
 
   if (!category) {
@@ -794,6 +815,17 @@ const TriviaGame = () => {
             <Leaderboard category={category === 'music' ? `${category}:${gameMode}` : category} currentPlayer={playerName} game="trivia" />
           </div>
         </div>
+
+        {/* Overwrite Confirmation Modal */}
+        <ScoreOverwriteModal
+          isOpen={showOverwriteModal}
+          onConfirm={confirmOverwrite}
+          onCancel={() => setShowOverwriteModal(false)}
+          playerName={playerName}
+          gameType="trivia"
+          oldScore={pendingScoreData?.oldScore || 0}
+          newScore={pendingScoreData?.score || 0}
+        />
       </div>
     );
   }
@@ -806,16 +838,10 @@ const TriviaGame = () => {
             initial={{ scale: 0, rotate: -5, y: 20 }}
             animate={{ scale: 1, rotate: 0, y: 0 }}
             exit={{ scale: 0, opacity: 0 }}
-            /* Ajustes realizados:
-               - Posición: 'top-[65%]' lo baja hacia la zona de las opciones.
-               - Tamaño: 'text-2xl md:text-3xl' (antes era 6xl).
-               - Padding: 'p-2 md:p-3' (antes era p-6).
-               - Sombra: Reducida de 8px a 4px para que no se vea tan pesado.
-            */
             className={`absolute top-[50%] left-1/3 -translate-x-1/2 -translate-y-1/2 z-[80] 
-        text-2xl md:text-3xl font-black italic tracking-tighter border-4 border-black 
-        p-4 md:p-2 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-4 ring-primary-pink/10 
-        ${feedback.type === 'correct' ? 'text-primary-pink' : 'text-gray-500'}`}
+          text-2xl md:text-3xl font-black italic tracking-tighter border-4 border-black 
+          p-4 md:p-2 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-4 ring-primary-pink/10 
+          ${feedback.type === 'correct' ? 'text-primary-pink' : 'text-gray-500'}`}
           >
             {feedback.text}
           </motion.div>
@@ -876,8 +902,8 @@ const TriviaGame = () => {
                       onClick={handleManualPlay}
                       disabled={hasPlayedAudio || isAudioPlaying || answered}
                       className={`px-8 py-4 rounded-xl font-black uppercase tracking-widest text-white shadow-[4px_4px_0px_0px_black] transition-all
-                                ${hasPlayedAudio ? 'bg-gray-500 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 active:translate-y-1 active:shadow-none animate-pulse'}
-                            `}
+                                  ${hasPlayedAudio ? 'bg-gray-500 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 active:translate-y-1 active:shadow-none animate-pulse'}
+                              `}
                     >
                       {isAudioPlaying ? t('games.trivia.audioPlaying') : hasPlayedAudio ? t('games.trivia.audioUsed') : t('games.trivia.playTrack')}
                     </button>
@@ -919,8 +945,8 @@ const TriviaGame = () => {
                       onClick={handleManualPlay}
                       disabled={isAudioPlaying || answered}
                       className={`px-6 py-2 rounded-lg font-black uppercase tracking-widest text-white shadow-[2px_2px_0px_0px_black] transition-all text-xs
-                        ${answered ? 'bg-gray-500 cursor-not-allowed opacity-50' : 'bg-purple-600 hover:bg-purple-500 active:translate-y-0.5 active:shadow-none'}
-                      `}
+                          ${answered ? 'bg-gray-500 cursor-not-allowed opacity-50' : 'bg-purple-600 hover:bg-purple-500 active:translate-y-0.5 active:shadow-none'}
+                        `}
                     >
                       {isAudioPlaying ? t('games.trivia.audioPlaying') : t('games.trivia.playSong')}
                     </button>
@@ -1092,7 +1118,7 @@ const TriviaGame = () => {
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-sm w-full p-8 border-4 border-black"
+              className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-sm w-full p-8 border-4 border-black"
             >
               <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">{t('games.puzzle.pause')}</h3>
               <div className="flex flex-col gap-4">

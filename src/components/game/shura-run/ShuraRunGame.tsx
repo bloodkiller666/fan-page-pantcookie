@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { submitGameScore } from '../../../utils/supabaseScoreService';
+import { submitGameScore, checkExistingScore } from '../../../utils/supabaseScoreService';
 import Leaderboard from '../Leaderboard';
 import { useLanguage } from '../../../context/LanguageContext';
+import ScoreOverwriteModal from '../ScoreOverwriteModal';
 
 export default function ShuraRunGame() {
     const { t } = useLanguage();
@@ -15,6 +16,8 @@ export default function ShuraRunGame() {
     const [isPaused, setIsPaused] = useState(false);
     const [showPauseMenu, setShowPauseMenu] = useState(false);
     const [showExitConfirm, setShowExitConfirm] = useState(false);
+    const [showOverwriteModal, setShowOverwriteModal] = useState(false);
+    const [pendingScoreData, setPendingScoreData] = useState<{ score: number, oldScore: number } | null>(null);
     const GRAVITY = 0.5;
     const JUMP_FORCE = -15;
     const INITIAL_SPEED = 3;
@@ -64,13 +67,41 @@ export default function ShuraRunGame() {
 
         // Submit to Supabase if we have a name
         const name = localStorage.getItem('playerName') || 'Anonymous';
+
+        // 1. Check if we should show overwrite modal
+        const check = await checkExistingScore('shura_run', name);
+
+        if (check.exists && check.score !== null) {
+            // If new score is better, ask to overwrite
+            if (scoreRef.current > check.score) {
+                setPendingScoreData({ score: scoreRef.current, oldScore: check.score });
+                setShowOverwriteModal(true);
+                return;
+            } else {
+                // If not better, don't submit
+                return;
+            }
+        }
+
         const result = await submitGameScore('shura_run', name, scoreRef.current);
 
         if (result.success && result.updated) {
             setUpdateMessage(t('games.shuraRun.updatingScore'));
             setTimeout(() => setUpdateMessage(null), 3000);
         }
-    }, []);
+    }, [t]);
+
+    const confirmOverwrite = async () => {
+        if (!pendingScoreData) return;
+        setShowOverwriteModal(false);
+        const name = localStorage.getItem('playerName') || 'Anonymous';
+        const result = await submitGameScore('shura_run', name, pendingScoreData.score);
+        if (result.success) {
+            setUpdateMessage(t('games.shuraRun.updatingScore'));
+            setTimeout(() => setUpdateMessage(null), 3000);
+        }
+        setPendingScoreData(null);
+    };
 
     const gameLoop = useCallback((time: number) => {
         if (!isPlayingRef.current || isPausedRef.current) return;
@@ -495,6 +526,17 @@ export default function ShuraRunGame() {
                     currentPlayer={playerName}
                 />
             </div>
+
+            {/* Overwrite Confirmation Modal */}
+            <ScoreOverwriteModal
+                isOpen={showOverwriteModal}
+                onConfirm={confirmOverwrite}
+                onCancel={() => setShowOverwriteModal(false)}
+                playerName={playerName || (typeof window !== 'undefined' ? localStorage.getItem('playerName') : '') || 'Anonymous'}
+                gameType="shura_run"
+                oldScore={pendingScoreData?.oldScore || 0}
+                newScore={pendingScoreData?.score || 0}
+            />
         </div>
     );
 }

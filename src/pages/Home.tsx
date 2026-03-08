@@ -10,6 +10,7 @@ import Hero from '../components/home/Hero';
 import { useLanguage } from '../context/LanguageContext';
 import WeeklyCalendar from '../components/home/WeeklyCalendar';
 import YoutubeShorts from '../components/social/YoutubeShorts';
+import SocialStats from '../components/home/SocialStats';
 import { FiYoutube } from 'react-icons/fi';
 import UpdateModal from '../components/home/UpdateModal';
 
@@ -94,9 +95,11 @@ const Home = () => {
         <>
             <UpdateModal />
             <div ref={containerRef} className="min-h-screen bg-pattern transition-colors duration-300">
-                <Hero />
+            <UpdateModal />
+            <Hero />
+            <SocialStats />
 
-                <section ref={calendarRef} className="py-24 bg-[var(--poke-bg)] border-y-4 border-black relative overflow-hidden">
+            <section ref={calendarRef} className="py-24 bg-[var(--poke-bg)] border-y-4 border-black relative overflow-hidden">
                     <div className="container mx-auto px-4 text-center">
                         <div className="inline-block px-6 py-2 rounded-xl border-4 border-black bg-pokemon-yellow text-black text-xs uppercase tracking-[0.2em] font-black mb-8 shadow-[4px_4px_0px_0px_black]">
                             {t('home.heroBadge') || 'Schedule Updates'}

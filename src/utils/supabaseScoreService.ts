@@ -63,12 +63,19 @@ export const submitGameScore = async (
       }
 
       // 3. Delete old records if we are updating (cleans up any potential duplicates too)
-      const { error: deleteError } = await supabase
+      let deleteQuery = supabase
         .from('game_scores')
         .delete()
         .eq('player_name', playerName)
-        .eq('game_type', gameType)
-        .eq('difficulty', difficulty || null);
+        .eq('game_type', gameType);
+
+      if (difficulty) {
+        deleteQuery = deleteQuery.eq('difficulty', difficulty);
+      } else {
+        deleteQuery = deleteQuery.is('difficulty', null);
+      }
+
+      const { error: deleteError } = await deleteQuery;
 
       if (deleteError) {
         console.error('Error deleting old scores:', deleteError);
@@ -136,5 +143,46 @@ export const getGameLeaderboard = async (
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     return [];
+  }
+};
+
+/**
+ * Checks if a player already has a score for a specific game and difficulty.
+ * @returns Object with existence status and existing score value
+ */
+export const checkExistingScore = async (
+  gameType: GameType,
+  playerName: string,
+  difficulty?: string
+) => {
+  try {
+    let query = supabase
+      .from('game_scores')
+      .select('score')
+      .eq('player_name', playerName)
+      .eq('game_type', gameType);
+
+    if (difficulty) {
+      query = query.eq('difficulty', difficulty);
+    } else {
+      query = query.is('difficulty', null);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    if (data && data.length > 0) {
+      // Sort in memory to get the best one if multiple exist for some reason
+      // For puzzle, lower is better. For others, higher is better.
+      const scores = data.map(d => d.score);
+      const bestScore = gameType === 'puzzle' ? Math.min(...scores) : Math.max(...scores);
+      return { exists: true, score: bestScore };
+    }
+
+    return { exists: false, score: null };
+  } catch (error) {
+    console.error('Error checking existing score:', error);
+    return { exists: false, score: null };
   }
 };
