@@ -23,6 +23,13 @@ export default function ShuraRunGame() {
     const INITIAL_SPEED = 3;
     const MAX_SPEED = 15;
     const INITIAL_OBSTACLE_INTERVAL = 1800;
+
+    // Audio Refs
+    const jumpSound = useRef<HTMLAudioElement | null>(null);
+    const collectSound = useRef<HTMLAudioElement | null>(null);
+    const gameOverSound = useRef<HTMLAudioElement | null>(null);
+    const bgMusic = useRef<HTMLAudioElement | null>(null);
+
     const requestRef = useRef<number | null>(null);
     const isPlayingRef = useRef(false);
     const isPausedRef = useRef(false);
@@ -53,11 +60,34 @@ export default function ShuraRunGame() {
         if (savedScore) setHighScore(parseInt(savedScore));
         const savedName = localStorage.getItem('playerName');
         if (savedName) setPlayerName(savedName);
+
+        // Initialize Audio
+        jumpSound.current = new Audio('/audio/jump.mp3');
+        collectSound.current = new Audio('/audio/collect.mp3');
+        gameOverSound.current = new Audio('/audio/gameover.mp3');
+        bgMusic.current = new Audio('/audio/bg-music.mp3');
+        if (bgMusic.current) {
+            bgMusic.current.loop = true;
+            bgMusic.current.volume = 0.4;
+        }
+
+        return () => {
+            if (bgMusic.current) {
+                bgMusic.current.pause();
+                bgMusic.current = null;
+            }
+        };
     }, []);
 
     const gameOver = useCallback(async () => {
         isPlayingRef.current = false;
         setGameState('gameover');
+        if (gameOverSound.current) {
+            gameOverSound.current.currentTime = 0;
+            gameOverSound.current.play().catch(() => { });
+        }
+        if (bgMusic.current) bgMusic.current.pause();
+
         if (requestRef.current) cancelAnimationFrame(requestRef.current);
         const currentHigh = parseInt(localStorage.getItem('shuraRunHighScore') || '0');
         if (scoreRef.current > currentHigh) {
@@ -160,6 +190,10 @@ export default function ShuraRunGame() {
                     return;
                 } else if (obs.type === 'ingredient' && !obs.markedForDeletion) {
                     obs.markedForDeletion = true;
+                    if (collectSound.current) {
+                        collectSound.current.currentTime = 0;
+                        collectSound.current.play().catch(() => { });
+                    }
                     scoreRef.current += 50; // Bonus score
                     setScore(scoreRef.current);
                 }
@@ -223,6 +257,10 @@ export default function ShuraRunGame() {
         if (isPlayingRef.current && playerRef.current.grounded) {
             playerRef.current.dy = JUMP_FORCE;
             playerRef.current.grounded = false;
+            if (jumpSound.current) {
+                jumpSound.current.currentTime = 0;
+                jumpSound.current.play().catch(() => { });
+            }
         }
     }, []);
 
@@ -267,6 +305,11 @@ export default function ShuraRunGame() {
         setShowPauseMenu(false);
         setShowExitConfirm(false);
 
+        if (bgMusic.current) {
+            bgMusic.current.currentTime = 0;
+            bgMusic.current.play().catch(() => { });
+        }
+
         // Ensure loop restarts if already in playing state
         if (gameState === 'playing') {
             lastTimeRef.current = performance.now();
@@ -284,8 +327,11 @@ export default function ShuraRunGame() {
         setShowPauseMenu(newPaused);
 
         if (!newPaused) {
+            if (bgMusic.current) bgMusic.current.play().catch(() => { });
             lastTimeRef.current = performance.now();
             requestRef.current = requestAnimationFrame(gameLoop);
+        } else {
+            if (bgMusic.current) bgMusic.current.pause();
         }
     }, [gameState, gameLoop]);
 

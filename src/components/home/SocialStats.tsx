@@ -7,8 +7,8 @@ export default function SocialStats() {
     const [subscribers, setSubscribers] = useState<number | null>(null);
     const [twitchFollowers, setTwitchFollowers] = useState<number>(3100);
     const [discordMembers, setDiscordMembers] = useState<number>(540);
-    const [tiktokFollowers, setTiktokFollowers] = useState<number>(17550); // Static placeholder
-    const [twitterFollowers, setTwitterFollowers] = useState<number>(17570); // Static placeholder
+    const [tiktokFollowers, setTiktokFollowers] = useState<number>(17550);
+    const [twitterFollowers, setTwitterFollowers] = useState<number>(17570);
 
     const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || '';
     const CHANNEL_ID = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID || '';
@@ -116,7 +116,7 @@ export default function SocialStats() {
 
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     {stats.map((stat, index) => (
-                        <div 
+                        <div
                             key={index}
                             className={`p-4 rounded-2xl border-2 ${stat.border} ${stat.bg} flex flex-col items-center justify-center gap-2 transition-transform hover:-translate-y-1`}
                         >
