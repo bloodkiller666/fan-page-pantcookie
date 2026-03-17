@@ -26,7 +26,11 @@ export default {
           yellow: '#ffee00',
           gold: '#d4af37',
           green: '#00ff66',
-        }
+        },
+        'neon-pink': '#ff007f',
+        'neon-cyan': '#00f3ff',
+        'neon-volt': '#ccff00',
+        'background-dark': '#0a0705',
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],

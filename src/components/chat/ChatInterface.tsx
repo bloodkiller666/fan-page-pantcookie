@@ -274,7 +274,7 @@ const ChatInterface = () => {
                 <div className="flex items-center gap-3">
                     <div className="relative">
                         <img
-                            src="./Fotos/Shura HiwaLogo 6.png"
+                            src="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png"
                             alt="Bot Avatar"
                             className="w-10 h-10 rounded-full bg-white object-contain p-1"
                         />

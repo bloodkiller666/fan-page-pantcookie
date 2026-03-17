@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { triviaQuestions } from '../../../utils/triviaQuestions';
 import { useLanguage } from '../../../context/LanguageContext';
 import PlayerInput from '../PlayerInput';
@@ -751,14 +751,9 @@ const TriviaGame = () => {
     return (
       <div className="flex flex-col items-center justify-center mt-25 md:mt-33 gap-10">
         <div className="relative h-40 md:h-56 flex items-center justify-center">
-          <AnimatePresence mode="popLayout">
-            <motion.div
+            <div
               key={countValue}
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 1.5, opacity: 0 }}
-              transition={{ type: "spring", duration: 0.4 }}
-              className="flex items-center justify-center"
+              className="flex items-center justify-center animate-bounce duration-500"
             >
               <span className={`font-black italic leading-none drop-shadow-sm transition-colors
                 ${countValue === 0
@@ -768,21 +763,18 @@ const TriviaGame = () => {
               >
                 {countValue === 0 ? 'GO!' : countValue}
               </span>
-            </motion.div>
-          </AnimatePresence>
+            </div>
         </div>
 
         {/* Mensaje dinámico inferior */}
-        <motion.div
+        <div
           key={`msg-${countValue}`}
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center"
+          className="flex flex-col items-center animate-fade-in-up"
         >
           <span className="text-sm md:text-base font-black uppercase tracking-[0.8em] text-primary-pink transition-all">
             {getStatusMessage(countValue)}
           </span>
-        </motion.div>
+        </div>
 
       </div>
     );
@@ -832,21 +824,18 @@ const TriviaGame = () => {
 
   return (
     <div className="max-w-7xl mx-auto relative">
-      <AnimatePresence>
+      <>
         {feedback && (
-          <motion.div
-            initial={{ scale: 0, rotate: -5, y: 20 }}
-            animate={{ scale: 1, rotate: 0, y: 0 }}
-            exit={{ scale: 0, opacity: 0 }}
+          <div
             className={`absolute top-[50%] left-1/3 -translate-x-1/2 -translate-y-1/2 z-[80] 
           text-2xl md:text-3xl font-black italic tracking-tighter border-4 border-black 
-          p-4 md:p-2 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-4 ring-primary-pink/10 
+          p-4 md:p-2 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-4 ring-primary-pink/10 animate-fade-in
           ${feedback.type === 'correct' ? 'text-primary-pink' : 'text-gray-500'}`}
           >
             {feedback.text}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+      </>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="md:col-span-3">
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors border border-gray-100 dark:border-gray-700 relative overflow-hidden">
@@ -854,18 +843,15 @@ const TriviaGame = () => {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-blue/5 rounded-full blur-3xl -z-0 pointer-events-none" />
 
             <div className="relative z-10">
-              <AnimatePresence>
+              <>
                 {updateMessage && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 bg-pokemon-yellow text-black px-6 py-2 rounded-full font-black text-sm border-4 border-black shadow-[4px_4px_0px_0px_black] z-[100] whitespace-nowrap"
+                  <div
+                    className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 bg-pokemon-yellow text-black px-6 py-2 rounded-full font-black text-sm border-4 border-black shadow-[4px_4px_0px_0px_black] z-[100] whitespace-nowrap animate-fade-in-up"
                   >
                     {updateMessage}
-                  </motion.div>
+                  </div>
                 )}
-              </AnimatePresence>
+              </>
               <div className="flex items-center justify-between mb-8">
                 <button
                   onClick={() => setShowPauseMenu(true)}
@@ -910,11 +896,9 @@ const TriviaGame = () => {
 
                     {hasPlayedAudio && !answered && (
                       <div className="w-full bg-black border-4 border-black rounded-xl h-8 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden relative mt-2">
-                        <motion.div
-                          className="h-full bg-red-500"
-                          initial={{ width: "100%" }}
-                          animate={{ width: `${(remaining / INSANE_MODE_TIMER) * 100}%` }}
-                          transition={{ ease: "linear", duration: 1 }}
+                        <div
+                          className="h-full bg-red-500 transition-all duration-1000 ease-linear"
+                          style={{ width: `${(remaining / INSANE_MODE_TIMER) * 100}%` }}
                         />
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-xs">
                           {remaining}s
@@ -926,11 +910,9 @@ const TriviaGame = () => {
               ) : gameMode === 'chaos' ? (
                 <div className="mb-8">
                   <div className="w-full bg-black border-4 border-black rounded-xl h-12 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden relative">
-                    <motion.div
-                      className="h-full bg-purple-600"
-                      initial={{ width: "100%" }}
-                      animate={{ width: `${(remaining / CHAOS_MODE_TIMER) * 100}%` }}
-                      transition={{ ease: "linear", duration: 1 }}
+                    <div
+                      className="h-full bg-purple-600 transition-all duration-1000 ease-linear"
+                      style={{ width: `${(remaining / CHAOS_MODE_TIMER) * 100}%` }}
                     />
                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-lg">
                       {t('games.trivia.totalTime')}: {remaining}s
@@ -955,14 +937,12 @@ const TriviaGame = () => {
               ) : gameMode === 'timed' && (
                 <div className="w-full bg-black border-4 border-black rounded-xl h-12 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden mb-8 relative">
                   {/* Progress Bar */}
-                  <motion.div
-                    className={`h-full ${remaining < 5
+                  <div
+                    className={`h-full transition-all duration-1000 ease-linear ${remaining < 5
                       ? 'bg-red-500 shadow-[inset_-10px_0_20px_rgba(0,0,0,0.2)]'
                       : 'bg-[#ff00ff] shadow-[inset_-10px_0_20px_rgba(0,0,0,0.2)]'
                       }`}
-                    initial={{ width: "100%" }}
-                    animate={{ width: `${(remaining / TIMER_PER_QUESTION) * 100}%` }}
-                    transition={{ ease: "linear", duration: 1 }}
+                    style={{ width: `${(remaining / TIMER_PER_QUESTION) * 100}%` }}
                   />
 
                   {/* Centered Text */}
@@ -1106,19 +1086,13 @@ const TriviaGame = () => {
       </div>
 
       {/* PAUSE MENU OVERLAY */}
-      <AnimatePresence>
+      <>
         {showPauseMenu && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-fade-in"
           >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-sm w-full p-8 border-4 border-black"
+            <div
+              className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-sm w-full p-8 border-4 border-black animate-fade-in-up"
             >
               <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">{t('games.puzzle.pause')}</h3>
               <div className="flex flex-col gap-4">
@@ -1141,22 +1115,17 @@ const TriviaGame = () => {
                   {t('games.puzzle.exit')}
                 </button>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
 
         {/* RESTART CONFIRMATION */}
         {showRestartConfirm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+          <div
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in"
           >
-            <motion.div
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
+            <div
+              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center animate-fade-in-up"
             >
               <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.restartConfirm')}</p>
               <div className="flex gap-4">
@@ -1178,22 +1147,17 @@ const TriviaGame = () => {
                   {t('games.puzzle.no')}
                 </button>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
 
         {/* EXIT CONFIRMATION */}
         {showExitConfirm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+          <div
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in"
           >
-            <motion.div
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
+            <div
+              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center animate-fade-in-up"
             >
               <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.exitConfirm')}</p>
               <div className="flex gap-4">
@@ -1214,10 +1178,10 @@ const TriviaGame = () => {
                   {t('games.puzzle.no')}
                 </button>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
+      </>
     </div>
   );
 };

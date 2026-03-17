@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { FiAlertTriangle, FiCheck, FiX } from 'react-icons/fi';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -35,14 +35,11 @@ export default function ScoreOverwriteModal({
     };
 
     return (
-        <AnimatePresence>
+        <>
             {isOpen && (
                 <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="bg-white dark:bg-gray-800 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border-4 border-black dark:border-white relative p-6 text-center"
+                    <div
+                        className="bg-white dark:bg-gray-800 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border-4 border-black dark:border-white relative p-6 text-center animate-fade-in-up"
                     >
                         <div className="w-20 h-20 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-yellow-500">
                             <FiAlertTriangle className="text-yellow-600 dark:text-yellow-400" size={40} />
@@ -76,9 +73,9 @@ export default function ScoreOverwriteModal({
                                 {t('common.continue')}
                             </button>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
             )}
-        </AnimatePresence>
+        </>
     );
 }

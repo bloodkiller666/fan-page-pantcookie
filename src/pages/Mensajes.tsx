@@ -1,11 +1,16 @@
 'use client';
 import React, { useState, useRef, useEffect, Suspense } from 'react';
 import Image from 'next/image';
-import { FaUser, FaImage, FaPaperPlane, FaTrash, FaGlobeAmericas, FaSmile, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { FaUser, FaImage, FaPaperPlane, FaTrash, FaGlobeAmericas, FaSmile, FaCheckCircle, FaTimesCircle, FaAward } from 'react-icons/fa';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { addWallMessage, subscribeToWallMessages } from '../utils/firebase';
 import { useLanguage } from '../context/LanguageContext';
+import { gsap } from 'gsap';
+import { Draggable } from 'gsap/Draggable';
+import { splitText } from '../utils/animations';
+
+gsap.registerPlugin(Draggable);
 
 // Simple list of countries (can be fetched from API in future)
 const COUNTRIES = [
@@ -27,15 +32,16 @@ interface Message {
   text: string;
   image: string | null;
   timestamp: string;
-  color: string;
+  color: { color: string; hover: string; };
 }
 
 const MensajesContent = () => {
   const { t } = useLanguage();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'write' | 'read' | 'view'>('write'); // Fixed typing
+  const [activeTab, setActiveTab] = useState<'write' | 'read' | 'view'>('write');
   const [messages, setMessages] = useState<Message[]>([]);
+  const [countryFlash, setCountryFlash] = useState(false);
 
   // Form State
   const [username, setUsername] = useState('');
@@ -52,6 +58,8 @@ const MensajesContent = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const emojiPickerRef = useRef<HTMLDivElement>(null);
+  const cardsWrapperRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Subscribe to Wall Messages
   useEffect(() => {
@@ -231,26 +239,112 @@ const MensajesContent = () => {
     router.push(`/mensajes?view=${tab}`);
   }
 
+  // GSAP: Title Badge Reveal
+  useEffect(() => {
+    const titleElement = document.querySelector('.muro-title');
+    if (!titleElement) return;
+    const chars = splitText(titleElement as HTMLElement);
+    chars.forEach(c => c.classList.add('muro-title-char'));
+    gsap.from(chars, {
+      duration: 0.8,
+      opacity: 0,
+      y: -50,
+      rotateX: -90,
+      filter: 'blur(10px)',
+      stagger: 0.05,
+      ease: 'back.out(2)',
+    });
+  }, []);
+
+  // GSAP Animations for Tabs
+  useEffect(() => {
+    if (isLoading) return;
+    let ctx: gsap.Context | null = null;
+
+    if (activeTab === 'write') {
+      ctx = gsap.context(() => {
+        gsap.from('.write-container', { scale: 0.8, opacity: 0, duration: 0.6, ease: 'back.out(1.7)' });
+        gsap.to('.cursor-pokemon', { opacity: 0, repeat: -1, duration: 0.5, yoyo: true });
+      }, containerRef);
+    }
+
+    if (activeTab === 'read' && messages.length > 0) {
+      ctx = gsap.context(() => {
+        const wrapper = cardsWrapperRef.current;
+        if (!wrapper) return;
+
+        // Entry animation
+        gsap.from('.message-card', {
+          x: 200,
+          opacity: 0,
+          stagger: 0.05,
+          duration: 1,
+          ease: 'power3.out',
+        });
+
+        // Calculate drag bounds
+        const minX = -(wrapper.scrollWidth - (wrapper.parentElement?.clientWidth || window.innerWidth));
+
+        // GSAP Draggable
+        Draggable.create(wrapper, {
+          type: 'x',
+          edgeResistance: 0.65,
+          bounds: { minX, maxX: 0 },
+          inertia: true,
+          cursor: 'grab',
+          activeCursor: 'grabbing',
+          onDragStart() {
+            gsap.to('.message-card', { scale: 0.97, duration: 0.3 });
+          },
+          onDragEnd() {
+            gsap.to('.message-card', { scale: 1, duration: 0.3 });
+          },
+        });
+
+        // Mouse wheel horizontal scroll
+        const handleWheel = (e: WheelEvent) => {
+          e.preventDefault();
+          const delta = e.deltaY || e.deltaX;
+          const currentX = gsap.getProperty(wrapper, 'x') as number;
+          const targetX = Math.max(minX, Math.min(0, currentX - delta * 1.5));
+          gsap.to(wrapper, { x: targetX, duration: 0.5, ease: 'power2.out', overwrite: true });
+        };
+
+        wrapper.parentElement?.addEventListener('wheel', handleWheel, { passive: false });
+
+        // Return cleanup inside context via a custom mechanism
+        (wrapper as any).__cleanupWheel = () =>
+          wrapper.parentElement?.removeEventListener('wheel', handleWheel);
+      }, cardsWrapperRef);
+    }
+
+    return () => {
+      const wrapper = cardsWrapperRef.current;
+      if (wrapper && (wrapper as any).__cleanupWheel) {
+        (wrapper as any).__cleanupWheel();
+      }
+      ctx?.revert();
+    };
+  }, [activeTab, messages, isLoading]);
+
   const getRandomColor = () => {
-    const colors = [
-      'bg-pink-500/20 border-pink-500/30',
-      'bg-purple-500/20 border-purple-500/30',
-      'bg-blue-500/20 border-blue-500/30',
-      'bg-green-500/20 border-green-500/30',
-      'bg-yellow-500/20 border-yellow-500/30',
-      'bg-orange-500/20 border-orange-500/30',
+    const types = [
+      { color: 'bg-red-500/20 border-red-500/30', hover: 'hover-fire' },
+      { color: 'bg-blue-500/20 border-blue-500/30', hover: 'hover-water' },
+      { color: 'bg-green-500/20 border-green-500/30', hover: 'hover-grass' },
+      { color: 'bg-yellow-500/20 border-yellow-500/30', hover: 'hover-electric' },
     ];
-    return colors[Math.floor(Math.random() * colors.length)];
+    return types[Math.floor(Math.random() * types.length)];
   };
 
 
   return (
-    <div className="min-h-screen bg-pattern dark:bg-pattern pt-20 pb-10">
+    <div ref={containerRef} className="min-h-screen bg-pattern dark:bg-pattern pt-20 pb-10">
       <div className="container mx-auto px-4">
 
         {/* Header & Tabs */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter italic neon-text-pink mb-8">
+          <h1 className="muro-title text-4xl md:text-6xl font-black uppercase tracking-tighter italic neon-text-pink mb-8 inline-block">
             {t('wall.title')}
           </h1>
 
@@ -273,144 +367,212 @@ const MensajesContent = () => {
         {/* Content Area */}
         <div className="max-w-6xl mx-auto">
 
-          {/* WRITE MODE */}
+          {/* WRITE MODE — GBA Console (Pink) */}
           {activeTab === 'write' && (
-            <div className="max-w-2xl mx-auto poke-card p-6 md:p-10 animate-fade-in-up">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Username */}
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-pokemon-pink mb-3">{t('wall.usernameLabel')}</label>
-                  <div className="relative">
-                    <FaUser className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="text"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      className={`w-full bg-white dark:bg-black border-4 ${errors.username ? 'border-red-500' : 'border-black'} rounded-xl py-4 pl-12 pr-4 text-[var(--poke-text)] placeholder-gray-400 focus:outline-none transition-all font-black uppercase text-xs tracking-wider`}
-                      placeholder={t('wall.usernamePlaceholder')}
-                    />
-                  </div>
-                  {errors.username && <p className="text-red-500 text-xs mt-1 font-bold uppercase tracking-tight">{errors.username}</p>}
+            <div className="write-container w-full flex justify-center">
+              <main className="relative w-full max-w-3xl gba-console-pink p-6 md:p-10">
+                {/* Console top decor */}
+                <div className="absolute top-5 left-1/2 -translate-x-1/2 flex gap-3">
+                  <div className="w-20 h-1 bg-black/20 rounded-full" />
+                  <div className="w-10 h-1 bg-black/20 rounded-full" />
                 </div>
 
-                {/* Country Dropdown */}
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-pokemon-blue mb-3">{t('wall.countryLabel')}</label>
-                  <div className="relative">
-                    <FaGlobeAmericas className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-                    <select
-                      value={country}
-                      onChange={(e) => setCountry(e.target.value)}
-                      className={`w-full bg-white dark:bg-black border-4 ${errors.country ? 'border-red-500' : 'border-black'} rounded-xl py-4 pl-12 pr-4 text-[var(--poke-text)] placeholder-gray-400 focus:outline-none transition-all appearance-none cursor-pointer font-black uppercase text-xs tracking-wider`}
-                    >
-                      <option value="" className="bg-[var(--poke-bg)]">{t('wall.countryPlaceholder')}</option>
-                      {COUNTRIES.map(c => (
-                        <option key={c} value={c} className="bg-[var(--poke-bg)]">{c}</option>
-                      ))}
-                    </select>
-                  </div>
-                  {errors.country && <p className="text-red-500 text-xs mt-1 font-bold uppercase tracking-tight">{errors.country}</p>}
-                </div>
+                {/* GBA Screen */}
+                <div className="scanlines relative bg-black rounded-xl p-3 md:p-6 border-[8px] border-[#222] mt-6">
+                  <div className="crt-flicker bg-white rounded-sm flex flex-col p-4 md:p-6 overflow-hidden">
 
-                {/* Message */}
-                <div className="relative">
-                  <label className="block text-xs font-black uppercase tracking-widest text-pokemon-pink mb-3">{t('wall.messageLabel')}</label>
-                  <div className="relative">
-                    <textarea
-                      value={messageText}
-                      onChange={(e) => {
-                        const newValue = e.target.value;
-                        if (countWords(newValue) <= MAX_WORDS) {
-                          setMessageText(newValue);
-                        }
-                      }}
-                      className={`w-full bg-white dark:bg-black border-4 ${errors.message ? 'border-red-500' : 'border-black'} rounded-xl py-4 px-4 text-[var(--poke-text)] placeholder-gray-400 focus:outline-none transition-all h-40 resize-none font-medium text-sm`}
-                      placeholder={t('wall.messagePlaceholder')}
-                    />
-                    <button
-                      type="button"
-                      aria-label="Insertar emoji"
-                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                      className="absolute bottom-4 right-4 text-gray-500 hover:text-[#ff00ff] transition-colors"
-                    >
-                      <FaSmile size={24} />
-                    </button>
-                    {showEmojiPicker && (
-                      <div className="absolute right-0 bottom-full mb-2 z-50" ref={emojiPickerRef}>
-                        <EmojiPicker onEmojiClick={handleEmojiClick} theme={Theme.DARK} width={300} height={400} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex justify-end mt-1">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                      {MAX_WORDS - countWords(messageText)} {t('wall.wordsLeft')}
-                    </span>
-                  </div>
-                  {errors.message && <p className="text-red-500 text-xs mt-1 font-bold uppercase tracking-tight">{errors.message}</p>}
-                </div>
-
-                {/* Image Upload */}
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-widest text-[#00ffff] mb-2">{t('wall.imageLabel')}</label>
-
-                  {!imagePreview ? (
-                    <div className="relative border border-dashed border-white/20 rounded-lg p-6 bg-black/20 hover:bg-black/40 transition-all text-center cursor-pointer group">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        disabled={isLoading}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-                      />
-                      {isLoading ? (
-                        <div className="flex flex-col items-center justify-center gap-2 text-[#00ffff]">
-                          <div className="w-8 h-8 border-2 border-[#00ffff] border-t-transparent rounded-full animate-spin"></div>
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em]">{t('wall.imageAnalyzing')}</span>
+                    {/* Screen Header */}
+                    <header className="flex justify-between items-center border-b-4 border-black pb-4 mb-6">
+                      <div className="flex items-center gap-3">
+                        {/* Mini Pokéball */}
+                        <div className="relative w-7 h-7 bg-[#cc0000] rounded-full border-4 border-black flex items-center justify-center">
+                          <div className="w-3 h-3 bg-white rounded-full border-2 border-black" />
                         </div>
-                      ) : (
-                        <div className="flex flex-col items-center justify-center gap-2 text-gray-500 group-hover:text-[#00ffff] transition-colors">
-                          <FaImage size={24} />
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em]">{selectedImage ? selectedImage.name : t('wall.imageUpload')}</span>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="relative mt-4 w-full h-48 rounded-lg overflow-hidden border border-white/10 group shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-                      <Image src={imagePreview} alt={t('wall.altUpload')} fill className="object-cover" />
-                      {/* Hover Delete Action */}
-                      <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <button
-                          type="button"
-                          onClick={removeImage}
-                          aria-label={t('wall.deleteImage')}
-                          className="bg-red-600 hover:bg-red-700 text-white rounded-full p-3 shadow-[0_0_15px_rgba(220,38,38,0.5)] transform hover:scale-110 transition-transform"
-                          title={t('wall.deleteImage')}
-                        >
-                          <FaTrash size={20} />
-                        </button>
+                        <h2 className="font-pixel text-[10px] md:text-xs tracking-tighter text-black uppercase">Email</h2>
                       </div>
-                    </div>
-                  )}
+                      <span className="font-pixel text-[8px] text-gray-400">ID: 08522</span>
+                    </header>
 
-                  {errors.image && <p className="text-red-500 bg-red-950/40 border border-red-500/50 py-2 px-4 rounded-lg text-xs mt-2 font-bold uppercase tracking-tight">{errors.image}</p>}
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+
+                      {/* Trainer Name */}
+                      <div>
+                        <label className="block font-pixel text-[9px] mb-2 text-[#3b4cca] uppercase">Nombre:</label>
+                        <div className="relative group transition-transform focus-within:scale-[1.01]">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-black text-sm font-pixel">▶</span>
+                          <input
+                            type="text"
+                            value={username}
+                            maxLength={15}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className={`w-full pl-10 pr-4 py-3 bg-transparent border-b-4 border-dashed ${errors.username ? 'border-[#cc0000]' : 'border-gray-300'} focus:border-[#cc0000] focus:ring-0 text-black font-pixel text-[10px] uppercase placeholder:text-gray-300 transition-colors outline-none`}
+                            placeholder="Ingresa tu nombre"
+                          />
+                        </div>
+                        {errors.username && <p className="font-pixel text-[8px] text-[#cc0000] mt-1 uppercase">{errors.username}</p>}
+                      </div>
+
+                      {/* Region / Country */}
+                      <div>
+                        <label className="block font-pixel text-[9px] mb-2 text-[#3b4cca] uppercase">Region / Country:</label>
+                        <div className={`relative transition-all focus-within:scale-[1.01] ${countryFlash ? 'country-flash' : ''}`}>
+                          <select
+                            value={country}
+                            onChange={(e) => {
+                              setCountry(e.target.value);
+                              setCountryFlash(true);
+                              setTimeout(() => setCountryFlash(false), 300);
+                            }}
+                            className={`w-full pl-4 pr-10 py-3 bg-gray-100 border-4 ${errors.country ? 'border-[#cc0000]' : 'border-black'} text-black font-pixel text-[9px] appearance-none cursor-pointer focus:bg-yellow-50 transition-all outline-none`}
+                          >
+                            <option value="">{t('wall.countryPlaceholder')}</option>
+                            {COUNTRIES.map(c => (
+                              <option key={c} value={c}>{c}</option>
+                            ))}
+                          </select>
+                          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-black" />
+                          </div>
+                        </div>
+                        {errors.country && <p className="font-pixel text-[8px] text-[#cc0000] mt-1 uppercase">{errors.country}</p>}
+                      </div>
+
+                      {/* Message (Dialogue Box) */}
+                      <div className="flex-grow flex flex-col">
+                        <label className="block font-pixel text-[9px] mb-2 text-[#3b4cca] uppercase">Escribe tu mensaje:</label>
+                        <div className="relative poke-dialogue-border bg-white p-4 flex-grow">
+                          <textarea
+                            value={messageText}
+                            onChange={(e) => {
+                              const newValue = e.target.value;
+                              if (countWords(newValue) <= MAX_WORDS) setMessageText(newValue);
+                            }}
+                            maxLength={2000}
+                            className={`w-full h-32 bg-transparent border-none focus:ring-0 text-black font-pixel text-[9px] leading-relaxed resize-none p-0 placeholder:text-gray-300 outline-none`}
+                            placeholder="Escribe algo..."
+                          />
+                          <div className="absolute bottom-2 right-4 dialogue-arrow" />
+                          {/* Emoji */}
+                          <button
+                            type="button"
+                            aria-label="Insertar emoji"
+                            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                            className="absolute top-2 right-4 text-gray-400 hover:text-[#cc0000] transition-colors z-20"
+                          >
+                            <FaSmile size={18} />
+                          </button>
+                          {showEmojiPicker && (
+                            <div className="absolute right-0 bottom-full mb-2 z-50" ref={emojiPickerRef}>
+                              <EmojiPicker onEmojiClick={handleEmojiClick} theme={Theme.DARK} width={300} height={400} />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex justify-end mt-1">
+                          <span className="font-pixel text-[8px] text-gray-400">{MAX_WORDS - countWords(messageText)} {t('wall.wordsLeft')}</span>
+                        </div>
+                        {errors.message && <p className="font-pixel text-[8px] text-[#cc0000] mt-1 uppercase">{errors.message}</p>}
+                      </div>
+
+                      {/* Attached Snapshot */}
+                      <div>
+                        <label className="block font-pixel text-[9px] mb-2 text-[#3b4cca] uppercase">Adjunta un archivo</label>
+                        {!imagePreview ? (
+                          <div className="relative border-4 border-black border-dotted p-4 bg-gray-50 flex items-center justify-center cursor-pointer hover:bg-white transition-colors">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageChange}
+                              disabled={isLoading}
+                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            />
+                            {isLoading ? (
+                              <div className="flex flex-col items-center gap-2 text-gray-400">
+                                <div className="w-6 h-6 border-2 border-[#cc0000] border-t-transparent rounded-full animate-spin" />
+                                <span className="font-pixel text-[8px]">{t('wall.imageAnalyzing')}</span>
+                              </div>
+                            ) : (
+                              <div className="text-center">
+                                <p className="font-pixel text-[8px] text-gray-400">{selectedImage ? selectedImage.name : 'SELECCIONA UNA IMAGEN'}</p>
+                                <p className="font-pixel text-[8px] text-gray-400 mt-1">(MAX 10MB)</p>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="relative mt-2 w-full h-40 rounded overflow-hidden border-4 border-black group">
+                            <Image src={imagePreview} alt={t('wall.altUpload')} fill className="object-cover" />
+                            <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <button type="button" onClick={removeImage} className="bg-[#cc0000] text-white rounded-full p-3 pixel-shadow btn-gb-press">
+                                <FaTrash size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        {errors.image && <p className="font-pixel text-[8px] text-[#cc0000] mt-1 uppercase">{errors.image}</p>}
+                      </div>
+
+                      {/* Console Buttons */}
+                      <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-2">
+                        <div className="flex items-center gap-6">
+                          {/* B — Reset */}
+                          <div className="text-center">
+                            <button
+                              type="button"
+                              onClick={() => { setUsername(''); setCountry(''); setMessageText(''); setSelectedImage(null); setImagePreview(null); setErrors({}); }}
+                              className="w-12 h-12 bg-gray-300 rounded-full border-4 border-black flex items-center justify-center btn-gb-press pixel-shadow mb-1"
+                            >
+                              <span className="font-pixel text-black text-xs">B</span>
+                            </button>
+                            <p className="font-pixel text-[7px] text-black">RESET</p>
+                          </div>
+                          {/* A — Submit */}
+                          <div className="text-center">
+                            <button
+                              type="submit"
+                              disabled={isLoading}
+                              className="w-16 h-16 bg-[#cc0000] rounded-full border-4 border-black flex items-center justify-center btn-gb-press pixel-shadow mb-1 disabled:opacity-50"
+                            >
+                              <span className="font-pixel text-white text-lg">{isLoading ? '...' : 'A'}</span>
+                            </button>
+                            <p className="font-pixel text-[7px] text-black">SEND DATA</p>
+                          </div>
+                        </div>
+                        <p className="font-pixel text-[7px] text-gray-400 text-right leading-loose">
+                          Ensure all data is<br />correct before transmitting.
+                        </p>
+                      </div>
+
+                    </form>
+                  </div>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="poke-button-pink w-full py-5 text-sm"
-                >
-                  <FaPaperPlane /> {isLoading ? t('wall.submitLoading') : t('wall.submitBase')}
-                </button>
-              </form>
+                {/* GBA Select / Start */}
+                <div className="flex justify-center mt-6 gap-8">
+                  <div className="-rotate-[15deg] text-center">
+                    <div className="w-10 h-3 bg-black/30 rounded-full border border-black/20" />
+                    <p className="font-pixel text-[6px] text-black/40 mt-1">SELECT</p>
+                  </div>
+                  <div className="-rotate-[15deg] text-center">
+                    <div className="w-10 h-3 bg-black/30 rounded-full border border-black/20" />
+                    <p className="font-pixel text-[6px] text-black/40 mt-1">START</p>
+                  </div>
+                </div>
+
+                {/* Speaker Grille */}
+                <div className="absolute bottom-8 right-8 grid grid-cols-3 gap-1.5 opacity-20">
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <div key={i} className="w-1.5 h-1.5 bg-black rounded-full" />
+                  ))}
+                </div>
+              </main>
             </div>
           )}
 
-          {/* READ MODE (Masonry Layout) */}
+          {/* READ MODE — Draggable Horizontal Carousel */}
           {activeTab === 'read' && (
-            <div>
+            <div className="relative w-full h-[70vh] flex items-center overflow-hidden rounded-2xl cursor-grab active:cursor-grabbing">
               {messages.length === 0 ? (
-                <div className="text-center py-20 flex flex-col items-center text-gray-400">
+                <div className="text-center py-20 flex flex-col items-center text-gray-400 w-full">
                   <FaImage size={64} className="mb-4 opacity-50" />
                   <p className="text-2xl italic">{t('wall.emptyWall')}</p>
                   <p className="mt-2">{t('wall.emptySub')}</p>
@@ -419,60 +581,78 @@ const MensajesContent = () => {
                   </button>
                 </div>
               ) : (
-                <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-                  {messages.map((msg) => (
-                    <div key={msg.id} className="break-inside-avoid poke-card mb-6 p-6 group relative overflow-hidden animate-fade-in-up">
-                      {/* Decorative corner */}
-                      <div className="absolute top-0 right-0 w-12 h-12 bg-pokemon-yellow border-b-4 border-l-4 border-black" />
+                <>
+                  {/* BG Title */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+                    <h2 className="text-[15vw] font-black text-black/[0.04] dark:text-white/[0.03] uppercase italic select-none leading-none tracking-tighter">
+                      POKÉWALL
+                    </h2>
+                  </div>
 
-                      <div className="flex items-start justify-between mb-4 relative z-10">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#ff00ff] to-[#00ffff] flex items-center justify-center font-black text-white shadow-[0_0_10px_rgba(255,0,255,0.4)] text-lg">
-                            {msg.username.charAt(0).toUpperCase()}
-                          </div>
-                          <div>
-                            <h3 className="font-black uppercase tracking-tight text-md text-[#ff00ff] leading-none mb-1">{msg.username}</h3>
-                            <div className="flex items-center text-[10px] font-bold text-blue-800 dark:text-[#00ffff] uppercase tracking-widest gap-1 opacity-80">
-                              <FaGlobeAmericas size={8} />
-                              <span>{msg.country}</span>
+                  {/* Counter bar */}
+                  <div className="absolute top-0 left-0 right-0 z-20 bg-[var(--poke-pink)]/10 border-b border-[var(--poke-pink)]/20 py-1.5 text-center">
+                    <p className="font-pixel text-[8px] text-[var(--poke-pink)] tracking-[0.4em] animate-pulse">
+                      REGISTROS DE ENTRENADORES: {messages.length}
+                    </p>
+                  </div>
+
+                  {/* Draggable wrapper */}
+                  <div
+                    ref={cardsWrapperRef}
+                    className="flex flex-nowrap gap-8 px-[8vw] items-center will-change-transform relative z-10 pt-8"
+                  >
+                    {messages.map((msg, index) => (
+                      <div
+                        key={msg.id}
+                        className={`message-card flex-shrink-0 w-[320px] md:w-[400px] h-[460px] bg-white dark:bg-zinc-900 border-t-8 border-[var(--poke-pink)] rounded-[2rem] p-7 shadow-[0_20px_50px_rgba(0,0,0,0.25)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.6)] relative hover:-translate-y-3 transition-transform duration-300 ${msg.color.hover}`}
+                      >
+                        <div className="flex justify-between items-start mb-5">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-[var(--poke-pink)]/10 dark:bg-white/10 flex items-center justify-center border border-[var(--poke-pink)]/20">
+                              <FaUser className="text-[var(--poke-pink)]" />
+                            </div>
+                            <div>
+                              <h4 className="text-gray-900 dark:text-white font-bold text-base leading-none mb-1">{msg.username}</h4>
+                              <div className="flex items-center gap-1">
+                                <span className="font-pixel text-[8px] text-gray-400 uppercase">{msg.country}</span>
+                                <FaAward className="text-yellow-500 text-xs ml-1" />
+                              </div>
                             </div>
                           </div>
+                          <button onClick={() => handleDelete(msg.id)} aria-label={t('wall.deleteMessage')} className="text-gray-300 dark:text-white/20 hover:text-red-500 transition-colors">
+                            <FaTrash size={13} />
+                          </button>
                         </div>
-                        {/* Circle Badge or something */}
-                        <button onClick={() => handleDelete(msg.id)} aria-label={t('wall.deleteMessage')} className="text-white/20 hover:text-red-500 transition-colors">
-                          <FaTrash size={12} />
-                        </button>
-                      </div>
 
-                      {msg.image && (
-                        <div className="rounded-lg overflow-hidden shadow-md mb-4 border-4 border-black relative group/img">
-                          <Image
-                            src={msg.image}
-                            alt="User upload"
-                            width={0}
-                            height={0}
-                            sizes="100vw"
-                            className="w-full h-auto object-cover transition-all duration-500"
-                          />
+                        <div className="bg-gray-50 dark:bg-black/40 p-4 rounded-2xl border border-gray-100 dark:border-white/5 flex flex-col justify-start h-[calc(100%-170px)] overflow-hidden">
+                          {msg.image && (
+                            <div className="mb-3 rounded-xl overflow-hidden border border-gray-200 dark:border-black/50 aspect-video relative flex-shrink-0">
+                              <Image src={msg.image} alt="User upload" fill className="object-cover" sizes="400px" />
+                            </div>
+                          )}
+                          <p className="text-gray-700 dark:text-gray-300 text-sm italic font-medium leading-relaxed line-clamp-5">&ldquo;{msg.text}&rdquo;</p>
                         </div>
-                      )}
 
-                      <p className="text-black dark:text-gray-100 text-sm whitespace-pre-wrap leading-relaxed font-bold tracking-wide">
-                        {msg.text}
-                      </p>
-
-                      <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center text-[9px] font-black uppercase tracking-[0.2em] text-gray-500 dark:text-white">
-                        <span className="flex items-center gap-2">
-                          <div className="w-1 h-1 rounded-full bg-[#ff00ff] animate-pulse" />
-                          {msg.timestamp}
-                        </span>
+                        <div className="absolute bottom-5 left-7 right-7 flex justify-between items-center font-pixel text-[8px] text-gray-400 border-t border-gray-100 dark:border-white/5 pt-3">
+                          <span className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-[var(--poke-pink)] animate-ping" />
+                            #{index + 1}
+                          </span>
+                          <span>{msg.timestamp}</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+
+                  {/* Drag hint */}
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 opacity-50">
+                    <span className="font-pixel text-[8px] text-gray-500 animate-pulse">← DRAG →</span>
+                  </div>
+                </>
               )}
             </div>
           )}
+
         </div>
       </div>
 

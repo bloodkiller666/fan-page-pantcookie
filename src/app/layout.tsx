@@ -9,7 +9,7 @@ export const metadata = {
     title: 'Fan Page Pantcookie | ShuraHiwa',
     description: 'Fan Page Pantcookie - Comunidad dedicada a ShuraHiwa con multimedia, juegos interactivos y más',
     icons: {
-        icon: '/Fotos/Shura HiwaLogo 6.png',
+        icon: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png',
     },
     openGraph: {
         title: 'Fan Page Pantcookie | ShuraHiwa',
@@ -18,7 +18,7 @@ export const metadata = {
         siteName: 'Fan Page Pantcookie',
         images: [
             {
-                url: '/Fotos/Shura HiwaLogo 6.png',
+                url: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png',
                 width: 800,
                 height: 600,
             },
@@ -30,7 +30,7 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'Fan Page Pantcookie | ShuraHiwa',
         description: 'Comunidad dedicada a ShuraHiwa con multimedia, juegos interactivos y más.',
-        images: ['/Fotos/Shura HiwaLogo 6.png'],
+        images: ['https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png'],
     },
 };
 

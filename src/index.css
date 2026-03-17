@@ -1,9 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-poppins bg-[var(--poke-bg)] text-[var(--poke-text)] transition-colors duration-300;
+  }
+}
 
 :root {
   --poke-pink: #fd219f;
@@ -190,60 +193,200 @@
   }
 }
 
-/* Poke-Gamer Specifics */
-.poke-container {
-  @apply container mx-auto px-4;
+
+/* Pokemon Center Interface & GB-A Button */
+.cursor-pokemon {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background-color: var(--poke-pink);
+  margin-left: 4px;
+  vertical-align: middle;
 }
 
-
-
-/* Scrollbar styling - Intense Color */
-::-webkit-scrollbar {
-  width: 12px;
+.button-gb-a {
+  @apply relative w-16 h-16 rounded-full bg-[#cc0000] border-4 border-black shadow-[4px_4px_0px_0px_black] 
+  active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all flex items-center justify-center;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--poke-bg);
+.button-gb-a::after {
+  content: 'A';
+  @apply text-white font-black text-2xl italic;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--poke-pink);
-  border: 3px solid var(--poke-bg);
-  border-radius: 10px;
+.country-flash {
+  animation: flash-white 0.3s ease-out;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--poke-blue);
+@keyframes flash-white {
+  0% { background-color: rgba(255, 255, 255, 0.8); }
+  100% { background-color: transparent; }
 }
 
-@keyframes spin-slow {
-  from {
-    transform: rotate(0deg);
+.pokedex-divisor {
+  @apply w-full py-4 my-8 border-y-2 border-dashed border-black/20 flex items-center justify-center gap-4;
+}
+
+.pokedex-pixel-text {
+  @apply font-pixel text-[10px] uppercase tracking-widest text-gray-500 bg-[var(--poke-bg)] px-4;
+}
+
+/* Pokemon Type Hover Effects */
+.hover-fire:hover {
+  @apply bg-red-500/10 border-red-500/50 shadow-[0_0_30px_rgba(239,68,68,0.2)];
+}
+
+.hover-water:hover {
+  @apply bg-blue-500/10 border-blue-500/50 shadow-[0_0_30px_rgba(59,130,246,0.2)];
+}
+
+.hover-grass:hover {
+  @apply bg-green-500/10 border-green-500/50 shadow-[0_0_30px_rgba(34,197,94,0.2)];
+}
+
+.hover-electric:hover {
+  @apply bg-yellow-400/10 border-yellow-400/50 shadow-[0_0_30px_rgba(250,204,21,0.2)];
+}
+
+/* Horizontal Scroll Helpers */
+.flex-nowrap {
+  flex-wrap: nowrap !important;
+}
+
+.messages-list-container {
+  will-change: transform;
+}
+
+.message-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.message-card:hover {
+  transform: translateY(-10px) scale(1.02);
+}
+
+/* Neon & Games UI Utilities */
+.glow-pink { box-shadow: 0 0 15px rgba(255, 0, 127, 0.6), inset 0 0 10px rgba(255, 0, 127, 0.4); }
+.glow-cyan { box-shadow: 0 0 15px rgba(0, 243, 255, 0.6), inset 0 0 10px rgba(0, 243, 255, 0.4); }
+.glow-volt { box-shadow: 0 0 15px rgba(204, 255, 0, 0.6), inset 0 0 10px rgba(204, 255, 0, 0.4); }
+
+.bg-grid {
+    background-image: radial-gradient(circle, #ec5b1322 1px, transparent 1px);
+    background-size: 30px 30px;
+}
+
+.neon-text-pink { text-shadow: 0 0 8px #ff007f; }
+.neon-text-cyan { text-shadow: 0 0 8px #00f3ff; }
+.neon-text-volt { text-shadow: 0 0 8px #ccff00; }
+
+.primary-pink { color: #ff007f; }
+.bg-primary-pink { background-color: #ff007f; }
+
+/* GBA Console Styles */
+.bg-pokeball-dark {
+  background-color: #1a1a1a;
+  background-image: radial-gradient(#333 2px, transparent 2px);
+  background-size: 32px 32px;
+}
+
+.gba-console {
+  background-color: #635994;
+  border-radius: 40px;
+  border-bottom: 12px solid rgba(0,0,0,0.3);
+  border-right: 8px solid rgba(0,0,0,0.3);
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+}
+
+/* Pink GBA variant — adapts to light / dark mode */
+.gba-console-pink {
+  border-radius: 40px;
+  border-bottom: 12px solid rgba(0,0,0,0.25);
+  border-right: 8px solid rgba(0,0,0,0.2);
+  /* Light mode */
+  background-color: #f472b6;
+  box-shadow: 0 25px 50px -12px rgba(244,114,182,0.4), 0 0 0 4px rgba(244,114,182,0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .gba-console-pink {
+    background-color: #be185d;
+    box-shadow: 0 25px 50px -12px rgba(190,24,93,0.6), 0 0 0 4px rgba(190,24,93,0.1);
   }
-
-  to {
-    transform: rotate(360deg);
-  }
 }
 
-.animate-spin-slow {
-  animation: spin-slow 3s linear infinite;
+/* Also support Tailwind dark class-based dark mode */
+:is(.dark) .gba-console-pink {
+  background-color: #be185d;
+  box-shadow: 0 25px 50px -12px rgba(190,24,93,0.6), 0 0 0 4px rgba(190,24,93,0.1);
 }
 
-@keyframes pulse-subtle {
-
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.9;
-    transform: scale(1.02);
-  }
+.scanlines {
+  position: relative;
+  overflow: hidden;
 }
 
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s ease-in-out infinite;
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  z-index: 10;
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+}
+
+@keyframes crt-flicker {
+  0%   { opacity: 0.98; }
+  5%   { opacity: 0.95; }
+  10%  { opacity: 0.99; }
+  15%  { opacity: 0.97; }
+  20%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+.crt-flicker {
+  animation: crt-flicker 0.15s infinite;
+}
+
+.poke-dialogue-border {
+  border: 6px solid #333;
+  box-shadow: 
+    inset -4px -4px 0px 0px #888,
+    inset 4px 4px 0px 0px #eee;
+}
+
+.pixel-shadow {
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+}
+
+.btn-gb-press:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+}
+
+@keyframes bounce-arrow {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(5px); }
+}
+
+.dialogue-arrow {
+  width: 0; height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 12px solid #333;
+  animation: bounce-arrow 0.8s infinite;
+}
+
+/* Title Muro Badge Reveal */
+@keyframes metallic-shimmer {
+  0%   { text-shadow: 0 0 5px rgba(255,255,255,0.3); }
+  50%  { text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(255,46,151,0.4); }
+  100% { text-shadow: 0 0 5px rgba(255,255,255,0.3); }
+}
+
+.muro-title-char {
+  display: inline-block;
+  animation: metallic-shimmer 2s ease-in-out infinite;
 }

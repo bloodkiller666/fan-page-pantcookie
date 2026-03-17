@@ -33,7 +33,7 @@ const Gallery = ({ query = '' }) => {
 
         return {
             id: index,
-            src: isLocal ? `/Fotos/${item.filename}` : item.filename,
+            src: item.filename,
             cldImg: isLocal ? null : getCloudinaryImage(item.filename),
             thumbnail: isLocal ? null : getCloudinaryThumbnail(item.filename),
             alt: `${t('multimedia.gallery.fanArt')} ${index + 1}`,

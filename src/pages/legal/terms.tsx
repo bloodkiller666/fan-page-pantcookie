@@ -4,61 +4,191 @@ import { useLanguage } from '../../context/LanguageContext';
 
 export default function Terms() {
   const { t } = useLanguage();
+
   return (
-    <div className="min-h-screen bg-pattern pt-24 pb-16">
-      <Head>
-        <title>Términos y Condiciones | Pantcookie</title>
-        <meta name="description" content="Términos y Condiciones de la Fan Page Pantcookie: uso del sitio, propiedad intelectual, conducta y cookies." />
-      </Head>
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-10">
-          <h1 className="text-4xl md:text-6xl font-black neon-text-pink uppercase italic tracking-tighter">
-            {t('footer.legal.termsTitle') || 'Términos y Condiciones'}
-          </h1>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          <section className="poke-card p-8">
-            <h2 className="text-2xl font-black uppercase tracking-tighter mb-4">{t('legal.terms.acceptanceTitle')}</h2>
-            <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              {t('legal.terms.acceptanceDesc')}
-            </p>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.usageTitle')}</h2>
-            <ul className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed space-y-2">
-              <li>{t('legal.terms.usageDesc1')}</li>
-              <li>{t('legal.terms.usagePoint1')}</li>
-              <li>{t('legal.terms.usagePoint2')}</li>
-            </ul>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.intellectualTitle')}</h2>
-            <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              {t('legal.terms.intellectualDesc')}
-            </p>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.changesTitle')}</h2>
-            <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              {t('legal.terms.changesDesc')}
-            </p>
-          </section>
-
-          <section className="poke-card p-8">
-            <h2 className="text-2xl font-black uppercase tracking-tighter mb-4">{t('legal.terms.userContentTitle')}</h2>
-            <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              {t('legal.terms.userContentDesc')}
-            </p>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.cookiesTitle')}</h2>
-            <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              {t('legal.terms.cookiesDesc')}
-            </p>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.moderationTitle')}</h2>
-            <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              {t('legal.terms.moderationDesc')}
-            </p>
-            <h2 className="text-2xl font-black uppercase tracking-tighter mt-8 mb-4">{t('legal.terms.recreationalTitle')}</h2>
-            <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-              {t('legal.terms.recreationalDesc')}
-            </p>
-          </section>
-        </div>
+    <div className="bg-background-light dark:bg-[#0f0a14] font-display text-zinc-900 dark:text-slate-300 min-h-screen relative overflow-x-hidden selection:bg-[#ff00ff] selection:text-white transition-colors duration-300">
+      {/* Ambient Effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#ff00ff]/10 blur-[150px] rounded-full animate-[pulse_3s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#00e5ff]/10 blur-[150px] rounded-full"></div>
+        <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.02]" style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '50px 50px' }}></div>
       </div>
+
+      <main className="relative z-10 min-h-screen w-full flex items-center justify-center p-4 md:p-8 pt-24 md:pt-32">
+        <div className="max-w-7xl w-full h-full flex gap-6 items-stretch">
+          {/* Side Navigation / Progress Indicator */}
+          <aside className="hidden lg:flex flex-col justify-between w-24 py-8 bg-black/5 dark:bg-[#0f0a14]/90 backdrop-blur-xl border border-zinc-200 dark:border-[#ff00ff]/30 rounded-lg items-center relative overflow-hidden">
+            <div className="flex flex-col items-center gap-8">
+              <div className="w-12 h-12 rounded-full border-2 border-[#ff00ff] flex items-center justify-center shadow-[0_0_15px_rgba(255,0,255,0.3)]">
+                <span className="material-symbols-outlined text-[#ff00ff]">security</span>
+              </div>
+              <div className="w-[2px] h-20 bg-gradient-to-b from-[#ff00ff] to-transparent"></div>
+            </div>
+            <div className="flex flex-col items-center gap-8">
+              <div className="w-[2px] h-20 bg-gradient-to-t from-[#00e5ff] to-transparent"></div>
+              <div className="w-12 h-12 rounded-lg bg-[#00e5ff]/10 flex items-center justify-center border border-[#00e5ff]/30">
+                <span className="material-symbols-outlined text-[#00e5ff]">gavel</span>
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col bg-white/60 dark:bg-[#0f0a14]/90 backdrop-blur-xl rounded-lg overflow-hidden border border-zinc-200 dark:border-white/10 shadow-2xl">
+            {/* Browser-like Header */}
+            <header className="bg-zinc-100 dark:bg-gradient-to-r dark:from-[#1a1525] dark:to-[#0f0a14] p-4 border-b border-zinc-200 dark:border-white/10 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/40"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/40"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/40"></div>
+                </div>
+                <div className="h-4 w-px bg-zinc-300 dark:bg-white/10 mx-2"></div>
+                <div className="text-[10px] font-mono tracking-widest text-zinc-500 dark:text-slate-500 uppercase flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[14px]">terminal</span>
+                  SYS_LINK // LEGAL_PROTOCOL_042
+                </div>
+              </div>
+              <div className="hidden sm:block text-[10px] font-mono text-[#00e5ff] animate-pulse">
+                &gt; ENCRYPTION_ACTIVE: AES-256
+              </div>
+            </header>
+
+            {/* Title Section */}
+            <div className="px-8 pt-10 pb-6">
+              <h1 className="text-4xl md:text-7xl font-black tracking-tighter uppercase italic text-zinc-900 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-[#ff00ff] dark:via-[#00e5ff] dark:to-[#ff00ff] dark:bg-[length:200%_auto] dark:animate-gradient-x leading-none">
+                {t('footer.legal.termsTitle') || 'Términos y Condiciones'}
+              </h1>
+              <div className="mt-4 flex flex-wrap items-center gap-4">
+                <span className="bg-[#ff00ff]/10 dark:bg-[#ff00ff]/20 text-[#ff00ff] text-[10px] px-2 py-0.5 font-mono border border-[#ff00ff]/30 uppercase">v2.4.0 ALPHA</span>
+                <p className="text-zinc-500 dark:text-slate-500 font-mono text-[10px] uppercase tracking-widest">
+                  Última actualización: 24.OCT.2023 // LOC: 40.7128° N
+                </p>
+              </div>
+            </div>
+
+            {/* Scrollable Cards */}
+            <div className="flex-1 overflow-y-auto px-8 pb-12 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#ff00ff] [&::-webkit-scrollbar-thumb]:shadow-[0_0_10px_#ff00ff] [&::-webkit-scrollbar-thumb]:rounded-full">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                
+                {/* Section 01 */}
+                <div className="group relative p-6 bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/5 hover:border-[#ff00ff]/40 transition-all duration-300 rounded-lg">
+                  <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#ff00ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">01 // Access</div>
+                  <div className="flex items-center justify-between mb-4 mt-2">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#ff00ff] transition-colors flex items-center gap-2">
+                      {t('legal.terms.acceptanceTitle')}
+                    </h3>
+                    <span className="material-symbols-outlined text-[#ff00ff]/30 group-hover:text-[#ff00ff] transition-colors">verified_user</span>
+                  </div>
+                  <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed font-medium">
+                    {t('legal.terms.acceptanceDesc')}
+                  </p>
+                </div>
+
+                {/* Section 02 */}
+                <div className="group relative p-6 bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/5 hover:border-[#00e5ff]/40 transition-all duration-300 rounded-lg">
+                  <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#00e5ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">02 // Behavior</div>
+                  <div className="flex items-center justify-between mb-4 mt-2">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#00e5ff] transition-colors">{t('legal.terms.usageTitle')}</h3>
+                    <span className="material-symbols-outlined text-[#00e5ff]/30 group-hover:text-[#00e5ff]">terminal</span>
+                  </div>
+                  <div className="space-y-3 text-sm text-zinc-600 dark:text-slate-400">
+                    <p>{t('legal.terms.usageDesc1')}</p>
+                    <ul className="space-y-2 font-mono text-[13px]">
+                      <li className="flex gap-3">
+                        <span className="text-[#00e5ff]">01.</span>
+                        <span>{t('legal.terms.usagePoint1')}</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="text-[#00e5ff]">02.</span>
+                        <span>{t('legal.terms.usagePoint2')}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Section 03 */}
+                <div className="group relative p-6 bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/5 hover:border-[#ff00ff]/40 transition-all duration-300 rounded-lg">
+                  <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#ff00ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">03 // IP Assets</div>
+                  <div className="flex items-center justify-between mb-4 mt-2">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#ff00ff] transition-colors">{t('legal.terms.intellectualTitle')}</h3>
+                    <span className="material-symbols-outlined text-[#ff00ff]/30 group-hover:text-[#ff00ff]">copyright</span>
+                  </div>
+                  <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed">
+                    {t('legal.terms.intellectualDesc')}
+                  </p>
+                </div>
+
+                {/* Section 04 */}
+                <div className="group relative p-6 bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/5 hover:border-[#00e5ff]/40 transition-all duration-300 rounded-lg">
+                  <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#00e5ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">04 // Data</div>
+                  <div className="flex items-center justify-between mb-4 mt-2">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#00e5ff] transition-colors">{t('legal.terms.userContentTitle')}</h3>
+                    <span className="material-symbols-outlined text-[#00e5ff]/30 group-hover:text-[#00e5ff]">cloud_done</span>
+                  </div>
+                  <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed font-mono italic bg-zinc-200/50 dark:bg-[#00e5ff]/5 p-3 border-l-2 border-zinc-300 dark:border-[#00e5ff]/40">
+                    &gt; {t('legal.terms.userContentDesc')}
+                  </p>
+                </div>
+
+                {/* Section 05 */}
+                <div className="group relative p-6 bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/5 hover:border-[#ff00ff]/40 transition-all duration-300 rounded-lg">
+                  <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#ff00ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">05 // Cookies</div>
+                  <div className="flex items-center justify-between mb-4 mt-2">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#ff00ff] transition-colors">{t('legal.terms.cookiesTitle')}</h3>
+                    <span className="material-symbols-outlined text-[#ff00ff]/30 group-hover:text-[#ff00ff]">cookie</span>
+                  </div>
+                  <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed">
+                    {t('legal.terms.cookiesDesc')}
+                  </p>
+                </div>
+
+                {/* Section 06 */}
+                <div className="group relative p-6 bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/5 hover:border-[#00e5ff]/40 transition-all duration-300 rounded-lg">
+                  <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#00e5ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">06 // Control</div>
+                  <div className="flex items-center justify-between mb-4 mt-2">
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#00e5ff] transition-colors">{t('legal.terms.moderationTitle')}</h3>
+                    <span className="material-symbols-outlined text-[#00e5ff]/30 group-hover:text-[#00e5ff]">admin_panel_settings</span>
+                  </div>
+                  <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed">
+                    {t('legal.terms.moderationDesc')}
+                  </p>
+                  
+                  {/* Additional Content Block if needed */}
+                  <h3 className="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-[#00e5ff] transition-colors mt-4">{t('legal.terms.recreationalTitle')}</h3>
+                  <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed mt-2">
+                    {t('legal.terms.recreationalDesc')}
+                  </p>
+                </div>
+              </div>
+
+              {/* Updates Section */}
+              <div className="mt-6 p-6 bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/5 rounded-lg border-l-4 border-l-[#ff00ff]">
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2">{t('legal.terms.changesTitle')}</h3>
+                  <p className="text-sm text-zinc-600 dark:text-slate-400">{t('legal.terms.changesDesc')}</p>
+              </div>
+
+            </div>
+
+            {/* Footer Bar */}
+            <footer className="p-3 bg-zinc-100 dark:bg-black/60 border-t border-zinc-200 dark:border-white/10 flex flex-wrap items-center justify-between px-8 text-[9px] font-mono text-zinc-500 dark:text-slate-500 uppercase tracking-[0.2em]">
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#00e5ff] animate-pulse shadow-[0_0_5px_#00e5ff]"></div>
+                  STATUS: COMPLIANT
+                </div>
+                <div className="hidden sm:block">COORD: 34.0522° N, 118.2437° W</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-zinc-300 dark:text-white/10">|</span>
+                <div className="flex items-center gap-1 text-[#facc15] ml-2">
+                  <span className="material-symbols-outlined text-[10px]">qr_code_2</span>
+                  AUTH_V
+                </div>
+              </div>
+            </footer>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

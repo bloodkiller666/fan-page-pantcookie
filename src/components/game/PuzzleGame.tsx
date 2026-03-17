@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import DifficultySelector from './DifficultySelector';
 import PuzzleBoard from './PuzzleBoard';
 import Timer from './Timer';
@@ -268,19 +268,13 @@ const PuzzleGame = () => {
             )}
 
             {/* PAUSE MENU OVERLAY */}
-            <AnimatePresence>
+            <>
                 {showPauseMenu && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
+                    <div
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-fade-in"
                     >
-                        <motion.div
-                            initial={{ scale: 0.9, y: 20 }}
-                            animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-sm w-full p-8 border-4 border-black"
+                        <div
+                            className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-sm w-full p-8 border-4 border-black animate-fade-in-up"
                         >
                             <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">{t('games.puzzle.pause')}</h3>
                             <div className="flex flex-col gap-4">
@@ -306,22 +300,17 @@ const PuzzleGame = () => {
                                     {t('games.puzzle.exit')}
                                 </button>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
                 )}
 
                 {/* RESTART CONFIRMATION */}
                 {showRestartConfirm && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+                    <div
+                        className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in"
                     >
-                        <motion.div
-                            initial={{ scale: 0.8 }}
-                            animate={{ scale: 1 }}
-                            className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
+                        <div
+                            className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center animate-fade-in-up"
                         >
                             <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.restartConfirm')}</p>
                             <div className="flex gap-4">
@@ -342,22 +331,17 @@ const PuzzleGame = () => {
                                     {t('games.puzzle.no')}
                                 </button>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
                 )}
 
                 {/* EXIT CONFIRMATION */}
                 {showExitConfirm && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+                    <div
+                        className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in"
                     >
-                        <motion.div
-                            initial={{ scale: 0.8 }}
-                            animate={{ scale: 1 }}
-                            className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center"
+                        <div
+                            className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center animate-fade-in-up"
                         >
                             <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.exitConfirm')}</p>
                             <div className="flex gap-4">
@@ -378,8 +362,8 @@ const PuzzleGame = () => {
                                     {t('games.puzzle.no')}
                                 </button>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
                 )}
                 {/* Overwrite Confirmation Modal */}
                 <ScoreOverwriteModal
@@ -391,7 +375,7 @@ const PuzzleGame = () => {
                     oldScore={pendingScoreData?.oldScore || 0}
                     newScore={pendingScoreData?.score || 0}
                 />
-            </AnimatePresence>
+            </>
         </div>
     );
 };

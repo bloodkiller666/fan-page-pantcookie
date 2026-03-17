@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { FiX, FiCheck, FiCpu, FiCalendar, FiImage, FiYoutube, FiInfo, FiMusic, FiSmartphone, FiVideo, FiMessageSquare } from 'react-icons/fi';
 import { FaGamepad } from "react-icons/fa";
 import { BiWorld } from "react-icons/bi";
@@ -30,15 +30,11 @@ export default function UpdateModal() {
     if (!mounted) return null;
 
     return createPortal(
-        <AnimatePresence>
+        <>
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                        transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
-                        className="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border-4 border-black dark:border-white relative"
+                    <div
+                        className="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border-4 border-black dark:border-white relative animate-fade-in-up"
                     >
                         {/* Header */}
                         <div className="bg-gradient-to-r from-primary-pink to-purple-600 p-6 text-white text-center relative overflow-hidden border-b-4 border-black">
@@ -143,10 +139,10 @@ export default function UpdateModal() {
                                 ¡Entendido!
                             </button>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
             )}
-        </AnimatePresence>,
+        </>,
         document.body
     );
 }

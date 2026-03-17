@@ -38,6 +38,7 @@ export const translations = {
             weeklyCalendar: "Calendario Semanal",
             heroTitle: "¡Bienvenido al mundo de la ShakeGang!",
             heroSubtitle: "La comunidad dedicada a ShuraHiwa. Explora contenido exclusivo, juega y diviértete con nosotros.",
+            heroBadge: "Gamer Mode: ON",
             heroMultimedia: "Ver Multimedia",
             heroGames: "Jugar Ahora",
             features: {

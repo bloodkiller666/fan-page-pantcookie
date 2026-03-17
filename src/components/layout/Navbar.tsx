@@ -107,7 +107,7 @@ const Navbar = () => {
                     <Link href="/" className="flex items-center group gap-3">
                         <div className="relative">
                             <img
-                                src="/Fotos/Shura HiwaLogo 6.png"
+                                src="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png"
                                 alt="Shura Hiwa Logo"
                                 className="relative h-12 w-auto object-contain transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]"
                             />

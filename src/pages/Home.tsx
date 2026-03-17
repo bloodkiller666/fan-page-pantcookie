@@ -1,68 +1,120 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLanguage } from '../context/LanguageContext';
+import LoadingScreen from '../components/ui/LoadingScreen';
+import Hero from '../components/home/Hero';
+import SocialStats from '../components/home/SocialStats';
+import WeeklyCalendar from '../components/home/WeeklyCalendar';
+import YouTubeFeedComponent from '../components/home/YouTubeFeedComponent';
+import UpdateModal from '../components/home/UpdateModal';
+import HeartsEffect from '../components/ui/HeartsEffect';
+import { FiYoutube, FiImage, FiTarget, FiInfo } from 'react-icons/fi';
+import { splitText, blurReveal } from '../utils/animations';
 
 gsap.registerPlugin(ScrollTrigger);
-import Link from 'next/link';
-import { FiImage, FiTarget, FiInfo, FiTwitter } from 'react-icons/fi';
-import Hero from '../components/home/Hero';
-import { useLanguage } from '../context/LanguageContext';
-import WeeklyCalendar from '../components/home/WeeklyCalendar';
-import YoutubeShorts from '../components/social/YoutubeShorts';
-import SocialStats from '../components/home/SocialStats';
-import { FiYoutube } from 'react-icons/fi';
-import UpdateModal from '../components/home/UpdateModal';
 
-const Home = () => {
-    const { t } = useLanguage();
+export default function Home() {
+    const { t, language } = useLanguage();
+    const [isLoading, setIsLoading] = useState(true);
     const [showInteractiveCalendar, setShowInteractiveCalendar] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
-    const calendarRef = useRef<HTMLElement>(null);
+    const calendarSectionRef = useRef<HTMLElement>(null);
+    const calendarTitleRef = useRef<HTMLHeadingElement>(null);
+    const calendarContainerRef = useRef<HTMLDivElement>(null);
     const featuresRef = useRef<HTMLElement>(null);
+    const exploreTitleRef = useRef<HTMLHeadingElement>(null);
     const socialRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
+        const handleLoadingComplete = () => {
+            setIsLoading(false);
+        };
+
+        window.addEventListener('loading_complete', handleLoadingComplete);
+        
+        if (sessionStorage.getItem('loading_done_v9')) {
+            setIsLoading(false);
+        }
+
+        return () => window.removeEventListener('loading_complete', handleLoadingComplete);
+    }, []);
+
+    useEffect(() => {
+        if (isLoading) return;
+
         const ctx = gsap.context(() => {
+            // A. Hero Entry Animation
+            const heroTitle = document.querySelector('.hero-title');
+            if (heroTitle) {
+                const chars = splitText(heroTitle as HTMLElement);
+                gsap.from(chars, {
+                    y: 100,
+                    opacity: 0,
+                    stagger: 0.02,
+                    duration: 1,
+                    ease: "power4.out",
+                    delay: 0.5
+                });
+            }
 
-            gsap.from(containerRef.current, { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' });
-            gsap.from(calendarRef.current, {
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                scrollTrigger: {
-                    trigger: calendarRef.current,
-                    start: 'top 80%',
-                    end: 'bottom 20%',
-                    toggleActions: 'play none none reverse'
+            // B. Blur Reveal for Titles
+            if (exploreTitleRef.current) {
+                blurReveal(exploreTitleRef.current);
+            }
+
+            if (calendarTitleRef.current) {
+                blurReveal(calendarTitleRef.current);
+            }
+
+            // C. Revealer Effect for Feature Images
+            const featureCards = gsap.utils.toArray('.feature-card');
+            featureCards.forEach((card: any) => {
+                const revealer = card.querySelector('.revealer');
+                const img = card.querySelector('img');
+
+                if (revealer && img) {
+                    const tl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top 80%',
+                        }
+                    });
+
+                    tl.fromTo(revealer, 
+                        { scaleX: 0, transformOrigin: 'left' },
+                        { scaleX: 1, duration: 0.6, ease: 'expo.inOut' }
+                    )
+                    .set(img, { opacity: 1 })
+                    .to(revealer, { scaleX: 0, transformOrigin: 'right', duration: 0.6, ease: 'expo.inOut' });
                 }
             });
 
-            gsap.from(featuresRef.current, {
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                scrollTrigger: {
-                    trigger: featuresRef.current,
-                    start: 'top 80%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
+            // Weekly Calendar Animation (simplified to use blurReveal)
+            if (calendarSectionRef.current) {
+                gsap.to(calendarContainerRef.current, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1,
+                    ease: 'power4.out',
+                    scrollTrigger: {
+                        trigger: calendarSectionRef.current,
+                        start: 'top 40%',
+                    }
+                });
+            }
 
-            gsap.from(socialRef.current, {
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                scrollTrigger: {
-                    trigger: socialRef.current,
-                    start: 'top 80%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
+            // "Últimas Novedades" Split Text Effect
+            const novedadesTitle = socialRef.current?.querySelector('h2');
+            if (novedadesTitle) {
+                blurReveal(novedadesTitle as HTMLElement);
+            }
 
         }, containerRef);
         return () => ctx.revert();
-    }, []);
+    }, [isLoading, language, t]);
 
     const features = [
         {
@@ -70,154 +122,181 @@ const Home = () => {
             description: t('home.features.multimediaDesc'),
             icon: FiImage,
             link: '/multimedia',
-            color: 'from-primary-pink to-primary-pink-light',
-            image: '/Fotos/ShuraHiwa RnC by Parkiranhonda.png'
+            color: 'border-primary-pink text-primary-pink shadow-[0_0_20px_rgba(255,46,151,0.2)]',
+            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/ShuraHiwa%20RnC%20by%20Parkiranhonda.png'
         },
         {
             title: t('nav.games'),
             description: t('home.features.gamesDesc'),
             icon: FiTarget,
             link: '/games',
-            color: 'from-primary-blue to-primary-blue-light',
-            image: '/Fotos/by toba_ww 1.png'
+            color: 'border-primary-blue text-primary-blue shadow-[0_0_20px_rgba(46,151,255,0.2)]',
+            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/by%20toba_ww%201.png'
         },
         {
             title: t('nav.about'),
             description: t('home.features.aboutDesc'),
             icon: FiInfo,
             link: '/about',
-            color: 'from-purple-500 to-pink-500',
-            image: '/Fotos/Tanabata1_by_higashibara_n.png'
+            color: 'border-purple-500 text-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.2)]',
+            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Tanabata1_by_higashibara_n.png'
         }
     ];
 
     return (
         <>
-            <UpdateModal />
-            <div ref={containerRef} className="min-h-screen bg-pattern transition-colors duration-300">
-            <UpdateModal />
-            <Hero />
-            <SocialStats />
+            {isLoading && <LoadingScreen />}
+            
+            <div 
+                ref={containerRef} 
+                className={`min-h-screen bg-black transition-opacity duration-700 ${
+                    isLoading ? 'opacity-0' : 'opacity-100'
+                }`}
+            >
+                <HeartsEffect />
+                <Hero />
+                <SocialStats />
 
-            <section ref={calendarRef} className="py-24 bg-[var(--poke-bg)] border-y-4 border-black relative overflow-hidden">
-                    <div className="container mx-auto px-4 text-center">
-                        <div className="inline-block px-6 py-2 rounded-xl border-4 border-black bg-pokemon-yellow text-black text-xs uppercase tracking-[0.2em] font-black mb-8 shadow-[4px_4px_0px_0px_black]">
-                            {t('home.heroBadge') || 'Schedule Updates'}
+                {/* Calendar Section */}
+                <section ref={calendarSectionRef} className="py-20 bg-[#050505] border-y-4 border-black relative overflow-hidden min-h-screen flex flex-col items-center">
+                    <div className="container mx-auto px-4 text-center h-full flex flex-col items-center">
+                        <div className="relative z-20 mb-16 h-24 flex items-center justify-center">
+                            <h2 
+                                ref={calendarTitleRef}
+                                className="text-4xl md:text-8xl font-black text-white uppercase italic tracking-tighter"
+                            >
+                                {t('home.weeklyCalendar')}
+                            </h2>
                         </div>
-                        <h2 className="text-4xl md:text-7xl font-black neon-text-pink mb-12 uppercase italic tracking-tighter">
-                            {t('home.weeklyCalendar')}
-                        </h2>
-                        <div
-                            className="max-w-4xl mx-auto relative p-1 bg-pokemon-yellow rounded-2xl shadow-[8px_8px_0px_0px_black] overflow-hidden hover:scale-[1.01] transition-transform duration-500 cursor-pointer border-4 border-black"
-                            onClick={() => setShowInteractiveCalendar(!showInteractiveCalendar)}
+                        
+                        <div 
+                            ref={calendarContainerRef}
+                            className="opacity-0 scale-95 max-w-5xl mx-auto w-full relative z-10"
                         >
-                            {!showInteractiveCalendar ? (
-                                <>
-                                    <img
-                                        src=""
-                                        alt={t('home.weeklyCalendar')}
-                                        className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                                        <div className="bg-white/10 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 text-white font-black uppercase tracking-widest text-xs">
-                                            Haz click aquí
+                            <div
+                                className="relative p-1 bg-gradient-to-br from-white/10 to-transparent rounded-2xl shadow-[0_0_50px_rgba(255,46,151,0.1)] overflow-hidden cursor-pointer border border-white/10"
+                                onClick={() => setShowInteractiveCalendar(!showInteractiveCalendar)}
+                            >
+                                {!showInteractiveCalendar ? (
+                                    <>
+                                        <img
+                                            src="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/ShuraHiwa%20Weekly%20Schedule.jpg"
+                                            alt={t('home.weeklyCalendar')}
+                                            className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity"
+                                            onError={(e) => {
+                                                e.currentTarget.src = "https://placehold.co/1200x800/222/FF2E97?text=Weekly+Schedule";
+                                            }}
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="bg-primary-pink/20 backdrop-blur-md px-10 py-4 rounded-full border-2 border-primary-pink text-white font-black uppercase tracking-[0.3em] text-sm animate-pulse">
+                                                Visualizar Calendario Interactivo
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="bg-black/95 backdrop-blur-3xl">
+                                        <WeeklyCalendar />
+                                        <div className="p-8 text-center border-t border-white/10 bg-black">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setShowInteractiveCalendar(false);
+                                                }}
+                                                className="text-sm font-black uppercase tracking-[0.5em] text-primary-pink hover:scale-110 transition-transform"
+                                            >
+                                                [ Regresar ]
+                                            </button>
                                         </div>
                                     </div>
-                                </>
-                            ) : (
-                                <div className="bg-white/90 dark:bg-black/90 backdrop-blur-3xl animate-fade-in">
-                                    <WeeklyCalendar />
-                                    <div className="p-6 text-center border-t-4 border-black bg-pokemon-yellow">
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setShowInteractiveCalendar(false);
-                                            }}
-                                            className="text-xs font-black uppercase tracking-[0.3em] text-pokemon-blue hover:scale-110 transition-transform"
-                                        >
-                                            [ Cerrar Calendario ]
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Features Section */}
-                <section ref={featuresRef} className="py-24 bg-white/50 dark:bg-black/20 backdrop-blur-sm border-t border-white/5">
+                <section ref={featuresRef} className="py-32 bg-black">
                     <div className="container mx-auto px-4">
-                        <div className="text-center mb-20">
-                            <h2 className="text-4xl md:text-6xl font-black neon-text-pink uppercase italic tracking-tighter">
+                        <div className="text-center mb-32">
+                            <h2 
+                                ref={exploreTitleRef}
+                                className="text-5xl md:text-8xl lg:text-9xl font-black text-white uppercase italic tracking-tighter leading-none"
+                            >
                                 {t('home.exploreContent')}
                             </h2>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        <div className="space-y-32">
                             {features.map((feature, index) => {
                                 const Icon = feature.icon;
+                                const isEven = index % 2 === 0;
                                 return (
-                                    <Link
+                                    <div 
                                         key={index}
-                                        href={feature.link}
-                                        className="poke-card group relative h-96 overflow-hidden transition-all duration-500 transform hover:-translate-y-4"
+                                        className={`feature-card flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12 md:gap-24`}
                                     >
-                                        {/* Background Image */}
-                                        <div className="absolute inset-0">
+                                        <Link 
+                                            href={feature.link}
+                                            className="w-full md:w-3/5 group relative h-[50vh] overflow-hidden rounded-3xl border border-white/10 bg-white/5"
+                                        >
+                                            <div className="revealer absolute inset-0 bg-primary-pink z-10 scale-x-0" />
                                             <img
                                                 src={feature.image}
                                                 alt={feature.title}
-                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                                                className="w-full h-full object-cover opacity-0 transition-transform duration-1000 group-hover:scale-110"
                                             />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80" />
-                                            <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} mix-blend-color opacity-40`} />
-                                        </div>
-
-                                        {/* HUD Elements */}
-                                        <div className="absolute top-4 right-4 flex gap-1.5">
-                                            <div className="w-3 h-3 bg-pokemon-yellow border-2 border-black rounded-full" />
-                                            <div className="w-3 h-3 bg-pokemon-pink border-2 border-black rounded-full" />
-                                        </div>
-
-                                        {/* Content */}
-                                        <div className="relative p-8 h-full flex flex-col justify-end text-white">
-                                            <div className="p-6 rounded-xl bg-black/40 border-4 border-black backdrop-blur-sm group-hover:border-pokemon-pink transition-all">
-                                                <Icon className="w-10 h-10 mb-4 text-pokemon-blue" />
-                                                <h3 className="text-2xl font-black mb-2 uppercase tracking-tighter italic">{feature.title}</h3>
-                                                <p className="text-gray-200 text-xs font-medium uppercase tracking-widest leading-relaxed">
-                                                    {feature.description}
-                                                </p>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                                            
+                                            <div className="absolute bottom-6 left-6 flex items-center gap-4">
+                                                <div className={`p-4 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10 ${feature.color}`}>
+                                                    <Icon className="w-8 h-8" />
+                                                </div>
+                                                <h3 className="text-3xl font-black text-white italic uppercase">{feature.title}</h3>
                                             </div>
+                                        </Link>
+
+                                        <div className="feature-text w-full md:w-2/5 space-y-6">
+                                            <div className="flex items-center gap-4 text-xs font-black uppercase tracking-[1em] text-primary-pink">
+                                                <div className="w-12 h-1 bg-primary-pink" />
+                                                Sección {index + 1}
+                                            </div>
+                                            <h3 className="text-4xl md:text-5xl font-black text-white uppercase italic tracking-tighter">
+                                                {feature.title}
+                                            </h3>
+                                            <p className="text-gray-400 text-lg md:text-xl font-medium leading-relaxed uppercase tracking-wider">
+                                                {feature.description}
+                                            </p>
+                                            <Link 
+                                                href={feature.link}
+                                                className={`inline-flex items-center gap-4 px-8 py-4 rounded-xl bg-white text-black font-black uppercase tracking-widest hover:bg-primary-pink hover:text-white transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,46,151,0.3)] hover:-translate-y-1`}
+                                            >
+                                                Explorar Ahora
+                                            </Link>
                                         </div>
-                                    </Link>
+                                    </div>
                                 );
                             })}
                         </div>
                     </div>
                 </section>
 
-                {/* Social Section */}
-                <section ref={socialRef} className="py-24 bg-[#0a0a0a] border-t-4 border-black relative overflow-hidden">
+                <section ref={socialRef} className="py-32 bg-[#050505] border-t border-white/5 perspective-1000">
                     <div className="container mx-auto px-4 text-center">
-                        <div className="mb-12">
-                            <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter italic flex items-center justify-center gap-4">
-                                <FiYoutube className="text-red-600" />
-                                Últimas <span className="text-red-600">Novedades</span>
+                        <div className="mb-20">
+                            <h2 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter italic flex flex-col md:flex-row items-center justify-center gap-6">
+                                <FiYoutube className="text-red-600 drop-shadow-[0_0_20px_rgba(255,0,0,0.5)]" />
+                                <span>Últimas <span className="text-red-600">Novedades</span></span>
                             </h2>
-                            <p className="text-gray-400 mt-4 text-sm font-bold uppercase tracking-widest">
-                                Sigue a @ShuraHiwa en YouTube
+                            <p className="text-gray-500 mt-6 text-base font-black uppercase tracking-[0.5em]">
+                                Contenido exclusivo de @ShuraHiwa
                             </p>
                         </div>
 
-                        <div className="max-w-4xl mx-auto bg-black rounded-xl border-4 border-gray-800 overflow-hidden shadow-[0_0_20px_rgba(255,0,0,0.3)] p-8">
-                            <YoutubeShorts />
-                        </div>
+                        {!isLoading && <YouTubeFeedComponent />}
                     </div>
                 </section>
+                <UpdateModal />
             </div>
         </>
     );
-};
-
-export default Home;
+}

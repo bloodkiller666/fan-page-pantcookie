@@ -2,7 +2,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { FaChevronDown } from 'react-icons/fa';
 
 interface FaqItem {
@@ -61,31 +61,22 @@ export default function Faq() {
                 <h2 className={`text-xl font-black uppercase tracking-widest transition-colors duration-300 ${item.questionColor} group-hover:opacity-80`}>
                   {item.question}
                 </h2>
-                <motion.div
-                  animate={{ rotate: activeIndex === index ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={`text-2xl ${item.questionColor}`}
+                <div
+                  className={`text-2xl ${item.questionColor} transition-transform duration-300 ${activeIndex === index ? 'rotate-180' : 'rotate-0'}`}
                 >
                   <FaChevronDown />
-                </motion.div>
+                </div>
               </button>
 
-              <AnimatePresence>
                 {activeIndex === index && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                  >
+                  <div>
                     <div className="px-6 pb-6 pt-0 border-t border-gray-100/10">
                       <p className="text-gray-600 dark:text-gray-300 font-medium leading-relaxed mt-4">
                         {item.answer}
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
                 )}
-              </AnimatePresence>
             </div>
           ))}
         </div>
