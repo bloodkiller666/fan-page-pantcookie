@@ -16,7 +16,7 @@ const ChatInterface = () => {
     const [isUploading, setIsUploading] = useState(false);
     const [pendingImage, setPendingImage] = useState<{ url: string, base64: string, name: string } | null>(null);
     const [isSoundEnabled, setIsSoundEnabled] = useState(true);
-    const [botIntensity, setBotIntensity] = useState(0.8); // 0.2 (Serio) - 1.0 (Caótico)
+    const [botIntensity, setBotIntensity] = useState(0.8);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     // Timers refs
@@ -26,18 +26,6 @@ const ChatInterface = () => {
 
     // Initial constants
     const MAX_INACTIVITY_TIME = 3 * 60 * 1000; // 3 minutes
-    const MAX_WORDS = 2000;
-
-    const countWords = (str: string) => {
-        return str.trim() === '' ? 0 : str.trim().split(/\s+/).length;
-    };
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newValue = e.target.value;
-        if (countWords(newValue) <= MAX_WORDS) {
-            setInputValue(newValue);
-        }
-    };
 
     // Auto-resize textarea logic
     useEffect(() => {
@@ -166,13 +154,7 @@ const ChatInterface = () => {
     };
 
     const onEmojiClick = (emojiObject: any) => {
-        setInputValue(prev => {
-            const newValue = prev + emojiObject.emoji;
-            if (countWords(newValue) <= MAX_WORDS) {
-                return newValue;
-            }
-            return prev;
-        });
+        setInputValue(prev => prev + emojiObject.emoji);
     };
 
     const speakText = (text: string) => {
@@ -460,7 +442,7 @@ const ChatInterface = () => {
                         <textarea
                             ref={textareaRef}
                             value={inputValue}
-                            onChange={handleInputChange}
+                            onChange={(e) => setInputValue(e.target.value)}
                             onFocus={() => setShowEmojiPicker(false)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey) {

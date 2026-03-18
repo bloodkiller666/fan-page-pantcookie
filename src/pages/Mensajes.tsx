@@ -253,6 +253,7 @@ const MensajesContent = () => {
       filter: 'blur(10px)',
       stagger: 0.05,
       ease: 'back.out(2)',
+      delay: 0.8,
     });
   }, []);
 

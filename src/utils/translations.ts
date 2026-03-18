@@ -43,7 +43,7 @@ export const translations = {
             heroGames: "Jugar Ahora",
             features: {
                 multimediaDesc: "Explora nuestra galería de fotos y videos de la comunidad Pantcookie",
-                gamesDesc: "Diviértete con nuestro rompecabezas interactivo y compite en el ranking",
+                gamesDesc: "Diviértete con nuestros juegos interactivos y compite en el ranking",
                 aboutDesc: "Conoce más sobre ShuraHiwa y la comunidad Pantcookie"
             }
         },
@@ -450,7 +450,7 @@ export const translations = {
             heroGames: "Play Now",
             features: {
                 multimediaDesc: "Explore our photo and video gallery of the Pantcookie community",
-                gamesDesc: "Have fun with our interactive puzzle and compete in the ranking",
+                gamesDesc: "Have fun with our interactive games and compete in the rankings",
                 aboutDesc: "Learn more about ShuraHiwa and the Pantcookie community"
             }
         },
@@ -858,7 +858,7 @@ export const translations = {
             heroGames: "今すぐプレイ",
             features: {
                 multimediaDesc: "Pantcookieコミュニティの写真やビデオギャラリーを探索",
-                gamesDesc: "インタラクティブなパズルで楽しみ、ランキングで競争しましょう",
+                gamesDesc: "インタラクティブなゲームを楽しんで、ランキングで競い合いましょう！",
                 aboutDesc: "ShuraHiwaとPantcookieコミュニティについてもっと知る"
             }
         },
@@ -1266,7 +1266,7 @@ export const translations = {
             heroGames: "Jouer Maintenant",
             features: {
                 multimediaDesc: "Explorez notre galerie photos et vidéos de la communauté Pantcookie",
-                gamesDesc: "Amusez-vous avec notre puzzle interactif et participez au classement",
+                gamesDesc: "Amusez-vous avec nos jeux interactifs et participez aux classements !",
                 aboutDesc: "En savoir plus sur ShuraHiwa et la communauté Pantcookie"
             }
         },

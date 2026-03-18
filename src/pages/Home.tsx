@@ -13,11 +13,13 @@ import UpdateModal from '../components/home/UpdateModal';
 import HeartsEffect from '../components/ui/HeartsEffect';
 import { FiYoutube, FiImage, FiTarget, FiInfo } from 'react-icons/fi';
 import { splitText, blurReveal } from '../utils/animations';
+import { useTransition } from '../context/TransitionContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
     const { t, language } = useLanguage();
+    const { transitionTo } = useTransition();
     const [isLoading, setIsLoading] = useState(true);
     const [showInteractiveCalendar, setShowInteractiveCalendar] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -29,17 +31,22 @@ export default function Home() {
     const socialRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
-        const handleLoadingComplete = () => {
-            setIsLoading(false);
-        };
-
-        window.addEventListener('loading_complete', handleLoadingComplete);
+        // 1. Verificamos si ya existe la marca en el navegador
+        const hasVisited = localStorage.getItem('shakegang_onboarding_done');
         
-        if (sessionStorage.getItem('loading_done_v9')) {
+        if (hasVisited) {
+            // Si ya entró antes, quitamos el loading de inmediato
             setIsLoading(false);
-        }
+        } else {
+            // Si es nuevo, dejamos que el LoadingScreen haga su trabajo
+            const handleLoadingComplete = () => {
+                localStorage.setItem('shakegang_onboarding_done', 'true');
+                setIsLoading(false);
+            };
 
-        return () => window.removeEventListener('loading_complete', handleLoadingComplete);
+            window.addEventListener('loading_complete', handleLoadingComplete);
+            return () => window.removeEventListener('loading_complete', handleLoadingComplete);
+        }
     }, []);
 
     useEffect(() => {
@@ -56,7 +63,7 @@ export default function Home() {
                     stagger: 0.02,
                     duration: 1,
                     ease: "power4.out",
-                    delay: 0.5
+                    delay: 0.8
                 });
             }
 
@@ -115,6 +122,11 @@ export default function Home() {
         }, containerRef);
         return () => ctx.revert();
     }, [isLoading, language, t]);
+
+    const handleNav = (e, path) => {
+        e.preventDefault();
+        transitionTo(path);
+    };
 
     const features = [
         {
@@ -238,6 +250,7 @@ export default function Home() {
                                         <Link 
                                             href={feature.link}
                                             className="w-full md:w-3/5 group relative h-[50vh] overflow-hidden rounded-3xl border border-white/10 bg-white/5"
+                                            onClick={(e) => handleNav(e, feature.link)}
                                         >
                                             <div className="revealer absolute inset-0 bg-primary-pink z-10 scale-x-0" />
                                             <img
@@ -269,6 +282,7 @@ export default function Home() {
                                             <Link 
                                                 href={feature.link}
                                                 className={`inline-flex items-center gap-4 px-8 py-4 rounded-xl bg-white text-black font-black uppercase tracking-widest hover:bg-primary-pink hover:text-white transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,46,151,0.3)] hover:-translate-y-1`}
+                                                onClick={(e) => handleNav(e, feature.link)}
                                             >
                                                 Explorar Ahora
                                             </Link>

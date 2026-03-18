@@ -10,7 +10,7 @@ const Chat = () => {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            gsap.from(containerRef.current, { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' });
+            gsap.from(containerRef.current, { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out', delay: 0.8 });
         });
         return () => ctx.revert();
     }, []);

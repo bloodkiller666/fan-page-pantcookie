@@ -47,7 +47,8 @@ const GamesContent = () => {
                     opacity: 0,
                     duration: 0.6,
                     ease: "power2.out",
-                    stagger: 0.1
+                    stagger: 0.1,
+                    delay: 0.8
                 });
 
                 // Animación de las cartas de juego
@@ -56,9 +57,10 @@ const GamesContent = () => {
                     opacity: 0,
                     y: 40,
                     duration: 0.8,
-                    stagger: 0.15, // Tiempo entre cada carta
-                    ease: "back.out(1.5)", // El "1.5" da ese rebote Pokémon
-                    clearProps: "all" // Limpia los estilos al terminar para no interferir con el hover
+                    stagger: 0.15,
+                    ease: "back.out(1.5)",
+                    clearProps: "all",
+                    delay: 0.9
                 });
 
                 // Animación del footer
@@ -67,7 +69,7 @@ const GamesContent = () => {
                     opacity: 0,
                     duration: 1,
                     ease: "expo.out",
-                    delay: 0.5 // Espera un poco a que las cartas bajen
+                    delay: 1.2
                 });
             }, containerRef);
 

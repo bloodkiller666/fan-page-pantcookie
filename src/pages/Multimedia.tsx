@@ -50,7 +50,7 @@ const MultimediaContent = () => {
     useEffect(() => {
         const ctx = gsap.context(() => {
             // Initial Container Fade In
-            gsap.from(containerRef.current, { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' });
+            gsap.from(containerRef.current, { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out', delay: 0.8 });
 
             // Parallax Header
             gsap.to(headerRef.current, {
@@ -69,7 +69,7 @@ const MultimediaContent = () => {
                 scale: 0.8,
                 opacity: 0,
                 duration: 0.8,
-                delay: 0.3,
+                delay: 1.0,
                 ease: 'back.out(1.7)'
             });
 
@@ -78,7 +78,7 @@ const MultimediaContent = () => {
                 y: 50,
                 opacity: 0,
                 duration: 0.8,
-                delay: 0.5,
+                delay: 1.2,
                 ease: 'power3.out'
             });
         }, containerRef);

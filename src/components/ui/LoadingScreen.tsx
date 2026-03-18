@@ -56,7 +56,7 @@ export default function LoadingScreen() {
 
                     return nextVal;
                 });
-            }, 60); // 60ms * 100 = ~6 segundos
+            }, 50);
 
             return () => clearInterval(timer);
         }, containerRef);
@@ -85,9 +85,9 @@ export default function LoadingScreen() {
                 </div>
             </div>
 
-            {/* Mensajes Dinámicos Inferiores */}
-            <div className="absolute bottom-16 left-10 right-10 flex flex-col items-center text-primary-pink font-pixel text-[8px] uppercase tracking-[0.4em]">
-                <div className="overflow-hidden h-5">
+            {/* Mensajes Dinámicos Inferiores - AJUSTAR TAMAÑO Y COLOR AQUÍ */}
+            <div className="absolute bottom-16 left-10 right-10 flex flex-col items-center text-white font-pixel text-[22px] uppercase tracking-[0.4em]">
+                <div className="overflow-hidden h-10">
                     <p key={statusText} className="animate-fade-in-up">
                         {statusText}
                     </p>

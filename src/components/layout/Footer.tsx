@@ -2,9 +2,16 @@
 import Link from 'next/link';
 import { FiX, FiHelpCircle, FiFileText, FiShield, FiAlertCircle } from 'react-icons/fi';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTransition } from '../../context/TransitionContext';
 
 const Footer = () => {
     const { t } = useLanguage();
+    const { transitionTo } = useTransition();
+
+    const handleNav = (e, path) => {
+        e.preventDefault();
+        transitionTo(path);
+    };
 
     return (
         <footer className="bg-[#0a0a0c] text-white py-12 border-t border-[#ff00ff]/20 relative overflow-hidden">
@@ -29,13 +36,21 @@ const Footer = () => {
                         <h4 className="text-sm font-bold uppercase tracking-widest text-[#00ffff] mb-4 border-b border-[#00ffff]/30 pb-2 inline-block">Legal</h4>
                         <ul className="space-y-3">
                             <li>
-                                <Link href="/legal/terms" className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group">
+                                <Link 
+                                    href="/legal/terms" 
+                                    className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group"
+                                    onClick={(e) => handleNav(e, '/legal/terms')}
+                                >
                                     <FiFileText className="group-hover:text-[#ff00ff] transition-colors" />
                                     {t('footer.terms') || "Términos y Condiciones"}
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/legal/privacy" className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group">
+                                <Link 
+                                    href="/legal/privacy" 
+                                    className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group"
+                                    onClick={(e) => handleNav(e, '/legal/privacy')}
+                                >
                                     <FiShield className="group-hover:text-[#ff00ff] transition-colors" />
                                     {t('footer.privacy') || "Privacidad"}
                                 </Link>
@@ -48,7 +63,11 @@ const Footer = () => {
                         <h4 className="text-sm font-bold uppercase tracking-widest text-[#00ffff] mb-4 border-b border-[#00ffff]/30 pb-2 inline-block">Ayuda</h4>
                         <ul className="space-y-3">
                             <li>
-                                <Link href="/legal/faq" className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group">
+                                <Link 
+                                    href="/legal/faq" 
+                                    className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group"
+                                    onClick={(e) => handleNav(e, '/legal/faq')}
+                                >
                                     <FiHelpCircle className="group-hover:text-[#ff00ff] transition-colors" />
                                     {t('footer.faq') || "FAQ"}
                                 </Link>

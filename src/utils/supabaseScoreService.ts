@@ -28,7 +28,6 @@ export const submitGameScore = async (
   metadata?: any
 ) => {
   try {
-    // 1. Check for existing score for this player/game/difficulty
     let query = supabase
       .from('game_scores')
       .select('*')
@@ -47,14 +46,11 @@ export const submitGameScore = async (
 
     const existingScore = existingScores && existingScores.length > 0 ? existingScores[0] : null;
 
-    // 2. Compare scores
     let shouldUpdate = false;
     if (existingScore) {
-      // For puzzle, lower score is better
       if (gameType === 'puzzle') {
         if (score < existingScore.score) shouldUpdate = true;
       } else {
-        // For others, higher score is better
         if (score > existingScore.score) shouldUpdate = true;
       }
 
@@ -62,7 +58,6 @@ export const submitGameScore = async (
         return { success: true, updated: false, ignored: true };
       }
 
-      // 3. Delete old records if we are updating (cleans up any potential duplicates too)
       let deleteQuery = supabase
         .from('game_scores')
         .delete()
@@ -83,7 +78,6 @@ export const submitGameScore = async (
       }
     }
 
-    // 4. Insert new score
     const { data, error } = await supabase
       .from('game_scores')
       .insert([

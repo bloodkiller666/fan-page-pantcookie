@@ -88,7 +88,7 @@ export async function POST(req: Request) {
     } catch (e) {
         return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
     }
-    
+
     const { message, imageUrl, intensity = 0.8 } = body;
 
     if (!message && !imageUrl) {
@@ -150,7 +150,7 @@ export async function POST(req: Request) {
                         `;
 
             let userContent: any = message;
-            
+
             if (imageUrl) {
                 userContent = [
                     { type: "text", text: message || "Mira esta imagen" },
@@ -170,16 +170,16 @@ export async function POST(req: Request) {
                     }
                 ],
                 model: imageUrl ? "llama-3.2-90b-vision-preview" : "llama-3.3-70b-versatile",
-                temperature: Number(intensity), // Usar intensidad dinámica
+                temperature: Number(intensity),
                 max_tokens: 200,
             });
 
             let responseText = completion.choices[0]?.message?.content || "¡Ups! Se me quemó la galleta en el horno. Intenta de nuevo.";
-            
+
             // Detectar cambio de intensidad
             let newIntensity: number | undefined;
             const intensityMatch = responseText.match(/\|\|\|INTENSITY:([\d.]+)\|\|\|/);
-            
+
             if (intensityMatch) {
                 newIntensity = parseFloat(intensityMatch[1]);
                 responseText = responseText.replace(intensityMatch[0], '').trim();
@@ -188,9 +188,11 @@ export async function POST(req: Request) {
             return NextResponse.json({ response: responseText, newIntensity });
         } catch (error) {
             console.error('Groq API Error:', error);
-            if(error ?.status === 429){
-                return NextResponse.json({ response:
-                    "¡Epa! Me dieron demasiados Pantcakes y ahora tengo lag mental (Límite de cuota alcanzado).😵‍💫 Regresa mañana, que mi código necesita dormir." });
+            if (error?.status === 429) {
+                return NextResponse.json({
+                    response:
+                        "¡Epa! Me dieron demasiados Pantcakes y ahora tengo lag mental (Límite de cuota alcanzado).😵‍💫 Regresa mañana, que mi código necesita dormir."
+                });
             }
             const fallback = getBotResponse(message);
             return NextResponse.json({ response: fallback });

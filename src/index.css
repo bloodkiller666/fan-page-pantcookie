@@ -390,3 +390,142 @@
   display: inline-block;
   animation: metallic-shimmer 2s ease-in-out infinite;
 }
+@layer utilities {
+  /* New Redesign Utilities */
+  .bg-holo-dark {
+    background-color: rgba(10, 20, 30, 0.7);
+  }
+
+  .shadow-holo-glow {
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.5), inset 0 0 10px rgba(0, 242, 255, 0.2);
+  }
+
+  .shadow-holo-glow-pink {
+    box-shadow: 0 0 15px rgba(255, 0, 229, 0.5);
+  }
+
+  .scanlines::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0, 242, 255, 0.05) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .holo-float {
+    animation: holo-float 4s ease-in-out infinite;
+    perspective: 1000px;
+  }
+
+  @keyframes holo-float {
+    0%, 100% { transform: translateY(0px) rotateX(2deg); }
+    50% { transform: translateY(-5px) rotateX(0deg); }
+  }
+
+  .nav-link:hover {
+    text-shadow: 2px 0 #ff00e5, -2px 0 #00f2ff;
+    letter-spacing: 0.1em;
+  }
+
+  .glass-panel {
+    backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(0, 242, 255, 0.3);
+  }
+
+  /* TCG Specific Animations */
+  @keyframes iridescent {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes cosmic-glow {
+    0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4)) drop-shadow(0 0 20px rgba(255, 0, 122, 0.4)); }
+    50% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.7)) drop-shadow(0 0 40px rgba(255, 0, 122, 0.7)); }
+  }
+
+  .holo-overlay {
+    background: linear-gradient(125deg, 
+      rgba(255,255,255,0) 0%, 
+      rgba(255,255,255,0.1) 10%, 
+      rgba(255,0,255,0.1) 20%, 
+      rgba(0,255,255,0.1) 30%, 
+      rgba(255,255,255,0) 40%,
+      rgba(255,255,0,0.1) 60%,
+      rgba(255,255,255,0) 100%);
+    background-size: 300% 300%;
+    animation: iridescent 10s ease infinite;
+    mix-blend-mode: overlay;
+  }
+
+  .bg-holographic {
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,0,122,0.15) 25%, rgba(0,255,255,0.15) 50%, rgba(109,40,217,0.15) 75%, rgba(255,255,255,0.2) 100%);
+  }
+
+  .bg-metallic-gold {
+     background-image: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+  }
+
+  .bg-metallic-silver {
+    background-image: linear-gradient(45deg, #999, #eee, #888, #ddd, #777);
+  }
+
+  .card-texture {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.05;
+    pointer-events: none;
+  }
+
+  .etched-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l20 20M10 0l10 10M0 10l10 10' stroke='rgba(0,0,0,0.1)' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
+  }
+
+  .shiny-sparkle {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='white'/%3E%3Ccircle cx='50' cy='30' r='1.5' fill='white'/%3E%3Ccircle cx='80' cy='80' r='1' fill='white'/%3E%3Ccircle cx='20' cy='70' r='0.5' fill='white'/%3E%3C/svg%3E");
+    background-size: 100px 100px;
+  }
+
+  .legendary-border {
+    box-shadow: 
+      0 0 0 2px #bf953f,
+      0 0 0 5px #fcf6ba,
+      0 0 15px 5px rgba(255, 215, 0, 0.4);
+  }
+
+  .tcg-card-glow {
+    animation: cosmic-glow 4s ease-in-out infinite;
+  }
+
+  /* Shimmer effect for buttons/cards */
+  .shimmer-effect::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 4s infinite linear;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+  }
+
+  /* Additional Glass Utilities */
+  .glass-card {
+    @apply bg-white/10 dark:bg-black/40 backdrop-blur-xl border border-white/20 shadow-2xl;
+  }
+}

@@ -1,8 +1,10 @@
 import '../index.css';
 import { LanguageProvider } from '../context/LanguageContext';
+import { TransitionProvider } from '../context/TransitionContext';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ScrollToTop from '../components/layout/ScrollToTop';
+import ClientTransitionHandler from '../components/layout/ClientTransitionHandler';
 
 export const metadata = {
     metadataBase: new URL('https://pantcookie.com'),
@@ -14,7 +16,7 @@ export const metadata = {
     openGraph: {
         title: 'Fan Page Pantcookie | ShuraHiwa',
         description: 'Comunidad dedicada a ShuraHiwa con multimedia, juegos interactivos y más.',
-        url: 'https://pantcookie.com', // Placeholder URL, update if known
+        url: 'https://pantcookie.com',
         siteName: 'Fan Page Pantcookie',
         images: [
             {
@@ -39,14 +41,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="en">
             <body>
                 <LanguageProvider>
-                    <ScrollToTop />
-                    <div className="flex flex-col min-h-screen">
-                        <Navbar />
-                        <main className="flex-grow">
-                            {children}
-                        </main>
-                        <Footer />
-                    </div>
+                    <TransitionProvider>
+                        <ClientTransitionHandler>
+                            <ScrollToTop />
+                            <div className="flex flex-col min-h-screen">
+                                <Navbar />
+                                <main className="flex-grow">
+                                    {children}
+                                </main>
+                                <Footer />
+                            </div>
+                        </ClientTransitionHandler>
+                    </TransitionProvider>
                 </LanguageProvider>
             </body>
         </html>

@@ -52,7 +52,7 @@ export default function AdminDashboard() {
     // Message CRUD
     const handleDeleteMessage = async (id: string) => {
         if (!confirm('¿Estás seguro de eliminar este mensaje?')) return;
-        
+
         const result = await deleteWallMessage(id);
         if (result.success) {
             setMessages(messages.filter(m => m.id !== id));
@@ -93,16 +93,15 @@ export default function AdminDashboard() {
             .from('game_scores')
             .select('*')
             .order('created_at', { ascending: false });
-        
+
         if (error) console.error('Error fetching scores:', error);
         else setScores(data || []);
         setLoading(false);
     };
 
-    // CRUD Operations
     const handleDeleteScore = async (id: string) => {
         if (!confirm('¿Estás seguro de eliminar este puntaje?')) return;
-        
+
         const { error } = await supabase
             .from('game_scores')
             .delete()
@@ -142,7 +141,6 @@ export default function AdminDashboard() {
         }
     };
 
-    // Filtering
     const filteredScores = scores.filter(score => {
         const matchesGame = filterGame === 'all' || score.game_type === filterGame;
         const matchesSearch = score.player_name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -187,12 +185,10 @@ export default function AdminDashboard() {
 
     return (
         <div className="bg-background-light dark:bg-background-dark text-zinc-800 dark:text-slate-100 font-sans min-h-screen selection:bg-primary selection:text-white overflow-x-hidden transition-colors duration-300">
-            {/* Ambient Background */}
             <div className="fixed inset-0 cyber-grid-bg bg-[radial-gradient(circle,rgba(255,31,142,0.08)_1px,transparent_1px)] opacity-30 pointer-events-none"></div>
             <div className="fixed top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
             <div className="fixed bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#00f2ff]/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
 
-            {/* Header */}
             <header className="sticky top-0 z-50 glass-panel backdrop-blur-xl bg-white/80 dark:bg-slate-950/60 border-b border-zinc-200 dark:border-white/5 transition-colors duration-300">
                 <div className="max-w-[1800px] mx-auto px-6 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-10">
@@ -312,16 +308,16 @@ export default function AdminDashboard() {
                                     <>
                                         <div className="relative">
                                             <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
-                                            <input 
-                                                type="text" 
-                                                placeholder="Buscar jugador..." 
+                                            <input
+                                                type="text"
+                                                placeholder="Buscar jugador..."
                                                 value={searchTerm}
                                                 onChange={(e) => setSearchTerm(e.target.value)}
                                                 className="w-full sm:w-48 pl-9 pr-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/20 text-zinc-900 dark:text-white focus:border-primary outline-none transition-colors"
                                             />
                                         </div>
-                                        <select 
-                                            value={filterGame} 
+                                        <select
+                                            value={filterGame}
                                             onChange={(e) => setFilterGame(e.target.value)}
                                             className="py-2 px-3 text-xs rounded-xl border border-zinc-300 dark:border-white/10 bg-white dark:bg-black/20 text-zinc-900 dark:text-white outline-none cursor-pointer"
                                         >
@@ -377,7 +373,7 @@ export default function AdminDashboard() {
                                                             </div>
                                                             <div>
                                                                 {editingId === score.id ? (
-                                                                    <input type="text" value={editForm.player_name} onChange={(e) => setEditForm({...editForm, player_name: e.target.value})} className="bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-2 py-1 text-sm text-zinc-900 dark:text-white outline-none focus:border-primary" />
+                                                                    <input type="text" value={editForm.player_name} onChange={(e) => setEditForm({ ...editForm, player_name: e.target.value })} className="bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-2 py-1 text-sm text-zinc-900 dark:text-white outline-none focus:border-primary" />
                                                                 ) : (
                                                                     <span className="block font-display font-black text-lg tracking-tight leading-none text-zinc-900 dark:text-white">{score.player_name}</span>
                                                                 )}
@@ -391,13 +387,13 @@ export default function AdminDashboard() {
                                                         </span>
                                                         <div className="text-[10px] text-zinc-500 dark:text-slate-500 uppercase mt-2">
                                                             {editingId === score.id ? (
-                                                                <input type="text" value={editForm.difficulty} onChange={(e) => setEditForm({...editForm, difficulty: e.target.value})} className="bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-1 py-0.5" />
+                                                                <input type="text" value={editForm.difficulty} onChange={(e) => setEditForm({ ...editForm, difficulty: e.target.value })} className="bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-1 py-0.5" />
                                                             ) : score.difficulty}
                                                         </div>
                                                     </td>
                                                     <td className="px-8 py-6">
                                                         {editingId === score.id ? (
-                                                            <input type="number" value={editForm.score} onChange={(e) => setEditForm({...editForm, score: e.target.value})} className="bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-2 py-1 flex w-24 text-zinc-900 dark:text-white focus:border-primary outline-none" />
+                                                            <input type="number" value={editForm.score} onChange={(e) => setEditForm({ ...editForm, score: e.target.value })} className="bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-2 py-1 flex w-24 text-zinc-900 dark:text-white focus:border-primary outline-none" />
                                                         ) : (
                                                             <span className={`text-xl font-black font-display ${score.score >= 1000 ? 'text-[#00f2ff] drop-shadow-[0_0_8px_rgba(0,242,255,0.3)]' : 'text-zinc-700 dark:text-slate-300'}`}>
                                                                 {score.score.toLocaleString()}
@@ -437,7 +433,7 @@ export default function AdminDashboard() {
                                                             </div>
                                                             <div>
                                                                 {editingId === msg.id ? (
-                                                                    <input type="text" value={editMessageForm.username} onChange={(e) => setEditMessageForm({...editMessageForm, username: e.target.value})} className="bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-2 py-1 text-sm text-zinc-900 dark:text-white outline-none focus:border-primary" />
+                                                                    <input type="text" value={editMessageForm.username} onChange={(e) => setEditMessageForm({ ...editMessageForm, username: e.target.value })} className="bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-2 py-1 text-sm text-zinc-900 dark:text-white outline-none focus:border-primary" />
                                                                 ) : (
                                                                     <span className="block font-display font-black text-lg tracking-tight leading-none text-zinc-900 dark:text-white">{msg.username}</span>
                                                                 )}
@@ -448,7 +444,7 @@ export default function AdminDashboard() {
                                                     <td className="px-8 py-6">
                                                         <div className="flex items-center gap-2 text-sm max-w-xs">
                                                             {editingId === msg.id ? (
-                                                                <textarea value={editMessageForm.text} onChange={(e) => setEditMessageForm({...editMessageForm, text: e.target.value})} className="w-full bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-2 py-1 text-sm text-zinc-900 dark:text-white outline-none focus:border-primary" rows={2} />
+                                                                <textarea value={editMessageForm.text} onChange={(e) => setEditMessageForm({ ...editMessageForm, text: e.target.value })} className="w-full bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-2 py-1 text-sm text-zinc-900 dark:text-white outline-none focus:border-primary" rows={2} />
                                                             ) : (
                                                                 <span className="text-zinc-700 dark:text-slate-300 truncate">{msg.text}</span>
                                                             )}
@@ -456,7 +452,7 @@ export default function AdminDashboard() {
                                                     </td>
                                                     <td className="px-8 py-6">
                                                         {editingId === msg.id ? (
-                                                            <input type="text" value={editMessageForm.country} onChange={(e) => setEditMessageForm({...editMessageForm, country: e.target.value})} className="w-20 bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-2 py-1 text-sm text-zinc-900 dark:text-white outline-none focus:border-primary" />
+                                                            <input type="text" value={editMessageForm.country} onChange={(e) => setEditMessageForm({ ...editMessageForm, country: e.target.value })} className="w-20 bg-white dark:bg-black/50 border border-zinc-300 dark:border-white/20 rounded px-2 py-1 text-sm text-zinc-900 dark:text-white outline-none focus:border-primary" />
                                                         ) : (
                                                             <div className="flex items-center gap-2">
                                                                 <span className="text-xs font-bold text-zinc-700 dark:text-slate-300">{msg.country}</span>
