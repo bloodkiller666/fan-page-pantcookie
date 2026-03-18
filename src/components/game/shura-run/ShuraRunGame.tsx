@@ -4,6 +4,7 @@ import { submitGameScore, checkExistingScore } from '../../../utils/supabaseScor
 import Leaderboard from '../Leaderboard';
 import { useLanguage } from '../../../context/LanguageContext';
 import ScoreOverwriteModal from '../ScoreOverwriteModal';
+import RulesModal from '../RulesModal';
 
 export default function ShuraRunGame() {
     const { t } = useLanguage();
@@ -17,6 +18,7 @@ export default function ShuraRunGame() {
     const [showPauseMenu, setShowPauseMenu] = useState(false);
     const [showExitConfirm, setShowExitConfirm] = useState(false);
     const [showOverwriteModal, setShowOverwriteModal] = useState(false);
+    const [showRules, setShowRules] = useState(false);
     const [pendingScoreData, setPendingScoreData] = useState<{ score: number, oldScore: number } | null>(null);
     const GRAVITY = 0.5;
     const JUMP_FORCE = -15;
@@ -449,22 +451,43 @@ export default function ShuraRunGame() {
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/70 text-white p-6 text-center z-10">
                         <h2 className="text-4xl md:text-6xl font-black text-pokemon-yellow mb-4 uppercase italic tracking-tighter transform -rotate-3">Shura Run</h2>
 
-                        <p className="mb-8 text-gray-300 font-medium text-lg">
+                        <p className="mb-8 text-gray-300 font-medium text-lg max-w-sm">
                             {t('games.shuraRun.tapToJump')}
-                            <br />
-                            <span className="text-sm mt-2 block opacity-80">{t('games.shuraRun.instructions')}</span>
                         </p>
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                startGame();
-                            }}
-                            className="bg-pokemon-pink hover:bg-pink-600 text-white font-black text-xl py-4 px-10 rounded-full border-4 border-white shadow-[0_0_20px_rgba(236,72,153,0.5)] transition-transform hover:scale-110 active:scale-95 animate-pulse"
-                        >
-                            {t('games.shuraRun.playNow')}
-                        </button>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    startGame();
+                                }}
+                                className="bg-primary hover:bg-primary/80 text-white font-black text-xl py-4 px-10 rounded-full border-4 border-white shadow-xl transition-transform hover:scale-105 active:scale-95 animate-pulse"
+                            >
+                                {t('games.shuraRun.playNow')}
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowRules(true);
+                                }}
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold py-4 px-8 rounded-full border-2 border-white/30 transition-all hover:border-white/60"
+                            >
+                                {t('games.puzzle.rulesTitle').split(' ')[1] || 'Reglas'}
+                            </button>
+                        </div>
                     </div>
                 )}
+
+                <RulesModal
+                    isOpen={showRules}
+                    onContinue={() => setShowRules(false)}
+                    title="Shura Run"
+                    icon="directions_run"
+                    instructions={[
+                        { icon: 'space_bar', title: 'Salto', description: t('games.shuraRun.tapToJump') },
+                        { icon: 'pancake', title: 'Puntaje', description: t('games.shuraRun.instructions') },
+                        { icon: 'speed', title: 'Dificultad', description: 'La velocidad aumenta conforme avanzas. ¡No te detengas!' }
+                    ]}
+                />
 
                 {gameState === 'gameover' && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white p-6 text-center z-10 animate-fade-in">

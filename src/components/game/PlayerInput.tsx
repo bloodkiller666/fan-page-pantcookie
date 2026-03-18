@@ -9,32 +9,31 @@ interface PlayerInputProps {
     hideButton?: boolean;
 }
 
-const PlayerInput = ({ playerName, onNameChange, onStartGame, hideButton = false }: PlayerInputProps) => {
+const PlayerInput = ({ playerName, onNameChange, onStartGame, hideButton = false }) => {
     const { t } = useLanguage();
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         onStartGame();
     };
 
     return (
-        <div className="max-w-md mx-auto my-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                    <label htmlFor="playerName" className="block text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">
-                        {t('common.enterName')}
+        <div className="bg-white/5 dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl p-8 border border-primary/20 shadow-2xl animate-fade-in-up">
+            <form onSubmit={handleSubmit} className="space-y-8">
+                <div className="space-y-4">
+                    <label className="block text-xs font-black uppercase tracking-[0.3em] text-primary/70 ml-1" htmlFor="username">
+                        {t('common.playerName') || 'Ingresa tu nombre de jugador'}
                     </label>
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <FiUser className="h-5 w-5 text-gray-400" />
-                        </div>
+                    <div className="relative group">
+                        <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within:text-primary transition-colors text-2xl">
+                            badge
+                        </span>
                         <input
+                            id="username"
                             type="text"
-                            id="playerName"
                             value={playerName}
                             onChange={(e) => onNameChange(e.target.value)}
-                            placeholder={t('common.namePlaceholder')}
-                            maxLength={20}
-                            className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 rounded-xl focus:ring-2 focus:ring-primary-pink focus:border-transparent transition"
+                            placeholder={t('common.placeholderNickname') || 'Escribe tu nickname...'}
+                            className="w-full bg-background-dark/30 border-2 border-primary/20 rounded-2xl py-5 pl-14 pr-6 text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300 font-bold text-lg"
                             required
                         />
                     </div>
@@ -43,9 +42,9 @@ const PlayerInput = ({ playerName, onNameChange, onStartGame, hideButton = false
                 {!hideButton && (
                     <button
                         type="submit"
-                        className="w-full bg-gradient-to-r from-primary-pink to-primary-blue text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transition transform hover:scale-105"
+                        className="w-full py-6 rounded-2xl bg-gradient-to-r from-primary via-[#00f2ff] to-primary bg-[length:200%_auto] hover:bg-right transition-all duration-700 text-background-dark font-black text-xl uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(13,185,242,0.3)] hover:shadow-[0_0_50px_rgba(13,185,242,0.5)] active:scale-[0.98] transform"
                     >
-                        {t('common.startGame')}
+                        {t('games.puzzle.startGame') || 'Comenzar Juego'}
                     </button>
                 )}
             </form>

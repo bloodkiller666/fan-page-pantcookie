@@ -147,12 +147,14 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
     }
 
     return (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-full">
             <div
-                className={`grid transition-all duration-500 bg-gray-800 p-2 rounded-xl shadow-2xl neon-border overflow-hidden ${isCompleted ? 'gap-0 border-4 border-primary-pink' : 'gap-[2px]'}`}
+                className={`grid transition-all duration-700 bg-background-dark/40 p-3 rounded-2xl shadow-3xl border-2 border-primary/30 overflow-hidden relative
+                    ${isCompleted ? 'gap-0 ring-4 ring-primary shadow-[0_0_50px_rgba(13,185,242,0.3)]' : 'gap-1.5'}`}
                 style={{
                     gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-                    width: 'min(800px, 95vw)', // Much larger max width
+                    width: '100%',
+                    maxWidth: '800px',
                     aspectRatio: '1',
                 }}
             >
@@ -165,41 +167,59 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
                             key={index}
                             onClick={() => handleTileClick(index)}
                             className={`
-                                relative transition-all duration-200 overflow-hidden
+                                relative transition-all duration-300 overflow-hidden rounded-md
                                 ${isCompleted 
                                     ? 'z-0 opacity-100 cursor-default' 
                                     : isCorrectPosition
-                                        ? 'z-0 opacity-100 cursor-default ring-1 ring-green-500/50'
-                                        : 'cursor-pointer hover:brightness-110 hover:sepia-[.5]'
+                                        ? 'z-0 cursor-default ring-2 ring-primary/20 hover:brightness-110'
+                                        : 'cursor-pointer hover:scale-[1.03] hover:brightness-110 hover:z-10'
                                 }
-                                ${isSelected && !isCompleted ? 'z-10 ring-4 ring-primary-pink shadow-[0_0_15px_rgba(255,0,255,0.6)] scale-95 rounded-lg' : ''}
+                                ${isSelected && !isCompleted ? 'z-20 ring-4 ring-primary shadow-[0_0_25px_rgba(13,185,242,0.8)] scale-90 rounded-xl' : ''}
                             `}
                             style={getTileStyle(tileNumber)}
                         >
-                            {/* Locked Indicator */}
+                            {/* Correct Position Indicator */}
                             {isCorrectPosition && !isCompleted && (
-                                <div className="absolute inset-0 ring-inset ring-2 ring-green-400/30 pointer-events-none">
-                                    <div className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full shadow-[0_0_5px_rgba(0,255,0,0.8)]"></div>
+                                <div className="absolute inset-0 ring-inset ring-4 ring-primary/20 pointer-events-none">
+                                    <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-primary rounded-full shadow-[0_0_10px_rgba(13,185,242,1)] animate-pulse"></div>
                                 </div>
                             )}
 
                             {/* Selection Overlay */}
                             {isSelected && !isCompleted && (
-                                <div className="absolute inset-0 bg-primary-pink/20 pointer-events-none"></div>
+                                <div className="absolute inset-0 bg-primary/20 backdrop-blur-[1px] pointer-events-none animate-pulse"></div>
+                            )}
+                            
+                            {/* Hover effect for movable tiles */}
+                            {!isCorrectPosition && !isCompleted && (
+                                <div className="absolute inset-0 bg-white/5 opacity-0 hover:opacity-100 transition-opacity pointer-events-none"></div>
                             )}
                         </div>
                     );
                 })}
+                
+                {/* Border Glow for completed puzzle */}
+                {isCompleted && (
+                    <div className="absolute inset-0 pointer-events-none border-[12px] border-primary/5 rounded-xl"></div>
+                )}
             </div>
 
             {!isCompleted && (
-                <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm flex items-center gap-2">
-                    <span>Haz clic en una pieza y luego en otra para intercambiarlas.</span>
-                    <span className="flex items-center gap-1 text-green-500">
-                        <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                        Piezas correctas se bloquean.
-                    </span>
-                </p>
+                <div className="mt-8 flex flex-col md:flex-row items-center gap-4 bg-primary/5 px-6 py-3 rounded-2xl border border-primary/20 backdrop-blur-sm animate-fade-in">
+                    <div className="flex items-center gap-3">
+                        <span className="material-symbols-outlined text-primary">info</span>
+                        <p className="text-sm font-black uppercase tracking-widest text-slate-400">
+                            {t('games.puzzle.instruction') || 'Intercambia piezas para completar la imagen'}
+                        </p>
+                    </div>
+                    <div className="h-4 w-[1px] bg-primary/20 hidden md:block"></div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_rgba(13,185,242,1)]"></div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-primary/80">
+                            Piezas bloqueadas se iluminan
+                        </p>
+                    </div>
+                </div>
             )}
         </div>
     );

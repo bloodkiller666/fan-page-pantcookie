@@ -10,6 +10,7 @@ import { MdCatchingPokemon } from 'react-icons/md';
 import { useGameSounds } from '../../../hooks/useGameSounds';
 import { submitGameScore, checkExistingScore } from '../../../utils/supabaseScoreService';
 import ScoreOverwriteModal from '../ScoreOverwriteModal';
+import RulesModal from '../RulesModal';
 
 const TIMER_PER_QUESTION = 15;
 const TOTAL_QUESTIONS = 20;
@@ -635,46 +636,34 @@ const TriviaGame = () => {
             </button>
           </div>
 
-          {/* Rules Modal */}
-          {showRules && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-primary-blue/20">
-                <h3 className="text-2xl font-bold text-primary-blue mb-4 text-center">
-                  🧠 {t('games.trivia.musicRulesTitle')}
-                </h3>
-                <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-8 text-left">
-                  {pendingMode === 'insane' ? (
-                    <>
-                      <p>{t('games.trivia.musicInsane1')}</p>
-                      <p dangerouslySetInnerHTML={{ __html: t('games.trivia.musicInsane2') }} />
-                      <p dangerouslySetInnerHTML={{ __html: t('games.trivia.musicInsane3') }} />
-                      <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center gap-3 border border-blue-200 dark:border-blue-800">
-                        <FiHeadphones className="w-6 h-6 text-primary-blue animate-pulse" />
-                        <p className="text-xs font-bold text-primary-blue">{t('games.trivia.headphonesRecommended')}</p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p>{t('games.trivia.musicChaos1')}</p>
-                      <p>{t('games.trivia.musicChaos2')}</p>
-                      <p dangerouslySetInnerHTML={{ __html: t('games.trivia.musicChaos3') }} />
-                      <p>{t('games.trivia.musicChaos4')}</p>
-                      <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center gap-3 border border-blue-200 dark:border-blue-800">
-                        <FiHeadphones className="w-6 h-6 text-primary-blue animate-pulse" />
-                        <p className="text-xs font-bold text-primary-blue">{t('games.trivia.headphonesRecommended')}</p>
-                      </div>
-                    </>
-                  )}
-                </div>
-                <button
-                  onClick={confirmStartGame}
-                  className="w-full btn-modern bg-primary-blue text-white shadow-lg hover:bg-blue-600 py-3 rounded-xl font-bold text-lg"
-                >
-                  {t('games.trivia.go')}
-                </button>
-              </div>
-            </div>
-          )}
+        {/* Rules Modal */}
+        <RulesModal
+          isOpen={showRules}
+          onContinue={confirmStartGame}
+          title={category === 'music' ? t('games.trivia.musicRulesTitle') : t('games.trivia.rulesTitle')}
+          icon={category === 'music' ? 'headset' : 'psychology'}
+          instructions={
+            category === 'music'
+              ? (pendingMode === 'insane'
+                ? [
+                  { icon: 'psychology', title: 'Mental', description: t('games.trivia.musicInsane1') },
+                  { icon: 'headphones', title: 'Audio', description: t('games.trivia.musicInsane2') },
+                  { icon: 'timer', title: 'Tiempo', description: t('games.trivia.musicInsane3') }
+                ]
+                : [
+                  { icon: 'bolt', title: 'Velocidad', description: t('games.trivia.musicChaos1') },
+                  { icon: 'priority_high', title: 'Alerta', description: t('games.trivia.musicChaos2') },
+                  { icon: 'headphones', title: 'Escucha', description: t('games.trivia.musicChaos3') },
+                  { icon: 'star', title: 'Puntaje', description: t('games.trivia.musicChaos4') }
+                ])
+              : [
+                { icon: 'quiz', title: 'Reto', description: t('games.trivia.rule1') },
+                { icon: 'stars', title: 'Precisión', description: t('games.trivia.rule2') },
+                { icon: 'military_tech', title: 'Bonus', description: t('games.trivia.rule3') },
+                ...(pendingMode === 'timed' ? [{ icon: 'timer', title: 'Tiempo', description: t('games.trivia.timedWarning').replace('{time}', TIMER_PER_QUESTION.toString()) }] : [])
+              ]
+          }
+        />
         </div>
       );
     }
@@ -709,30 +698,6 @@ const TriviaGame = () => {
           </button>
         </div>
 
-        {/* Rules Modal */}
-        {showRules && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up border border-primary-blue/20">
-              <h3 className="text-2xl font-bold text-primary-blue mb-4 text-center">
-                🧠 {t('games.trivia.rulesTitle')}
-              </h3>
-              <div className="space-y-4 text-gray-600 dark:text-gray-300 mb-8 text-left">
-                <p>{t('games.trivia.rule1')}</p>
-                <p>{t('games.trivia.rule2')}</p>
-                <p>{t('games.trivia.rule3')}</p>
-                {pendingMode === 'timed' && (
-                  <p className="text-sm font-bold text-primary-pink">⚠️ {t('games.trivia.timedWarning').replace('{time}', TIMER_PER_QUESTION.toString())}</p>
-                )}
-              </div>
-              <button
-                onClick={confirmStartGame}
-                className="w-full btn-modern bg-primary-blue text-white shadow-lg hover:bg-blue-600 py-3 rounded-xl font-bold text-lg"
-              >
-                {t('games.puzzle.continue')}
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
