@@ -33,7 +33,7 @@ export default function Home() {
     useEffect(() => {
         // 1. Verificamos si ya existe la marca en el navegador
         const hasVisited = localStorage.getItem('shakegang_onboarding_done');
-        
+
         if (hasVisited) {
             // Si ya entró antes, quitamos el loading de inmediato
             setIsLoading(false);
@@ -90,12 +90,12 @@ export default function Home() {
                         }
                     });
 
-                    tl.fromTo(revealer, 
+                    tl.fromTo(revealer,
                         { scaleX: 0, transformOrigin: 'left' },
                         { scaleX: 1, duration: 0.6, ease: 'expo.inOut' }
                     )
-                    .set(img, { opacity: 1 })
-                    .to(revealer, { scaleX: 0, transformOrigin: 'right', duration: 0.6, ease: 'expo.inOut' });
+                        .set(img, { opacity: 1 })
+                        .to(revealer, { scaleX: 0, transformOrigin: 'right', duration: 0.6, ease: 'expo.inOut' });
                 }
             });
 
@@ -158,12 +158,11 @@ export default function Home() {
     return (
         <>
             {isLoading && <LoadingScreen />}
-            
-            <div 
-                ref={containerRef} 
-                className={`min-h-screen bg-black transition-opacity duration-700 ${
-                    isLoading ? 'opacity-0' : 'opacity-100'
-                }`}
+
+            <div
+                ref={containerRef}
+                className={`min-h-screen bg-black transition-opacity duration-700 ${isLoading ? 'opacity-0' : 'opacity-100'
+                    }`}
             >
                 <HeartsEffect />
                 <Hero />
@@ -173,15 +172,15 @@ export default function Home() {
                 <section ref={calendarSectionRef} className="py-20 bg-[#050505] border-y-4 border-black relative overflow-hidden min-h-screen flex flex-col items-center">
                     <div className="container mx-auto px-4 text-center h-full flex flex-col items-center">
                         <div className="relative z-20 mb-16 h-24 flex items-center justify-center">
-                            <h2 
+                            <h2
                                 ref={calendarTitleRef}
                                 className="text-4xl md:text-8xl font-black text-white uppercase italic tracking-tighter"
                             >
                                 {t('home.weeklyCalendar')}
                             </h2>
                         </div>
-                        
-                        <div 
+
+                        <div
                             ref={calendarContainerRef}
                             className="opacity-0 scale-95 max-w-5xl mx-auto w-full relative z-10"
                         >
@@ -230,9 +229,9 @@ export default function Home() {
                 <section ref={featuresRef} className="py-32 bg-black">
                     <div className="container mx-auto px-4">
                         <div className="text-center mb-32">
-                            <h2 
+                            <h2
                                 ref={exploreTitleRef}
-                                className="text-5xl md:text-8xl lg:text-9xl font-black text-white uppercase italic tracking-tighter leading-none"
+                                className="text-4xl md:text-6xl lg:text-7xl font-black text-white uppercase italic tracking-tighter leading-none"
                             >
                                 {t('home.exploreContent')}
                             </h2>
@@ -243,11 +242,11 @@ export default function Home() {
                                 const Icon = feature.icon;
                                 const isEven = index % 2 === 0;
                                 return (
-                                    <div 
+                                    <div
                                         key={index}
                                         className={`feature-card flex flex-col ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12 md:gap-24`}
                                     >
-                                        <Link 
+                                        <Link
                                             href={feature.link}
                                             className="w-full md:w-3/5 group relative h-[50vh] overflow-hidden rounded-3xl border border-white/10 bg-white/5"
                                             onClick={(e) => handleNav(e, feature.link)}
@@ -259,7 +258,7 @@ export default function Home() {
                                                 className="w-full h-full object-cover opacity-0 transition-transform duration-1000 group-hover:scale-110"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                                            
+
                                             <div className="absolute bottom-6 left-6 flex items-center gap-4">
                                                 <div className={`p-4 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10 ${feature.color}`}>
                                                     <Icon className="w-8 h-8" />
@@ -279,7 +278,7 @@ export default function Home() {
                                             <p className="text-gray-400 text-lg md:text-xl font-medium leading-relaxed uppercase tracking-wider">
                                                 {feature.description}
                                             </p>
-                                            <Link 
+                                            <Link
                                                 href={feature.link}
                                                 className={`inline-flex items-center gap-4 px-8 py-4 rounded-xl bg-white text-black font-black uppercase tracking-widest hover:bg-primary-pink hover:text-white transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,46,151,0.3)] hover:-translate-y-1`}
                                                 onClick={(e) => handleNav(e, feature.link)}
@@ -297,7 +296,7 @@ export default function Home() {
                 <section ref={socialRef} className="py-32 bg-[#050505] border-t border-white/5 perspective-1000">
                     <div className="container mx-auto px-4 text-center">
                         <div className="mb-20">
-                            <h2 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter italic flex flex-col md:flex-row items-center justify-center gap-6">
+                            <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter italic flex flex-col md:flex-row items-center justify-center gap-6">
                                 <FiYoutube className="text-red-600 drop-shadow-[0_0_20px_rgba(255,0,0,0.5)]" />
                                 <span>Últimas <span className="text-red-600">Novedades</span></span>
                             </h2>

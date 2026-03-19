@@ -6,6 +6,7 @@ import { FiHome, FiImage, FiVideo, FiTarget, FiInfo, FiMenu, FiX, FiSun, FiMoon,
 import { MdCatchingPokemon } from 'react-icons/md';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTransition } from '../../context/TransitionContext';
+import gsap from 'gsap';
 
 const Navbar = () => {
     const { t, setLanguage } = useLanguage();
@@ -13,6 +14,8 @@ const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const mobileMenuRef = useRef<HTMLDivElement>(null);
+    const overlayRef = useRef<HTMLDivElement>(null);
 
     const [theme, setTheme] = useState('dark');
     const pathname = usePathname();
@@ -39,6 +42,21 @@ const Navbar = () => {
         setTheme(newTheme);
         localStorage.setItem('theme-mode', newTheme);
     };
+
+    // Mobile Menu Animation with GSAP
+    useEffect(() => {
+        if (!mobileMenuRef.current || !overlayRef.current) return;
+
+        if (isMenuOpen) {
+            // Open animation
+            gsap.to(overlayRef.current, { opacity: 1, display: 'block', duration: 0.3 });
+            gsap.to(mobileMenuRef.current, { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' });
+        } else {
+            // Close animation
+            gsap.to(mobileMenuRef.current, { x: '100%', opacity: 0, duration: 0.4, ease: 'power3.in' });
+            gsap.to(overlayRef.current, { opacity: 0, display: 'none', duration: 0.3 });
+        }
+    }, [isMenuOpen]);
 
     const navLinks = [
         { path: '/', label: t('nav.home'), icon: FiHome },
@@ -93,35 +111,35 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="holo-float w-full max-w-7xl mx-auto px-4 mt-4 sticky top-4 z-50 font-orbitron">
-            <div className="glass-panel scanlines bg-holo-dark dark:bg-black/70 rounded-2xl shadow-holo-glow px-6 py-3 flex items-center justify-between transition-all duration-300">
-                
+        <nav className="w-full z-50 font-orbitron border-b border-[#00f2ff]/20">
+            <div className="glass-panel bg-holo-dark dark:bg-black/80 px-8 py-0 flex items-center justify-between transition-all duration-300 min-h-[70px]">
+
                 {/* Logo Section */}
-                <Link 
-                    href="/" 
+                <Link
+                    href="/"
                     className="flex items-center space-x-3 group"
                     onClick={(e) => handleNav(e, '/')}
                 >
                     <div className="relative group/logo">
                         <div className="absolute -inset-1 bg-gradient-to-r from-[#00f2ff] to-[#ff00e5] rounded-full opacity-0 group-hover/logo:opacity-50 blur transition-opacity duration-300"></div>
                         <div className="relative w-10 h-10 rounded-full overflow-hidden border border-[#00f2ff]/30 shadow-holo-glow">
-                            <img 
-                                src="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png" 
-                                alt="Shake-Gang Logo" 
+                            <img
+                                src="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png"
+                                alt="Shake-Gang Logo"
                                 className="w-full h-full object-cover"
                             />
                         </div>
                     </div>
                     <div className="hidden md:block">
-                        <h1 className="text-white text-xl font-black tracking-tighter italic drop-shadow-holo-glow leading-none">
+                        <h1 className="text-white text-2xl font-black tracking-tighter italic drop-shadow-holo-glow leading-none">
                             SHAKE-<span className="text-[#ff00e5]">GANG</span>
                         </h1>
-                        <p className="text-[8px] text-[#00f2ff] tracking-[0.3em] uppercase opacity-70">Community Network</p>
+                        <p className="text-[10px] text-[#00f2ff] tracking-[0.3em] uppercase opacity-70">Community Network</p>
                     </div>
                 </Link>
 
                 {/* Desktop Navigation */}
-                <ul className="hidden lg:flex items-center space-x-6 text-[10px] font-bold tracking-widest text-white">
+                <ul className="hidden lg:flex items-center space-x-8 text-sm font-bold tracking-widest text-white h-full">
                     {navLinks.map((link) => {
                         const safePathname = pathname || '';
                         const active = safePathname === link.path || safePathname.startsWith(link.path + '/') || (link.path !== '/' && safePathname.startsWith(link.path));
@@ -130,36 +148,42 @@ const Navbar = () => {
                         const isDropdownOpen = activeDropdown === link.path;
 
                         return (
-                            <li 
-                                key={link.path} 
+                            <li
+                                key={link.path}
                                 className="relative"
                                 onMouseEnter={() => hasSubMenu && handleMouseEnter(link.path)}
                                 onMouseLeave={() => hasSubMenu && handleMouseLeave()}
                             >
                                 <Link
                                     href={link.path}
-                                    className={`nav-link transition-all duration-300 hover:text-[#00f2ff] block py-2 ${actualActive ? 'text-[#00f2ff] border-b-2 border-[#00f2ff]' : 'text-white'}`}
+                                    className={`nav-link text-sm transition-all duration-300 hover:text-[#00f2ff] flex items-center gap-2 py-4 ${actualActive ? 'text-[#00f2ff] border-b-2 border-[#00f2ff]' : 'text-white border-b-2 border-transparent hover:border-[#00f2ff]/30'}`}
                                     onClick={(e) => handleNav(e, link.path)}
                                 >
                                     {link.label.toUpperCase()}
+                                    {hasSubMenu && <FiChevronDown className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />}
                                 </Link>
 
                                 {/* Dropdown Menu */}
                                 {hasSubMenu && isDropdownOpen && (
-                                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-black/80 backdrop-blur-xl border border-[#00f2ff]/30 rounded-xl shadow-holo-glow overflow-hidden z-50 animate-fade-in-up">
-                                        {link.subItems!.map((sub) => (
-                                            <Link
-                                                key={sub.path}
-                                                href={sub.path}
-                                                className="block px-4 py-3 text-[9px] hover:bg-[#00f2ff]/10 text-white hover:text-[#00f2ff] transition-colors border-b border-white/5 last:border-none uppercase"
-                                                onClick={(e) => {
-                                                    handleNav(e, sub.path);
-                                                    setActiveDropdown(null);
-                                                }}
-                                            >
-                                                {sub.label}
-                                            </Link>
-                                        ))}
+                                    <div className="absolute top-full left-0 mt-[2px] w-56 z-[100] animate-fade-in-up">
+                                        <div className="bg-black/95 backdrop-blur-2xl border border-[#00f2ff]/30 rounded-xl shadow-[0_20px_50px_rgba(0,242,255,0.3)] overflow-hidden">
+                                            <div className="flex flex-col">
+                                                {link.subItems!.map((sub) => (
+                                                    <Link
+                                                        key={sub.path}
+                                                        href={sub.path}
+                                                        className="flex items-center gap-3 px-6 py-4 text-xs hover:bg-[#00f2ff]/10 text-white hover:text-[#00f2ff] transition-all border-b border-white/5 last:border-none uppercase font-bold"
+                                                        onClick={(e) => {
+                                                            handleNav(e, sub.path);
+                                                            setActiveDropdown(null);
+                                                        }}
+                                                    >
+                                                        {sub.icon && <sub.icon className="text-[#00f2ff] text-sm" />}
+                                                        <span>{sub.label}</span>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
                             </li>
@@ -167,89 +191,72 @@ const Navbar = () => {
                     })}
                 </ul>
 
-                {/* Utilities Section */}
-                <div className="flex items-center space-x-6">
-                    {/* Language Selector */}
-                    <div className="relative group">
-                        <button className="flex items-center space-x-2 text-white hover:text-[#00f2ff] transition-colors group">
-                            <FiGlobe className="h-4 w-4 text-[#00f2ff] group-hover:animate-pulse" />
-                            <span className="text-[10px] hidden sm:block uppercase">{t('nav.language')}</span>
-                        </button>
-                        <div className="absolute right-0 top-full pt-4 w-32 hidden group-hover:block z-50">
-                            <div className="bg-black/90 backdrop-blur-xl border border-[#00f2ff]/30 rounded-xl shadow-holo-glow overflow-hidden">
-                                {['en', 'ja', 'fr', 'es'].map((lang) => (
-                                    <button
-                                        key={lang}
-                                        onClick={() => setLanguage(lang)}
-                                        className="block w-full text-left px-4 py-2 text-[9px] text-white hover:bg-[#00f2ff]/10 hover:text-[#00f2ff] transition-colors uppercase border-b border-white/5 last:border-none"
-                                    >
-                                        {lang === 'en' ? 'English' : lang === 'ja' ? '日本語' : lang === 'fr' ? 'Français' : 'Español'}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                {/* Theme Toggle / Mobile Menu Toggle */}
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={toggleTheme}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-indigo-900 border-[#00f2ff]' : 'bg-yellow-400 border-[#ff00e5]'} border-2 shadow-holo-glow hover:scale-110 active:scale-95`}
+                    >
+                        {theme === 'dark' ? <FiMoon className="text-white text-sm" /> : <FiSun className="text-white text-sm" />}
+                    </button>
 
-                    {/* Theme Toggle / Avatar Link */}
-                    <div className="flex items-center gap-4">
-                        <button 
-                            onClick={toggleTheme}
-                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-indigo-900 border-[#00f2ff]' : 'bg-yellow-400 border-[#ff00e5]'} border-2 shadow-holo-glow hover:scale-110 active:scale-95`}
-                        >
-                            {theme === 'dark' ? <FiMoon className="text-white text-xs" /> : <FiSun className="text-white text-xs" />}
-                        </button>
-
-                        <div className="relative group cursor-pointer" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                            <div className="absolute -inset-1 bg-gradient-to-r from-[#00f2ff] to-[#ff00e5] rounded-full opacity-70 group-hover:opacity-100 blur transition-opacity duration-300"></div>
-                            <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/50">
-                                <img 
-                                    src="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png" 
-                                    alt="Profile" 
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Mobile Menu Toggle */}
-                    <button className="lg:hidden text-[#00f2ff]" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                        {isMenuOpen ? <FiX className="h-6 w-6" /> : <FiMenu className="h-6 w-6" />}
+                    <button className="lg:hidden text-[#00f2ff] p-2 hover:bg-[#00f2ff]/10 rounded-xl transition-colors" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                        <FiMenu className="h-8 w-8" />
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Menu Overlay */}
-            {isMenuOpen && (
-                <div className="lg:hidden mt-4 glass-panel bg-black/90 rounded-2xl shadow-holo-glow overflow-hidden animate-fade-in-up">
-                    <ul className="flex flex-col p-4 text-[10px] font-bold tracking-widest">
+            {/* GSAP Side Mobile Menu */}
+            <div
+                ref={overlayRef}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] hidden opacity-0"
+                onClick={() => setIsMenuOpen(false)}
+            />
+
+            <div
+                ref={mobileMenuRef}
+                className="fixed top-0 right-0 h-full w-[80vw] max-w-sm bg-black/95 border-l border-[#00f2ff]/30 z-[70] shadow-2xl opacity-0 translate-x-full overflow-y-auto"
+            >
+                <div className="p-8">
+                    <div className="flex items-center justify-between mb-12">
+                        <h2 className="text-[#00f2ff] text-2xl font-black italic tracking-tighter">MENU</h2>
+                        <button onClick={() => setIsMenuOpen(false)} className="text-white p-2">
+                            <FiX className="h-8 w-8" />
+                        </button>
+                    </div>
+
+                    <ul className="space-y-4">
                         {navLinks.map((link) => (
-                            <li key={link.path}>
+                            <li key={link.path} className="border-b border-white/5 pb-2">
                                 <Link
                                     href={link.path}
-                                    className="block py-4 px-6 text-white hover:text-[#00f2ff] border-b border-white/5 uppercase"
+                                    className="block py-3 text-xl font-bold text-white hover:text-[#00f2ff] transition-colors uppercase italic"
                                     onClick={(e) => handleNav(e, link.path)}
                                 >
                                     {link.label}
                                 </Link>
                                 {link.subItems && (
-                                    <div className="bg-white/5 pl-8">
+                                    <ul className="mt-2 space-y-2 pl-4">
                                         {link.subItems.map(sub => (
-                                            <Link
-                                                key={sub.path}
-                                                href={sub.path}
-                                                className="block py-3 px-6 text-[8px] text-gray-400 hover:text-[#00f2ff] uppercase"
-                                                onClick={(e) => handleNav(e, sub.path)}
-                                            >
-                                                {sub.label}
-                                            </Link>
+                                            <li key={sub.path}>
+                                                <Link
+                                                    key={sub.path}
+                                                    href={sub.path}
+                                                    className="block py-2 text-sm text-gray-400 hover:text-[#00f2ff] uppercase"
+                                                    onClick={(e) => handleNav(e, sub.path)}
+                                                >
+                                                    — {sub.label}
+                                                </Link>
+                                            </li>
                                         ))}
-                                    </div>
+                                    </ul>
                                 )}
                             </li>
                         ))}
                     </ul>
                 </div>
-            )}
+            </div>
+
 
             {/* Decorative bottom highlight */}
             <div className="w-1/2 h-[1px] mx-auto mt-2 bg-gradient-to-r from-transparent via-[#00f2ff] to-transparent opacity-50 shadow-holo-glow"></div>

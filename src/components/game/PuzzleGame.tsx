@@ -35,6 +35,19 @@ const PuzzleGame = () => {
         }
     }, []);
 
+    // Timer Logic
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        if (isTimerRunning) {
+            interval = setInterval(() => {
+                setElapsedTime(prev => prev + 1);
+            }, 1000);
+        }
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [isTimerRunning]);
+
     const startGame = () => {
         if (!playerName.trim()) {
             alert(t('games.puzzle.alertName') || '¡Por favor ingresa tu nombre!');
@@ -88,6 +101,22 @@ const PuzzleGame = () => {
         setShowVictoryScreen(false);
     };
 
+    const handleShare = () => {
+        const timeStr = `${Math.floor(elapsedTime / 60)}:${(elapsedTime % 60).toString().padStart(2, '0')}`;
+        const text = `¡Acabo de completar el Puzzle Challenge en dificultad ${difficulty.toUpperCase()} en solo ${timeStr}! ¿Puedes superarme?`;
+
+        if (navigator.share) {
+            navigator.share({
+                title: 'Puzzle Challenge Result',
+                text: text,
+                url: window.location.href,
+            }).catch(console.error);
+        } else {
+            navigator.clipboard.writeText(`${text} ${window.location.href}`);
+            alert('¡Resultado copiado al portapapeles!');
+        }
+    };
+
     const restartGame = () => {
         const image = getRandomPuzzleImage();
         setCurrentImage(image);
@@ -110,18 +139,18 @@ const PuzzleGame = () => {
     const puzzleRules = [
         {
             icon: 'drag_pan',
-            title: t('games.puzzle.rule1Title') || 'Mueve las piezas',
-            description: t('games.puzzle.rule1Desc') || 'Arrastra las piezas para completar la imagen correctamente.'
+            title: t('Mueve las piezas') || 'Mueve las piezas',
+            description: t('Arrastra las piezas para completar la imagen correctamente.') || 'Arrastra las piezas para completar la imagen correctamente.'
         },
         {
             icon: 'timer',
-            title: t('games.puzzle.rule2Title') || 'Velocidad es clave',
-            description: t('games.puzzle.rule2Desc') || 'Completa en el menor tiempo posible para subir en el ranking.'
+            title: t('Velocidad es clave') || 'Velocidad es clave',
+            description: t('Completa en el menor tiempo posible para subir en el ranking.') || 'Completa en el menor tiempo posible para subir en el ranking.'
         },
         {
             icon: 'warning',
-            title: t('games.puzzle.rule3Title') || 'Cuidado al cambiar',
-            description: t('games.puzzle.rule3Desc') || 'Cambiar la dificultad reiniciará tu progreso actual de inmediato.'
+            title: t('Cuidado al cambiar') || 'Cuidado al cambiar',
+            description: t('Cambiar la dificultad reiniciará tu progreso actual de inmediato.') || 'Cambiar la dificultad reiniciará tu progreso actual de inmediato.'
         }
     ];
 
@@ -159,7 +188,7 @@ const PuzzleGame = () => {
             <main className="flex-1 flex flex-col lg:flex-row p-8 lg:p-12 gap-12 max-w-[1600px] mx-auto w-full">
                 {/* Left Side: Interaction Area */}
                 <div className="flex-1 flex flex-col gap-12">
-                    
+
                     {/* VIEW: SETUP */}
                     {gameState === 'setup' && (
                         <div className="space-y-12 animate-fade-in">
@@ -172,13 +201,13 @@ const PuzzleGame = () => {
                                 </p>
                             </div>
 
-                            <DifficultySelector 
-                                difficulty={difficulty} 
+                            <DifficultySelector
+                                difficulty={difficulty}
                                 onSelectDifficulty={changeDifficulty}
                                 disabled={false}
                             />
 
-                            <PlayerInput 
+                            <PlayerInput
                                 playerName={playerName}
                                 onNameChange={setPlayerName}
                                 onStartGame={startGame}
@@ -192,21 +221,21 @@ const PuzzleGame = () => {
                                 <div className="flex items-center gap-10">
                                     <div className="flex flex-col">
                                         <span className="text-[10px] uppercase tracking-[0.3em] text-slate-500 dark:text-primary/60 font-black mb-1">Dificultad</span>
-                                        <span className="text-2xl font-black text-slate-900 dark:text-slate-100 italic uppercase">{difficulty}</span>
+                                        <span className="text-2xl font-black text-slate-900 dark:text-white italic uppercase">{difficulty}</span>
                                     </div>
                                     <div className="h-12 w-[1.5px] bg-slate-300 dark:bg-primary/20"></div>
                                     <div className="flex flex-col">
                                         <span className="text-[10px] uppercase tracking-[0.3em] text-slate-500 dark:text-primary/60 font-black mb-1">Cronómetro</span>
                                         <div className="flex items-center gap-3">
-                                            <span className="text-3xl font-black text-primary font-mono tabular-nums drop-shadow-[0_0_10px_rgba(13,185,242,0.4)]">
+                                            <span className="text-3xl font-black text-black font-mono tabular-nums drop-shadow-[0_0_10px_rgba(13,185,242,0.4)]">
                                                 {Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:{(elapsedTime % 60).toString().padStart(2, '0')}
                                             </span>
-                                            <span className="material-symbols-outlined text-primary text-2xl animate-spin-slow">timer</span>
+                                            <span className="material-symbols-outlined text-black text-2xl animate-spin-slow">timer</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="flex gap-4">
-                                    <button 
+                                    <button
                                         onClick={() => {
                                             setIsTimerRunning(false);
                                             setShowPauseMenu(true);
@@ -226,20 +255,20 @@ const PuzzleGame = () => {
                                     onComplete={handlePuzzleComplete}
                                     isCompleted={gameState === 'completed'}
                                 />
-                                
+
                                 {gameState === 'completed' && (
                                     <div className="absolute inset-0 flex items-center justify-center bg-background-dark/20 backdrop-blur-sm rounded-3xl animate-fade-in z-30">
                                         <button
                                             onClick={() => setShowVictoryScreen(true)}
                                             className="px-12 py-6 bg-primary text-background-dark font-black uppercase tracking-[0.3em] rounded-2xl shadow-[0_0_50px_rgba(13,185,242,0.6)] hover:scale-110 active:scale-95 transition-all animate-bounce"
                                         >
-                                            {t('games.puzzle.viewResults') || 'Ver Resultados'}
+                                            {t('Ver Resultados') || 'Ver Resultados'}
                                         </button>
                                     </div>
                                 )}
                             </div>
 
-                            <button 
+                            <button
                                 onClick={restartGame}
                                 className="w-full lg:w-fit self-center flex items-center justify-center gap-3 bg-slate-800 dark:bg-slate-700/50 hover:bg-red-500 hover:shadow-red-500/30 transition-all text-white px-12 py-4 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl active:scale-95 border border-white/5"
                             >
@@ -259,44 +288,44 @@ const PuzzleGame = () => {
                             </div>
                             <div className="relative flex flex-col items-center justify-center py-16 bg-white dark:bg-slate-900/40 rounded-[3rem] border border-slate-200 dark:border-primary/20 backdrop-blur-xl overflow-hidden shadow-2xl dark:shadow-none">
                                 <div className="absolute inset-0 opacity-10 pointer-events-none">
-                                    <div className="absolute top-10 left-10 text-primary transform -rotate-12 animate-pulse">
-                                        <span className="material-symbols-outlined text-[10rem]">star</span>
-                                    </div>
                                     <div className="absolute bottom-10 right-10 text-primary transform rotate-12 animate-pulse">
                                         <span className="material-symbols-outlined text-[10rem]">auto_awesome</span>
                                     </div>
                                 </div>
                                 <div className="relative z-10 text-center flex flex-col items-center">
-                                    <div className="mb-8 h-56 w-56 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary/20 shadow-[0_0_60px_rgba(13,185,242,0.2)]">
-                                        <span className="material-symbols-outlined text-[120px] text-primary drop-shadow-[0_0_15px_rgba(13,185,242,0.8)]" style={{fontVariationSettings: "'FILL' 1"}}>emoji_events</span>
+                                    <div className="mb-8 h-64 w-64 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary/20 shadow-[0_0_60px_rgba(13,185,242,0.2)]">
+                                        <span className="material-symbols-outlined text-primary drop-shadow-[0_0_20px_rgba(13,185,242,1)] transform scale-[5.5]" style={{ fontVariationSettings: "'FILL' 1" }}>emoji_events</span>
                                     </div>
                                     <h3 className="text-4xl font-black uppercase italic tracking-tighter mb-3 text-slate-900 dark:text-white">¡Victoria Magistral!</h3>
                                     <p className="text-slate-500 dark:text-slate-400 font-medium mb-10 max-w-md mx-auto px-6 leading-relaxed">Tu agilidad mental es impresionante. Has resuelto cada pieza con precisión quirúrgica.</p>
                                     <div className="flex flex-wrap justify-center gap-6 w-full px-6">
-                                        <div className="flex-1 min-w-[180px] bg-slate-50 dark:bg-slate-800/80 p-8 rounded-3xl border border-slate-200 dark:border-white/5 shadow-inner group hover:border-primary/30 transition-colors">
+                                        <div className="flex-1 min-w-[200px] bg-slate-50 dark:bg-slate-800/80 p-8 rounded-3xl border border-slate-200 dark:border-white/5 shadow-inner group hover:border-primary/30 transition-colors">
                                             <span className="material-symbols-outlined text-primary mb-4 text-4xl transform group-hover:scale-110 transition-transform">timer</span>
-                                            <p className="text-xs uppercase tracking-[0.3em] text-slate-500 font-black mb-2">Tiempo Final</p>
+                                            <p className="text-xs uppercase tracking-[0.1em] text-slate-500 font-black mb-2 sm:whitespace-nowrap">Tiempo Final</p>
                                             <p className="text-4xl font-black italic tracking-tighter text-slate-900 dark:text-slate-100">
                                                 {Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}
                                             </p>
                                         </div>
-                                        <div className="flex-1 min-w-[180px] bg-slate-50 dark:bg-slate-800/80 p-8 rounded-3xl border border-slate-200 dark:border-white/5 shadow-inner group hover:border-primary/30 transition-colors">
+                                        <div className="flex-1 min-w-[200px] bg-slate-50 dark:bg-slate-800/80 p-8 rounded-3xl border border-slate-200 dark:border-white/5 shadow-inner group hover:border-primary/30 transition-colors">
                                             <span className="material-symbols-outlined text-primary mb-4 text-4xl transform group-hover:scale-110 transition-transform">signal_cellular_alt</span>
-                                            <p className="text-xs uppercase tracking-[0.3em] text-slate-500 font-black mb-2">Dificultad</p>
-                                            <p className="text-4xl font-black italic tracking-tighter text-slate-900 dark:text-slate-100 uppercase">{difficulty}</p>
+                                            <p className="text-xs uppercase tracking-[0.1em] text-slate-500 font-black mb-2 sm:whitespace-nowrap">Dificultad</p>
+                                            <p className="text-4xl font-black italic tracking-tighter text-slate-900 dark:text-black uppercase">{difficulty}</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="flex flex-col items-center gap-6 mt-6">
-                                <button 
+                                <button
                                     onClick={resetGame}
                                     className="w-full max-w-md py-6 bg-[#ff007a] hover:bg-[#ff1a8a] text-white rounded-2xl text-2xl font-black tracking-[0.2em] uppercase transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_0_30px_rgba(255,0,122,0.4)] hover:shadow-[0_0_50px_rgba(255,0,122,0.6)]"
                                 >
                                     ¡JUGAR DE NUEVO!
                                 </button>
-                                <button className="flex items-center gap-3 text-slate-500 hover:text-primary font-black uppercase tracking-widest text-sm transition-all group">
+                                <button
+                                    onClick={handleShare}
+                                    className="flex items-center gap-3 text-slate-500 hover:text-primary font-black uppercase tracking-widest text-sm transition-all group"
+                                >
                                     <span className="material-symbols-outlined group-hover:scale-125 transition-transform">share</span>
                                     {t('common.shareResults') || 'Compartir Resultados'}
                                 </button>
@@ -314,7 +343,7 @@ const PuzzleGame = () => {
                             <div className="relative z-10">
                                 <h4 className="text-background-dark font-black text-2xl uppercase italic tracking-tighter mb-2">¿Necesitas ayuda?</h4>
                                 <p className="text-background-dark/80 text-sm font-bold mb-6 leading-tight">Usa una pista para revelar la posición de la siguiente pieza correcta.</p>
-                                <button className="bg-background-dark text-primary px-6 py-4 rounded-xl font-black text-sm w-full shadow-2xl hover:brightness-110 transition-all active:scale-95 uppercase tracking-widest border border-white/10">
+                                <button className="bg-background-dark text-white px-6 py-4 rounded-xl font-black text-sm w-full shadow-2xl hover:brightness-110 transition-all active:scale-95 uppercase tracking-widest border border-white/10">
                                     Usar Pista (3 Libres)
                                 </button>
                             </div>
@@ -322,7 +351,7 @@ const PuzzleGame = () => {
                             <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                         </div>
                     )}
-                    
+
                     <div className="bg-gradient-to-br from-primary/20 to-indigo-600/20 rounded-[2rem] p-8 border border-white/10 backdrop-blur-md shadow-xl">
                         <h4 className="font-black text-lg mb-2 flex items-center gap-3 italic tracking-tighter uppercase">
                             <span className="material-symbols-outlined text-[#ff007a] shadow-[0_0_10px_rgba(255,0,122,0.4)]">workspace_premium</span>
@@ -337,7 +366,7 @@ const PuzzleGame = () => {
                 </aside>
             </main>
 
-            <RulesModal 
+            <RulesModal
                 isOpen={showRules}
                 onContinue={confirmStartGame}
                 title="Reglas del Puzzle"
@@ -355,20 +384,23 @@ const PuzzleGame = () => {
                                     setShowPauseMenu(false);
                                     setIsTimerRunning(true);
                                 }}
-                                className="w-full py-5 bg-primary text-background-dark font-black uppercase tracking-[0.2em] rounded-2xl shadow-lg hover:brightness-110 active:scale-95 transition-all"
+                                className="w-full py-5 bg-gradient-to-r from-primary to-cyan-400 text-white font-black uppercase tracking-[0.3em] rounded-2xl shadow-[0_0_20px_rgba(13,185,242,0.4)] hover:scale-[1.03] hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-3"
                             >
+                                <span className="material-symbols-outlined">play_circle</span>
                                 {t('games.puzzle.continue') || 'Continuar'}
                             </button>
                             <button
                                 onClick={() => setShowRestartConfirm(true)}
-                                className="w-full py-5 bg-white/5 text-primary border border-primary/20 font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-primary/10 active:scale-95 transition-all"
+                                className="w-full py-5 bg-slate-800/80 text-primary border border-primary/30 font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-700 active:scale-95 transition-all flex items-center justify-center gap-3"
                             >
+                                <span className="material-symbols-outlined">restart_alt</span>
                                 {t('games.puzzle.restart') || 'Reiniciar'}
                             </button>
                             <button
                                 onClick={() => setShowExitConfirm(true)}
-                                className="w-full py-5 bg-red-600/10 text-red-500 border border-red-500/20 font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-red-500/20 active:scale-95 transition-all"
+                                className="w-full py-5 bg-red-500/10 text-red-400 border border-red-500/20 font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-red-500/20 active:scale-95 transition-all flex items-center justify-center gap-3"
                             >
+                                <span className="material-symbols-outlined">logout</span>
                                 {t('games.puzzle.exit') || 'Salir'}
                             </button>
                         </div>

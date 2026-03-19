@@ -180,8 +180,10 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
                         >
                             {/* Correct Position Indicator */}
                             {isCorrectPosition && !isCompleted && (
-                                <div className="absolute inset-0 ring-inset ring-4 ring-primary/20 pointer-events-none">
-                                    <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-primary rounded-full shadow-[0_0_10px_rgba(13,185,242,1)] animate-pulse"></div>
+                                <div className="absolute inset-0 ring-inset ring-2 ring-[#00ff66]/30 pointer-events-none transition-all duration-500">
+                                    <div className="absolute top-2 right-2 w-6 h-6 bg-[#00ff66] rounded-full shadow-[0_0_15px_rgba(0,255,102,0.8)] animate-pulse flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-slate-900 text-xs font-black">done</span>
+                                    </div>
                                 </div>
                             )}
 
@@ -214,9 +216,11 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
                     </div>
                     <div className="h-4 w-[1px] bg-primary/20 hidden md:block"></div>
                     <div className="flex items-center gap-2">
-                        <div className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_rgba(13,185,242,1)]"></div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-primary/80">
-                            Piezas bloqueadas se iluminan
+                        <div className="w-3 h-3 bg-[#00ff66] rounded-full animate-pulse shadow-[0_0_8px_rgba(0,255,102,1)] flex items-center justify-center">
+                            <span className="material-symbols-outlined text-[6px] text-slate-900 font-black">done</span>
+                        </div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-[#00ff66]">
+                            Piezas en posición correcta
                         </p>
                     </div>
                 </div>

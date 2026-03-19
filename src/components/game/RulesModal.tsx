@@ -33,7 +33,7 @@ const RulesModal: React.FC<RulesModalProps> = ({
         {/* Header Section */}
         <header className="p-8 border-b border-primary/20 flex flex-col items-center gap-4 text-center">
           <div className="bg-primary/10 p-4 rounded-full border border-primary/30 flex items-center justify-center">
-            <span className="material-symbols-outlined text-primary text-5xl">{icon}</span>
+            <span className="material-symbols-outlined text-white text-5xl">{icon}</span>
           </div>
           <div className="space-y-1">
             <h2 className="text-3xl font-bold tracking-tight text-slate-100 uppercase italic leading-none">{title}</h2>
@@ -44,16 +44,16 @@ const RulesModal: React.FC<RulesModalProps> = ({
         {/* Content Section */}
         <div className="p-8 space-y-6">
           <p className="text-slate-500 text-center text-xs uppercase tracking-[0.2em] font-black">
-            {t('common.instructions') || 'Instrucciones de Juego'}
+            {t('Instrucciones de Juego') || 'Instrucciones de Juego'}
           </p>
           <div className="space-y-4">
             {instructions.map((inst, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="flex items-start gap-4 p-4 rounded-2xl bg-primary/5 border border-primary/10 group hover:border-primary/40 transition-all duration-300 transform hover:translate-x-1"
               >
                 <div className="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-primary/20 text-primary shadow-inner">
-                  <span className="material-symbols-outlined text-2xl">{inst.icon}</span>
+                  <span className="material-symbols-outlined text-white text-2xl">{inst.icon}</span>
                 </div>
                 <div>
                   <h4 className="text-slate-100 font-bold text-lg leading-tight mb-1">{inst.title}</h4>
@@ -66,7 +66,7 @@ const RulesModal: React.FC<RulesModalProps> = ({
 
         {/* Footer Section */}
         <div className="p-8 pt-0 mt-auto">
-          <button 
+          <button
             onClick={onContinue}
             className="w-full bg-[#ff007a] text-white font-black py-5 px-6 rounded-2xl uppercase tracking-[0.2em] text-lg hover:brightness-110 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,0,122,0.4)] hover:shadow-[0_0_35px_rgba(255,0,122,0.6)] flex items-center justify-center gap-3 group"
           >
