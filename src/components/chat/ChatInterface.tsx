@@ -278,7 +278,7 @@ const ChatInterface = () => {
                         
                         <div className={`flex flex-col gap-1.5 max-w-[80%] ${msg.sender === 'user' ? 'items-end' : ''}`}>
                             <span className="text-[10px] font-bold text-primary dark:text-primary uppercase tracking-widest px-1">
-                                {msg.sender === 'bot' ? 'Pantcookie IA' : 'Core_Navigator'}
+                                {msg.sender === 'bot' ? 'Pantcookie IA' : 'Usuario'}
                             </span>
                             
                             <div className={`p-4 rounded-2xl shadow-lg leading-relaxed border ${

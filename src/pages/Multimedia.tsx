@@ -87,7 +87,7 @@ const MultimediaContent = () => {
 
     return (
         <div ref={containerRef} className="min-h-screen bg-pattern py-20 transition-colors duration-300">
-            <div className="container mx-auto px-4">
+            <div className={`mx-auto px-4 transition-all duration-500 ${activeTab === 'covers' ? 'max-w-[2100px]' : 'container'}`}>
                 {/* Header */}
                 <div ref={headerRef} className="mb-12 flex flex-col items-center text-center">
                     <h1 className="text-6xl md:text-8xl font-black mb-6 text-[#ff00ff] drop-shadow-sm dark:drop-shadow-[0_0_10px_rgba(255,0,255,0.8)] tracking-tighter uppercase italic">
@@ -180,7 +180,7 @@ const MultimediaContent = () => {
                 </div>
 
                 {/* Content - Removed problematic transition to fix flicker */}
-                <div className="relative">
+                <div className={`relative transition-all duration-500 ${activeTab === 'covers' ? 'max-w-[1600px] mx-auto' : ''}`}>
                     {activeTab === 'images' && <Gallery query={query} />}
                     {activeTab === 'videos' && <VideoPlayer query={query} />}
                     {activeTab === 'covers' && <MusicPlayer />}

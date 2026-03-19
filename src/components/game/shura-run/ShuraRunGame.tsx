@@ -5,6 +5,7 @@ import Leaderboard from '../Leaderboard';
 import { useLanguage } from '../../../context/LanguageContext';
 import ScoreOverwriteModal from '../ScoreOverwriteModal';
 import RulesModal from '../RulesModal';
+import PauseMenu from '../PauseMenu';
 
 export default function ShuraRunGame() {
     const { t } = useLanguage();
@@ -516,42 +517,12 @@ export default function ShuraRunGame() {
                 )}
 
                 {/* PAUSE MENU OVERLAY */}
-                {showPauseMenu && (
-                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
-                        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-xs w-full p-8 border-4 border-black animate-fade-in-up">
-                            <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">{t('games.puzzle.pause')}</h3>
-                            <div className="flex flex-col gap-4">
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        togglePause();
-                                    }}
-                                    className="w-full py-4 bg-pokemon-blue text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                                >
-                                    {t('games.puzzle.continue')}
-                                </button>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        startGame();
-                                    }}
-                                    className="w-full py-4 bg-pokemon-yellow text-black font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                                >
-                                    {t('games.puzzle.restart')}
-                                </button>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setShowExitConfirm(true);
-                                    }}
-                                    className="w-full py-4 bg-red-600 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                                >
-                                    {t('games.puzzle.exit')}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                <PauseMenu
+                    isOpen={showPauseMenu}
+                    onResume={togglePause}
+                    onRestart={startGame}
+                    onExit={() => setShowExitConfirm(true)}
+                />
 
                 {/* EXIT CONFIRMATION MODAL */}
                 {showExitConfirm && (

@@ -11,6 +11,7 @@ import { useGameSounds } from '../../../hooks/useGameSounds';
 import { submitGameScore, checkExistingScore } from '../../../utils/supabaseScoreService';
 import ScoreOverwriteModal from '../ScoreOverwriteModal';
 import RulesModal from '../RulesModal';
+import PauseMenu from '../PauseMenu';
 
 const TIMER_PER_QUESTION = 15;
 const TOTAL_QUESTIONS = 20;
@@ -1051,40 +1052,14 @@ const TriviaGame = () => {
       </div>
 
       {/* PAUSE MENU OVERLAY */}
-      <>
-        {showPauseMenu && (
-          <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-fade-in"
-          >
-            <div
-              className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-sm w-full p-8 border-4 border-black animate-fade-in-up"
-            >
-              <h3 className="text-3xl font-black text-center mb-8 uppercase italic tracking-tighter dark:text-white">{t('games.puzzle.pause')}</h3>
-              <div className="flex flex-col gap-4">
-                <button
-                  onClick={() => setShowPauseMenu(false)}
-                  className="w-full py-4 bg-primary-blue text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                >
-                  {t('games.puzzle.continue')}
-                </button>
-                <button
-                  onClick={() => setShowRestartConfirm(true)}
-                  className="w-full py-4 bg-yellow-500 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                >
-                  {t('games.puzzle.restart')}
-                </button>
-                <button
-                  onClick={() => setShowExitConfirm(true)}
-                  className="w-full py-4 bg-red-600 text-white font-black uppercase tracking-widest rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                >
-                  {t('games.puzzle.exit')}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+      <PauseMenu
+        isOpen={showPauseMenu}
+        onResume={() => setShowPauseMenu(false)}
+        onRestart={() => setShowRestartConfirm(true)}
+        onExit={() => setShowExitConfirm(true)}
+      />
 
-        {/* RESTART CONFIRMATION */}
+      {/* RESTART CONFIRMATION */}
         {showRestartConfirm && (
           <div
             className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in"
@@ -1146,7 +1121,6 @@ const TriviaGame = () => {
             </div>
           </div>
         )}
-      </>
     </div>
   );
 };

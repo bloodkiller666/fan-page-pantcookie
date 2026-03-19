@@ -10,6 +10,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useGameSounds } from '../../hooks/useGameSounds';
 import ScoreOverwriteModal from './ScoreOverwriteModal';
 import RulesModal from './RulesModal';
+import PauseMenu from './PauseMenu';
 
 const PuzzleGame = () => {
     const { t } = useLanguage();
@@ -374,39 +375,15 @@ const PuzzleGame = () => {
                 instructions={puzzleRules}
             />
 
-            {showPauseMenu && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
-                    <div className="bg-slate-900 border-2 border-primary/20 rounded-[3rem] shadow-3xl max-w-sm w-full p-10 animate-fade-in-up">
-                        <h3 className="text-4xl font-black text-center mb-10 uppercase italic tracking-tighter text-slate-100">Juego en <span className="text-primary">Pausa</span></h3>
-                        <div className="flex flex-col gap-5">
-                            <button
-                                onClick={() => {
-                                    setShowPauseMenu(false);
-                                    setIsTimerRunning(true);
-                                }}
-                                className="w-full py-5 bg-gradient-to-r from-primary to-cyan-400 text-white font-black uppercase tracking-[0.3em] rounded-2xl shadow-[0_0_20px_rgba(13,185,242,0.4)] hover:scale-[1.03] hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-3"
-                            >
-                                <span className="material-symbols-outlined">play_circle</span>
-                                {t('games.puzzle.continue') || 'Continuar'}
-                            </button>
-                            <button
-                                onClick={() => setShowRestartConfirm(true)}
-                                className="w-full py-5 bg-slate-800/80 text-primary border border-primary/30 font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-slate-700 active:scale-95 transition-all flex items-center justify-center gap-3"
-                            >
-                                <span className="material-symbols-outlined">restart_alt</span>
-                                {t('games.puzzle.restart') || 'Reiniciar'}
-                            </button>
-                            <button
-                                onClick={() => setShowExitConfirm(true)}
-                                className="w-full py-5 bg-red-500/10 text-red-400 border border-red-500/20 font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-red-500/20 active:scale-95 transition-all flex items-center justify-center gap-3"
-                            >
-                                <span className="material-symbols-outlined">logout</span>
-                                {t('games.puzzle.exit') || 'Salir'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <PauseMenu
+                isOpen={showPauseMenu}
+                onResume={() => {
+                    setShowPauseMenu(false);
+                    setIsTimerRunning(true);
+                }}
+                onRestart={() => setShowRestartConfirm(true)}
+                onExit={() => setShowExitConfirm(true)}
+            />
 
             {showRestartConfirm && (
                 <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fade-in">
