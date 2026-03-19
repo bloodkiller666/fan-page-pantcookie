@@ -250,105 +250,57 @@ const ChatInterface = () => {
     const isOffline = status === 'offline';
 
     return (
-        <div className="flex flex-col h-[800px] w-full max-w-2xl mx-auto bg-[#e5ddd5] dark:bg-[#0b0509] rounded-xl shadow-2xl overflow-hidden border border-black/20 dark:border-white/10 font-sans relative">
-            {/* Header */}
-            <div className="bg-primary-pink/90 dark:bg-[#2a1b25]/80 backdrop-blur-md p-3 text-white flex items-center justify-between shadow-sm z-20 relative border-b border-black/10 dark:border-white/5">
-                <div className="flex items-center gap-3">
-                    <div className="relative">
-                        <img
-                            src="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png"
-                            alt="Bot Avatar"
-                            className="w-10 h-10 rounded-full bg-white object-contain p-1"
-                        />
-                        {status === 'online' && (
-                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-pokemon-green rounded-full border-2 border-primary-pink dark:border-[#202c33]"></div>
-                        )}
-                    </div>
-                    <div>
-                        <h3 className="font-semibold text-base leading-tight">Pantcookie IA</h3>
-                        <p className="text-xs text-white/80">
-                            {status === 'online' ? t('chat.online') : t('chat.offline')}
-                        </p>
-                    </div>
-                </div>
-                <div className="flex gap-4 text-white/80">
-                    <button
-                        onClick={() => {
-                            if (isSoundEnabled) window.speechSynthesis.cancel();
-                            setIsSoundEnabled(!isSoundEnabled);
-                        }}
-                        className="hover:text-white transition-colors"
-                        title={isSoundEnabled ? "Desactivar voz" : "Activar voz"}
+        <div className="flex flex-col h-full w-full bg-transparent dark:bg-transparent overflow-hidden font-sans relative">
+            {/* Header - Moved info to Sidebar, keeping it minimal or hidden as requested by UI design */}
+            
+            {/* Scrollable Messages Area */}
+            <div
+                ref={scrollContainerRef}
+                className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide scroll-smooth relative z-10"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+                <style jsx>{`
+                    div::-webkit-scrollbar {
+                        display: none;
+                    }
+                `}</style>
+
+                {messages.map((msg) => (
+                    <div
+                        key={msg.id}
+                        className={`flex items-start gap-4 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
-                        {isSoundEnabled ? <FiVolume2 className="w-5 h-5" /> : <FiVolumeX className="w-5 h-5 opacity-70" />}
-                    </button>
-                    <button><FiVideo className="w-5 h-5 pointer-events-none opacity-50" /></button>
-                    <button><FiMoreVertical className="w-5 h-5 cursor-pointer hover:text-white" /></button>
-                </div>
-            </div>
-
-            {/* Content Wrapper - Handles Background and Scrolling independently */}
-            <div className="flex-1 relative overflow-hidden group">
-                {/* Fixed Background Layer */}
-                <div
-                    className="absolute inset-0 z-0 pointer-events-none"
-                    style={{
-                        backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')",
-                        backgroundRepeat: 'repeat',
-                        backgroundSize: '400px',
-                        opacity: 0.4,
-                        mixBlendMode: 'overlay'
-                    }}
-                ></div>
-
-                {/* Gradient Background Layer */}
-                <div className="absolute inset-0 bg-[#e5ddd5] dark:bg-radial-dark z-[-1]"></div>
-                <div className="absolute inset-0 bg-white/40 dark:bg-transparent backdrop-blur-[2px] z-[-1]"></div>
-
-                {/* Scrollable Messages Area */}
-                <div
-                    ref={scrollContainerRef}
-                    className="absolute inset-0 overflow-y-auto p-4 space-y-2 z-10 scrollbar-hide scroll-smooth"
-                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                >
-                    <style jsx>{`
-                        div::-webkit-scrollbar {
-                            display: none;
-                        }
-                    `}</style>
-                    {/* Security Message Mock */}
-                    <div className="flex justify-center mb-4">
-                        <div className="bg-[#fff5c4] dark:bg-[#182229]/80 backdrop-blur-sm text-gray-800 dark:text-[#ffde00] text-[10px] px-3 py-1.5 rounded-lg shadow-md border border-yellow-500/20 text-center max-w-[80%] font-medium">
-                            {t('chat.security')}
-                        </div>
-                    </div>
-
-                    {messages.map((msg) => (
-                        <div
-                            key={msg.id}
-                            className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                        >
-                            <div
-                                className={`max-w-[75%] rounded-2xl px-4 py-2 shadow-md text-sm relative group border-2 ${msg.sender === 'user'
-                                    ? 'bg-primary-blue text-white rounded-tr-none border-primary-blue-dark'
-                                    : 'bg-[var(--poke-card)] text-[var(--poke-text)] rounded-tl-none border-black/10 dark:border-white/10'
-                                    }`}
-                            >
-                                {msg.text && <p className="mb-3 break-words leading-relaxed">{msg.text}</p>}
+                        {msg.sender === 'bot' && (
+                            <div className="size-9 rounded-xl glass-panel border border-primary/40 flex items-center justify-center shrink-0 neon-glow-cyan">
+                                <span className="material-symbols-outlined text-primary text-xl">bolt</span>
+                            </div>
+                        )}
+                        
+                        <div className={`flex flex-col gap-1.5 max-w-[80%] ${msg.sender === 'user' ? 'items-end' : ''}`}>
+                            <span className="text-[10px] font-bold text-primary dark:text-primary uppercase tracking-widest px-1">
+                                {msg.sender === 'bot' ? 'Pantcookie IA' : 'Core_Navigator'}
+                            </span>
+                            
+                            <div className={`p-4 rounded-2xl shadow-lg leading-relaxed border ${
+                                msg.sender === 'user'
+                                    ? 'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tr-none'
+                                    : 'ai-bubble-gradient border-primary/10 text-slate-800 dark:text-slate-200 rounded-tl-none'
+                            }`}>
+                                {msg.text && <p className="break-words">{msg.text}</p>}
                                 {msg.fileUrl && (
-                                    <div className="mb-3">
+                                    <div className="mt-3">
                                         {(msg.fileName?.match(/\.(jpg|jpeg|png|gif|webp)$/i) || msg.fileUrl.startsWith('blob:') || msg.fileUrl.startsWith('data:image')) ? (
                                             <img
                                                 src={msg.fileUrl}
                                                 alt="Uploaded content"
-                                                className="max-w-full rounded-lg mb-2 max-h-60 object-contain border border-black/10 dark:border-white/10"
+                                                className="max-w-full rounded-lg max-h-60 object-contain border border-black/10 dark:border-white/10"
                                             />
                                         ) : (
                                             <a
                                                 href={msg.fileUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-2 p-2 bg-black/10 dark:bg-white/10 rounded-lg hover:bg-black/20 transition-colors underline"
+                                                className="flex items-center gap-2 p-2 bg-black/5 dark:bg-white/5 rounded-lg hover:bg-black/10 transition-colors underline"
                                             >
                                                 <FiPaperclip />
                                                 <span className="truncate max-w-[150px]">{msg.fileName || 'Archivo'}</span>
@@ -356,121 +308,111 @@ const ChatInterface = () => {
                                         )}
                                     </div>
                                 )}
-                                <span suppressHydrationWarning className={`absolute bottom-1 right-2 text-[10px] ${msg.sender === 'user' ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'}`}>
-                                    {formatTime(msg.time)}
-                                    {msg.sender === 'user' && <span className="ml-1 text-pokemon-yellow">✓✓</span>}
-                                </span>
                             </div>
+                            <span className="text-[10px] text-slate-500 dark:text-slate-600 px-1">
+                                {formatTime(msg.time)}
+                            </span>
                         </div>
-                    ))}
 
-                    {isTyping && (
-                        <div className="flex justify-start">
-                            <div className="bg-white dark:bg-[#202c33] rounded-lg rounded-tl-none px-4 py-3 shadow-sm flex gap-1">
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></div>
+                        {msg.sender === 'user' && (
+                            <div className="size-9 rounded-xl bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-900 border border-slate-300 dark:border-slate-600 flex items-center justify-center shrink-0">
+                                <span className="material-symbols-outlined text-slate-600 dark:text-slate-400 text-xl">person</span>
+                            </div>
+                        )}
+                    </div>
+                ))}
+
+                {isTyping && (
+                    <div className="flex items-start gap-4">
+                        <div className="size-9 rounded-xl glass-panel border border-primary/40 flex items-center justify-center shrink-0">
+                            <span className="material-symbols-outlined text-primary text-xl">bolt</span>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <div className="ai-bubble-gradient border border-primary/10 px-4 py-3 rounded-2xl rounded-tl-none">
+                                <div className="flex gap-1.5">
+                                    <span className="size-1.5 bg-primary/40 rounded-full animate-bounce"></span>
+                                    <span className="size-1.5 bg-primary/60 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                                    <span className="size-1.5 bg-primary/80 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                                </div>
                             </div>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
 
             {/* Input Area */}
-            <div className="bg-white/80 dark:bg-[#202c33]/90 backdrop-blur-md p-3 flex items-center gap-2 z-20 relative border-t border-black/10 dark:border-white/5">
-                {/* Emoji Popover */}
-                {showEmojiPicker && (
-                    <div className="absolute bottom-full left-0 mb-2 shadow-2xl rounded-xl z-50 animate-fade-in-up">
-                        <EmojiPicker
-                            onEmojiClick={onEmojiClick}
-                            theme={"auto" as any}
-                            searchDisabled={false}
-                            skinTonesDisabled
-                            height={350}
-                            width={300}
-                        />
-                    </div>
-                )}
-
-                <button
-                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                    disabled={isOffline}
-                    className={`p-2 rounded-full transition disabled:opacity-50 ${showEmojiPicker ? 'text-primary-pink bg-black/5 dark:bg-white/5' : 'text-gray-500 dark:text-gray-400 hover:bg-black/5 dark:hover:bg-white/5'}`}
-                >
-                    <FiSmile className="w-6 h-6" />
-                </button>
-                <button
-                    disabled={isOffline || isUploading}
-                    onClick={() => fileInputRef.current?.click()}
-                    className="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition disabled:opacity-50"
-                >
-                    <FiPaperclip className={`w-5 h-5 ${isUploading ? 'animate-pulse text-primary-pink' : ''}`} />
-                </button>
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    className="hidden"
-                />
-
-                <form onSubmit={handleSendMessage} className="flex-1 flex gap-2">
-                    <div className="flex-1 relative">
-                        {pendingImage && (
-                            <div className="absolute bottom-full left-0 mb-2 p-2 bg-white/90 dark:bg-[#202c33]/90 backdrop-blur-sm rounded-xl shadow-lg border border-black/10 dark:border-white/10 flex items-center gap-3 animate-fade-in-up z-10">
-                                <img
-                                    src={pendingImage.url}
-                                    alt="Preview"
-                                    className="h-16 w-16 object-cover rounded-lg border border-black/5 dark:border-white/5"
+            <div className="p-6 relative z-20">
+                <div className="max-w-5xl mx-auto w-full relative">
+                    <div className="glass-panel rounded-2xl p-2 border border-slate-200 dark:border-slate-700/50 shadow-2xl focus-within:border-primary/50 transition-all">
+                        {showEmojiPicker && (
+                            <div className="absolute bottom-full left-0 mb-4 shadow-2xl rounded-xl z-50 animate-fade-in-up">
+                                <EmojiPicker
+                                    onEmojiClick={onEmojiClick}
+                                    theme={"auto" as any}
+                                    searchDisabled={false}
+                                    skinTonesDisabled
+                                    height={350}
+                                    width={300}
                                 />
-                                <div className="flex flex-col gap-1 pr-2">
-                                    <span className="text-xs font-medium text-gray-700 dark:text-gray-200 truncate max-w-[120px]">
-                                        {pendingImage.name}
-                                    </span>
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setPendingImage(null);
-                                            if (fileInputRef.current) fileInputRef.current.value = '';
-                                        }}
-                                        className="text-[10px] text-red-500 hover:text-red-600 font-semibold uppercase tracking-wider text-left hover:underline"
-                                    >
-                                        Eliminar
-                                    </button>
-                                </div>
                             </div>
                         )}
-                        <textarea
-                            ref={textareaRef}
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
-                            onFocus={() => setShowEmojiPicker(false)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && !e.shiftKey) {
-                                    e.preventDefault();
-                                    handleSendMessage(e);
-                                }
-                            }}
-                            placeholder={isOffline ? t('chat.finished') : t('chat.placeholder')}
-                            disabled={isOffline}
-                            rows={1}
-                            className="w-full py-2.5 px-4 bg-gray-100 dark:bg-black/20 rounded-xl text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-pink/50 disabled:opacity-50 disabled:cursor-not-allowed border border-black/5 dark:border-white/5 resize-none scrollbar-none min-h-[44px]"
-                        />
-                    </div>
-                </form>
 
-                {inputValue.trim() || pendingImage ? (
-                    <button
-                        onClick={handleSendMessage}
-                        disabled={isOffline}
-                        className="p-3 bg-primary-pink text-white rounded-full hover:bg-primary-pink-light transition shadow-lg flex items-center justify-center disabled:bg-gray-400 active:scale-95"
-                    >
-                        <FiSend className="w-5 h-5 translate-x-0.5" />
-                    </button>
-                ) : (
-                    <button disabled={isOffline} className="p-3 bg-[#f0f2f5] dark:bg-[#202c33] text-gray-500 dark:text-gray-400 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition disabled:opacity-50">
-                        <FiMic className="w-5 h-5" />
-                    </button>
-                )}
+                        <div className="flex items-end gap-2 px-2">
+                            <button 
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={isOffline || isUploading}
+                                className="size-10 flex items-center justify-center rounded-xl text-slate-500 hover:text-primary hover:bg-primary/5 transition-all"
+                            >
+                                <span className="material-symbols-outlined">attach_file</span>
+                            </button>
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleFileChange}
+                                className="hidden"
+                            />
+                            
+                            <textarea
+                                ref={textareaRef}
+                                value={inputValue}
+                                onChange={(e) => setInputValue(e.target.value)}
+                                onFocus={() => setShowEmojiPicker(false)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleSendMessage(e);
+                                    }
+                                }}
+                                className="flex-1 bg-transparent border-none focus:ring-0 text-slate-800 dark:text-slate-200 py-3 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none font-medium" 
+                                placeholder={isOffline ? t('chat.finished') : "Initialize query..."}
+                                rows={1}
+                            />
+
+                            <div className="flex items-center gap-1 pb-1">
+                                <button 
+                                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                    disabled={isOffline}
+                                    className={`size-9 flex items-center justify-center rounded-lg transition-all ${showEmojiPicker ? 'text-accent-magenta bg-accent-magenta/5' : 'text-slate-500 hover:text-accent-magenta hover:bg-accent-magenta/5'}`}
+                                >
+                                    <span className="material-symbols-outlined">mood</span>
+                                </button>
+                                <button className="size-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-primary hover:bg-primary/5 transition-all">
+                                    <span className="material-symbols-outlined">mic</span>
+                                </button>
+                                <button 
+                                    onClick={handleSendMessage}
+                                    disabled={isOffline || (!inputValue.trim() && !pendingImage)}
+                                    className="size-10 flex items-center justify-center rounded-xl bg-primary text-background-dark neon-glow-cyan hover:scale-105 transition-transform ml-2 disabled:opacity-50 disabled:hover:scale-100"
+                                >
+                                    <span className="material-symbols-outlined font-bold">send</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex justify-center mt-3">
+                        <p className="text-[9px] text-slate-500 dark:text-slate-600 font-bold uppercase tracking-[0.3em]">Hardware Accelerated Interface • Ver 2.4.0</p>
+                    </div>
+                </div>
             </div>
         </div>
     );

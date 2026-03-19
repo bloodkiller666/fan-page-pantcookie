@@ -102,6 +102,8 @@ export const translations = {
                 pause: "Pausa",
                 continue: "Continuar",
                 exit: "Salir",
+                startGame: "Comenzar Juego",
+                instruction: "Intercambia piezas para completar la imagen",
                 rulesTitle: "🧩 Reglas del Puzzle",
                 rule1: "1. Arrastra las piezas para completar la imagen original.",
                 rule2: "2. Completa el rompecabezas en el menor tiempo posible para entrar al ranking.",
@@ -205,7 +207,9 @@ export const translations = {
         },
         common: {
             enterName: "Ingresa tu nombre",
+            playerName: "Ingresa tu nombre de jugador",
             namePlaceholder: "Tu nombre...",
+            placeholderNickname: "Escribe tu nickname...",
             startGame: "Comenzar Juego",
             backToSelection: "Volver a Selección",
             score: "Puntuación",
@@ -219,7 +223,11 @@ export const translations = {
             continue: "Sobrescribir",
             downloadVideo: "Descargar Video",
             videoNotSupported: "Tu navegador no soporta el elemento de video.",
-            close: "Cerrar"
+            close: "Cerrar",
+            recommended: "Recomendado",
+            shareResults: "Compartir Resultados",
+            viewFullRanking: "Ver Ranking Completo",
+            trendingUp: "En Tendencia"
         },
         musicPlayer: {
             originalBy: "Original por"

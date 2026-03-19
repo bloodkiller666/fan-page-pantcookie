@@ -205,10 +205,10 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
             </div>
 
             {!isCompleted && (
-                <div className="mt-8 flex flex-col md:flex-row items-center gap-4 bg-primary/5 px-6 py-3 rounded-2xl border border-primary/20 backdrop-blur-sm animate-fade-in">
+                <div className="mt-8 flex flex-col md:flex-row items-center gap-4 bg-primary/5 px-6 py-3 rounded-2xl border border-primary/20 backdrop-blur-sm animate-fade-in shadow-sm dark:shadow-none">
                     <div className="flex items-center gap-3">
                         <span className="material-symbols-outlined text-primary">info</span>
-                        <p className="text-sm font-black uppercase tracking-widest text-slate-400">
+                        <p className="text-sm font-black uppercase tracking-widest text-slate-600 dark:text-slate-400">
                             {t('games.puzzle.instruction') || 'Intercambia piezas para completar la imagen'}
                         </p>
                     </div>

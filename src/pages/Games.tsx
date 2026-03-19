@@ -38,7 +38,6 @@ const GamesContent = () => {
     }, [searchParams]);
 
     useEffect(() => {
-        // Si no hay un juego seleccionado (estamos en la pantalla de My Games)
         if (!selected) {
             const ctx = gsap.context(() => {
                 // Animación de los títulos y cabecera
@@ -143,7 +142,7 @@ const GamesContent = () => {
             <main className="relative z-10 flex-1 flex flex-col px-6 md:px-12 py-10 md:py-16 justify-center">
                 <div className="flex items-center justify-between mb-8 md:mb-12">
                     <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-zinc-900 dark:text-white/90">
-                        My <span className="text-primary-pink neon-text-pink">Games</span>
+                        Mis <span className="text-primary-pink neon-text-pink">Juegos</span>
                     </h1>
                     <div className="flex gap-2">
                         <button className="bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 p-2 rounded-lg border border-zinc-200 dark:border-white/10 transition-colors text-zinc-600 dark:text-white">
@@ -241,7 +240,7 @@ const GamesContent = () => {
                     </div>
                     <div className="flex items-center gap-3 group cursor-pointer">
                         <div className="size-8 rounded-full bg-neon-volt/20 border-2 border-neon-volt flex items-center justify-center group-hover:bg-neon-volt transition-all group-hover:shadow-[0_0_15px_#ccff00]">
-                            <span className="text-black font-black text-xs">A</span>
+                            <span className="text-black dark:text-white font-black text-xs">A</span>
                         </div>
                         <span className="text-zinc-500 dark:text-white/60 text-[10px] font-bold uppercase italic tracking-widest">Select</span>
                     </div>

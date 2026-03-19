@@ -37,7 +37,7 @@ const DifficultySelector = ({ difficulty, onSelectDifficulty, disabled }) => {
                     className={`group relative flex flex-col items-center justify-center p-8 rounded-2xl transition-all duration-500 border-2 overflow-hidden 
                         ${difficulty === diff.value 
                             ? 'bg-primary/10 border-primary shadow-[0_0_25px_rgba(13,185,242,0.2)] scale-[1.02]' 
-                            : 'bg-white/5 dark:bg-slate-900/40 border-primary/20 hover:border-primary/50 backdrop-blur-md'
+                            : 'bg-white dark:bg-slate-900/40 border-primary/20 hover:border-primary/50 shadow-lg dark:shadow-none'
                         } 
                         ${disabled && difficulty !== diff.value ? 'opacity-40 cursor-not-allowed grayscale' : ''}
                     `}
@@ -57,23 +57,16 @@ const DifficultySelector = ({ difficulty, onSelectDifficulty, disabled }) => {
                     {/* Label and Grid */}
                     <div className="text-center relative z-10">
                         <h3 className={`text-2xl font-black uppercase italic tracking-tighter mb-1 transition-colors 
-                            ${difficulty === diff.value ? 'text-primary' : 'text-slate-300'}
+                            ${difficulty === diff.value ? 'text-primary' : 'text-slate-700 dark:text-slate-300'}
                         `}>
                             {diff.label}
                         </h3>
                         <p className={`font-bold tracking-[0.2em] text-sm 
-                            ${difficulty === diff.value ? 'text-slate-200' : 'text-primary/60'}
+                            ${difficulty === diff.value ? 'text-slate-600 dark:text-slate-200' : 'text-primary/60'}
                         `}>
                             {diff.grid}
                         </p>
                     </div>
-
-                    {/* Recommended Tag */}
-                    {diff.recommended && (
-                        <div className="absolute -top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-background-dark text-[10px] font-black px-4 py-1.5 rounded-full tracking-[0.2em] uppercase shadow-[0_0_15px_rgba(13,185,242,0.4)] z-20">
-                            {t('common.recommended') || 'Recomendado'}
-                        </div>
-                    )}
 
                     {/* Selection Backdrop */}
                     {difficulty === diff.value && (
