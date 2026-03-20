@@ -14,20 +14,20 @@ const VideoPlayer = ({ query = '' }) => {
     const videoRefs = useRef<HTMLVideoElement[]>([]);
     const containerRefs = useRef<HTMLDivElement[]>([]);
 
-    // List of video filenames from Cloudinary
     const videoList = [
         { id: 'La_creadora_de_la_grasa_yrci3z', title: 'Bautizada como que...' },
         { id: 'Shura_descuido_v2syi0', title: 'Shura Descuido' },
         { id: 'vod-2363747114-offset-2196_bnqebg', title: 'Vuela alto Vomori' },
         { id: 'video-1080_jlejtp', title: 'Vomori vs Rihsuri' },
         { id: 'ULTIMA_CHARLA_CON_MAMA_HIWA_0_t3pihy', title: 'Charlando con Mama Hiwa' },
-        { id: 'Atrapado_con_las_patas_en_la_masa_rubfeo', title: 'El mayor atraco' }
+        { id: 'Atrapado_con_las_patas_en_la_masa_rubfeo', title: 'El mayor atraco' },
+        { id: 'Shura_Fuera_de_Contexto_pt._1_koknsu', title: 'Fuera de Contexto PARTE 1' },
+        { id: 'Shura_Fuera_de_Contexto_pt._2_ei6pfl', title: 'Fuera de Contexto PARTE 2' }
     ];
 
     const videos = useMemo(() => videoList.map((video, index) => ({
         id: index,
         src: getCloudinaryVideo(video.id),
-        // Create a download URL that forces attachment
         downloadUrl: getCloudinaryVideo(video.id).delivery(format('mp4')).toURL() + '?fl_attachment',
         title: video.title
     })), []);
@@ -54,9 +54,8 @@ const VideoPlayer = ({ query = '' }) => {
 
         if (playingIndex === index && !video.paused) {
             video.pause();
-            setPlayingIndex(null); // Just pause UI update
+            setPlayingIndex(null);
         } else {
-            // Pause others
             if (playingIndex !== null && playingIndex !== index) {
                 videoRefs.current[playingIndex]?.pause();
             }
@@ -110,7 +109,6 @@ const VideoPlayer = ({ query = '' }) => {
             }));
         } else {
             video.muted = true;
-            // Not changing level so we can restore it
             setVolumes(prev => ({
                 ...prev,
                 [index]: { ...prev[index], muted: true }
@@ -129,7 +127,6 @@ const VideoPlayer = ({ query = '' }) => {
                         try {
                             await (screen.orientation as any).lock('landscape');
                         } catch (err) {
-                            // Ignored: orientation lock not supported or failed (expected on some devices)
                             console.log("Orientation lock not supported:", err);
                         }
                     }
@@ -208,7 +205,6 @@ const VideoPlayer = ({ query = '' }) => {
         }
     };
 
-    // Reset timeout when play state changes
     useEffect(() => {
         if (playingIndex === modalVideoIndex) {
             resetControlsTimeout();
@@ -243,7 +239,6 @@ const VideoPlayer = ({ query = '' }) => {
     const restoreTimeRef = useRef(0);
     const restorePlayRef = useRef(false);
 
-    // Intecept quality change to save restore points
     const changeQuality = (q) => {
         if (modalVideoIndex === null) return;
         const video = videoRefs.current[modalVideoIndex];
@@ -254,17 +249,12 @@ const VideoPlayer = ({ query = '' }) => {
         handleQualityChange(q);
     }
 
-
-    // ... (videoList and videos array definition remains same)
-
     const openVideoModal = (index) => {
         setModalVideoIndex(index);
         setIsLoading(true);
         document.body.style.overflow = 'hidden'; // Lock scroll
-        // Simulate network delay for loader
         setTimeout(() => {
             setIsLoading(false);
-            // Auto play could go here if needed, via ref
             const vid = videoRefs.current[index];
             if (vid) vid.play().catch(() => { });
         }, 1500);
