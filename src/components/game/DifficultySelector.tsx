@@ -1,4 +1,5 @@
 import { useLanguage } from '../../context/LanguageContext';
+import { MdLocalFlorist, MdBolt, MdPsychology } from 'react-icons/md';
 
 const DifficultySelector = ({ difficulty, onSelectDifficulty, disabled }) => {
     const { t } = useLanguage();
@@ -7,14 +8,14 @@ const DifficultySelector = ({ difficulty, onSelectDifficulty, disabled }) => {
             value: 'easy', 
             label: t('games.difficultyOptions.easy'), 
             grid: '4x4', 
-            icon: 'potted_plant',
+            icon: <MdLocalFlorist />,
             color: 'from-primary to-cyan-400' 
         },
         { 
             value: 'medium', 
             label: t('games.difficultyOptions.medium'), 
             grid: '6x6', 
-            icon: 'bolt',
+            icon: <MdBolt />,
             recommended: true,
             color: 'from-primary to-blue-500' 
         },
@@ -22,7 +23,7 @@ const DifficultySelector = ({ difficulty, onSelectDifficulty, disabled }) => {
             value: 'hard', 
             label: t('games.difficultyOptions.hard'), 
             grid: '8x8', 
-            icon: 'psychology',
+            icon: <MdPsychology />,
             color: 'from-primary to-indigo-600' 
         },
     ];
@@ -49,9 +50,7 @@ const DifficultySelector = ({ difficulty, onSelectDifficulty, disabled }) => {
                             : 'bg-primary/10 text-primary opacity-60 group-hover:opacity-100 group-hover:scale-110'
                         }`}
                     >
-                        <span className="material-symbols-outlined text-5xl leading-none">
-                            {diff.icon}
-                        </span>
+                        {diff.icon}
                     </div>
 
                     {/* Label and Grid */}

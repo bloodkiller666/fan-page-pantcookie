@@ -6,6 +6,7 @@ import { useLanguage } from '../../../context/LanguageContext';
 import ScoreOverwriteModal from '../ScoreOverwriteModal';
 import RulesModal from '../RulesModal';
 import PauseMenu from '../PauseMenu';
+import { MdDirectionsRun, MdSpaceBar, MdSpeed, MdBreakfastDining } from 'react-icons/md';
 
 export default function ShuraRunGame() {
     const { t } = useLanguage();
@@ -482,11 +483,11 @@ export default function ShuraRunGame() {
                     isOpen={showRules}
                     onContinue={() => setShowRules(false)}
                     title="Shura Run"
-                    icon="directions_run"
+                    icon={<MdDirectionsRun />}
                     instructions={[
-                        { icon: 'space_bar', title: 'Salto', description: t('games.shuraRun.tapToJump') },
-                        { icon: 'pancake', title: 'Puntaje', description: t('games.shuraRun.instructions') },
-                        { icon: 'speed', title: 'Dificultad', description: 'La velocidad aumenta conforme avanzas. ¡No te detengas!' }
+                        { icon: <MdSpaceBar />, title: 'Salto', description: t('games.shuraRun.tapToJump') },
+                        { icon: <MdBreakfastDining />, title: 'Puntaje', description: t('games.shuraRun.instructions') },
+                        { icon: <MdSpeed />, title: 'Dificultad', description: 'La velocidad aumenta conforme avanzas. ¡No te detengas!' }
                     ]}
                 />
 

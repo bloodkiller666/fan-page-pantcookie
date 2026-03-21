@@ -1,6 +1,7 @@
 'use client';
 import Head from 'next/head';
 import { useLanguage } from '../../context/LanguageContext';
+import { MdFormatListBulleted, MdPolicy } from 'react-icons/md';
 
 export default function Privacy() {
   const { t } = useLanguage();
@@ -23,7 +24,7 @@ export default function Privacy() {
             <div className="absolute -left-4 bottom-0 w-2 h-2 border-b-2 border-l-2 border-[#00e5ff]"></div>
             
             <div className="flex items-center gap-3 mb-4">
-              <span className="material-symbols-outlined text-[#00e5ff] animate-pulse">policy</span>
+              <MdPolicy className="text-[#00e5ff] animate-pulse" />
               <span className="text-[10px] font-mono tracking-[0.3em] text-[#00e5ff] uppercase">Protocol Division</span>
             </div>
             
@@ -54,7 +55,7 @@ export default function Privacy() {
           <aside className="lg:col-span-3 lg:col-start-1 h-max top-24 sticky hidden lg:block">
             <div className="bg-white/50 dark:bg-[#0a0f16]/80 border border-zinc-200 dark:border-cyan-900/30 rounded-xl p-6 backdrop-blur-md">
               <h2 className="text-[11px] font-mono tracking-widest text-[#00e5ff] uppercase mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[14px]">format_list_bulleted</span>
+                <MdFormatListBulleted className="text-[14px]" />
                 Índice de Datos
               </h2>
               <ul className="space-y-4 font-mono text-xs text-zinc-600 dark:text-cyan-100/70">

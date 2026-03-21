@@ -12,6 +12,7 @@ export default {
     extend: {
       colors: {
         primary: {
+          DEFAULT: '#0db9f2',
           pink: '#ff007f',
           blue: '#0070ff',
           'pink-light': '#ff4d9a',

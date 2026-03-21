@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useGameSounds } from '../../hooks/useGameSounds';
+import { MdDone, MdInfo } from 'react-icons/md';
 
 const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { image: string, difficulty: string, onComplete: () => void, isCompleted?: boolean }) => {
     const { t } = useLanguage();
@@ -182,7 +183,7 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
                             {isCorrectPosition && !isCompleted && (
                                 <div className="absolute inset-0 ring-inset ring-2 ring-[#00ff66]/30 pointer-events-none transition-all duration-500">
                                     <div className="absolute top-2 right-2 w-6 h-6 bg-[#00ff66] rounded-full shadow-[0_0_15px_rgba(0,255,102,0.8)] animate-pulse flex items-center justify-center">
-                                        <span className="material-symbols-outlined text-slate-900 text-xs font-black">done</span>
+                                        <MdDone className="text-slate-900 text-xs font-black" />
                                     </div>
                                 </div>
                             )}
@@ -209,7 +210,7 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
             {!isCompleted && (
                 <div className="mt-8 flex flex-col md:flex-row items-center gap-4 bg-primary/5 px-6 py-3 rounded-2xl border border-primary/20 backdrop-blur-sm animate-fade-in shadow-sm dark:shadow-none">
                     <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-primary">info</span>
+                        <MdInfo className="text-primary" />
                         <p className="text-sm font-black uppercase tracking-widest text-slate-600 dark:text-slate-400">
                             {t('games.puzzle.instruction') || 'Intercambia piezas para completar la imagen'}
                         </p>
@@ -217,7 +218,7 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
                     <div className="h-4 w-[1px] bg-primary/20 hidden md:block"></div>
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 bg-[#00ff66] rounded-full animate-pulse shadow-[0_0_8px_rgba(0,255,102,1)] flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[6px] text-slate-900 font-black">done</span>
+                            <MdDone className="text-[6px] text-slate-900 font-black" />
                         </div>
                         <p className="text-[10px] font-black uppercase tracking-widest text-[#00ff66]">
                             Piezas en posición correcta

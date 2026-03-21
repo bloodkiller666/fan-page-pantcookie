@@ -1,6 +1,7 @@
 import React from 'react';
 import { FiUser } from 'react-icons/fi';
 import { useLanguage } from '../../context/LanguageContext';
+import { MdBadge } from 'react-icons/md';
 
 interface PlayerInputProps {
     playerName: string;
@@ -24,9 +25,7 @@ const PlayerInput = ({ playerName, onNameChange, onStartGame, hideButton = false
                         {t('common.playerName') || 'Ingresa tu nombre de jugador'}
                     </label>
                     <div className="relative group">
-                        <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within:text-primary transition-colors text-2xl">
-                            badge
-                        </span>
+                        <MdBadge className="absolute left-5 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within:text-primary transition-colors text-2xl" />
                         <input
                             id="username"
                             type="text"

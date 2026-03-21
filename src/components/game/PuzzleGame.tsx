@@ -11,6 +11,7 @@ import { useGameSounds } from '../../hooks/useGameSounds';
 import ScoreOverwriteModal from './ScoreOverwriteModal';
 import RulesModal from './RulesModal';
 import PauseMenu from './PauseMenu';
+import { MdAutoAwesome, MdEmojiEvents, MdGridView, MdHelp, MdHome, MdLightbulb, MdLogout, MdPauseCircle, MdPerson, MdRefresh, MdRestartAlt, MdSettings, MdShare, MdSignalCellularAlt, MdTimer, MdWorkspacePremium, MdExtension, MdPanTool, MdWarning } from 'react-icons/md';
 
 const PuzzleGame = () => {
     const { t } = useLanguage();
@@ -139,17 +140,17 @@ const PuzzleGame = () => {
 
     const puzzleRules = [
         {
-            icon: 'drag_pan',
+            icon: <MdPanTool />,
             title: t('Mueve las piezas') || 'Mueve las piezas',
             description: t('Arrastra las piezas para completar la imagen correctamente.') || 'Arrastra las piezas para completar la imagen correctamente.'
         },
         {
-            icon: 'timer',
+            icon: <MdTimer />,
             title: t('Velocidad es clave') || 'Velocidad es clave',
             description: t('Completa en el menor tiempo posible para subir en el ranking.') || 'Completa en el menor tiempo posible para subir en el ranking.'
         },
         {
-            icon: 'warning',
+            icon: <MdWarning />,
             title: t('Cuidado al cambiar') || 'Cuidado al cambiar',
             description: t('Cambiar la dificultad reiniciará tu progreso actual de inmediato.') || 'Cambiar la dificultad reiniciará tu progreso actual de inmediato.'
         }
@@ -161,7 +162,7 @@ const PuzzleGame = () => {
             <header className="flex-shrink-0 flex items-center justify-between px-6 lg:px-12 py-8 border-b border-primary/10 bg-white dark:bg-slate-900/90 backdrop-blur-2xl z-20 shadow-lg dark:shadow-none transition-colors duration-300">
                 <div className="flex items-center gap-6 group">
                     <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-[0_0_20px_rgba(13,185,242,0.4)] group-hover:rotate-12 transition-transform duration-500">
-                        <span className="material-symbols-outlined dark:text-white text-3xl font-black">grid_view</span>
+                        <MdGridView className="dark:text-white text-3xl font-black" />
                     </div>
                     <div className="flex flex-col leading-none">
                         <h1 className="text-3xl font-black tracking-tighter text-slate-900 dark:text-slate-100 italic">
@@ -172,15 +173,15 @@ const PuzzleGame = () => {
                 </div>
                 <div className="flex items-center gap-4">
                     <button className="h-12 w-12 flex items-center justify-center rounded-xl bg-primary/10 hover:bg-primary/20 text-primary transition-all active:scale-90 border border-primary/20 shadow-sm">
-                        <span className="material-symbols-outlined">settings</span>
+                        <MdSettings />
                     </button>
                     <button className="h-12 w-12 flex items-center justify-center rounded-xl bg-primary/10 hover:bg-primary/20 text-primary transition-all active:scale-90 border border-primary/20 shadow-sm">
-                        <span className="material-symbols-outlined">help</span>
+                        <MdHelp />
                     </button>
                     <div className="h-8 w-[1px] bg-primary/20 mx-2"></div>
                     <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-primary to-cyan-400 p-0.5 shadow-lg shadow-primary/20 overflow-hidden group/avatar cursor-pointer">
                         <div className="w-full h-full rounded-full bg-white dark:bg-slate-800 flex items-center justify-center">
-                            <span className="material-symbols-outlined text-primary text-2xl group-hover/avatar:scale-110 transition-transform">person</span>
+                            <MdPerson className="text-primary text-2xl group-hover/avatar:scale-110 transition-transform" />
                         </div>
                     </div>
                 </div>
@@ -231,7 +232,7 @@ const PuzzleGame = () => {
                                             <span className="text-3xl font-black text-black font-mono tabular-nums drop-shadow-[0_0_10px_rgba(13,185,242,0.4)]">
                                                 {Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:{(elapsedTime % 60).toString().padStart(2, '0')}
                                             </span>
-                                            <span className="material-symbols-outlined text-black text-2xl animate-spin-slow">timer</span>
+                                            <MdTimer className="text-black text-2xl animate-spin-slow" />
                                         </div>
                                     </div>
                                 </div>
@@ -243,7 +244,7 @@ const PuzzleGame = () => {
                                         }}
                                         className="flex items-center gap-3 bg-white dark:bg-primary/10 hover:bg-primary hover:text-white transition-all text-slate-700 dark:text-primary px-8 py-3.5 rounded-2xl font-black uppercase tracking-widest border border-primary/20 shadow-lg active:scale-95"
                                     >
-                                        <span className="material-symbols-outlined">pause_circle</span>
+                                        <MdPauseCircle />
                                         {t('games.puzzle.pause') || 'Pausa'}
                                     </button>
                                 </div>
@@ -273,7 +274,7 @@ const PuzzleGame = () => {
                                 onClick={restartGame}
                                 className="w-full lg:w-fit self-center flex items-center justify-center gap-3 bg-slate-800 dark:bg-slate-700/50 hover:bg-red-500 hover:shadow-red-500/30 transition-all text-white px-12 py-4 rounded-2xl font-black uppercase tracking-[0.2em] shadow-xl active:scale-95 border border-white/5"
                             >
-                                <span className="material-symbols-outlined">restart_alt</span>
+                                <MdRestartAlt />
                                 {t('games.puzzle.restart') || 'Reiniciar'}
                             </button>
                         </div>
@@ -290,25 +291,25 @@ const PuzzleGame = () => {
                             <div className="relative flex flex-col items-center justify-center py-16 bg-white dark:bg-slate-900/40 rounded-[3rem] border border-slate-200 dark:border-primary/20 backdrop-blur-xl overflow-hidden shadow-2xl dark:shadow-none">
                                 <div className="absolute inset-0 opacity-10 pointer-events-none">
                                     <div className="absolute bottom-10 right-10 text-primary transform rotate-12 animate-pulse">
-                                        <span className="material-symbols-outlined text-[10rem]">auto_awesome</span>
+                                        <MdAutoAwesome className="text-[10rem]" />
                                     </div>
                                 </div>
                                 <div className="relative z-10 text-center flex flex-col items-center">
                                     <div className="mb-8 h-64 w-64 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary/20 shadow-[0_0_60px_rgba(13,185,242,0.2)]">
-                                        <span className="material-symbols-outlined text-primary drop-shadow-[0_0_20px_rgba(13,185,242,1)] transform scale-[5.5]" style={{ fontVariationSettings: "'FILL' 1" }}>emoji_events</span>
+                                        <MdEmojiEvents className="text-primary drop-shadow-[0_0_20px_rgba(13,185,242,1)] transform scale-[5.5]" style={{ fontVariationSettings: "'FILL' 1" }} />
                                     </div>
                                     <h3 className="text-4xl font-black uppercase italic tracking-tighter mb-3 text-slate-900 dark:text-white">¡Victoria Magistral!</h3>
                                     <p className="text-slate-500 dark:text-slate-400 font-medium mb-10 max-w-md mx-auto px-6 leading-relaxed">Tu agilidad mental es impresionante. Has resuelto cada pieza con precisión quirúrgica.</p>
                                     <div className="flex flex-wrap justify-center gap-6 w-full px-6">
                                         <div className="flex-1 min-w-[200px] bg-slate-50 dark:bg-slate-800/80 p-8 rounded-3xl border border-slate-200 dark:border-white/5 shadow-inner group hover:border-primary/30 transition-colors">
-                                            <span className="material-symbols-outlined text-primary mb-4 text-4xl transform group-hover:scale-110 transition-transform">timer</span>
+                                            <MdTimer className="text-primary mb-4 text-4xl transform group-hover:scale-110 transition-transform" />
                                             <p className="text-xs uppercase tracking-[0.1em] text-slate-500 font-black mb-2 sm:whitespace-nowrap">Tiempo Final</p>
                                             <p className="text-4xl font-black italic tracking-tighter text-slate-900 dark:text-slate-100">
                                                 {Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}
                                             </p>
                                         </div>
                                         <div className="flex-1 min-w-[200px] bg-slate-50 dark:bg-slate-800/80 p-8 rounded-3xl border border-slate-200 dark:border-white/5 shadow-inner group hover:border-primary/30 transition-colors">
-                                            <span className="material-symbols-outlined text-primary mb-4 text-4xl transform group-hover:scale-110 transition-transform">signal_cellular_alt</span>
+                                            <MdSignalCellularAlt className="text-primary mb-4 text-4xl transform group-hover:scale-110 transition-transform" />
                                             <p className="text-xs uppercase tracking-[0.1em] text-slate-500 font-black mb-2 sm:whitespace-nowrap">Dificultad</p>
                                             <p className="text-4xl font-black italic tracking-tighter text-slate-900 dark:text-black uppercase">{difficulty}</p>
                                         </div>
@@ -327,7 +328,7 @@ const PuzzleGame = () => {
                                     onClick={handleShare}
                                     className="flex items-center gap-3 text-slate-500 hover:text-primary font-black uppercase tracking-widest text-sm transition-all group"
                                 >
-                                    <span className="material-symbols-outlined group-hover:scale-125 transition-transform">share</span>
+                                    <MdShare className="group-hover:scale-125 transition-transform" />
                                     {t('common.shareResults') || 'Compartir Resultados'}
                                 </button>
                             </div>
@@ -348,14 +349,14 @@ const PuzzleGame = () => {
                                     Usar Pista (3 Libres)
                                 </button>
                             </div>
-                            <span className="material-symbols-outlined absolute -bottom-8 -right-8 text-background-dark/20 text-[10rem] rotate-12 group-hover:rotate-0 transition-all duration-700">lightbulb</span>
+                            <MdLightbulb className="absolute -bottom-8 -right-8 text-background-dark/20 text-[10rem] rotate-12 group-hover:rotate-0 transition-all duration-700" />
                             <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                         </div>
                     )}
 
                     <div className="bg-gradient-to-br from-primary/20 to-indigo-600/20 rounded-[2rem] p-8 border border-white/10 backdrop-blur-md shadow-xl">
                         <h4 className="font-black text-lg mb-2 flex items-center gap-3 italic tracking-tighter uppercase">
-                            <span className="material-symbols-outlined text-[#ff007a] shadow-[0_0_10px_rgba(255,0,122,0.4)]">workspace_premium</span>
+                            <MdWorkspacePremium className="text-[#ff007a] shadow-[0_0_10px_rgba(255,0,122,0.4)]" />
                             Desafío Semanal
                         </h4>
                         <p className="text-xs text-slate-500 font-bold mb-5 leading-relaxed">Completa 3 puzzles en dificultad DIFÍCIL para ganar una insignia exclusiva.</p>
@@ -371,7 +372,7 @@ const PuzzleGame = () => {
                 isOpen={showRules}
                 onContinue={confirmStartGame}
                 title="Reglas del Puzzle"
-                icon="extension"
+                icon={<MdExtension />}
                 instructions={puzzleRules}
             />
 
@@ -389,7 +390,7 @@ const PuzzleGame = () => {
                 <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fade-in">
                     <div className="bg-slate-900 rounded-[2.5rem] p-10 border-2 border-primary/20 shadow-3xl max-w-xs w-full text-center animate-fade-in-up">
                         <div className="mb-6 w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto border border-red-500/30">
-                            <span className="material-symbols-outlined text-red-500 text-3xl">refresh</span>
+                            <MdRefresh className="text-red-500 text-3xl" />
                         </div>
                         <p className="text-xl font-black mb-8 text-slate-100 uppercase italic leading-tight">¿Reiniciar el rompecabezas?</p>
                         <div className="flex gap-4">
@@ -418,7 +419,7 @@ const PuzzleGame = () => {
                 <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-fade-in">
                     <div className="bg-slate-900 rounded-[2.5rem] p-10 border-2 border-primary/20 shadow-3xl max-w-xs w-full text-center animate-fade-in-up">
                         <div className="mb-6 w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto border border-red-500/30">
-                            <span className="material-symbols-outlined text-red-500 text-3xl">logout</span>
+                            <MdLogout className="text-red-500 text-3xl" />
                         </div>
                         <p className="text-xl font-black mb-8 text-slate-100 uppercase italic leading-tight">¿Deseas abandonar el juego?</p>
                         <div className="flex gap-4">
@@ -455,15 +456,15 @@ const PuzzleGame = () => {
 
             <nav className="flex lg:hidden fixed bottom-0 left-0 right-0 bg-background-light dark:bg-background-dark border-t border-primary/10 px-6 py-4 justify-around z-50 backdrop-blur-xl">
                 <button className="flex flex-col items-center gap-1 text-primary">
-                    <span className="material-symbols-outlined">home</span>
+                    <MdHome />
                     <span className="text-[10px] font-black uppercase italic">Inicio</span>
                 </button>
                 <button className="flex flex-col items-center gap-1 text-slate-500">
-                    <span className="material-symbols-outlined">emoji_events</span>
+                    <MdEmojiEvents />
                     <span className="text-[10px] font-black uppercase italic">Ranking</span>
                 </button>
                 <button className="flex flex-col items-center gap-1 text-slate-500">
-                    <span className="material-symbols-outlined">person</span>
+                    <MdPerson />
                     <span className="text-[10px] font-black uppercase italic">Perfil</span>
                 </button>
             </nav>

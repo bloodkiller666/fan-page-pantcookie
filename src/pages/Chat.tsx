@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import ChatInterface from '../components/chat/ChatInterface';
 import { useLanguage } from '../context/LanguageContext';
+import { MdDarkMode, MdHub, MdMoreVert, MdSearch, MdSecurity, MdSettings, MdShowChart } from 'react-icons/md';
 
 const Chat = () => {
     const { t } = useLanguage();
@@ -64,14 +65,14 @@ const Chat = () => {
                         <div className="flex items-center gap-3 mb-6">
                             <div className="relative">
                                 <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
-                                    <span className="material-symbols-outlined text-primary text-xl">hub</span>
+                                    <MdHub className="text-primary text-xl" />
                                 </div>
                                 <div 
                                     className={`absolute bottom-0 right-0 size-3 rounded-full border-2 border-white dark:border-background-dark flex items-center justify-center transition-all duration-500 cursor-pointer ${isOnline ? 'bg-[#39ff14] shadow-[0_0_10px_#39ff14]' : 'bg-slate-500'}`}
                                     onClick={() => setIsOnline(!isOnline)}
                                     title={isOnline ? "Online" : "Offline"}
                                 >
-                                    {!isOnline && <span className="material-symbols-outlined text-[8px] text-white">dark_mode</span>}
+                                    {!isOnline && <MdDarkMode className="text-[8px] text-white" />}
                                 </div>
                             </div>
                             <div>
@@ -114,7 +115,7 @@ const Chat = () => {
                         <div className="space-y-4">
                             <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
                                 <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-primary text-sm">show_chart</span>
+                                    <MdShowChart className="text-primary text-sm" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Market_Bot_v3</p>
@@ -123,7 +124,7 @@ const Chat = () => {
                             </div>
                             <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
                                 <div className="w-8 h-8 rounded bg-accent-magenta/20 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-accent-magenta text-sm">security</span>
+                                    <MdSecurity className="text-accent-magenta text-sm" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Shield_Core</p>
@@ -143,7 +144,7 @@ const Chat = () => {
                                     <p className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">Núcleo Navegante</p>
                                     <p className="text-[10px] text-slate-500">Tier: Elite</p>
                                 </div>
-                                <span className="material-symbols-outlined text-slate-500 text-sm cursor-pointer hover:text-primary transition-colors">settings</span>
+                                <MdSettings className="text-slate-500 text-sm cursor-pointer hover:text-primary transition-colors" />
                             </div>
                         </div>
 
@@ -174,10 +175,10 @@ const Chat = () => {
                         </div>
                         <div className="flex items-center gap-4">
                             <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 text-slate-500">
-                                <span className="material-symbols-outlined text-xl">search</span>
+                                <MdSearch className="text-xl" />
                             </button>
                             <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 text-slate-500">
-                                <span className="material-symbols-outlined text-xl">more_vert</span>
+                                <MdMoreVert className="text-xl" />
                             </button>
                             <div className="h-6 w-px bg-slate-300 dark:bg-slate-800 mx-2"></div>
                             <button className="bg-primary dark:text-white text-background-dark px-4 py-1.5 rounded-lg text-xs font-bold neon-glow-cyan hover:scale-105 transition-transform">

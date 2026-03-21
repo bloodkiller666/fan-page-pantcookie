@@ -1,6 +1,7 @@
 'use client';
 import Head from 'next/head';
 import { useLanguage } from '../../context/LanguageContext';
+import { MdAdminPanelSettings, MdCloudDone, MdCookie, MdCopyright, MdGavel, MdQrCode2, MdSecurity, MdTerminal, MdVerifiedUser } from 'react-icons/md';
 
 export default function Terms() {
   const { t } = useLanguage();
@@ -20,14 +21,14 @@ export default function Terms() {
           <aside className="hidden lg:flex flex-col justify-between w-24 py-8 bg-black/5 dark:bg-[#0f0a14]/90 backdrop-blur-xl border border-zinc-200 dark:border-[#ff00ff]/30 rounded-lg items-center relative overflow-hidden">
             <div className="flex flex-col items-center gap-8">
               <div className="w-12 h-12 rounded-full border-2 border-[#ff00ff] flex items-center justify-center shadow-[0_0_15px_rgba(255,0,255,0.3)]">
-                <span className="material-symbols-outlined text-[#ff00ff]">security</span>
+                <MdSecurity className="text-[#ff00ff]" />
               </div>
               <div className="w-[2px] h-20 bg-gradient-to-b from-[#ff00ff] to-transparent"></div>
             </div>
             <div className="flex flex-col items-center gap-8">
               <div className="w-[2px] h-20 bg-gradient-to-t from-[#00e5ff] to-transparent"></div>
               <div className="w-12 h-12 rounded-lg bg-[#00e5ff]/10 flex items-center justify-center border border-[#00e5ff]/30">
-                <span className="material-symbols-outlined text-[#00e5ff]">gavel</span>
+                <MdGavel className="text-[#00e5ff]" />
               </div>
             </div>
           </aside>
@@ -44,7 +45,7 @@ export default function Terms() {
                 </div>
                 <div className="h-4 w-px bg-zinc-300 dark:bg-white/10 mx-2"></div>
                 <div className="text-[10px] font-mono tracking-widest text-zinc-500 dark:text-slate-500 uppercase flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[14px]">terminal</span>
+                  <MdTerminal className="text-[14px]" />
                   SYS_LINK // LEGAL_PROTOCOL_042
                 </div>
               </div>
@@ -77,7 +78,7 @@ export default function Terms() {
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#ff00ff] transition-colors flex items-center gap-2">
                       {t('legal.terms.acceptanceTitle')}
                     </h3>
-                    <span className="material-symbols-outlined text-[#ff00ff]/30 group-hover:text-[#ff00ff] transition-colors">verified_user</span>
+                    <MdVerifiedUser className="text-[#ff00ff]/30 group-hover:text-[#ff00ff] transition-colors" />
                   </div>
                   <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed font-medium">
                     {t('legal.terms.acceptanceDesc')}
@@ -89,7 +90,7 @@ export default function Terms() {
                   <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#00e5ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">02 // Behavior</div>
                   <div className="flex items-center justify-between mb-4 mt-2">
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#00e5ff] transition-colors">{t('legal.terms.usageTitle')}</h3>
-                    <span className="material-symbols-outlined text-[#00e5ff]/30 group-hover:text-[#00e5ff]">terminal</span>
+                    <MdTerminal className="text-[#00e5ff]/30 group-hover:text-[#00e5ff]" />
                   </div>
                   <div className="space-y-3 text-sm text-zinc-600 dark:text-slate-400">
                     <p>{t('legal.terms.usageDesc1')}</p>
@@ -111,7 +112,7 @@ export default function Terms() {
                   <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#ff00ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">03 // IP Assets</div>
                   <div className="flex items-center justify-between mb-4 mt-2">
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#ff00ff] transition-colors">{t('legal.terms.intellectualTitle')}</h3>
-                    <span className="material-symbols-outlined text-[#ff00ff]/30 group-hover:text-[#ff00ff]">copyright</span>
+                    <MdCopyright className="text-[#ff00ff]/30 group-hover:text-[#ff00ff]" />
                   </div>
                   <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed">
                     {t('legal.terms.intellectualDesc')}
@@ -123,7 +124,7 @@ export default function Terms() {
                   <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#00e5ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">04 // Data</div>
                   <div className="flex items-center justify-between mb-4 mt-2">
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#00e5ff] transition-colors">{t('legal.terms.userContentTitle')}</h3>
-                    <span className="material-symbols-outlined text-[#00e5ff]/30 group-hover:text-[#00e5ff]">cloud_done</span>
+                    <MdCloudDone className="text-[#00e5ff]/30 group-hover:text-[#00e5ff]" />
                   </div>
                   <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed font-mono italic bg-zinc-200/50 dark:bg-[#00e5ff]/5 p-3 border-l-2 border-zinc-300 dark:border-[#00e5ff]/40">
                     &gt; {t('legal.terms.userContentDesc')}
@@ -135,7 +136,7 @@ export default function Terms() {
                   <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#ff00ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">05 // Cookies</div>
                   <div className="flex items-center justify-between mb-4 mt-2">
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#ff00ff] transition-colors">{t('legal.terms.cookiesTitle')}</h3>
-                    <span className="material-symbols-outlined text-[#ff00ff]/30 group-hover:text-[#ff00ff]">cookie</span>
+                    <MdCookie className="text-[#ff00ff]/30 group-hover:text-[#ff00ff]" />
                   </div>
                   <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed">
                     {t('legal.terms.cookiesDesc')}
@@ -147,7 +148,7 @@ export default function Terms() {
                   <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#00e5ff] text-[9px] font-bold tracking-tighter text-black dark:text-white uppercase">06 // Control</div>
                   <div className="flex items-center justify-between mb-4 mt-2">
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white group-hover:text-[#00e5ff] transition-colors">{t('legal.terms.moderationTitle')}</h3>
-                    <span className="material-symbols-outlined text-[#00e5ff]/30 group-hover:text-[#00e5ff]">admin_panel_settings</span>
+                    <MdAdminPanelSettings className="text-[#00e5ff]/30 group-hover:text-[#00e5ff]" />
                   </div>
                   <p className="text-sm text-zinc-600 dark:text-slate-400 leading-relaxed">
                     {t('legal.terms.moderationDesc')}
@@ -181,7 +182,7 @@ export default function Terms() {
               <div className="flex items-center gap-4">
                 <span className="text-zinc-300 dark:text-white/10">|</span>
                 <div className="flex items-center gap-1 text-[#facc15] ml-2">
-                  <span className="material-symbols-outlined text-[10px]">qr_code_2</span>
+                  <MdQrCode2 className="text-[10px]" />
                   AUTH_V
                 </div>
               </div>

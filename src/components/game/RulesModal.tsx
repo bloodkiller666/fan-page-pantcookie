@@ -1,8 +1,9 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+import { MdPlayArrow } from 'react-icons/md';
 
 interface Instruction {
-  icon: string;
+  icon: React.ReactNode;
   title: string;
   description: string;
 }
@@ -11,7 +12,7 @@ interface RulesModalProps {
   isOpen: boolean;
   onContinue: () => void;
   title: string;
-  icon: string;
+  icon: React.ReactNode;
   instructions: Instruction[];
 }
 
@@ -32,8 +33,8 @@ const RulesModal: React.FC<RulesModalProps> = ({
       <div className="bg-slate-900/80 backdrop-blur-xl w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-primary/20 animate-fade-in-up">
         {/* Header Section */}
         <header className="p-8 border-b border-primary/20 flex flex-col items-center gap-4 text-center">
-          <div className="bg-primary/10 p-4 rounded-full border border-primary/30 flex items-center justify-center">
-            <span className="material-symbols-outlined text-white text-5xl">{icon}</span>
+          <div className="bg-primary/10 p-4 rounded-full border border-primary/30 flex items-center justify-center text-white text-5xl">
+            {icon}
           </div>
           <div className="space-y-1">
             <h2 className="text-3xl font-bold tracking-tight text-slate-100 uppercase italic leading-none">{title}</h2>
@@ -52,8 +53,8 @@ const RulesModal: React.FC<RulesModalProps> = ({
                 key={index}
                 className="flex items-start gap-4 p-4 rounded-2xl bg-primary/5 border border-primary/10 group hover:border-primary/40 transition-all duration-300 transform hover:translate-x-1"
               >
-                <div className="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-primary/20 text-primary shadow-inner">
-                  <span className="material-symbols-outlined text-white text-2xl">{inst.icon}</span>
+                <div className="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-primary/20 shadow-inner text-white text-2xl">
+                  {inst.icon}
                 </div>
                 <div>
                   <h4 className="text-slate-100 font-bold text-lg leading-tight mb-1">{inst.title}</h4>
@@ -71,7 +72,7 @@ const RulesModal: React.FC<RulesModalProps> = ({
             className="w-full bg-[#ff007a] text-white font-black py-5 px-6 rounded-2xl uppercase tracking-[0.2em] text-lg hover:brightness-110 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,0,122,0.4)] hover:shadow-[0_0_35px_rgba(255,0,122,0.6)] flex items-center justify-center gap-3 group"
           >
             {t('games.puzzle.continue') || 'Continuar'}
-            <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">play_arrow</span>
+            <MdPlayArrow className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>

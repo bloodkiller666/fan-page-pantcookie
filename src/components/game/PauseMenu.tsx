@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+import { MdChevronRight, MdClose, MdInfo, MdLogout, MdPauseCircle, MdPlayArrow, MdRefresh, MdReplay } from 'react-icons/md';
 
 interface PauseMenuProps {
     isOpen: boolean;
@@ -24,7 +25,7 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
                 <div className="relative p-8 flex flex-col items-center">
                     {/* Icon Header */}
                     <div className="mb-6 bg-[#0db9f2]/10 p-4 rounded-full border border-[#0db9f2]/30">
-                        <span className="material-symbols-outlined text-5xl text-[#0db9f2]">pause_circle</span>
+                        <MdPauseCircle className="text-5xl text-[#0db9f2]" />
                     </div>
 
                     {/* Title Section */}
@@ -44,10 +45,10 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
                             className="group flex items-center justify-between w-full h-16 px-6 bg-[#0db9f2] hover:bg-[#0db9f2]/90 text-[#101e22] rounded-xl transition-all duration-200 shadow-lg shadow-[#0db9f2]/25 active:scale-95"
                         >
                             <span className="flex items-center gap-3">
-                                <span className="material-symbols-outlined font-bold">play_arrow</span>
+                                <MdPlayArrow className="font-bold" />
                                 <span className="text-xl font-black tracking-wide uppercase">{t('games.puzzle.continue') || 'Continuar'}</span>
                             </span>
-                            <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">chevron_right</span>
+                            <MdChevronRight className="opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
 
                         {/* REINICIAR (Amarillo/Naranja) */}
@@ -56,10 +57,10 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
                             className="group flex items-center justify-between w-full h-16 px-6 bg-[#fbbf24] hover:bg-[#f59e0b] text-[#101e22] rounded-xl transition-all duration-200 active:scale-95"
                         >
                             <span className="flex items-center gap-3">
-                                <span className="material-symbols-outlined font-bold">refresh</span>
+                                <MdRefresh className="font-bold" />
                                 <span className="text-xl font-black tracking-wide uppercase">{t('games.puzzle.restart') || 'Reiniciar'}</span>
                             </span>
-                            <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">replay</span>
+                            <MdReplay className="opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
 
                         {/* SALIR (Rojo) */}
@@ -68,17 +69,17 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
                             className="group flex items-center justify-between w-full h-16 px-6 bg-[#e11d48] hover:bg-[#be123c] text-white rounded-xl transition-all duration-200 active:scale-95"
                         >
                             <span className="flex items-center gap-3">
-                                <span className="material-symbols-outlined font-bold">logout</span>
+                                <MdLogout className="font-bold" />
                                 <span className="text-xl font-black tracking-wide uppercase">{t('games.puzzle.exit') || 'Salir'}</span>
                             </span>
-                            <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">close</span>
+                            <MdClose className="opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
                     </div>
 
                     {/* Info Card */}
                     <div className="mt-8 w-full p-4 rounded-lg bg-[#0db9f2]/5 border border-[#0db9f2]/20 flex items-center gap-4">
                         <div className="bg-[#0db9f2]/20 p-2 rounded-lg">
-                            <span className="material-symbols-outlined text-[#0db9f2]">info</span>
+                            <MdInfo className="text-[#0db9f2]" />
                         </div>
                         <div>
                             <p className="text-slate-100 text-sm font-bold">¿Necesitas un respiro?</p>

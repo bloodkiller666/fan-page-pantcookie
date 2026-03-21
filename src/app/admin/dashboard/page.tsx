@@ -5,6 +5,7 @@ import { getAllWallMessages, deleteWallMessage, updateWallMessage } from '../../
 import { FiTrash2, FiEdit2, FiSave, FiX, FiFilter, FiSearch, FiLock } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { MdBolt, MdDelete, MdDns, MdEdit, MdForum, MdGroups, MdLogout, MdMonitor, MdRefresh, MdSensors, MdShield, MdSportsEsports, MdLogin, MdSync } from 'react-icons/md';
 
 export default function AdminDashboard() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -210,7 +211,7 @@ export default function AdminDashboard() {
                 <form onSubmit={handleLogin} className="relative z-10 glass-panel bg-white dark:bg-slate-900/40 p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-2xl w-full max-w-md border border-zinc-200 dark:border-white/10 backdrop-blur-xl">
                     <div className="flex justify-center mb-8">
                         <div className="w-16 h-16 bg-gradient-to-br from-primary to-purple-600 rounded-2xl flex items-center justify-center rotate-3 shadow-[0_0_20px_rgba(255,31,142,0.4)]">
-                            <span className="material-symbols-outlined text-4xl">bolt</span>
+                           <MdMonitor className="text-purple-500" />
                         </div>
                     </div>
                     {/* CAMBIO: Texto del logo forzado a zinc-950 en light mode */}
@@ -264,7 +265,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-10">
                         <div className="flex items-center gap-3 group cursor-pointer">
                             <div className="w-10 h-10 bg-gradient-to-br from-primary to-purple-600 rounded-lg flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform shadow-[0_0_15px_rgba(255,31,142,0.4)]">
-                                <span className="material-symbols-outlined text-2xl">bolt</span>
+                                <MdBolt className="text-2xl" />
                             </div>
                             {/* CAMBIO: Texto del logo zinc-950 en light mode */}
                             <span className="font-display font-extrabold text-2xl tracking-tighter uppercase italic text-zinc-950 dark:text-white">
@@ -274,10 +275,10 @@ export default function AdminDashboard() {
                         <nav className="hidden xl:flex items-center gap-8">
                             {/* CAMBIO: Texto de navegación inactivo zinc-600 en light mode */}
                             <button onClick={() => setActiveTab('scores')} className={`flex items-center gap-2 text-[11px] font-bold tracking-widest transition-opacity ${activeTab === 'scores' ? 'text-primary border-b-2 border-primary pb-1' : 'text-zinc-600 dark:text-slate-300 opacity-70 hover:opacity-100'}`}>
-                                <span className="material-symbols-outlined text-[18px]">sports_esports</span> PUNTAJES
+                                <MdSportsEsports className="text-[18px]" /> PUNTAJES
                             </button>
                             <button onClick={() => setActiveTab('messages')} className={`flex items-center gap-2 text-[11px] font-bold tracking-widest transition-opacity ${activeTab === 'messages' ? 'text-primary border-b-2 border-primary pb-1' : 'text-zinc-600 dark:text-slate-300 opacity-70 hover:opacity-100'}`}>
-                                <span className="material-symbols-outlined text-[18px]">forum</span> MENSAJES
+                                <MdForum className="text-[18px]" /> MENSAJES
                             </button>
                         </nav>
                     </div>
@@ -314,20 +315,20 @@ export default function AdminDashboard() {
                     <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 border border-zinc-200 dark:border-white/10 p-3 rounded-2xl flex flex-row lg:flex-col items-center justify-around lg:justify-start gap-4 lg:min-h-[600px] shadow-sm dark:shadow-none">
                         {/* CAMBIO: Botones inactivos zinc-500, hover zinc-100 bg en light mode */}
                         <button onClick={() => setActiveTab('scores')} className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${activeTab === 'scores' ? 'bg-primary/20 text-primary shadow-[0_0_15px_rgba(255,31,142,0.2)]' : 'hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white'}`}>
-                            <span className="material-symbols-outlined">sports_esports</span>
+                            <MdSportsEsports />
                         </button>
                         <button onClick={() => setActiveTab('messages')} className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${activeTab === 'messages' ? 'bg-primary/20 text-primary shadow-[0_0_15px_rgba(255,31,142,0.2)]' : 'hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white'}`}>
-                            <span className="material-symbols-outlined">forum</span>
+                            <MdForum />
                         </button>
                         <button className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-all">
-                            <span className="material-symbols-outlined">monitoring</span>
+                            <MdMonitor />
                         </button>
                         <button className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-all">
-                            <span className="material-symbols-outlined">shield</span>
+                            <MdShield />
                         </button>
                         <div className="flex-grow lg:block hidden"></div>
                         <button onClick={handleLogout} className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-slate-400 hover:text-red-600 transition-all">
-                            <span className="material-symbols-outlined">logout</span>
+                            <MdLogout />
                         </button>
                     </div>
                 </aside>
@@ -341,7 +342,7 @@ export default function AdminDashboard() {
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 dark:bg-primary/10 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-150"></div>
                                 <div className="flex items-center justify-between mb-6 relative z-10">
                                     <span className="text-[10px] font-bold tracking-widest text-primary uppercase">Total Records</span>
-                                    <span className="material-symbols-outlined text-primary/60 dark:text-primary/40">groups</span>
+                                    <MdGroups className="text-primary/60 dark:text-primary/40" />
                                 </div>
                                 <div className="flex items-end gap-2 relative z-10">
                                     {/* CAMBIO: Texto principal zinc-950 en light mode */}
@@ -352,7 +353,7 @@ export default function AdminDashboard() {
                             <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 p-8 rounded-3xl border border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none relative overflow-hidden group">
                                 <div className="flex items-center justify-between mb-6">
                                     <span className="text-[10px] font-bold tracking-widest text-[#00c2cc] dark:text-[#00f2ff] uppercase">Active Sessions</span>
-                                    <span className="material-symbols-outlined text-[#00c2cc]/60 dark:text-[#00f2ff]/40">sensors</span>
+                                    <MdSensors className="text-[#00c2cc]/60 dark:text-[#00f2ff]/40" />
                                 </div>
                                 <div className="flex items-end gap-2">
                                     <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">1,204</h3>
@@ -363,7 +364,7 @@ export default function AdminDashboard() {
                                 <div className="flex items-center justify-between mb-6">
                                     {/* CAMBIO: Texto de categoría zinc-600 en light mode */}
                                     <span className="text-[10px] font-bold tracking-widest text-zinc-600 dark:text-slate-400 uppercase">Server Uptime</span>
-                                    <span className="material-symbols-outlined text-zinc-500 dark:text-slate-400/40">dns</span>
+                                    <MdDns className="text-zinc-500 dark:text-slate-400/40" />
                                 </div>
                                 <div className="flex items-end gap-2">
                                     <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">99.9<span className="text-sm opacity-50">%</span></h3>
@@ -418,7 +419,7 @@ export default function AdminDashboard() {
                                     </>
                                 )}
                                 <button onClick={activeTab === 'scores' ? fetchScores : fetchMessages} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-all border border-primary/20">
-                                    <span className="material-symbols-outlined text-sm">refresh</span> REFRESH
+                                    <MdRefresh className="text-sm" /> REFRESH
                                 </button>
                             </div>
                         </div>
@@ -503,8 +504,8 @@ export default function AdminDashboard() {
                                                             </div>
                                                         ) : (
                                                             <div className="flex justify-end gap-2 sm:opacity-40 group-hover:opacity-100 transition-opacity">
-                                                                <button onClick={() => startEdit(score)} className="p-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-white/10 text-zinc-600 dark:text-slate-400 hover:text-[#00a8b3] dark:hover:text-[#00f2ff] transition-colors"><span className="material-symbols-outlined text-xl">edit</span></button>
-                                                                <button onClick={() => handleDeleteScore(score.id)} className="p-2 rounded-lg hover:bg-primary/20 text-zinc-600 dark:text-slate-400 hover:text-primary transition-colors"><span className="material-symbols-outlined text-xl">delete</span></button>
+                                                                <button onClick={() => startEdit(score)} className="p-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-white/10 text-zinc-600 dark:text-slate-400 hover:text-[#00a8b3] dark:hover:text-[#00f2ff] transition-colors"><MdEdit className="text-xl" /></button>
+                                                                <button onClick={() => handleDeleteScore(score.id)} className="p-2 rounded-lg hover:bg-primary/20 text-zinc-600 dark:text-slate-400 hover:text-primary transition-colors"><MdDelete className="text-xl" /></button>
                                                             </div>
                                                         )}
                                                     </td>
@@ -562,8 +563,8 @@ export default function AdminDashboard() {
                                                             </div>
                                                        ) : (
                                                             <div className="flex justify-end gap-2 sm:opacity-40 group-hover:opacity-100 transition-opacity">
-                                                                <button onClick={() => startEditMessage(msg)} className="p-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-white/10 text-zinc-600 dark:text-slate-400 hover:text-[#00c2cc] dark:hover:text-[#00f2ff] transition-colors"><span className="material-symbols-outlined text-xl">edit</span></button>
-                                                                <button onClick={() => handleDeleteMessage(msg.id)} className="p-2 rounded-lg hover:bg-primary/20 text-zinc-600 dark:text-slate-400 hover:text-primary transition-colors"><span className="material-symbols-outlined text-xl">delete</span></button>
+                                                                <button onClick={() => startEditMessage(msg)} className="p-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-white/10 text-zinc-600 dark:text-slate-400 hover:text-[#00c2cc] dark:hover:text-[#00f2ff] transition-colors"><MdEdit className="text-xl" /></button>
+                                                                <button onClick={() => handleDeleteMessage(msg.id)} className="p-2 rounded-lg hover:bg-primary/20 text-zinc-600 dark:text-slate-400 hover:text-primary transition-colors"><MdDelete className="text-xl" /></button>
                                                             </div>
                                                         )}
                                                     </td>
@@ -599,12 +600,11 @@ export default function AdminDashboard() {
                                 <div key={activity.id} className="flex gap-4 relative">
                                     {/* CAMBIO: Icono actividad borde primary/30 en light mode */}
                                     <div className="w-8 h-8 rounded-full bg-primary/10 dark:bg-white/5 flex items-center justify-center flex-shrink-0 z-10 border border-primary/30 dark:border-primary/20 transition-colors duration-300">
-                                        <span className="material-symbols-outlined text-primary text-sm">
-                                            {activity.type === 'auth' ? 'login' : 
-                                             activity.type === 'sync' ? 'sync' : 
-                                             activity.type === 'refresh' ? 'refresh' : 
-                                             activity.type === 'edit' ? 'edit' : 'delete'}
-                                        </span>
+                                        {activity.type === 'auth' ? <MdLogin className="text-primary text-sm" /> : 
+                                         activity.type === 'sync' ? <MdSync className="text-primary text-sm" /> : 
+                                         activity.type === 'refresh' ? <MdRefresh className="text-primary text-sm" /> : 
+                                         activity.type === 'edit' ? <MdEdit className="text-primary text-sm" /> : 
+                                         <MdDelete className="text-primary text-sm" />}
                                     </div>
                                     <div className="flex-grow">
                                         {/* CAMBIO: Texto actividad zinc-900 en light mode */}

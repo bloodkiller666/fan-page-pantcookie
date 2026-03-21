@@ -3,6 +3,7 @@ import { FiSend, FiMoreVertical, FiPaperclip, FiSmile, FiMic, FiVideo, FiVolume2
 import { getBotResponse } from '../../utils/botLogic';
 import EmojiPicker from 'emoji-picker-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { MdAttachFile, MdBolt, MdMic, MdMood, MdPerson, MdSend } from 'react-icons/md';
 
 const ChatInterface = () => {
     const { t } = useLanguage();
@@ -272,7 +273,7 @@ const ChatInterface = () => {
                     >
                         {msg.sender === 'bot' && (
                             <div className="size-9 rounded-xl glass-panel border border-primary/40 flex items-center justify-center shrink-0 neon-glow-cyan">
-                                <span className="material-symbols-outlined text-primary text-xl">bolt</span>
+                                <MdBolt className="text-primary text-xl" />
                             </div>
                         )}
                         
@@ -316,7 +317,7 @@ const ChatInterface = () => {
 
                         {msg.sender === 'user' && (
                             <div className="size-9 rounded-xl bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-900 border border-slate-300 dark:border-slate-600 flex items-center justify-center shrink-0">
-                                <span className="material-symbols-outlined text-slate-600 dark:text-slate-400 text-xl">person</span>
+                                <MdPerson className="text-slate-600 dark:text-slate-400 text-xl" />
                             </div>
                         )}
                     </div>
@@ -325,7 +326,7 @@ const ChatInterface = () => {
                 {isTyping && (
                     <div className="flex items-start gap-4">
                         <div className="size-9 rounded-xl glass-panel border border-primary/40 flex items-center justify-center shrink-0">
-                            <span className="material-symbols-outlined text-primary text-xl">bolt</span>
+                            <MdBolt className="text-primary text-xl" />
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <div className="ai-bubble-gradient border border-primary/10 px-4 py-3 rounded-2xl rounded-tl-none">
@@ -363,7 +364,7 @@ const ChatInterface = () => {
                                 disabled={isOffline || isUploading}
                                 className="size-10 flex items-center justify-center rounded-xl text-slate-500 hover:text-primary hover:bg-primary/5 transition-all"
                             >
-                                <span className="material-symbols-outlined">attach_file</span>
+                                <MdAttachFile />
                             </button>
                             <input
                                 type="file"
@@ -394,17 +395,17 @@ const ChatInterface = () => {
                                     disabled={isOffline}
                                     className={`size-9 flex items-center justify-center rounded-lg transition-all ${showEmojiPicker ? 'text-accent-magenta bg-accent-magenta/5' : 'text-slate-500 hover:text-accent-magenta hover:bg-accent-magenta/5'}`}
                                 >
-                                    <span className="material-symbols-outlined">mood</span>
+                                    <MdMood />
                                 </button>
                                 <button className="size-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-primary hover:bg-primary/5 transition-all">
-                                    <span className="material-symbols-outlined">mic</span>
+                                    <MdMic />
                                 </button>
                                 <button 
                                     onClick={handleSendMessage}
                                     disabled={isOffline || (!inputValue.trim() && !pendingImage)}
                                     className="size-10 flex items-center justify-center rounded-xl bg-primary text-background-dark neon-glow-cyan hover:scale-105 transition-transform ml-2 disabled:opacity-50 disabled:hover:scale-100"
                                 >
-                                    <span className="material-symbols-outlined font-bold">send</span>
+                                    <MdSend className="font-bold" />
                                 </button>
                             </div>
                         </div>

@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 @layer base {
   body {
     @apply font-poppins bg-[var(--poke-bg)] text-[var(--poke-text)] transition-colors duration-300;
@@ -135,6 +137,13 @@
   .neon-text-yellow {
     @apply text-[var(--poke-yellow)];
     text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+  }
+
+  .neon-glow {
+    box-shadow: 0 0 15px rgba(13, 185, 242, 0.3);
+  }
+  .neon-glow-pink {
+    box-shadow: 0 0 15px rgba(255, 0, 122, 0.3);
   }
 
   /* Pokemon Card Utilities */
@@ -526,6 +535,17 @@
 
   /* Additional Glass Utilities */
   .glass-card {
-    @apply bg-white/10 dark:bg-black/40 backdrop-blur-xl border border-white/20 shadow-2xl;
+    @apply bg-white/10 dark:bg-black/40 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300;
+  }
+  .glass-card:hover {
+    @apply bg-white/20 dark:bg-primary-blue/10 border-primary-blue/40 -translate-y-1;
+  }
+
+  .neon-border-primary {
+    box-shadow: 0 0 15px rgba(13, 185, 242, 0.3);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 10px rgba(13, 185, 242, 0.5);
   }
 }

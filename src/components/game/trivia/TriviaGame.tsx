@@ -6,7 +6,7 @@ import { useLanguage } from '../../../context/LanguageContext';
 import PlayerInput from '../PlayerInput';
 import Leaderboard from '../Leaderboard';
 import { FiUsers, FiCpu, FiGlobe, FiArrowLeft, FiHeadphones } from 'react-icons/fi';
-import { MdCatchingPokemon } from 'react-icons/md';
+import { MdCatchingPokemon, MdQuiz, MdTimer, MdCheckCircle, MdEmojiEvents, MdHeadset, MdPsychology, MdHeadphones, MdBolt, MdPriorityHigh, MdStar, MdStars, MdMilitaryTech, MdSportsEsports, MdNotifications, MdPerson, MdHome, MdChevronRight, MdArrowBack, MdArrowForward, MdVisibility, MdPlayArrow, MdPets, MdMusicNote, MdCake, MdGridView, MdLeaderboard, MdShoppingBag, MdSettings, MdAllInclusive, MdSchool, MdSelfImprovement, MdMenuBook } from 'react-icons/md';
 import { useGameSounds } from '../../../hooks/useGameSounds';
 import { submitGameScore, checkExistingScore } from '../../../utils/supabaseScoreService';
 import ScoreOverwriteModal from '../ScoreOverwriteModal';
@@ -535,64 +535,222 @@ const TriviaGame = () => {
     }
     setPendingScoreData(null);
   };
-
   if (!category) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 transition-colors border-4 border-black shadow-[8px_8px_0px_0px_black]">
-        <div className="mb-8">
-          <PlayerInput
-            playerName={playerName}
-            onNameChange={setPlayerName}
-            onStartGame={() => { }} // No auto-start, just name setting
-            hideButton={true}
-          />
+      <div className="relative flex flex-col w-full animate-fade-in text-slate-900 dark:text-slate-100">
+        {/* Background Glows */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-blue/10 rounded-full blur-[120px]"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary-pink/10 rounded-full blur-[120px]"></div>
         </div>
 
-        <h3 className="text-2xl font-bold text-center mb-8 neon-text-blue uppercase tracking-widest">
-          {t('games.options.selectCategory')}
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <button
-            onClick={() => selectCategory('pantcookie')}
-            className="group relative overflow-hidden bg-white/50 dark:bg-black/40 backdrop-blur-xl p-6 rounded-2xl border border-primary-blue/30 hover:border-primary-blue transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,255,255,0.3)] hover:-translate-y-2"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-blue/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10 flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-primary-blue/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <FiUsers className="w-8 h-8 text-primary-blue" />
+        <div className="relative z-10 space-y-8">
+          {/* Header */}
+          <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-2">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary-blue to-primary-pink rounded-lg flex items-center justify-center text-white neon-glow">
+                <MdSportsEsports className="text-2xl" />
               </div>
-              <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">PantCookie</h4>
-              <p className="text-xs text-center text-gray-500 dark:text-gray-400">{t('games.trivia.categoryPantcookie')}</p>
+              <h2 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-800 dark:from-white to-primary-blue/80">Trivia Gamer</h2>
             </div>
+            <div className="flex gap-4">
+              <button className="flex items-center justify-center rounded-lg h-10 w-10 bg-white/5 border border-white/10 text-slate-400 hover:text-primary-blue transition-colors">
+                <MdNotifications />
+              </button>
+              <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-primary-blue/20 flex items-center justify-center">
+                  <MdPerson className="text-primary-blue text-xs" />
+                </div>
+                <span className="text-xs font-medium">{playerName || 'Invitado'}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Info Bar */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2 text-slate-400 text-sm">
+              <MdHome className="text-lg" />
+              <span>Menu</span>
+              <MdChevronRight />
+              <span className="text-primary-blue font-medium">Categorías</span>
+            </div>
+          </div>
+
+          {/* Hero section */}
+          <div className="mb-10 text-center md:text-left">
+            <h1 className="text-5xl font-black mb-3 tracking-tighter text-gray-800 dark:text-slate-100 uppercase italic">
+              Elige tu <span className="text-primary-pink underline decoration-primary-pink/50 underline-offset-8">Categoría</span>
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 text-lg max-w-xl mx-auto md:mx-0">
+              Demuestra tu nivel y desbloquea recompensas exclusivas en los desafíos de esta temporada.
+            </p>
+          </div>
+
+          <div className="mb-8">
+            <PlayerInput
+              playerName={playerName}
+              onNameChange={setPlayerName}
+              onStartGame={() => { }} // No auto-start, just name setting
+              hideButton={true}
+            />
+          </div>
+
+          {/* Categories Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* PantCookie */}
+            <div
+              onClick={() => selectCategory('pantcookie')}
+              className="glass-card rounded-2xl p-1 flex flex-col group cursor-pointer overflow-hidden relative"
+            >
+              <div className="relative aspect-video rounded-xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+                <img
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuADmNov2I1T3_GAPg4x6T2vc6Fio5cSU4M2wKPdKqzF65X9YvbsgPb8vo9mtABT1BQGEEY73P-rrGZpfIMxXC1kPZ_pRm1livhbXPkVRBqux0rfNqt6xN8A0XnigLhD0ZJRgz5yJPxN2GAA5qZhKcls00e0zztFlPxyTljSnRqe0e4tmfeiQYVvjhdJIYkp0PN7MX99T82pNvsr496dmg3NcyFid9eXnEmPgQcLqGCAHHEL0481iZEKwAVZYywTp7u6uW3UjkcvqRI"
+                  alt="PantCookie"
+                />
+                <div className="absolute top-4 right-4 z-20 bg-primary-blue/20 backdrop-blur-md px-3 py-1 rounded-full border border-primary-blue/30">
+                  <span className="text-[10px] font-bold text-primary-blue uppercase tracking-widest">Hot 🔥</span>
+                </div>
+              </div>
+              <div className="p-6 flex flex-col gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary-blue/10 flex items-center justify-center border border-primary-blue/20 neon-glow">
+                    <MdCake className="text-2xl text-primary-blue" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-white group-hover:text-primary-blue transition-colors">PantCookie</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs">{t('games.trivia.categoryPantcookie')}</p>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center pt-4 border-t border-black/5 dark:border-white/5">
+                  <div className="flex items-center gap-2">
+                    <MdVisibility className="text-slate-500 text-sm" />
+                    <span className="text-xs text-slate-500">12.4k jugadores</span>
+                  </div>
+                  <MdPlayArrow className="text-primary-blue opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </div>
+            </div>
+
+            {/* ShuraHiwa */}
+            <div
+              onClick={() => selectCategory('shurahiwa')}
+              className="glass-card rounded-2xl p-1 flex flex-col group cursor-pointer overflow-hidden relative"
+            >
+              <div className="relative aspect-video rounded-xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+                <img
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy4HZrC4g-8Zmziv4BRCnLFks-2CZSAEHICVSO60Zm9pvzJAmbzW8LteJzSU1o88U6-WJhrVjYuCk15Wdv0RvNCuWWQKOa0ZBm-6MahOj1tZDR0cOO-Jp_o-VBgtp2JXZrB7RW-dS3BDX0z9-x3H5kwL4Ugx7ubmCrvvYgH1bDqRLg7GpZgqgi-XOCXDlwiGI1X3PF8qRlSILVqAgtVCqkVifG9T8dWE9sNCAg3EiVIbm6lsGmo4tMnZj5-PatL2AyOi5INWmZFIk"
+                  alt="ShuraHiwa"
+                />
+                <div className="absolute top-4 right-4 z-20 bg-primary-pink/20 backdrop-blur-md px-3 py-1 rounded-full border border-primary-pink/30">
+                  <span className="text-[10px] font-bold text-primary-pink uppercase tracking-widest">Rare 💎</span>
+                </div>
+              </div>
+              <div className="p-6 flex flex-col gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary-pink/10 flex items-center justify-center text-primary-pink border border-primary-pink/20 neon-glow-pink">
+                    <MdPets className="text-2xl" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-white group-hover:text-primary-pink transition-colors">ShuraHiwa</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs">{t('games.trivia.categoryShura')}</p>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center pt-4 border-t border-black/5 dark:border-white/5">
+                  <div className="flex items-center gap-2">
+                    <MdVisibility className="text-slate-500 text-sm" />
+                    <span className="text-xs text-slate-500">8.9k jugadores</span>
+                  </div>
+                  <MdPlayArrow className="text-primary-pink opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </div>
+            </div>
+
+            {/* Canciones */}
+            <div
+              onClick={() => selectCategory('music')}
+              className="glass-card rounded-2xl p-1 flex flex-col group cursor-pointer overflow-hidden relative"
+            >
+              <div className="relative aspect-video rounded-xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+                <img
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAy993X-qeTwANsYf-pKpygT7HFcY6m8didf28B29m-n--nbDwyLnz24UuLqcSaJ1aD_TB2Pk0nkmxQxkmpMxfVCMm9rdE8Pk0nkmxQxkmpMxfVCMm9rdE8Kg_kIu98viRnnJP5ueQ_ayjuThwJojBh6rBmru5zef1LSqhRLX2-JlML9a7GnlVDztkVAvtYhMPkaYtGqFYVUONqg2vSCwIcumGatrmNNFN7KHRQwNTPdr1mvlzc6JtIPPzeOr1K7ZLDgeURiwdNMz6aYVn1UWhmEQZNAgAagJO_K8"
+                  alt="Music"
+                />
+                <div className="absolute top-4 right-4 z-20 bg-purple-500/20 backdrop-blur-md px-3 py-1 rounded-full border border-purple-500/30">
+                  <span className="text-[10px] font-bold text-purple-400 uppercase tracking-widest">Viral 🎵</span>
+                </div>
+              </div>
+              <div className="p-6 flex flex-col gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                    <MdMusicNote className="text-2xl" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-white group-hover:text-purple-400 transition-colors">{t('games.trivia.categoryMusicTitle')}</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs">{t('games.trivia.categoryMusic')}</p>
+                  </div>
+                </div>
+                <div className="flex justify-between items-center pt-4 border-t border-black/5 dark:border-white/5">
+                  <div className="flex items-center gap-2">
+                    <MdVisibility className="text-slate-500 text-sm" />
+                    <span className="text-xs text-slate-500">25.1k jugadores</span>
+                  </div>
+                  <MdPlayArrow className="text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer Stats Mockup from user input */}
+          <div className="glass-card rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 mt-8">
+            <div className="flex items-center gap-6">
+              <div className="flex -space-x-3">
+                <div className="w-10 h-10 rounded-full border-2 border-black bg-slate-700 flex items-center justify-center text-[10px] font-bold text-white">JD</div>
+                <div className="w-10 h-10 rounded-full border-2 border-black bg-primary-blue flex items-center justify-center text-[10px] font-bold text-white">SM</div>
+                <div className="w-10 h-10 rounded-full border-2 border-black bg-primary-pink flex items-center justify-center text-[10px] font-bold text-white">AL</div>
+                <div className="w-10 h-10 rounded-full border-2 border-black bg-white/10 flex items-center justify-center text-[10px] font-bold text-slate-400">+52</div>
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Hay <span className="text-gray-800 dark:text-white font-bold">142 amigos</span> conectados jugando ahora</p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  const cats = ['pantcookie', 'shurahiwa', 'music'];
+                  selectCategory(cats[Math.floor(Math.random() * cats.length)] as any);
+                }}
+                className="px-6 py-3 rounded-xl bg-primary-blue text-white font-bold text-sm tracking-wide neon-glow hover:brightness-110 transition-all uppercase"
+              >
+                Partida Rápida
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Navigation Bar (Mobile) */}
+        <div className="md:hidden fixed bottom-4 left-4 right-4 z-50 glass-card rounded-2xl flex items-center justify-around py-3 px-6 border border-white/10">
+          <button className="text-primary-blue flex flex-col items-center gap-1">
+            <MdGridView />
+            <span className="text-[10px] font-bold uppercase">Categorías</span>
           </button>
-
-          <button
-            onClick={() => selectCategory('shurahiwa')}
-            className="group relative overflow-hidden bg-white/50 dark:bg-black/40 backdrop-blur-xl p-6 rounded-2xl border border-primary-pink/30 hover:border-primary-pink transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,0,255,0.3)] hover:-translate-y-2"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-pink/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10 flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-primary-pink/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <FiCpu className="w-8 h-8 text-primary-pink" />
-              </div>
-              <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">ShuraHiwa</h4>
-              <p className="text-xs text-center text-gray-500 dark:text-gray-400">{t('games.trivia.categoryShura')}</p>
-            </div>
+          <button className="text-slate-400 flex flex-col items-center gap-1">
+            <MdLeaderboard />
+            <span className="text-[10px] font-bold uppercase">Ranking</span>
           </button>
-
-          <button
-            onClick={() => selectCategory('music')}
-            className="group relative overflow-hidden bg-white/50 dark:bg-black/40 backdrop-blur-xl p-6 rounded-2xl border-purple-500/30 hover:border-purple-500 transition-all duration-300 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] hover:-translate-y-2"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10 flex flex-col items-center">
-              <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <FiGlobe className="w-8 h-8 text-purple-500" />
-              </div>
-              <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{t('games.trivia.categoryMusicTitle')}</h4>
-              <p className="text-xs text-center text-gray-500 dark:text-gray-400">{t('games.trivia.categoryMusic')}</p>
-            </div>
+          <div className="w-12 h-12 rounded-full bg-primary-blue flex items-center justify-center -translate-y-6 border-4 border-slate-900 shadow-xl">
+            <MdPlayArrow className="text-slate-900 text-3xl font-bold" />
+          </div>
+          <button className="text-slate-400 flex flex-col items-center gap-1">
+            <MdShoppingBag />
+            <span className="text-[10px] font-bold uppercase">Tienda</span>
+          </button>
+          <button className="text-slate-400 flex flex-col items-center gap-1">
+            <MdSettings />
+            <span className="text-[10px] font-bold uppercase">Perfil</span>
           </button>
         </div>
       </div>
@@ -602,134 +760,361 @@ const TriviaGame = () => {
   if (!started && !isCountingDown) {
     if (category === 'music') {
       return (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors text-center animate-fade-in relative">
-          <button onClick={() => setCategory(null)} className="absolute top-8 left-8 text-gray-400 hover:text-gray-600 dark:hover:text-white transition">
-            <FiArrowLeft size={24} />
-          </button>
-
-          <h3 className="text-2xl font-bold mb-8 neon-text-pink uppercase tracking-widest">
-            {t('games.options.chooseMode')} (Música)
-          </h3>
-
-          <div className="flex flex-col md:flex-row gap-6 justify-center max-w-2xl mx-auto">
-            <button
-              onClick={() => startGame('insane')}
-              className="flex-1 p-8 rounded-2xl border-4 border-red-600/30 hover:border-red-600 bg-red-600/5 hover:bg-red-600/10 transition-all group relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 bg-red-600 text-white text-[10px] px-2 py-1 font-bold uppercase">Hardcore</div>
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">🔥</div>
-              <h4 className="text-xl font-bold mb-2 text-red-600">{t('games.trivia.insaneMode')}</h4>
-              <p className="text-sm text-gray-500 whitespace-pre-line">
-                {t('games.trivia.insaneModeDesc')}
-              </p>
-            </button>
-
-            <button
-              onClick={() => startGame('chaos')}
-              className="flex-1 p-8 rounded-2xl border-4 border-purple-600/30 hover:border-purple-600 bg-purple-600/5 hover:bg-purple-600/10 transition-all group relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 bg-purple-600 text-white text-[10px] px-2 py-1 font-bold uppercase">Speedrun</div>
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">⚡</div>
-              <h4 className="text-xl font-bold mb-2 text-purple-600">{t('games.trivia.chaosMode')}</h4>
-              <p className="text-sm text-gray-500 whitespace-pre-line">
-                {t('games.trivia.chaosModeDesc')}
-              </p>
-            </button>
+        <div className="relative flex flex-col w-full animate-fade-in text-slate-900 dark:text-slate-100">
+          {/* Background Glows */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-red-600/10 rounded-full blur-[120px]"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 rounded-full blur-[120px]"></div>
           </div>
+
+          <div className="relative z-10 space-y-8">
+            {/* Header */}
+            <header className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 mb-2">
+              <div className="flex items-center gap-3">
+                <div className="size-8 text-primary-blue flex items-center justify-center">
+                  <MdSportsEsports className="text-3xl" />
+                </div>
+                <h2 className="text-slate-900 dark:text-slate-100 text-xl font-bold tracking-tight">Trivia Master</h2>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-primary-blue/10 border border-primary-blue/20">
+                  <MdStars className="text-primary-blue text-sm" />
+                  <span className="text-sm font-bold text-primary-blue">Nivel 42</span>
+                </div>
+                <button
+                  onClick={() => setCategory(null)}
+                  className="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-primary-blue transition-colors"
+                >
+                  <MdSettings />
+                </button>
+              </div>
+            </header>
+
+            <main className="flex flex-col items-center justify-center py-6">
+              <div className="max-w-4xl w-full text-center mb-12">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight glow-text text-slate-900 dark:text-white uppercase">
+                  Desafío <span className="text-red-600">Musical</span>
+                </h1>
+                <p className="text-slate-600 dark:text-slate-400 text-lg">Pon a prueba tu oído con los modos más extremos</p>
+              </div>
+
+              {/* Cards Container */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl relative">
+                {/* VS Divider */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center size-16 rounded-full bg-slate-900 border-4 border-slate-800 shadow-2xl">
+                  <span className="text-red-600 font-black text-2xl italic tracking-tighter">VS</span>
+                </div>
+
+                {/* Mode: Insane */}
+                <div
+                  onClick={() => startGame('insane')}
+                  className="group relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-900/50 border-2 border-red-600/30 p-8 transition-all hover:border-red-600 hover:scale-[1.02] flex flex-col items-center text-center cursor-pointer"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-b from-red-600/5 to-transparent pointer-events-none"></div>
+                  <div className="mb-6 flex size-24 items-center justify-center rounded-full bg-red-600/20 text-red-600 shadow-[0_0_20px_rgba(220,38,38,0.3)]">
+                    <MdPsychology className="text-6xl" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white uppercase tracking-wider">{t('games.trivia.insaneMode')}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-xs leading-relaxed">
+                    {t('games.trivia.insaneModeDesc')}
+                  </p>
+                  <div className="mt-auto w-full">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-500 mb-4 px-2">
+                      <span className="flex items-center gap-1 uppercase"><MdHeadset className="text-sm" /> Auditivo</span>
+                      <span className="flex items-center gap-1 uppercase"><MdTimer className="text-sm" /> 7s Limit</span>
+                    </div>
+                    <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-lg transition-all flex items-center justify-center gap-2 group-hover:shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+                      <span>HARDCORE</span>
+                      <MdPlayArrow className="text-xl" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Mode: Chaos */}
+                <div
+                  onClick={() => startGame('chaos')}
+                  className="group relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-900/50 border-2 border-purple-600/30 p-8 transition-all hover:border-purple-600 hover:scale-[1.02] flex flex-col items-center text-center cursor-pointer"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-b from-purple-600/5 to-transparent pointer-events-none"></div>
+                  <div className="mb-6 flex size-24 items-center justify-center rounded-full bg-purple-600/20 text-purple-600 shadow-[0_0_20px_rgba(147,51,234,0.3)]">
+                    <MdBolt className="text-6xl" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white uppercase tracking-wider">{t('games.trivia.chaosMode')}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-xs leading-relaxed">
+                    {t('games.trivia.chaosModeDesc')}
+                  </p>
+                  <div className="mt-auto w-full">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-500 mb-4 px-2">
+                      <span className="flex items-center gap-1 uppercase"><MdPriorityHigh className="text-sm" /> Speedrun</span>
+                      <span className="flex items-center gap-1 uppercase"><MdStar className="text-sm" /> 100 Qs</span>
+                    </div>
+                    <button className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-lg transition-all flex items-center justify-center gap-2 group-hover:shadow-[0_0_20px_rgba(147,51,234,0.4)]">
+                      <span>CHAOS</span>
+                      <MdPlayArrow className="text-xl" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+
+          {/* Rules Modal */}
+          <RulesModal
+            isOpen={showRules}
+            onContinue={confirmStartGame}
+            title={category === 'music' ? t('games.trivia.musicRulesTitle') : t('games.trivia.rulesTitle')}
+            icon={category === 'music' ? <MdHeadset /> : <MdPsychology />}
+            instructions={
+              category === 'music'
+                ? (pendingMode === 'insane'
+                  ? [
+                    { icon: <MdPsychology />, title: 'Mental', description: t('games.trivia.musicInsane1') },
+                    { icon: <MdHeadphones />, title: 'Audio', description: t('games.trivia.musicInsane2') },
+                    { icon: <MdTimer />, title: 'Tiempo', description: t('games.trivia.musicInsane3') }
+                  ]
+                  : [
+                    { icon: <MdBolt />, title: 'Velocidad', description: t('games.trivia.musicChaos1') },
+                    { icon: <MdPriorityHigh />, title: 'Alerta', description: t('games.trivia.musicChaos2') },
+                    { icon: <MdHeadphones />, title: 'Escucha', description: t('games.trivia.musicChaos3') },
+                    { icon: <MdStar />, title: 'Puntaje', description: t('games.trivia.musicChaos4') }
+                  ])
+                : [
+                  { icon: <MdQuiz />, title: 'Reto', description: t('games.trivia.rule1') },
+                  { icon: <MdStars />, title: 'Precisión', description: t('games.trivia.rule2') },
+                  { icon: <MdMilitaryTech />, title: 'Bonus', description: t('games.trivia.rule3') },
+                  ...(pendingMode === 'timed' ? [{ icon: <MdTimer />, title: 'Tiempo', description: t('games.trivia.timedWarning').replace('{time}', TIMER_PER_QUESTION.toString()) }] : [])
+                ]
+            }
+          />
+
+          {/* Bottom Navigation (Mobile Friendly) */}
+          <nav className="flex justify-around items-center border-t border-slate-200 dark:border-slate-800 py-3 px-6 md:hidden">
+            <button
+              onClick={() => setCategory(null)}
+              className="flex flex-col items-center gap-1 text-primary-blue"
+            >
+              <MdHome className="text-xl" />
+              <span className="text-[10px] font-bold uppercase">Inicio</span>
+            </button>
+            <button className="flex flex-col items-center gap-1 text-slate-400">
+              <MdEmojiEvents className="text-xl" />
+              <span className="text-[10px] font-bold uppercase">Ranking</span>
+            </button>
+            <button className="flex flex-col items-center gap-1 text-slate-400">
+              <MdShoppingBag className="text-xl" />
+              <span className="text-[10px] font-bold uppercase">Tienda</span>
+            </button>
+            <button className="flex flex-col items-center gap-1 text-slate-400">
+              <MdPerson className="text-xl" />
+              <span className="text-[10px] font-bold uppercase">Perfil</span>
+            </button>
+          </nav>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative flex flex-col w-full animate-fade-in text-slate-900 dark:text-slate-100">
+        {/* Background Glows */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-blue/10 rounded-full blur-[120px]"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary-pink/10 rounded-full blur-[120px]"></div>
+        </div>
+
+        <div className="relative z-10 space-y-8">
+          {/* Header */}
+          <header className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4 mb-2">
+            <div className="flex items-center gap-3">
+              <div className="size-8 text-primary-blue flex items-center justify-center">
+                <MdSportsEsports className="text-3xl" />
+              </div>
+              <h2 className="text-slate-900 dark:text-slate-100 text-xl font-bold tracking-tight">Trivia Master</h2>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex items-center gap-3 px-4 py-2 rounded-full bg-primary-blue/10 border border-primary-blue/20">
+                <MdStars className="text-primary-blue text-sm" />
+                <span className="text-sm font-bold text-primary-blue">Nivel 42</span>
+              </div>
+              <button
+                onClick={() => setCategory(null)}
+                className="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-primary-blue transition-colors"
+              >
+                <MdSettings />
+              </button>
+            </div>
+          </header>
+
+          <main className="flex flex-col items-center justify-center py-6">
+            <div className="max-w-4xl w-full text-center mb-12">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight glow-text text-slate-900 dark:text-white uppercase">
+                Selecciona tu <span className="text-primary-blue">Desafío</span>
+              </h1>
+              <p className="text-slate-600 dark:text-slate-400 text-lg">Elige cómo quieres poner a prueba tus conocimientos hoy ({category?.toUpperCase()})</p>
+            </div>
+
+            {/* Cards Container */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl relative">
+              {/* VS Divider */}
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center size-16 rounded-full bg-slate-900 border-4 border-slate-800 shadow-2xl">
+                <span className="text-primary-blue font-black text-2xl italic tracking-tighter">VS</span>
+              </div>
+
+              {/* Mode: Con Tiempo */}
+              <div
+                onClick={() => startGame('timed')}
+                className="group relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-900/50 border-2 border-primary-blue/40 p-8 transition-all hover:border-primary-blue hover:scale-[1.02] flex flex-col items-center text-center cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-primary-blue/5 to-transparent pointer-events-none"></div>
+                <div className="mb-6 flex size-24 items-center justify-center rounded-full bg-primary-blue/20 text-primary-blue neon-glow">
+                  <MdTimer className="text-6xl" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white uppercase tracking-wider">Con Tiempo</h3>
+                <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-xs leading-relaxed">
+                  ¡Pura adrenalina! Responde antes de que el cronómetro llegue a cero para maximizar tus puntos.
+                </p>
+                <div className="mt-auto w-full">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-500 mb-4 px-2">
+                    <span className="flex items-center gap-1 uppercase"><MdBolt className="text-sm" /> +50% XP</span>
+                    <span className="flex items-center gap-1 uppercase"><MdLeaderboard className="text-sm" /> Pro Mode</span>
+                  </div>
+                  <button className="w-full bg-primary-blue hover:bg-primary-blue/90 text-white font-bold py-4 rounded-lg transition-all flex items-center justify-center gap-2 group-hover:shadow-[0_0_20px_rgba(13,185,242,0.4)]">
+                    <span>COMENZAR</span>
+                    <MdPlayArrow className="text-xl" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Mode: Sin Tiempo */}
+              <div
+                onClick={() => startGame('untimed')}
+                className="group relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-900/50 border-2 border-slate-300 dark:border-slate-800 p-8 transition-all hover:border-primary-pink/60 hover:scale-[1.02] flex flex-col items-center text-center cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-slate-500/5 to-transparent pointer-events-none"></div>
+                <div className="mb-6 flex size-24 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                  <MdAllInclusive className="text-6xl" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-slate-900 dark:text-white uppercase tracking-wider">Sin Tiempo</h3>
+                <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-xs leading-relaxed">
+                  Relájate y aprende. Tómate el tiempo necesario para leer y reflexionar cada respuesta.
+                </p>
+                <div className="mt-auto w-full">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-500 mb-4 px-2">
+                    <span className="flex items-center gap-1 uppercase"><MdSchool className="text-sm" /> Práctica</span>
+                    <span className="flex items-center gap-1 uppercase"><MdSelfImprovement className="text-sm" /> Relax</span>
+                  </div>
+                  <button className="w-full bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold py-4 rounded-lg transition-all flex items-center justify-center gap-2">
+                    <span>EXPLORAR</span>
+                    <MdMenuBook className="text-xl" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Mini-Bar */}
+            <div className="mt-16 w-full max-w-lg p-4 rounded-xl bg-slate-200/50 dark:bg-slate-800/30 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-full border-2 border-primary-blue bg-slate-400 bg-cover bg-center" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1gt77Dt4i2riP3j187U8cQuD7bQyL6MSllpIPVywpB-_06N1CxwAZWyXnvmmZ775CEHBp3XwtkLi8VWHtDfYE5epi9P2fa4PCKW4hq6SQl_KjfsZyFAU8RGYQAqYcWYCuV8YaS0SC39y21wZqPQNdohijd4xJNZgfXGlvlWdBfDG6Ls5vVXsMghAYyp3jJznLzu93jftAeWRj0yPgvRWuZP_ZCEPLcct4jYl9wkf8c0VCYTjC5K7iMf6O9iAeOEhe-rELrR2r_WI')` }}></div>
+                <div className="flex flex-col">
+                  <span className="font-bold text-slate-900 dark:text-white">{playerName || 'Invitado'}</span>
+                  <span className="text-xs text-slate-500">Online</span>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <div className="text-center px-3 py-1 bg-slate-200 dark:bg-slate-800 rounded-lg">
+                  <div className="text-[10px] uppercase text-slate-500 font-bold tracking-widest">Racha</div>
+                  <div className="text-primary-blue font-bold">5 🔥</div>
+                </div>
+                <div className="text-center px-3 py-1 bg-slate-200 dark:bg-slate-800 rounded-lg">
+                  <div className="text-[10px] uppercase text-slate-500 font-bold tracking-widest">Global</div>
+                  <div className="text-slate-900 dark:text-white font-bold">#124</div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
 
         {/* Rules Modal */}
         <RulesModal
           isOpen={showRules}
           onContinue={confirmStartGame}
           title={category === 'music' ? t('games.trivia.musicRulesTitle') : t('games.trivia.rulesTitle')}
-          icon={category === 'music' ? 'headset' : 'psychology'}
+          icon={category === 'music' ? <MdHeadset /> : <MdPsychology />}
           instructions={
             category === 'music'
               ? (pendingMode === 'insane'
                 ? [
-                  { icon: 'psychology', title: 'Mental', description: t('games.trivia.musicInsane1') },
-                  { icon: 'headphones', title: 'Audio', description: t('games.trivia.musicInsane2') },
-                  { icon: 'timer', title: 'Tiempo', description: t('games.trivia.musicInsane3') }
+                  { icon: <MdPsychology />, title: 'Mental', description: t('games.trivia.musicInsane1') },
+                  { icon: <MdHeadphones />, title: 'Audio', description: t('games.trivia.musicInsane2') },
+                  { icon: <MdTimer />, title: 'Tiempo', description: t('games.trivia.musicInsane3') }
                 ]
                 : [
-                  { icon: 'bolt', title: 'Velocidad', description: t('games.trivia.musicChaos1') },
-                  { icon: 'priority_high', title: 'Alerta', description: t('games.trivia.musicChaos2') },
-                  { icon: 'headphones', title: 'Escucha', description: t('games.trivia.musicChaos3') },
-                  { icon: 'star', title: 'Puntaje', description: t('games.trivia.musicChaos4') }
+                  { icon: <MdBolt />, title: 'Velocidad', description: t('games.trivia.musicChaos1') },
+                  { icon: <MdPriorityHigh />, title: 'Alerta', description: t('games.trivia.musicChaos2') },
+                  { icon: <MdHeadphones />, title: 'Escucha', description: t('games.trivia.musicChaos3') },
+                  { icon: <MdStar />, title: 'Puntaje', description: t('games.trivia.musicChaos4') }
                 ])
               : [
-                { icon: 'quiz', title: 'Reto', description: t('games.trivia.rule1') },
-                { icon: 'stars', title: 'Precisión', description: t('games.trivia.rule2') },
-                { icon: 'military_tech', title: 'Bonus', description: t('games.trivia.rule3') },
-                ...(pendingMode === 'timed' ? [{ icon: 'timer', title: 'Tiempo', description: t('games.trivia.timedWarning').replace('{time}', TIMER_PER_QUESTION.toString()) }] : [])
+                { icon: <MdQuiz />, title: 'Reto', description: t('games.trivia.rule1') },
+                { icon: <MdStars />, title: 'Precisión', description: t('games.trivia.rule2') },
+                { icon: <MdMilitaryTech />, title: 'Bonus', description: t('games.trivia.rule3') },
+                ...(pendingMode === 'timed' ? [{ icon: <MdTimer />, title: 'Tiempo', description: t('games.trivia.timedWarning').replace('{time}', TIMER_PER_QUESTION.toString()) }] : [])
               ]
           }
         />
-        </div>
-      );
-    }
 
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors text-center animate-fade-in relative">
-        <button onClick={() => setCategory(null)} className="absolute top-8 left-8 text-gray-400 hover:text-gray-600 dark:hover:text-white transition">
-          <FiArrowLeft size={24} />
-        </button>
-
-        <h3 className="text-2xl font-bold mb-8 neon-text-pink uppercase tracking-widest">
-          {t('games.options.chooseMode')}
-        </h3>
-
-        <div className="flex flex-col md:flex-row gap-6 justify-center max-w-2xl mx-auto">
+        {/* Bottom Navigation (Mobile Friendly) */}
+        <nav className="flex justify-around items-center border-t border-slate-200 dark:border-slate-800 py-3 px-6 md:hidden">
           <button
-            onClick={() => startGame('timed')}
-            className="flex-1 p-8 rounded-2xl border-2 border-primary-blue/30 hover:border-primary-blue bg-primary-blue/5 hover:bg-primary-blue/10 transition-all group"
+            onClick={() => setCategory(null)}
+            className="flex flex-col items-center gap-1 text-primary-blue"
           >
-            <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">⏱️</div>
-            <h4 className="text-xl font-bold mb-2">{t('games.options.timedMode')}</h4>
-            <p className="text-sm text-gray-500">{t('games.options.legendTimedBonus')}</p>
+            <MdHome className="text-xl" />
+            <span className="text-[10px] font-bold uppercase">Inicio</span>
           </button>
-
-          <button
-            onClick={() => startGame('untimed')}
-            className="flex-1 p-8 rounded-2xl border-2 border-primary-pink/30 hover:border-primary-pink bg-primary-pink/5 hover:bg-primary-pink/10 transition-all group"
-          >
-            <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">♾️</div>
-            <h4 className="text-xl font-bold mb-2">{t('games.options.untimedMode')}</h4>
-            <p className="text-sm text-gray-500">{t('games.options.untimedDesc')}</p>
+          <button className="flex flex-col items-center gap-1 text-slate-400">
+            <MdEmojiEvents className="text-xl" />
+            <span className="text-[10px] font-bold uppercase">Ranking</span>
           </button>
-        </div>
-
+          <button className="flex flex-col items-center gap-1 text-slate-400">
+            <MdShoppingBag className="text-xl" />
+            <span className="text-[10px] font-bold uppercase">Tienda</span>
+          </button>
+          <button className="flex flex-col items-center gap-1 text-slate-400">
+            <MdPerson className="text-xl" />
+            <span className="text-[10px] font-bold uppercase">Perfil</span>
+          </button>
+        </nav>
       </div>
     );
   }
 
-  if (isCountingDown) {
-    const getStatusMessage = (value) => {
-      switch (value) {
-        case 3: return t('games.trivia.countdownReady');
-        case 2: return t('games.trivia.countdownSet');
-        case 1: return t('games.trivia.countdownSteady');
-        case 0: return t('games.trivia.countdownGo');
-        default: return '';
-      }
-    };
+  const getStatusMessage = (value: number) => {
+    switch (value) {
+      case 3: return t('games.trivia.countdownReady');
+      case 2: return t('games.trivia.countdownSet');
+      case 1: return t('games.trivia.countdownSteady');
+      case 0: return t('games.trivia.countdownGo');
+      default: return '';
+    }
+  };
 
+  if (isCountingDown) {
     return (
       <div className="flex flex-col items-center justify-center mt-25 md:mt-33 gap-10">
         <div className="relative h-40 md:h-56 flex items-center justify-center">
-            <div
-              key={countValue}
-              className="flex items-center justify-center animate-bounce duration-500"
-            >
-              <span className={`font-black italic leading-none drop-shadow-sm transition-colors
+          <div
+            key={countValue}
+            className="flex items-center justify-center animate-bounce duration-500"
+          >
+            <span className={`font-black italic leading-none drop-shadow-sm transition-colors
                 ${countValue === 0
-                  ? 'text-[10rem] md:text-[14rem] text-primary-blue'
-                  : 'text-[12rem] md:text-[16rem] text-[#1a1c2c] dark:text-white'
-                }`}
-              >
-                {countValue === 0 ? 'GO!' : countValue}
-              </span>
-            </div>
+                ? 'text-[10rem] md:text-[14rem] text-primary-blue'
+                : 'text-[12rem] md:text-[16rem] text-[#1a1c2c] dark:text-white'
+              }`}
+            >
+              {countValue === 0 ? 'GO!' : countValue}
+            </span>
+          </div>
         </div>
 
         {/* Mensaje dinámico inferior */}
@@ -770,7 +1155,7 @@ const TriviaGame = () => {
             </div>
           </div>
           <div className="md:col-span-1">
-            <Leaderboard category={category === 'music' ? `${category}:${gameMode}` : category} currentPlayer={playerName} game="trivia" />
+            <Leaderboard category={category === 'music' ? `${category}:${gameMode}` : (category || undefined)} currentPlayer={playerName} game="trivia" />
           </div>
         </div>
 
@@ -804,246 +1189,402 @@ const TriviaGame = () => {
       </>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="md:col-span-3">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors border border-gray-100 dark:border-gray-700 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary-pink/5 rounded-full blur-3xl -z-0 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-blue/5 rounded-full blur-3xl -z-0 pointer-events-none" />
+          {gameMode === 'untimed' ? (
+            <div className="flex flex-col gap-6 w-full relative animate-fade-in text-slate-900 dark:text-slate-100">
+              {/* Overlay Feedback from parent (top of relative block) */}
 
-            <div className="relative z-10">
-              <>
-                {updateMessage && (
-                  <div
-                    className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 bg-pokemon-yellow text-black px-6 py-2 rounded-full font-black text-sm border-4 border-black shadow-[4px_4px_0px_0px_black] z-[100] whitespace-nowrap animate-fade-in-up"
-                  >
-                    {updateMessage}
-                  </div>
-                )}
-              </>
-              <div className="flex items-center justify-between mb-8">
-                <button
-                  onClick={() => setShowPauseMenu(true)}
-                  className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-xs font-black uppercase tracking-widest transition-all border-2 border-black shadow-[2px_2px_0px_0px_black] active:translate-y-0.5 active:shadow-none"
-                >
-                  {t('games.trivia.back')}
-                </button>
-
-                <div className="flex items-center gap-4">
-                  <div className="text-sm font-semibold uppercase tracking-wider text-gray-400">
-                    {category}
-                  </div>
-                  <div className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-bold">
-                    {index + 1}/{gameMode === 'chaos' ? CHAOS_MODE_QUESTIONS : TOTAL_QUESTIONS}
-                  </div>
-                </div>
-
-                <div className="text-lg relative font-bold text-primary-blue dark:text-primary-pink">
-                  {t('common.score')}: {score}
-                  {scoreChange !== null && (
-                    <ScoreIndicator
-                      points={scoreChange}
-                      onComplete={() => setScoreChange(null)}
-                    />
-                  )}
-                </div>
-              </div>
-
-              {/* BARRA DE TIEMPO / JUGADOR DE MUSICA */}
-              {gameMode === 'insane' ? (
-                <div className="mb-8">
-                  <div className="flex flex-col items-center gap-4">
+              {/* Progress & Stats */}
+              <div className="bg-primary-blue/5 backdrop-blur-md border border-primary-blue/10 rounded-2xl p-6 border-l-4 border-l-primary-blue shadow-lg">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h1 className="text-primary-blue font-bold uppercase tracking-wider text-xs">Modo Activo</h1>
+                    <h2 className="text-2xl font-bold dark:text-white mb-2">Modo Sin Tiempo</h2>
                     <button
-                      onClick={handleManualPlay}
-                      disabled={hasPlayedAudio || isAudioPlaying || answered}
-                      className={`px-8 py-4 rounded-xl font-black uppercase tracking-widest text-white shadow-[4px_4px_0px_0px_black] transition-all
-                                  ${hasPlayedAudio ? 'bg-gray-500 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 active:translate-y-1 active:shadow-none animate-pulse'}
-                              `}
+                      onClick={() => setShowPauseMenu(true)}
+                      className="px-3 py-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded flex items-center gap-1 text-xs font-bold uppercase text-slate-600 dark:text-slate-300 transition-colors"
                     >
-                      {isAudioPlaying ? t('games.trivia.audioPlaying') : hasPlayedAudio ? t('games.trivia.audioUsed') : t('games.trivia.playTrack')}
+                      <MdArrowBack /> {t('games.trivia.back')}
                     </button>
-
-                    {hasPlayedAudio && !answered && (
-                      <div className="w-full bg-black border-4 border-black rounded-xl h-8 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden relative mt-2">
-                        <div
-                          className="h-full bg-red-500 transition-all duration-1000 ease-linear"
-                          style={{ width: `${(remaining / INSANE_MODE_TIMER) * 100}%` }}
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-xs">
-                          {remaining}s
+                  </div>
+                  <div className="flex flex-col items-end gap-2">
+                    <div className="text-lg font-bold text-primary-blue border border-primary-blue/20 bg-primary-blue/10 px-3 py-1 rounded-lg flex items-center gap-1 shadow-sm relative">
+                      <span className="text-[10px] uppercase tracking-widest text-primary-blue/70 block absolute -top-4 right-1">{t('common.score')}</span>
+                      {score} PTS
+                      {scoreChange !== null && (
+                        <div className="absolute right-full mr-2 -translate-y-1/2 top-1/2">
+                          <ScoreIndicator points={scoreChange} onComplete={() => setScoreChange(null)} />
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ) : gameMode === 'chaos' ? (
-                <div className="mb-8">
-                  <div className="w-full bg-black border-4 border-black rounded-xl h-12 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden relative">
-                    <div
-                      className="h-full bg-purple-600 transition-all duration-1000 ease-linear"
-                      style={{ width: `${(remaining / CHAOS_MODE_TIMER) * 100}%` }}
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-lg">
-                      {t('games.trivia.totalTime')}: {remaining}s
+                      )}
                     </div>
-                  </div>
-                  <div className="flex justify-center gap-4 mt-2 text-xs font-bold uppercase">
-                    <span className="text-green-500">{t('games.trivia.chaosCorrect')}: {chaosStats.correct}</span>
-                    <span className="text-red-500">{t('games.trivia.chaosIncorrect')}: {chaosStats.incorrect}</span>
-                  </div>
-                  <div className="flex justify-center mt-4">
-                    <button
-                      onClick={handleManualPlay}
-                      disabled={isAudioPlaying || answered}
-                      className={`px-6 py-2 rounded-lg font-black uppercase tracking-widest text-white shadow-[2px_2px_0px_0px_black] transition-all text-xs
-                          ${answered ? 'bg-gray-500 cursor-not-allowed opacity-50' : 'bg-purple-600 hover:bg-purple-500 active:translate-y-0.5 active:shadow-none'}
-                        `}
-                    >
-                      {isAudioPlaying ? t('games.trivia.audioPlaying') : t('games.trivia.playSong')}
-                    </button>
-                  </div>
-                </div>
-              ) : gameMode === 'timed' && (
-                <div className="w-full bg-black border-4 border-black rounded-xl h-12 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden mb-8 relative">
-                  {/* Progress Bar */}
-                  <div
-                    className={`h-full transition-all duration-1000 ease-linear ${remaining < 5
-                      ? 'bg-red-500 shadow-[inset_-10px_0_20px_rgba(0,0,0,0.2)]'
-                      : 'bg-[#ff00ff] shadow-[inset_-10px_0_20px_rgba(0,0,0,0.2)]'
-                      }`}
-                    style={{ width: `${(remaining / TIMER_PER_QUESTION) * 100}%` }}
-                  />
-
-                  {/* Centered Text */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <span className="text-sm font-black uppercase tracking-[0.2em] text-white drop-shadow-[1px_1px_0px_rgba(0,0,0,1)] z-10">
-                      TIME: {remaining}S
+                    <span className="text-sm font-bold bg-primary-blue/20 text-primary-blue px-3 py-1 rounded-full shadow-sm">
+                      Pregunta {index + 1}/{TOTAL_QUESTIONS}
                     </span>
                   </div>
                 </div>
-              )}
-
-              {index === 0 && !answered && (
-                <div className="mb-10 p-4 border-4 border-black bg-white dark:bg-black rounded-2xl shadow-[4px_4px_0px_0px_black] flex flex-wrap justify-center gap-6 text-[10px] uppercase tracking-[0.2em] font-black">
-                  {gameMode === 'insane' ? (
-                    <>
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
-                        <span>{t('games.trivia.legendInsaneRight')}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-black" />
-                        <span>{t('games.trivia.legendInsaneAudio')}</span>
-                      </div>
-                    </>
-                  ) : gameMode === 'chaos' ? (
-                    <>
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
-                        <span>{t('games.trivia.legendChaosRight')}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-red-500 border-2 border-black" />
-                        <span>{t('games.trivia.legendChaosWrong')}</span>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
-                        <span>{t('games.options.legendCorrect')}: {gameMode === 'timed' ? 'UP TO 5pts' : '5pts'}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-black" />
-                        <span>{t('games.options.legendPartial')}: 1pt</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-red-500 border-2 border-black" />
-                        <span>{t('games.options.legendIncorrect')}: {gameMode === 'timed' ? '-2pts' : '0pts'}</span>
-                      </div>
-                    </>
-                  )}
+                <div className="w-full bg-slate-200 dark:bg-slate-800 h-3 rounded-full overflow-hidden mt-4 shadow-inner">
+                  <div
+                    className="bg-primary-blue h-full shadow-[0_0_15px_rgba(13,185,242,0.5)] transition-all duration-500"
+                    style={{ width: `${(index / TOTAL_QUESTIONS) * 100}%` }}
+                  ></div>
                 </div>
-              )}
+              </div>
 
-              <div className="mb-8 text-center">
-                <h3 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white leading-tight">
+              {/* Question Area */}
+              <div className="flex-1 flex flex-col justify-center items-center py-10 px-6 gap-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl transition-colors border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+
+                {/* Internal Glows */}
+                <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary-blue/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+                <h2 className="text-3xl md:text-4xl font-bold text-center leading-tight max-w-2xl text-slate-900 dark:text-white z-10">
                   {current?.question}
-                </h3>
+                </h2>
                 {isMultipleAnswer && !answered && (
-                  <p className="text-sm text-primary-pink font-semibold mt-3 animate-pulse">
+                  <p className="text-sm text-primary-pink font-semibold mt-1 animate-pulse z-10">
                     ({t('games.options.selectMultiple')})
                   </p>
                 )}
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                {current?.options.map((opt, i) => {
-                  const isCorrectOption = correctAnswerIndexes.includes(i);
-                  const isSelected = selectedAnswers.includes(i);
-                  let cls = "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:border-primary-blue/50 hover:shadow-lg";
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl z-10">
+                  {current?.options.map((opt, i) => {
+                    const isCorrectOption = correctAnswerIndexes.includes(i);
+                    const isSelected = selectedAnswers.includes(i);
 
-                  if (answered) {
-                    if (isCorrectOption) {
-                      cls = "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400";
-                    } else if (isSelected && !isCorrectOption) {
-                      cls = "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400";
+                    let btnClass = "group relative flex items-center gap-4 p-5 rounded-xl border-2 transition-all text-left overflow-hidden ";
+                    let iconClass = "flex items-center justify-center w-10 h-10 rounded-lg font-bold transition-colors z-10 ";
+                    let textClass = "text-lg font-semibold transition-colors z-10 relative ";
+
+                    if (answered) {
+                      if (isCorrectOption) {
+                        btnClass += "border-green-500 bg-green-500/10";
+                        iconClass += "bg-green-500 text-white shadow-lg shadow-green-500/30";
+                        textClass += "text-green-700 dark:text-green-400";
+                      } else if (isSelected && !isCorrectOption) {
+                        btnClass += "border-red-500 bg-red-500/10";
+                        iconClass += "bg-red-500 text-white shadow-lg shadow-red-500/30";
+                        textClass += "text-red-700 dark:text-red-400";
+                      } else {
+                        btnClass += "border-gray-200 dark:border-gray-800 bg-transparent opacity-50";
+                        iconClass += "bg-gray-200 dark:bg-gray-800 text-gray-500";
+                        textClass += "text-gray-500";
+                      }
+                    } else if (isSelected) {
+                      btnClass += "border-primary-blue bg-primary-blue/10 shadow-[0_0_20px_rgba(13,185,242,0.1)] scale-[1.02]";
+                      iconClass += "bg-primary-blue text-white shadow-lg shadow-primary-blue/40";
+                      textClass += "text-primary-blue";
                     } else {
-                      cls = "opacity-50 border-gray-200 dark:border-gray-800";
+                      btnClass += "border-primary-blue/20 bg-slate-50 dark:bg-slate-800/40 hover:border-primary-blue hover:bg-primary-blue/5 active:scale-[0.98]";
+                      iconClass += "bg-primary-blue/10 text-primary-blue group-hover:bg-primary-blue group-hover:text-white";
+                      textClass += "text-slate-700 dark:text-slate-300 group-hover:text-primary-blue";
                     }
-                  } else if (isSelected) {
-                    cls = "bg-primary-blue/10 border-primary-blue text-primary-blue";
-                  }
 
-                  return (
+                    return (
+                      <button
+                        key={i}
+                        disabled={answered}
+                        onClick={() => handleOptionClick(i)}
+                        className={btnClass}
+                      >
+                        {isSelected && !answered && (
+                          <div className="absolute inset-0 bg-gradient-to-r from-primary-blue/10 to-transparent pointer-events-none opacity-50"></div>
+                        )}
+                        <span className={iconClass}>{String.fromCharCode(65 + i)}</span>
+                        <span className={textClass}>{opt}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {showCorrectAnswer && (
+                  <div className={`mt-2 w-full max-w-2xl p-4 rounded-xl border-l-4 border-red-500 bg-red-500/10 animate-fade-in z-10`}>
+                    <p className="font-bold mb-1 text-red-600 dark:text-red-400">{t('games.trivia.incorrect')}</p>
+                    <p className="text-sm opacity-90 text-slate-700 dark:text-slate-300">
+                      {t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span>
+                    </p>
+                  </div>
+                )}
+
+                {/* Legend block for Untimed */}
+                {index === 0 && !answered && (
+                  <div className="w-full max-w-2xl mt-2 flex items-center justify-center gap-6 text-[10px] uppercase font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 py-2 px-4 rounded-lg z-10">
+                    <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-green-500 shadow-sm shadow-green-500/50" />Correcto: 5pts</div>
+                    {isMultipleAnswer && (
+                      <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-yellow-500 shadow-sm shadow-yellow-500/50" />Parcial: 1pt</div>
+                    )}
+                    <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-red-500 shadow-sm shadow-red-500/50" />Incorrecto: 0pts</div>
+                  </div>
+                )}
+
+                <div className="flex w-full max-w-2xl justify-between pt-6 border-t border-slate-200 dark:border-slate-800 mt-2 z-10 items-center">
+                  {isMultipleAnswer && !answered ? (
                     <button
-                      key={i}
-                      disabled={answered}
-                      onClick={() => handleOptionClick(i)}
-                      className={`w-full p-4 rounded-xl border-4 font-bold uppercase tracking-wide transition-all duration-200 transform shadow-[4px_4px_0px_0px_black] active:translate-y-1 active:shadow-none flex items-center gap-4 ${cls}`}
+                      onClick={() => submitAnswer()}
+                      disabled={selectedAnswers.length === 0}
+                      className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-lg transition-all
+                           ${selectedAnswers.length === 0
+                          ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed'
+                          : 'bg-primary-blue hover:bg-primary-blue/80 text-white active:scale-95 shadow-lg shadow-primary-blue/20'}`}
                     >
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg border-4 ${isSelected || (answered && isCorrectOption)
-                        ? 'border-black bg-white text-black'
-                        : 'border-black bg-gray-200 text-gray-500'
-                        }`}>
-                        {String.fromCharCode(65 + i)}
-                      </div>
-                      <span className="text-left flex-1 leading-tight">{opt}</span>
+                      <MdCatchingPokemon className={selectedAnswers.length > 0 ? "animate-spin-slow" : ""} />
+                      {t('games.trivia.submitAnswer')}
                     </button>
-                  );
-                })}
+                  ) : <div />}
+
+                  <button
+                    onClick={nextQuestion}
+                    disabled={!answered}
+                    className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-lg uppercase tracking-wide transition-all ml-auto
+                        ${!answered
+                        ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 border border-slate-300 dark:border-slate-600 cursor-not-allowed opacity-50'
+                        : 'bg-primary-blue hover:bg-primary-blue/80 text-white shadow-lg shadow-primary-blue/20 active:scale-95'}`}
+                  >
+                    Siguiente
+                    <MdArrowForward className="text-xl" />
+                  </button>
+                </div>
               </div>
             </div>
+          ) : (
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary-pink/5 rounded-full blur-3xl -z-0 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-blue/5 rounded-full blur-3xl -z-0 pointer-events-none" />
 
-            {showCorrectAnswer && (
-              <div className={`mb-6 p-4 rounded-xl border-l-4 ${selectedAnswers.length === 0 && gameMode === 'timed' ? 'bg-yellow-500/10 border-yellow-500' : 'bg-red-500/10 border-red-500'} animate-fade-in`}>
-                <p className="font-bold mb-1">
-                  {selectedAnswers.length === 0 && gameMode === 'timed' ? t('games.trivia.timeUp') : t('games.trivia.incorrect')}
-                </p>
-                <p className="text-sm opacity-90">
-                  {t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span>
-                </p>
+              <div className="relative z-10">
+                <>
+                  {updateMessage && (
+                    <div
+                      className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 bg-pokemon-yellow text-black px-6 py-2 rounded-full font-black text-sm border-4 border-black shadow-[4px_4px_0px_0px_black] z-[100] whitespace-nowrap animate-fade-in-up"
+                    >
+                      {updateMessage}
+                    </div>
+                  )}
+                </>
+                <div className="flex items-center justify-between mb-8">
+                  <button
+                    onClick={() => setShowPauseMenu(true)}
+                    className="px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg text-xs font-black uppercase tracking-widest transition-all border-2 border-black shadow-[2px_2px_0px_0px_black] active:translate-y-0.5 active:shadow-none"
+                  >
+                    {t('games.trivia.back')}
+                  </button>
+
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm font-semibold uppercase tracking-wider text-gray-400">
+                      {category}
+                    </div>
+                    <div className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-bold">
+                      {index + 1}/{gameMode === 'chaos' ? CHAOS_MODE_QUESTIONS : TOTAL_QUESTIONS}
+                    </div>
+                  </div>
+
+                  <div className="text-lg relative font-bold text-primary-blue dark:text-primary-pink">
+                    {t('common.score')}: {score}
+                    {scoreChange !== null && (
+                      <ScoreIndicator
+                        points={scoreChange}
+                        onComplete={() => setScoreChange(null)}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* BARRA DE TIEMPO / JUGADOR DE MUSICA */}
+                {gameMode === 'insane' ? (
+                  <div className="mb-8">
+                    <div className="flex flex-col items-center gap-4">
+                      <button
+                        onClick={handleManualPlay}
+                        disabled={hasPlayedAudio || isAudioPlaying || answered}
+                        className={`px-8 py-4 rounded-xl font-black uppercase tracking-widest text-white shadow-[4px_4px_0px_0px_black] transition-all
+                                    ${hasPlayedAudio ? 'bg-gray-500 cursor-not-allowed' : 'bg-red-600 hover:bg-red-500 active:translate-y-1 active:shadow-none animate-pulse'}
+                                `}
+                      >
+                        {isAudioPlaying ? t('games.trivia.audioPlaying') : hasPlayedAudio ? t('games.trivia.audioUsed') : t('games.trivia.playTrack')}
+                      </button>
+
+                      {hasPlayedAudio && !answered && (
+                        <div className="w-full bg-black border-4 border-black rounded-xl h-8 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden relative mt-2">
+                          <div
+                            className="h-full bg-red-500 transition-all duration-1000 ease-linear"
+                            style={{ width: `${(remaining / INSANE_MODE_TIMER) * 100}%` }}
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-xs">
+                            {remaining}s
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : gameMode === 'chaos' ? (
+                  <div className="mb-8">
+                    <div className="w-full bg-black border-4 border-black rounded-xl h-12 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden relative">
+                      <div
+                        className="h-full bg-purple-600 transition-all duration-1000 ease-linear"
+                        style={{ width: `${(remaining / CHAOS_MODE_TIMER) * 100}%` }}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white font-black text-lg">
+                        {t('games.trivia.totalTime')}: {remaining}s
+                      </div>
+                    </div>
+                    <div className="flex justify-center gap-4 mt-2 text-xs font-bold uppercase">
+                      <span className="text-green-500">{t('games.trivia.chaosCorrect')}: {chaosStats.correct}</span>
+                      <span className="text-red-500">{t('games.trivia.chaosIncorrect')}: {chaosStats.incorrect}</span>
+                    </div>
+                    <div className="flex justify-center mt-4">
+                      <button
+                        onClick={handleManualPlay}
+                        disabled={isAudioPlaying || answered}
+                        className={`px-6 py-2 rounded-lg font-black uppercase tracking-widest text-white shadow-[2px_2px_0px_0px_black] transition-all text-xs
+                            ${answered ? 'bg-gray-500 cursor-not-allowed opacity-50' : 'bg-purple-600 hover:bg-purple-500 active:translate-y-0.5 active:shadow-none'}
+                          `}
+                      >
+                        {isAudioPlaying ? t('games.trivia.audioPlaying') : t('games.trivia.playSong')}
+                      </button>
+                    </div>
+                  </div>
+                ) : gameMode === 'timed' && (
+                  <div className="w-full bg-black border-4 border-black rounded-xl h-12 flex items-center shadow-[4px_4px_0px_0px_black] overflow-hidden mb-8 relative">
+                    {/* Progress Bar */}
+                    <div
+                      className={`h-full transition-all duration-1000 ease-linear ${remaining < 5
+                        ? 'bg-red-500 shadow-[inset_-10px_0_20px_rgba(0,0,0,0.2)]'
+                        : 'bg-[#ff00ff] shadow-[inset_-10px_0_20px_rgba(0,0,0,0.2)]'
+                        }`}
+                      style={{ width: `${(remaining / TIMER_PER_QUESTION) * 100}%` }}
+                    />
+
+                    {/* Centered Text */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <span className="text-sm font-black uppercase tracking-[0.2em] text-white drop-shadow-[1px_1px_0px_rgba(0,0,0,1)] z-10">
+                        TIME: {remaining}S
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {index === 0 && !answered && (
+                  <div className="mb-10 p-4 border-4 border-black bg-white dark:bg-black rounded-2xl shadow-[4px_4px_0px_0px_black] flex flex-wrap justify-center gap-6 text-[10px] uppercase tracking-[0.2em] font-black">
+                    {gameMode === 'insane' ? (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
+                          <span>{t('games.trivia.legendInsaneRight')}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-black" />
+                          <span>{t('games.trivia.legendInsaneAudio')}</span>
+                        </div>
+                      </>
+                    ) : gameMode === 'chaos' ? (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
+                          <span>{t('games.trivia.legendChaosRight')}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-3 h-3 rounded-full bg-red-500 border-2 border-black" />
+                          <span>{t('games.trivia.legendChaosWrong')}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-2">
+                          <span className="w-3 h-3 rounded-full bg-green-500 border-2 border-black" />
+                          <span>{t('games.options.legendCorrect')}: {gameMode === 'timed' ? 'UP TO 5pts' : '5pts'}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-3 h-3 rounded-full bg-yellow-500 border-2 border-black" />
+                          <span>{t('games.options.legendPartial')}: 1pt</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-3 h-3 rounded-full bg-red-500 border-2 border-black" />
+                          <span>{t('games.options.legendIncorrect')}: {gameMode === 'timed' ? '-2pts' : '0pts'}</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                <div className="mb-8 text-center">
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white leading-tight">
+                    {current?.question}
+                  </h3>
+                  {isMultipleAnswer && !answered && (
+                    <p className="text-sm text-primary-pink font-semibold mt-3 animate-pulse">
+                      ({t('games.options.selectMultiple')})
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  {current?.options.map((opt, i) => {
+                    const isCorrectOption = correctAnswerIndexes.includes(i);
+                    const isSelected = selectedAnswers.includes(i);
+                    let cls = "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:border-primary-blue/50 hover:shadow-lg";
+
+                    if (answered) {
+                      if (isCorrectOption) {
+                        cls = "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400";
+                      } else if (isSelected && !isCorrectOption) {
+                        cls = "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400";
+                      } else {
+                        cls = "opacity-50 border-gray-200 dark:border-gray-800";
+                      }
+                    } else if (isSelected) {
+                      cls = "bg-primary-blue/10 border-primary-blue text-primary-blue";
+                    }
+
+                    return (
+                      <button
+                        key={i}
+                        disabled={answered}
+                        onClick={() => handleOptionClick(i)}
+                        className={`w-full p-4 rounded-xl border-4 font-bold uppercase tracking-wide transition-all duration-200 transform shadow-[4px_4px_0px_0px_black] active:translate-y-1 active:shadow-none flex items-center gap-4 ${cls}`}
+                      >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg border-4 ${isSelected || (answered && isCorrectOption)
+                          ? 'border-black bg-white text-black'
+                          : 'border-black bg-gray-200 text-gray-500'
+                          }`}>
+                          {String.fromCharCode(65 + i)}
+                        </div>
+                        <span className="text-left flex-1 leading-tight">{opt}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            )}
 
-            <div className="flex justify-between items-center mt-6">
-              {isMultipleAnswer && !answered && (
-                <button
-                  onClick={() => submitAnswer()}
-                  disabled={selectedAnswers.length === 0}
-                  className={`poke-button-blue ${selectedAnswers.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
-                >
-                  <MdCatchingPokemon className="animate-spin-slow mr-2" />
-                  {t('games.trivia.submitAnswer')}
-                </button>
+              {showCorrectAnswer && (
+                <div className={`mb-6 p-4 rounded-xl border-l-4 ${selectedAnswers.length === 0 && gameMode === 'timed' ? 'bg-yellow-500/10 border-yellow-500' : 'bg-red-500/10 border-red-500'} animate-fade-in`}>
+                  <p className="font-bold mb-1">
+                    {selectedAnswers.length === 0 && gameMode === 'timed' ? t('games.trivia.timeUp') : t('games.trivia.incorrect')}
+                  </p>
+                  <p className="text-sm opacity-90">
+                    {t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span>
+                  </p>
+                </div>
               )}
 
-              <button
-                onClick={nextQuestion}
-                disabled={!answered}
-                className={`poke-button-pink ml-auto ${!answered ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95 animate-pulse-subtle'}`}
-              >
-                {t('common.next')}
-              </button>
+              <div className="flex justify-between items-center mt-6">
+                {isMultipleAnswer && !answered && (
+                  <button
+                    onClick={() => submitAnswer()}
+                    disabled={selectedAnswers.length === 0}
+                    className={`poke-button-blue ${selectedAnswers.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
+                  >
+                    <MdCatchingPokemon className="animate-spin-slow mr-2" />
+                    {t('games.trivia.submitAnswer')}
+                  </button>
+                )}
+
+                <button
+                  onClick={nextQuestion}
+                  disabled={!answered}
+                  className={`poke-button-pink ml-auto ${!answered ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95 animate-pulse-subtle'}`}
+                >
+                  {t('common.next')}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <div className="md:col-span-1">
@@ -1060,67 +1601,67 @@ const TriviaGame = () => {
       />
 
       {/* RESTART CONFIRMATION */}
-        {showRestartConfirm && (
+      {showRestartConfirm && (
+        <div
+          className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in"
+        >
           <div
-            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in"
+            className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center animate-fade-in-up"
           >
-            <div
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center animate-fade-in-up"
-            >
-              <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.restartConfirm')}</p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => {
-                    setShowRestartConfirm(false);
-                    setShowPauseMenu(false);
-                    setIsCountingDown(true);
-                    setCountValue(3);
-                  }}
-                  className="flex-1 py-3 bg-green-500 text-white font-black uppercase rounded-xl border-2 border-black"
-                >
-                  {t('games.puzzle.yes')}
-                </button>
-                <button
-                  onClick={() => setShowRestartConfirm(false)}
-                  className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
-                >
-                  {t('games.puzzle.no')}
-                </button>
-              </div>
+            <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.restartConfirm')}</p>
+            <div className="flex gap-4">
+              <button
+                onClick={() => {
+                  setShowRestartConfirm(false);
+                  setShowPauseMenu(false);
+                  setIsCountingDown(true);
+                  setCountValue(3);
+                }}
+                className="flex-1 py-3 bg-green-500 text-white font-black uppercase rounded-xl border-2 border-black"
+              >
+                {t('games.puzzle.yes')}
+              </button>
+              <button
+                onClick={() => setShowRestartConfirm(false)}
+                className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
+              >
+                {t('games.puzzle.no')}
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* EXIT CONFIRMATION */}
-        {showExitConfirm && (
+      {/* EXIT CONFIRMATION */}
+      {showExitConfirm && (
+        <div
+          className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in"
+        >
           <div
-            className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in"
+            className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center animate-fade-in-up"
           >
-            <div
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 border-4 border-black shadow-[8px_8px_0px_0px_black] max-w-xs w-full text-center animate-fade-in-up"
-            >
-              <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.exitConfirm')}</p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => {
-                    setShowExitConfirm(false);
-                    setShowPauseMenu(false);
-                    resetToSelection();
-                  }}
-                  className="flex-1 py-3 bg-red-600 text-white font-black uppercase rounded-xl border-2 border-black"
-                >
-                  {t('games.puzzle.yes')}
-                </button>
-                <button
-                  onClick={() => setShowExitConfirm(false)}
-                  className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
-                >
-                  {t('games.puzzle.no')}
-                </button>
-              </div>
+            <p className="text-xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.exitConfirm')}</p>
+            <div className="flex gap-4">
+              <button
+                onClick={() => {
+                  setShowExitConfirm(false);
+                  setShowPauseMenu(false);
+                  resetToSelection();
+                }}
+                className="flex-1 py-3 bg-red-600 text-white font-black uppercase rounded-xl border-2 border-black"
+              >
+                {t('games.puzzle.yes')}
+              </button>
+              <button
+                onClick={() => setShowExitConfirm(false)}
+                className="flex-1 py-3 bg-gray-400 text-white font-black uppercase rounded-xl border-2 border-black"
+              >
+                {t('games.puzzle.no')}
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };

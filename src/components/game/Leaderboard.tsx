@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getGameLeaderboard, GameType } from '../../utils/supabaseScoreService';
 import { FiAward, FiClock, FiUser, FiZap } from 'react-icons/fi';
 import { useLanguage } from '../../context/LanguageContext';
+import { MdEmojiEvents, MdHistory, MdTrendingUp } from 'react-icons/md';
 
 interface Score {
     id: string;
@@ -70,7 +71,7 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: L
             <div className="bg-white dark:bg-slate-900/40 backdrop-blur-xl rounded-[2rem] h-full flex flex-col overflow-hidden border border-primary/20 shadow-2xl dark:shadow-none relative group/sidebar">
                 <div className="p-6 border-b border-primary/20 flex items-center justify-between bg-primary/5">
                     <h2 className="font-black text-xl flex items-center gap-3 italic tracking-tighter text-slate-900 dark:text-slate-100">
-                        <span className="material-symbols-outlined text-primary text-2xl drop-shadow-[0_0_8px_rgba(13,185,242,0.4)]">emoji_events</span>
+                        <MdEmojiEvents className="text-primary text-2xl drop-shadow-[0_0_8px_rgba(13,185,242,0.4)]" />
                         {t('Ranking') || 'Ranking'}
                     </h2>
                     <span className="text-[10px] bg-primary/20 text-primary font-black px-2.5 py-1 rounded-full tracking-[0.2em] uppercase border border-primary/30">
@@ -139,7 +140,7 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: L
                     ) : (
                         <div className="flex flex-col items-center justify-center h-64 text-center px-6">
                             <div className="w-16 h-16 rounded-full bg-slate-800/50 flex items-center justify-center mb-4 border border-white/5">
-                                <span className="material-symbols-outlined text-4xl text-slate-600">history</span>
+                                <MdHistory className="text-4xl text-slate-600" />
                             </div>
                             <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">
                                 <span>{t('noScores') || 'Sin registros aún'}</span>
@@ -152,7 +153,7 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: L
                 <div className="p-6 bg-primary/5 border-t border-primary/10">
                     <button className="w-full py-3 bg-white/5 dark:bg-slate-800/20 hover:bg-primary/10 border border-primary/20 rounded-xl text-[10px] font-black text-primary uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 group-hover/sidebar:gap-3 group/btn shadow-sm dark:shadow-none">
                         <span>{t('common.viewFullRanking') || 'Ver Ranking Completo'}</span>
-                        <span className="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform normal-case">trending_up</span>
+                        <MdTrendingUp className="text-sm group-hover/btn:translate-x-1 transition-transform normal-case" />
                     </button>
                 </div>
 
