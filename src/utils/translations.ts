@@ -44,7 +44,9 @@ export const translations = {
             features: {
                 multimediaDesc: "Explora nuestra galería de fotos y videos de la comunidad Pantcookie",
                 gamesDesc: "Diviértete con nuestros juegos interactivos y compite en el ranking",
-                aboutDesc: "Conoce más sobre ShuraHiwa y la comunidad Pantcookie"
+                aboutDesc: "Conoce más sobre ShuraHiwa y la comunidad Pantcookie",
+                chatDesc: "Interactúa en tiempo real con Shura y la comunidad en nuestro chat exclusivo",
+                messagesDesc: "Lee y envía mensajes especiales en el muro de la comunidad Pantcookie"
             }
         },
         multimedia: {
@@ -169,7 +171,23 @@ export const translations = {
                 countdownReady: "Prepárate",
                 countdownSet: "Concentrate",
                 countdownSteady: "Listos",
-                countdownGo: "A jugar"
+                countdownGo: "A jugar",
+                back: "← Volver",
+                incorrect: "¡Incorrecto!",
+                correctAnswerIs: "La respuesta correcta era",
+                submitAnswer: "Enviar Respuesta",
+                timeUp: "¡Tiempo agotado!",
+                chaosCorrect: "Correctas",
+                chaosIncorrect: "Incorrectas",
+                totalTime: "Tiempo total",
+                audioPlaying: "♪ Reproduciendo...",
+                audioUsed: "Ya escuchaste",
+                playTrack: "▶ Reproducir Pista",
+                playSong: "▶ Reproducir",
+                legendInsaneRight: "Sin audio: 5pts",
+                legendInsaneAudio: "Con audio: 3pts + 7s",
+                legendChaosRight: "Correcto: +10pts",
+                legendChaosWrong: "Incorrecto: -3pts"
             }
         },
         chat: {
@@ -459,7 +477,9 @@ export const translations = {
             features: {
                 multimediaDesc: "Explore our photo and video gallery of the Pantcookie community",
                 gamesDesc: "Have fun with our interactive games and compete in the rankings",
-                aboutDesc: "Learn more about ShuraHiwa and the Pantcookie community"
+                aboutDesc: "Learn more about ShuraHiwa and the Pantcookie community",
+                chatDesc: "Interact in real-time with Shura and the community in our exclusive chat",
+                messagesDesc: "Read and send special messages on the Pantcookie community wall"
             }
         },
         multimedia: {
@@ -582,7 +602,23 @@ export const translations = {
                 countdownReady: "Get Ready",
                 countdownSet: "Focus",
                 countdownSteady: "Set",
-                countdownGo: "Go!"
+                countdownGo: "Go!",
+                back: "← Back",
+                incorrect: "Incorrect!",
+                correctAnswerIs: "The correct answer was",
+                submitAnswer: "Submit Answer",
+                timeUp: "Time's up!",
+                chaosCorrect: "Correct",
+                chaosIncorrect: "Incorrect",
+                totalTime: "Total time",
+                audioPlaying: "♪ Playing...",
+                audioUsed: "Already used",
+                playTrack: "▶ Play Track",
+                playSong: "▶ Play Song",
+                legendInsaneRight: "No audio: 5pts",
+                legendInsaneAudio: "With audio: 3pts + 7s",
+                legendChaosRight: "Correct: +10pts",
+                legendChaosWrong: "Incorrect: -3pts"
             }
         },
         chat: {

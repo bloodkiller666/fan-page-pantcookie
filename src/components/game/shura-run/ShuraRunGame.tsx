@@ -8,13 +8,12 @@ import RulesModal from '../RulesModal';
 import PauseMenu from '../PauseMenu';
 import { MdDirectionsRun, MdSpaceBar, MdSpeed, MdBreakfastDining } from 'react-icons/md';
 
-export default function ShuraRunGame() {
+export default function ShuraRunGame({ playerName }: { playerName: string }) {
     const { t } = useLanguage();
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
-    const [playerName, setPlayerName] = useState('');
     const [updateMessage, setUpdateMessage] = useState<string | null>(null);
     const [isPaused, setIsPaused] = useState(false);
     const [showPauseMenu, setShowPauseMenu] = useState(false);
@@ -62,8 +61,6 @@ export default function ShuraRunGame() {
     useEffect(() => {
         const savedScore = localStorage.getItem('shuraRunHighScore');
         if (savedScore) setHighScore(parseInt(savedScore));
-        const savedName = localStorage.getItem('playerName');
-        if (savedName) setPlayerName(savedName);
 
         // Initialize Audio
         jumpSound.current = new Audio('/audio/jump.mp3');
@@ -100,7 +97,7 @@ export default function ShuraRunGame() {
         }
 
         // Submit to Supabase if we have a name
-        const name = localStorage.getItem('playerName') || 'Anonymous';
+        const name = playerName || 'Anonymous';
 
         // 1. Check if we should show overwrite modal
         const check = await checkExistingScore('shura_run', name);
@@ -128,7 +125,7 @@ export default function ShuraRunGame() {
     const confirmOverwrite = async () => {
         if (!pendingScoreData) return;
         setShowOverwriteModal(false);
-        const name = localStorage.getItem('playerName') || 'Anonymous';
+        const name = playerName || 'Anonymous';
         const result = await submitGameScore('shura_run', name, pendingScoreData.score);
         if (result.success) {
             setUpdateMessage(t('games.shuraRun.updatingScore'));
@@ -281,15 +278,6 @@ export default function ShuraRunGame() {
     }, []);
 
     const startGame = () => {
-        if (!playerName.trim()) {
-            const name = prompt(t('common.enterName'), playerName);
-            if (name) {
-                setPlayerName(name);
-                localStorage.setItem('playerName', name);
-            } else {
-                return;
-            }
-        }
 
         // Load high score
         const savedHigh = localStorage.getItem('shuraRunHighScore');

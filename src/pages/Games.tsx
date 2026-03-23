@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import PuzzleGame from '../components/game/PuzzleGame';
 import TriviaGame from '../components/game/trivia/TriviaGame';
 import ShuraRunGame from '../components/game/shura-run/ShuraRunGame';
+import PlayerInput from '../components/game/PlayerInput';
 import { useLanguage } from '../context/LanguageContext';
 import Image from 'next/image';
 import {
@@ -21,8 +22,26 @@ const GamesContent = () => {
     const { t } = useLanguage();
     const [selected, setSelected] = useState<'puzzle' | 'trivia' | 'shuraRun' | null>(null);
     const [time, setTime] = useState('09:41');
+    const [playerName, setPlayerName] = useState('');
+    const [showNamePrompt, setShowNamePrompt] = useState(false);
     const searchParams = useSearchParams();
     const containerRef = useRef(null);
+
+    useEffect(() => {
+        const savedName = localStorage.getItem('playerName');
+        if (savedName) {
+            setPlayerName(savedName);
+        } else {
+            setShowNamePrompt(true);
+        }
+    }, []);
+
+    const handleNameSubmit = () => {
+        if (playerName.trim()) {
+            localStorage.setItem('playerName', playerName.trim());
+            setShowNamePrompt(false);
+        }
+    };
 
     useEffect(() => {
         const game = searchParams?.get('game');
@@ -79,24 +98,11 @@ const GamesContent = () => {
     if (selected) {
         return (
             <div className="min-h-screen bg-[#fff5f9] dark:bg-background-dark bg-grid py-24 px-4 md:px-12 relative overflow-hidden transition-colors duration-300">
-                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-neon-pink/10 blur-[120px] rounded-full pointer-events-none" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-neon-cyan/10 blur-[120px] rounded-full pointer-events-none" />
-
                 <div className="relative z-10 max-w-7xl mx-auto">
-                    <button
-                        onClick={() => setSelected(null)}
-                        className="group flex items-center gap-3 mb-8 text-zinc-600 dark:text-white/60 hover:text-zinc-900 dark:hover:text-white transition-colors uppercase text-xs font-bold tracking-[0.2em]"
-                    >
-                        <div className="size-8 rounded-full bg-neon-pink/20 border-2 border-neon-pink flex items-center justify-center group-hover:bg-neon-pink transition-colors">
-                            <span className="text-zinc-900 dark:text-white font-black text-xs">B</span>
-                        </div>
-                        {t('common.backToSelection')}
-                    </button>
-
                     <div className="animate-fade-in-up">
-                        {selected === 'puzzle' && <PuzzleGame />}
-                        {selected === 'trivia' && <TriviaGame />}
-                        {selected === 'shuraRun' && <ShuraRunGame />}
+                        {selected === 'puzzle' && <PuzzleGame playerName={playerName} />}
+                        {selected === 'trivia' && <TriviaGame playerName={playerName} />}
+                        {selected === 'shuraRun' && <ShuraRunGame playerName={playerName} />}
                     </div>
                 </div>
             </div>
@@ -105,9 +111,6 @@ const GamesContent = () => {
 
     return (
         <div ref={containerRef} className="relative min-h-screen w-full flex flex-col bg-[#fff5f9] dark:bg-background-dark bg-grid overflow-hidden selection:bg-neon-pink selection:text-white transition-colors duration-300">
-            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-neon-pink/10 blur-[120px] rounded-full pointer-events-none" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-neon-cyan/10 blur-[120px] rounded-full pointer-events-none" />
-
             <header className="relative z-20 flex items-center justify-between px-6 md:px-12 py-6 border-b border-zinc-200 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-md">
                 <div className="flex items-center gap-4 md:gap-6">
                     <div className="relative group">
@@ -117,7 +120,9 @@ const GamesContent = () => {
                         </div>
                     </div>
                     <div className="flex flex-col">
-                        <h2 className="text-zinc-900 dark:text-white text-base md:text-xl font-bold tracking-tight italic uppercase neon-text-pink leading-none mb-1">Trainer Pika</h2>
+                        <h2 onClick={() => setShowNamePrompt(true)} className="text-zinc-900 dark:text-white text-base md:text-xl font-bold tracking-tight italic uppercase neon-text-pink leading-none mb-1 cursor-pointer hover:opacity-80 transition-opacity">
+                            {playerName || 'Trainer Pika'}
+                        </h2>
                         <div className="flex items-center gap-2">
                             <span className="text-neon-volt text-[10px] font-bold px-1.5 py-0.5 border border-neon-volt/50 rounded italic whitespace-nowrap">LV 99</span>
                             <div className="w-16 md:w-24 h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden border border-zinc-300 dark:border-white/5">
@@ -246,6 +251,24 @@ const GamesContent = () => {
                     </div>
                 </div>
             </footer>
+
+            {showNamePrompt && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+                    <div className="max-w-md w-full">
+                        <div className="mb-8 text-center animate-fade-in-up">
+                            <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white mb-2">
+                                ¡Bienvenido <span className="text-neon-pink">Jugador</span>!
+                            </h2>
+                            <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs">Ingresa tu nickname para guardar tus récords</p>
+                        </div>
+                        <PlayerInput 
+                            playerName={playerName} 
+                            onNameChange={setPlayerName} 
+                            onStartGame={handleNameSubmit} 
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

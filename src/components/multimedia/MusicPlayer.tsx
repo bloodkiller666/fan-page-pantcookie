@@ -252,7 +252,7 @@ const MusicPlayer = () => {
                         title: file.name.replace(/\.[^/.]+$/, ""),
                         coverArtist: "Local Upload",
                         audioUrl: URL.createObjectURL(file),
-                        coverUrl: albumArt || "https://www.freepik.es/vector-gratis/plantilla-logotipo-musica_47628550.htm#fromView=keyword&page=1&position=16&uuid=73269a61-df50-4b5d-9432-c183509e20e4&query=Logo+musica",
+                        coverUrl: albumArt || "https://img.freepik.com/vector-gratis/gato-lindo-escuchando-musica-telefono-auriculares-icono-vectorial-dibujos-animados-ilustracion-tecnologia-animal_138676-11290.jpg",
                         lyrics: [{ time: 0, text: "Archivo local - Sin letra disponible" }]
                     }
                 };
@@ -514,7 +514,7 @@ const MusicPlayer = () => {
                                     <div className={`absolute -inset-4 rounded-2xl blur-3xl transition duration-1000 ${isPlaying ? 'opacity-80 scale-110' : 'opacity-50'}`} style={{ backgroundColor: `${playerColor}33` }}></div>
                                     <div className="relative glass p-2 rounded-3xl shadow-2xl border border-white/10 transition-transform duration-700 ease-in-out" style={{ transform: isPlaying ? 'scale(1.02)' : 'scale(1)' }}>
                                         <div className="aspect-square w-64 md:w-80 rounded-2xl overflow-hidden shadow-2xl relative bg-black/20">
-                                            <img className="w-full h-full object-cover" src={currentSong?.coverUrl || "https://www.freepik.es/vector-gratis/plantilla-logotipo-musica_47628550.htm#fromView=keyword&page=1&position=16&uuid=73269a61-df50-4b5d-9432-c183509e20e4&query=Logo+musica"} alt={currentSong?.title || "No song"} />
+                                            <img className="w-full h-full object-cover" src={currentSong?.coverUrl || "https://img.freepik.com/vector-gratis/gato-lindo-escuchando-musica-telefono-auriculares-icono-vectorial-dibujos-animados-ilustracion-tecnologia-animal_138676-11290.jpg"} alt={currentSong?.title || "No song"} />
                                         </div>
                                     </div>
                                 </div>
@@ -528,13 +528,11 @@ const MusicPlayer = () => {
                                 </div>
                                 <p className="text-xl font-medium tracking-wide" style={{ color: playerColor }}>{currentSong?.coverArtist || ""}</p>
 
-                                {isLocalSong && (
-                                    <div className="flex items-center justify-center gap-0.5 h-6 mt-4 opacity-80">
-                                        {visualizerData.slice(0, 30).map((h, i) => (
-                                            <div key={i} className="w-1 rounded-full bg-current transition-all duration-75" style={{ height: `${Math.max(10, h * 0.5)}%`, backgroundColor: playerColor, color: playerColor }} />
-                                        ))}
-                                    </div>
-                                )}
+                                <div className="flex items-center justify-center gap-1.5 h-16 mt-8">
+                                    {visualizerData.slice(0, 40).map((h, i) => (
+                                        <div key={i} className="w-1.5 rounded-full bg-current transition-all duration-75 shadow-[0_0_10px_rgba(0,0,0,0.2)]" style={{ height: `${Math.max(15, h * 1.2)}%`, backgroundColor: playerColor, color: playerColor, opacity: 0.6 + (h / 200) }} />
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
@@ -602,12 +600,7 @@ const MusicPlayer = () => {
                                             </button>
                                         </div>
                                     </div>
-                                    {/* Small visualizer below LOCAL UPLOAD */}
-                                    <div className="px-8 py-3 flex items-end justify-center gap-1.5 h-16 bg-black/20 mx-6 rounded-xl border border-white/5 shadow-inner">
-                                        {visualizerData.slice(0, 40).map((height, i) => (
-                                            <div key={i} className="w-1.5 rounded-full opacity-60" style={{ height: `${Math.max(15, height * 1.2)}%`, transition: 'height 0.1s ease-out', backgroundColor: playerColor, boxShadow: `0 0 8px ${playerColor}40` }} />
-                                        ))}
-                                    </div>
+
                                     <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4 space-y-1">
                                         {filteredLocalLibrary.map((song) => {
                                             const idxInOrig = playlist.findIndex(s => s.id === song.id);
@@ -662,7 +655,7 @@ const MusicPlayer = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4 w-1/4">
                                 <div className="size-12 rounded-lg overflow-hidden shrink-0 border border-white/5">
-                                    <img className="w-full h-full object-cover" src={currentSong?.coverUrl || "https://www.freepik.es/vector-gratis/plantilla-logotipo-musica_47628550.htm#fromView=keyword&page=1&position=16&uuid=73269a61-df50-4b5d-9432-c183509e20e4&query=Logo+musica"} alt={currentSong?.title || "No song"} />
+                                    <img className="w-full h-full object-cover" src={currentSong?.coverUrl || "https://img.freepik.com/vector-gratis/gato-lindo-escuchando-musica-telefono-auriculares-icono-vectorial-dibujos-animados-ilustracion-tecnologia-animal_138676-11290.jpg"} alt={currentSong?.title || "No song"} />
                                 </div>
                                 <div className="flex flex-col min-w-0">
                                     <span className="text-sm font-bold truncate text-white">{currentSong?.title || "Seleccionar música"}</span>

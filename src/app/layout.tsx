@@ -5,6 +5,7 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ScrollToTop from '../components/layout/ScrollToTop';
 import ClientTransitionHandler from '../components/layout/ClientTransitionHandler';
+import { Space_Grotesk } from 'next/font/google';
 
 export const metadata = {
     metadataBase: new URL('https://pantcookie.com'),

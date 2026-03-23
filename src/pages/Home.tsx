@@ -11,7 +11,7 @@ import WeeklyCalendar from '../components/home/WeeklyCalendar';
 import YouTubeFeedComponent from '../components/home/YouTubeFeedComponent';
 import UpdateModal from '../components/home/UpdateModal';
 import HeartsEffect from '../components/ui/HeartsEffect';
-import { FiYoutube, FiImage, FiTarget, FiInfo } from 'react-icons/fi';
+import { FiYoutube, FiImage, FiTarget, FiInfo, FiMessageSquare, FiMail } from 'react-icons/fi';
 import { splitText, blurReveal } from '../utils/animations';
 import { useTransition } from '../context/TransitionContext';
 
@@ -113,10 +113,49 @@ export default function Home() {
                 });
             }
 
-            // "Últimas Novedades" Split Text Effect
+            // "Últimas Novedades" Advanced Reveal Effect
             const novedadesTitle = socialRef.current?.querySelector('h2');
+            const novedadesIcon = socialRef.current?.querySelector('.fi-youtube-icon');
+            const novedadesSubtitle = socialRef.current?.querySelector('p');
+
             if (novedadesTitle) {
-                blurReveal(novedadesTitle as HTMLElement);
+                const wordSpans = splitText(novedadesTitle as HTMLElement, 'words');
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: socialRef.current,
+                        start: 'top 80%',
+                    }
+                });
+
+                if (novedadesIcon) {
+                    tl.from(novedadesIcon, {
+                        scale: 0,
+                        rotation: -45,
+                        filter: "blur(10px) brightness(2)",
+                        duration: 0.8,
+                        ease: "back.out(1.7)"
+                    });
+                }
+
+                tl.from(wordSpans, {
+                    x: 100,
+                    skewX: -30,
+                    opacity: 0,
+                    duration: 1,
+                    stagger: 0.1,
+                    ease: "back.out(1.5)",
+                }, "-=0.4");
+
+                if (novedadesSubtitle) {
+                    tl.from(novedadesSubtitle, {
+                        opacity: 0,
+                        y: 20,
+                        letterSpacing: "0em",
+                        duration: 1,
+                        ease: "expo.out"
+                    }, "-=0.6");
+                }
             }
 
         }, containerRef);
@@ -144,6 +183,22 @@ export default function Home() {
             link: '/games',
             color: 'border-primary-blue text-primary-blue shadow-[0_0_20px_rgba(46,151,255,0.2)]',
             image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/by%20toba_ww%201.png'
+        },
+        {
+            title: t('nav.chat'),
+            description: t('home.features.chatDesc'),
+            icon: FiMessageSquare,
+            link: '/chat',
+            color: 'border-cyan-400 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.2)]',
+            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/ShuraHiwas_Summer_2025.jpg'
+        },
+        {
+            title: t('nav.mensajes'),
+            description: t('home.features.messagesDesc'),
+            icon: FiMail,
+            link: '/mensajes',
+            color: 'border-amber-400 text-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.2)]',
+            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Recording-2026-03-20-21-04-03.png'
         },
         {
             title: t('nav.about'),
@@ -294,11 +349,13 @@ export default function Home() {
                 </section>
 
                 <section ref={socialRef} className="py-32 bg-[#050505] border-t border-white/5 perspective-1000">
-                    <div className="container mx-auto px-4 text-center">
+                    <div className="container mx-auto px-6 md:px-4 text-center">
                         <div className="mb-20">
-                            <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter italic flex flex-col md:flex-row items-center justify-center gap-6">
-                                <FiYoutube className="text-red-600 drop-shadow-[0_0_20px_rgba(255,0,0,0.5)]" />
-                                <span>Últimas <span className="text-red-600">Novedades</span></span>
+                            <h2 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tight italic flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 w-full max-w-7xl mx-auto">
+                                <FiYoutube className="fi-youtube-icon text-red-600 drop-shadow-[0_0_20px_rgba(255,0,0,0.5)] shrink-0 text-5xl md:text-7xl" />
+                                <span className="text-center md:text-left leading-none">
+                                    Últimas <span className="text-red-600">Novedades</span>
+                                </span>
                             </h2>
                             <p className="text-gray-500 mt-6 text-base font-black uppercase tracking-[0.5em]">
                                 Contenido exclusivo de @ShuraHiwa

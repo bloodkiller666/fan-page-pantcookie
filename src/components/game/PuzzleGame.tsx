@@ -13,12 +13,11 @@ import RulesModal from './RulesModal';
 import PauseMenu from './PauseMenu';
 import { MdAutoAwesome, MdEmojiEvents, MdGridView, MdHelp, MdHome, MdLightbulb, MdLogout, MdPauseCircle, MdPerson, MdRefresh, MdRestartAlt, MdSettings, MdShare, MdSignalCellularAlt, MdTimer, MdWorkspacePremium, MdExtension, MdPanTool, MdWarning } from 'react-icons/md';
 
-const PuzzleGame = () => {
+const PuzzleGame = ({ playerName }: { playerName: string }) => {
     const { t } = useLanguage();
     const { playVictory } = useGameSounds();
     const [difficulty, setDifficulty] = useState('medium');
     const [gameState, setGameState] = useState('setup'); // setup, playing, completed
-    const [playerName, setPlayerName] = useState('');
     const [currentImage, setCurrentImage] = useState('');
     const [elapsedTime, setElapsedTime] = useState(0);
     const [isTimerRunning, setIsTimerRunning] = useState(false);
@@ -29,13 +28,6 @@ const PuzzleGame = () => {
     const [showVictoryScreen, setShowVictoryScreen] = useState(false);
     const [showOverwriteModal, setShowOverwriteModal] = useState(false);
     const [pendingScoreData, setPendingScoreData] = useState<{ score: number, oldScore: number } | null>(null);
-
-    useEffect(() => {
-        const savedName = localStorage.getItem('playerName');
-        if (savedName) {
-            setPlayerName(savedName);
-        }
-    }, []);
 
     // Timer Logic
     useEffect(() => {
@@ -51,16 +43,11 @@ const PuzzleGame = () => {
     }, [isTimerRunning]);
 
     const startGame = () => {
-        if (!playerName.trim()) {
-            alert(t('games.puzzle.alertName') || '¡Por favor ingresa tu nombre!');
-            return;
-        }
         setShowRules(true);
     };
 
     const confirmStartGame = () => {
         setShowRules(false);
-        localStorage.setItem('playerName', playerName.trim());
         const image = getRandomPuzzleImage();
         setCurrentImage(image);
         setGameState('playing');
@@ -209,11 +196,14 @@ const PuzzleGame = () => {
                                 disabled={false}
                             />
 
-                            <PlayerInput
-                                playerName={playerName}
-                                onNameChange={setPlayerName}
-                                onStartGame={startGame}
-                            />
+                            <div className="flex justify-center">
+                                <button
+                                    onClick={startGame}
+                                    className="w-full max-w-md py-6 rounded-2xl bg-gradient-to-r from-primary via-[#00f2ff] to-primary bg-[length:200%_auto] hover:bg-right transition-all duration-500 dark:text-white text-background-dark font-black text-xl uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(13,185,242,0.3)] hover:shadow-[0_0_50px_rgba(13,185,242,0.5)] active:scale-[0.98] transform"
+                                >
+                                    {t('games.puzzle.startGame') || 'Comenzar Juego'}
+                                </button>
+                            </div>
                         </div>
                     )}
 

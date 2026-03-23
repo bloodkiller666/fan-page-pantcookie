@@ -9,7 +9,7 @@ import { useTransition } from '../../context/TransitionContext';
 import gsap from 'gsap';
 
 const Navbar = () => {
-    const { t, setLanguage } = useLanguage();
+    const { t, setLanguage, language } = useLanguage();
     const { transitionTo } = useTransition();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -111,8 +111,8 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="w-full z-50 font-orbitron border-b border-[#00f2ff]/20">
-            <div className="glass-panel bg-holo-dark dark:bg-black/80 px-8 py-0 flex items-center justify-between transition-all duration-300 min-h-[70px]">
+        <nav className="w-full z-50 font-orbitron">
+            <div className="glass-panel bg-holo-dark dark:bg-black/90 px-8 py-0 flex items-center justify-between transition-all duration-300 min-h-[70px] border-none shadow-none">
 
                 {/* Logo Section */}
                 <Link
@@ -193,11 +193,35 @@ const Navbar = () => {
 
                 {/* Theme Toggle / Mobile Menu Toggle */}
                 <div className="flex items-center gap-4">
+                    <div className="relative group/lang">
+                        <button className="flex items-center gap-2 text-white/80 hover:text-[#00f2ff] transition-colors p-2 rounded-lg bg-white/5 dark:bg-white/5 border border-white/10">
+                            <FiGlobe className="text-lg" />
+                            <span className="text-[10px] font-bold uppercase">{language}</span>
+                        </button>
+                        <div className="absolute top-full right-0 mt-2 w-32 bg-black/95 border border-[#00f2ff]/30 rounded-xl overflow-hidden opacity-0 invisible group-hover/lang:opacity-100 group-hover/lang:visible transition-all duration-300 z-[100] shadow-[0_10px_30px_rgba(0,242,255,0.2)]">
+                            {[
+                                { code: 'es', label: 'Español' },
+                                { code: 'en', label: 'English' },
+                                { code: 'ja', label: '日本語' },
+                                { code: 'fr', label: 'Français' }
+                            ].map((lang) => (
+                                <button
+                                    key={lang.code}
+                                    onClick={() => setLanguage(lang.code)}
+                                    className={`w-full px-4 py-2 text-left text-[10px] font-bold uppercase transition-colors hover:bg-[#00f2ff]/20 ${language === lang.code ? 'text-[#00f2ff] bg-[#00f2ff]/10' : 'text-white'}`}
+                                >
+                                    {lang.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     <button
                         onClick={toggleTheme}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-indigo-900 border-[#00f2ff]' : 'bg-yellow-400 border-[#ff00e5]'} border-2 shadow-holo-glow hover:scale-110 active:scale-95`}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-indigo-900 border-[#00f2ff]' : 'bg-red-600 border-white'} border-2 shadow-holo-glow hover:scale-110 active:scale-95 group relative overflow-hidden`}
                     >
-                        {theme === 'dark' ? <FiMoon className="text-white text-sm" /> : <FiSun className="text-white text-sm" />}
+                        <MdCatchingPokemon className={`text-xl transition-all duration-500 ${theme === 'dark' ? 'text-white rotate-0' : 'text-white rotate-180'}`} />
+                        <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </button>
 
                     <button className="lg:hidden text-[#00f2ff] p-2 hover:bg-[#00f2ff]/10 rounded-xl transition-colors" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -258,8 +282,7 @@ const Navbar = () => {
             </div>
 
 
-            {/* Decorative bottom highlight */}
-            <div className="w-1/2 h-[1px] mx-auto mt-2 bg-gradient-to-r from-transparent via-[#00f2ff] to-transparent opacity-50 shadow-holo-glow"></div>
+
         </nav>
     );
 };

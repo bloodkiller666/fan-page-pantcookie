@@ -41,7 +41,7 @@ export default function YouTubeFeedComponent() {
                         thumbnail: item.snippet.thumbnails.high.url,
                         publishedAt: item.snippet.publishedAt
                     }));
-                    setVideos(mappedVideos);
+                    setVideos(mappedVideos.slice(0, 3));
                 }
             } catch (e) {
                 console.error("Error fetching YouTube videos:", e);
@@ -91,7 +91,7 @@ export default function YouTubeFeedComponent() {
 
     if (isLoading) {
         return (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
                 {[1, 2, 3].map((i) => (
                     <div key={i} className="aspect-video bg-white/5 rounded-3xl animate-pulse" />
                 ))}
@@ -104,7 +104,7 @@ export default function YouTubeFeedComponent() {
     return (
         <div 
             ref={containerRef} 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto px-4 perspective-1000"
+            className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto px-4 perspective-1000"
         >
             {videos.map((video) => (
                 <a
