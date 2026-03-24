@@ -10,13 +10,13 @@ import { useLanguage } from '../context/LanguageContext';
 import Image from 'next/image';
 import {
     FaWifi,
-    FaBatteryHalf,
     FaThLarge,
     FaPlusCircle,
     FaGlobeAmericas,
     FaNewspaper,
     FaChevronRight
 } from 'react-icons/fa';
+import { FaBatteryEmpty, FaBatteryQuarter, FaBatteryHalf, FaBatteryThreeQuarters, FaBatteryFull } from 'react-icons/fa';
 
 const GamesContent = () => {
     const { t } = useLanguage();
@@ -26,6 +26,14 @@ const GamesContent = () => {
     const [showNamePrompt, setShowNamePrompt] = useState(false);
     const searchParams = useSearchParams();
     const containerRef = useRef(null);
+    const [batteryLevel, setBatteryLevel] = useState(() => Math.floor(Math.random() * (100 - 20 + 1)) + 20);
+    const getBatteryIcon = (level: number) => {
+        if (level > 90) return <FaBatteryFull size={24} className="text-neon-volt" />;
+        if (level > 60) return <FaBatteryThreeQuarters size={24} className="text-neon-volt" />;
+        if (level > 30) return <FaBatteryHalf size={24} className="text-neon-volt" />;
+        if (level > 10) return <FaBatteryQuarter size={24} className="text-neon-pink animate-pulse" />;
+        return <FaBatteryEmpty size={24} className="text-neon-pink animate-bounce" />;
+    };
 
     useEffect(() => {
         const savedName = localStorage.getItem('playerName');
@@ -59,7 +67,6 @@ const GamesContent = () => {
     useEffect(() => {
         if (!selected) {
             const ctx = gsap.context(() => {
-                // Animación de los títulos y cabecera
                 gsap.from("header, h1, .flex.gap-2", {
                     y: -20,
                     opacity: 0,
@@ -69,7 +76,6 @@ const GamesContent = () => {
                     delay: 0.8
                 });
 
-                // Animación de las cartas de juego
                 gsap.from(".game-card", {
                     scale: 0.8,
                     opacity: 0,
@@ -81,7 +87,6 @@ const GamesContent = () => {
                     delay: 0.9
                 });
 
-                // Animación del footer
                 gsap.from("footer", {
                     y: 50,
                     opacity: 0,
@@ -90,7 +95,6 @@ const GamesContent = () => {
                     delay: 1.2
                 });
             }, containerRef);
-
             return () => ctx.revert();
         }
     }, [selected]);
@@ -134,10 +138,12 @@ const GamesContent = () => {
 
                 <div className="flex items-center gap-4 md:gap-8">
                     <div className="hidden sm:flex items-center gap-4 text-zinc-500 dark:text-white/70">
-                        <FaWifi className="text-neon-cyan animate-pulse" />
+                        <FaWifi size={22} className="text-neon-cyan animate-pulse" />
                         <div className="flex items-center gap-2">
-                            <FaBatteryHalf className="text-neon-volt" />
-                            <span className="text-zinc-900 dark:text-white text-sm font-bold italic">85%</span>
+                            {getBatteryIcon(batteryLevel)}
+                            <span className={`text-sm font-bold italic ${batteryLevel <= 30 ? 'text-neon-pink' : 'text-zinc-900 dark:text-white'}`}>
+                                {batteryLevel}%
+                            </span>
                         </div>
                     </div>
                     <h1 className="text-zinc-900 dark:text-white text-2xl md:text-3xl font-black italic tracking-tighter neon-text-cyan">{time}</h1>
@@ -156,9 +162,7 @@ const GamesContent = () => {
                     </div>
                 </div>
 
-                {/* Grid corregido con items-start para evitar el efecto "bajada" */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 items-start">
-                    {/* Card 1: ROMPECABEZAS */}
                     <div onClick={() => setSelected('puzzle')} className="game-card group relative aspect-square cursor-pointer transform transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]">
                         <div className="absolute -inset-0.5 bg-neon-pink rounded-2xl blur opacity-0 group-hover:opacity-80 transition duration-300" />
                         <div className="relative h-full flex flex-col rounded-2xl overflow-hidden border-2 border-neon-pink/40 glow-pink bg-zinc-900 transition-colors group-hover:border-neon-pink">
@@ -261,10 +265,10 @@ const GamesContent = () => {
                             </h2>
                             <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs">Ingresa tu nickname para guardar tus récords</p>
                         </div>
-                        <PlayerInput 
-                            playerName={playerName} 
-                            onNameChange={setPlayerName} 
-                            onStartGame={handleNameSubmit} 
+                        <PlayerInput
+                            playerName={playerName}
+                            onNameChange={setPlayerName}
+                            onStartGame={handleNameSubmit}
                         />
                     </div>
                 </div>

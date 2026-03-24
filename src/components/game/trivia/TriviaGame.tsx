@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-
 import { triviaQuestions } from '../../../utils/triviaQuestions';
 import { useLanguage } from '../../../context/LanguageContext';
 import PlayerInput from '../PlayerInput';
@@ -119,6 +118,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
   // Stats for Timed Mode
   const [timedStats, setTimedStats] = useState({ correct: 0, incorrect: 0, streak: 0 });
+  const [maxStreak, setMaxStreak] = useState(0);
 
   // Insane Mode State
   const [hasPlayedAudio, setHasPlayedAudio] = useState(false);
@@ -239,17 +239,10 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   useEffect(() => {
     if (!started || gameOver || (answered && gameMode !== 'chaos') || gameMode === 'untimed' || showPauseMenu) return;
 
-    // Chaos Mode: Global Timer (doesn't reset per question)
     if (gameMode === 'chaos') {
-      // Logic handled separately or we use 'remaining' as global time
-      // If this effect runs, it decrements 'remaining'. 
-      // For Chaos, 'remaining' should be initialized to 120 and decrement until 0.
     } else if (gameMode === 'insane') {
-      // Insane Mode: Timer only starts after audio play (if enabled) or maybe not?
-      // Requirement: "si el jugador no logra decifrar el acertijo y reproduce la canción... se encenderá un contador de 7 segundos"
       if (!hasPlayedAudio) return; // No timer until audio is played
     } else {
-      // Normal Timed Mode
       setRemaining(TIMER_PER_QUESTION);
     }
 
@@ -279,6 +272,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     setSelectedAnswers([]);
     setChaosStats({ correct: 0, incorrect: 0 });
     setTimedStats({ correct: 0, incorrect: 0, streak: 0 });
+    setMaxStreak(0);
 
     // Initialize Timer based on Mode
     if (pendingMode === 'chaos') {
@@ -310,22 +304,40 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
   // Manual Play for Music Modes
   const handleManualPlay = () => {
-    if (!current?.audioUrl || isAudioPlaying) return;
+    if (isAudioPlaying || answered || !current?.audioUrl) return;
 
-    const audio = new Audio(current.audioUrl);
-    audioRef.current = audio;
-    audio.volume = 0.5;
+    if (gameMode === 'insane') {
+      setScore(prev => Math.max(0, prev - 3));
+    }
 
-    audio.play().then(() => {
-      setIsAudioPlaying(true);
+    // Si audioRef.current es null (ocurre en modos insane/chaos porque el useEffect
+    // hace un return temprano sin crear el objeto Audio), lo creamos aquí.
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+      audioRef.current.volume = 0.5;
+    }
 
-      if (gameMode === 'insane') {
+    const audio = audioRef.current;
+
+    // 1. FORZAR EL NUEVO SRC: R2 a veces necesita que se le asigne el src justo antes de tocar
+    audio.src = current.audioUrl;
+
+    // 2. CARGAR EL ARCHIVO
+    audio.load();
+
+    // 3. REPRODUCIR CON MANEJO DE ERRORES (Importante para depurar)
+    audio.play()
+      .then(() => {
+        setIsAudioPlaying(true);
         setHasPlayedAudio(true);
-        setRemaining(INSANE_MODE_TIMER); // Start 7s countdown
-      }
-    }).catch(e => console.error(e));
-
-    audio.onended = () => setIsAudioPlaying(false);
+        if (gameMode === 'insane') {
+          setRemaining(INSANE_MODE_TIMER);
+        }
+      })
+      .catch(error => {
+        console.error("Error de R2:", error);
+        // Si sale error de CORS, aquí lo verás en la consola
+      });
   };
 
   // Countdown logic
@@ -339,7 +351,6 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
       setCountValue(prev => {
         if (prev <= 0) {
           clearInterval(timer);
-          // Small delay before starting game to show "GO!"
           setTimeout(() => {
             setIsCountingDown(false);
             realStartGame();
@@ -389,16 +400,13 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     if (isMultipleAnswer) {
       const correctSet = new Set(current.correctIndexes as number[]);
       const selectedSet = new Set(selectedIndexes);
-
       isCorrect = correctSet.size === selectedSet.size &&
         [...correctSet].every(idx => selectedSet.has(idx));
 
       if (!isCorrect) {
-
         const correctSelected = [...selectedSet].filter(idx => correctSet.has(idx)).length;
         const incorrectSelected = [...selectedSet].filter(idx => !correctSet.has(idx)).length;
         isPartial = correctSelected > 0 && incorrectSelected > 0;
-
       }
     } else {
       isCorrect = selectedIndexes[0] === current.correctIndex;
@@ -406,73 +414,62 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
     let pts = 0;
 
-    // Scoring Logic per Mode
-    if (gameMode === 'insane') {
-      if (isCorrect) {
-        pts = hasPlayedAudio ? 3 : 5;
-      } else {
-        pts = 0; // No penalty mentioned for incorrect, but usually 0.
-      }
-    } else if (gameMode === 'chaos') {
-      if (isCorrect) {
-        pts = 10;
-        setChaosStats(prev => ({ ...prev, correct: prev.correct + 1 }));
-      } else {
-        pts = -3;
-        setChaosStats(prev => ({ ...prev, incorrect: prev.incorrect + 1 }));
-      }
-    } else if (gameMode === 'timed') {
-      if (isCorrect) {
-        pts = getPointsByRemainingTime(remaining, true);
-        setTimedStats(prev => ({ correct: prev.correct + 1, incorrect: prev.incorrect, streak: prev.streak + 1 }));
-      } else if (isPartial) {
-        pts = 1;
-        setTimedStats(prev => ({ correct: prev.correct + 1, incorrect: prev.incorrect, streak: prev.streak + 1 }));
-      } else {
-        pts = -2;
-        setTimedStats(prev => ({ correct: prev.correct, incorrect: prev.incorrect + 1, streak: 0 }));
-      }
+    // LÓGICA DE RACHA UNIFICADA
+    if (isCorrect || isPartial) {
+      setTimedStats(prev => {
+        const newStreak = prev.streak + 1;
+        setMaxStreak(m => Math.max(m, newStreak));
+        return { ...prev, correct: prev.correct + 1, streak: newStreak };
+      });
     } else {
-      // Untimed
-      if (isCorrect) pts = 5;
-      else if (isPartial) pts = 1;
-      else pts = 0;
+      setTimedStats(prev => ({ ...prev, incorrect: prev.incorrect + 1, streak: 0 }));
     }
 
-    setScore(s => s + pts);
+    // --- LÓGICA DE PUNTOS ACTUALIZADA ---
+    if (gameMode === 'insane') {
+      // +10 si es correcto, -5 si es incorrecto
+      // (La penalización de -3 por audio se aplica en handleManualPlay)
+      pts = isCorrect ? 10 : -5;
+    } else if (gameMode === 'chaos') {
+      pts = isCorrect ? 10 : -3;
+      if (isCorrect) setChaosStats(prev => ({ ...prev, correct: prev.correct + 1 }));
+      else setChaosStats(prev => ({ ...prev, incorrect: prev.incorrect + 1 }));
+    } else if (gameMode === 'timed') {
+      pts = isCorrect ? getPointsByRemainingTime(remaining, true) : (isPartial ? 1 : -2);
+    } else {
+      pts = isCorrect ? 5 : (isPartial ? 1 : 0);
+    }
+
+    // Usamos Math.max(0, ...) para que el score nunca sea negativo
+    setScore(s => Math.max(0, s + pts));
     setScoreChange(pts);
     setAnswered(true);
 
-    if (!isCorrect) {
+    // Detener audio si estaba sonando (Importante para el flujo del juego)
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsAudioPlaying(false);
+    }
+
+    if (!isCorrect && !isPartial) {
       playIncorrect();
       setFeedback({ type: 'incorrect', text: t('games.trivia.incorrectFeedback') });
       setShowCorrectAnswer(true);
     } else {
       playCorrect();
-      setFeedback({ type: 'correct', text: gameMode === 'timed' && remaining > 10 ? t('games.trivia.excellent') : t('games.trivia.correctFeedback') });
+      setFeedback({ type: 'correct', text: t('games.trivia.correctFeedback') });
     }
 
-    setTimeout(() => {
-      setFeedback(null);
-    }, 1000);
+    setTimeout(() => setFeedback(null), 1000);
   };
 
   const handleTimeout = () => {
     if (answered) return;
 
     if (gameMode === 'chaos') {
-      // Chaos Mode Timeout = Game Over
       setGameOver(true);
-      playVictory(); // Or failure sound?
-      return;
-    }
-
-    // Insane Mode Timeout (7s passed)
-    if (gameMode === 'insane') {
-      setAnswered(true);
-      setScoreChange(0); // 0 points if time runs out
-      playIncorrect();
-      setShowCorrectAnswer(true);
+      playVictory();
       return;
     }
 
@@ -480,10 +477,9 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     setScoreChange(0);
     playIncorrect();
     setShowCorrectAnswer(true);
-    // Timeout counts as incorrect for timed mode stats
-    if (gameMode === 'timed') {
-      setTimedStats(prev => ({ correct: prev.correct, incorrect: prev.incorrect + 1, streak: 0 }));
-    }
+
+    // REINICIAR RACHA AL AGOTARSE EL TIEMPO
+    setTimedStats(prev => ({ ...prev, incorrect: prev.incorrect + 1, streak: 0 }));
   };
 
   const nextQuestion = async () => {
@@ -548,6 +544,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     setShowCorrectAnswer(false);
     setScoreChange(null);
     setTimedStats({ correct: 0, incorrect: 0, streak: 0 });
+    setMaxStreak(0);
     if (audioRef.current) {
       audioRef.current.pause();
     }
@@ -582,17 +579,19 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
             <div className="w-10 h-10 bg-gradient-to-br from-primary-blue to-primary-pink rounded-lg flex items-center justify-center text-white neon-glow">
               <MdSportsEsports className="text-2xl" />
             </div>
-            <h2 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-800 dark:from-white to-primary-blue/80">Trivia Gamer</h2>
+            <h2 className="text-xl font-bold tracking-tight bg-clip-text bg-gradient-to-r from-gray-800 dark:from-white to-primary-blue/80">Trivia Gamer</h2>
           </div>
           <div className="flex gap-4">
             <button className="flex items-center justify-center rounded-lg h-10 w-10 bg-white/5 border border-white/10 text-slate-400 hover:text-primary-blue transition-colors">
               <MdNotifications />
             </button>
-            <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-primary-blue/20 flex items-center justify-center">
-                <MdPerson className="text-primary-blue text-xs" />
+            <div className="flex items-center gap-2 p-2 w-fit">
+              <div className="bg-white p-1 border border-black rounded-full">
+                <MdPerson className="text-black text-xl" />
               </div>
-              <span className="text-xs font-medium">{playerName || 'Invitado'}</span>
+              <span className="font-bold text-black uppercase text-sm">
+                {playerName || "Invitado"}
+              </span>
             </div>
           </div>
         </div>
@@ -643,7 +642,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
           <div onClick={() => selectCategory('music')} className="glass-card rounded-2xl p-1 flex flex-col group cursor-pointer overflow-hidden relative">
             <div className="relative aspect-video rounded-xl overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-              <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAy993X-qeTwANsYf-pKpygT7HFcY6m8didf28B29m-n--nbDwyLnz24UuLqcSaJ1aD_TB2Pk0nkmxQxkmpMxfVCMm9rdE8Pk0nkmxQxkmpMxfVCMm9rdE8Kg_kIu98viRnnJP5ueQ_ayjuThwJojBh6rBmru5zef1LSqhRLX2-JlML9a7GnlVDztkVAvtYhMPkaYtGqFYVUONqg2vSCwIcumGatrmNNFN7KHRQwNTPdr1mvlzc6JtIPPzeOr1K7ZLDgeURiwdNMz6aYVn1UWhmEQZNAgAagJO_K8" alt="Music" />
+              <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60" src="https://www.freepik.es/foto-gratis/audiencia-emocionada-viendo-fuegos-artificiales-confeti-divirtiendose-festival-musica-noche-copiar-espacio_25566947.htm#fromView=keyword&page=1&position=1&uuid=59055ed4-19e3-46c4-853e-f6f7ef07e82a&query=Concert+background" alt="Music" />
               <div className="absolute top-4 right-4 z-20 bg-purple-500/20 backdrop-blur-md px-3 py-1 rounded-full border border-purple-500/30"><span className="text-[10px] font-bold text-purple-400 uppercase tracking-widest">Viral 🎵</span></div>
             </div>
             <div className="p-6 flex flex-col gap-4">
@@ -766,26 +765,46 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   );
 
   const renderGameOverUI = () => (
-    <div className="max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="md:col-span-3">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 text-center animate-fade-in-up">
-            <h1 className="text-4xl md:text-6xl font-black neon-text-pink mb-6 uppercase italic tracking-tighter">{t('games.shuraRun.gameOver')}</h1>
-            <h2 className="text-3xl font-bold text-primary-pink mb-2">{playerName}</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">{t('common.score')}: <span className="font-bold text-primary-blue">{score}</span></p>
-          </div>
+    <div className="flex flex-col items-center w-full max-w-4xl mx-auto gap-6 py-8 px-4 animate-fade-in min-h-screen">
+      {/* Título Principal */}
+      <div className="text-center mb-4">
+        <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-black dark:text-white drop-shadow-[4px_4px_0px_#FF007F]">
+          ¡FIN DEL JUEGO!
+        </h1>
+      </div>
+
+      {/* Estadísticas: Ahora en un contenedor flexible que no se corta */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-6">
+        <div className="bg-white dark:bg-zinc-900 border-4 border-black p-4 shadow-[5px_5px_0px_0px_#FF007F] flex flex-col items-center">
+          <span className="text-[10px] font-black uppercase opacity-60">Puntaje</span>
+          <span className="text-3xl font-black italic text-[#FF007F]">{score}</span>
         </div>
-        <div className="md:col-span-1">
-          <div className="mt-8 w-full overflow-x-auto pb-4">
-            <div className="min-w-[300px]">
-              <Leaderboard category={category === 'music' ? `${category}:${gameMode}` : (category || undefined)} currentPlayer={playerName} game="trivia" />
-            </div>
-          </div>
+        <div className="bg-white dark:bg-zinc-900 border-4 border-black p-4 shadow-[5px_5px_0px_0px_#00E5FF] flex flex-col items-center">
+          <span className="text-[10px] font-black uppercase opacity-60">Mejor Racha</span>
+          <span className="text-3xl font-black italic text-[#00E5FF]">{maxStreak}</span>
         </div>
       </div>
+
+      {/* Tabla de Ranking: Ocupa su propio espacio sin pisar lo anterior */}
+      <div className="w-full bg-white dark:bg-zinc-900 border-4 border-black p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col">
+        <h3 className="text-lg font-black uppercase italic tracking-tighter mb-4 text-center border-b-2 border-black pb-2">
+          TABLA DE POSICIONES
+        </h3>
+        <div className="w-full">
+          {/* Aquí renderiza el Leaderboard solo una vez */}
+          <Leaderboard category={category ?? undefined} mode={gameMode ?? undefined} currentPlayer={playerName} game="trivia" />
+        </div>
+      </div>
+
+      {/* Botón Volver (Ahora al final de todo) */}
+      <button
+        onClick={() => window.location.reload()}
+        className="mt-4 bg-[#FF007F] text-white font-black px-10 py-4 uppercase italic border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-y-1 transition-all w-full md:w-auto"
+      >
+        Jugar de Nuevo
+      </button>
     </div>
   );
-
 
   const renderChaosMode = () => {
     if (!current) return null;
@@ -801,52 +820,68 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
         <style dangerouslySetInnerHTML={{ __html: customStyles }} />
         {/* Left Column: Game Area */}
         <div className="md:col-span-8 flex flex-col gap-8 text-center">
-          {/* Timer & Action Bar */}
-          <div className="flex items-center justify-between bg-white dark:bg-zinc-900 p-6 rounded-full shadow-[0_10px_30px_rgba(181,0,88,0.04)] relative overflow-hidden group">
-            <div className="absolute inset-0 scanline-overlay opacity-50"></div>
-            <div className="flex items-center gap-4 relative z-10">
-              <div className="w-12 h-12 flex items-center justify-center bg-[#b50058] text-white rounded-full animate-pulse shadow-[0_0_15px_rgba(181,0,88,0.4)]">
+          {/* Contenedor del Timer y Botón - Añadido margen superior y responsividad */}
+          <div className="mt-6 md:mt-14 flex flex-col md:flex-row items-center justify-between bg-white dark:bg-zinc-900 p-6 rounded-3xl md:rounded-full shadow-[0_10px_30px_rgba(181,0,88,0.1)] relative overflow-hidden group w-full max-w-3xl mx-auto border-2 border-[#b50058]/20 gap-6 md:gap-0">
+            <div className="absolute inset-0 scanline-overlay opacity-30"></div>
+
+            {/* Sección del Timer */}
+            <div className="flex items-center gap-4 relative z-10 w-full md:w-auto justify-center md:justify-start">
+              <div className="w-12 h-12 flex items-center justify-center bg-[#b50058] text-white rounded-full animate-pulse shadow-[0_0_15px_rgba(181,0,88,0.4)] shrink-0">
                 <MdTimer className="text-2xl" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Tiempo Restante</span>
-                <span className="text-3xl font-bold text-[#b50058] tracking-tighter">{formatTime(remaining)}</span>
+                <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Tiempo Restante</span>
+                <span className="text-3xl font-black italic text-[#b50058] tracking-tighter">
+                  {formatTime(remaining)}
+                </span>
               </div>
             </div>
+
+            {/* Botón de Reproducción */}
             <button
               onClick={handleManualPlay}
               disabled={isAudioPlaying || answered}
-              className="bg-gradient-to-tr from-[#b50058] to-[#ff709e] px-8 py-4 rounded-full flex items-center gap-3 active:scale-95 transition-all shadow-[0_10px_20px_rgba(181,0,88,0.2)] disabled:opacity-50 relative z-10"
+              className="w-full md:w-auto bg-gradient-to-tr from-[#b50058] to-[#ff709e] px-8 py-4 rounded-full flex items-center justify-center gap-3 active:scale-95 transition-all shadow-[0_10px_20px_rgba(181,0,88,0.3)] disabled:opacity-50 relative z-10 border-b-4 border-black/20"
             >
               <MdPlayCircle className="text-white text-2xl" />
-              <span className="font-bold text-white uppercase tracking-widest text-sm">
+              <span className="font-black text-white uppercase tracking-widest text-xs md:text-sm italic">
                 {isAudioPlaying ? 'Reproduciendo...' : 'Reproducir Pista'}
               </span>
             </button>
           </div>
 
-          <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/20 shadow-2xl group">
-            <img
-              src={current.image || "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop"}
-              alt="Album Artwork"
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60 dark:opacity-40"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/40 dark:from-zinc-900/80 via-transparent to-transparent"></div>
-            <div className="absolute top-0 right-0 w-64 h-64 opacity-10 pointer-events-none -mr-20 -mt-10">
-              <MdMusicNote className="text-[200px] text-[#b50058]" />
-            </div>
-            <div className="relative z-10 h-full flex flex-col justify-end p-8 md:p-12 gap-6">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 bg-[#b50058] rounded-full"></span>
-                <span className="text-xs font-bold text-[#b50058] uppercase tracking-widest">Adivinanza Musical</span>
+          <div className="relative w-full max-w-4xl mx-auto mt-4 md:mt-8 group px-2 md:px-0">
+            {/* Fondo con imagen - Ajustado bordes y sombras para pantallas pequeñas */}
+            <div className="absolute inset-0 rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border-[3px] md:border-[4px] border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] md:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
+              <img
+                src={current.image || "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop"}
+                alt="Album Artwork"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-40 dark:opacity-30"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/60 via-transparent to-transparent"></div>
+
+              {/* Icono de nota decorativo - Más pequeño en pantallas reducidas */}
+              <div className="absolute top-0 right-0 w-32 h-32 md:w-48 md:h-48 opacity-20 pointer-events-none -mr-6 -mt-6 md:-mr-10 md:-mt-10">
+                <MdMusicNote className="text-[120px] md:text-[180px] text-[#FF007F]" />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-white leading-tight text-center w-full">
-                "{current.question}"
-              </h2>
+            </div>
+
+            {/* Contenedor del Acertijo - Reducción de paddings verticales para monitores bajos */}
+            <div className="relative z-10 flex flex-col items-center justify-center py-8 md:py-16 px-4 md:px-12">
+              {/* El cuadro ahora reduce su ancho máximo y padding en pantallas pequeñas */}
+              <div className="w-full max-w-lg md:max-w-2xl bg-white dark:bg-zinc-900 border-[4px] md:border-[6px] border-black p-5 md:p-10 shadow-[8px_8px_0px_0px_#FF007F] md:shadow-[12px_12px_0px_0px_#FF007F] transform -rotate-1 hover:rotate-0 transition-transform duration-300">
+
+                {/* TEXTO RESPONSIVO: lg en móvil, xl en monitor pequeño, 3xl en monitor grande */}
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black italic uppercase tracking-tighter text-black dark:text-white text-center leading-[1.1]">
+                  {current.question}
+                </h2>
+              </div>
+
+              {/* Pista - Ajustada para ser más discreta en pantallas pequeñas */}
               {current.hint && (
-                <div className="mt-4 p-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg inline-flex items-center gap-3 w-fit border border-zinc-100 dark:border-zinc-700">
-                  <MdInfo className="text-zinc-400" />
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Pista: {current.hint}</p>
+                <div className="mt-6 md:mt-8 px-4 py-2 md:px-6 md:py-3 bg-black text-white dark:bg-white dark:text-black border-[2px] md:border-[3px] border-black font-black italic uppercase text-[10px] md:text-xs tracking-[0.15em] md:tracking-[0.2em] flex items-center gap-2 md:gap-3 shadow-[4px_4px_0px_0px_#FF007F]">
+                  <MdInfo className="text-base md:text-lg" />
+                  <span>Pista: {current.hint}</span>
                 </div>
               )}
             </div>
@@ -912,15 +947,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
         {/* Right Column: Sidebar */}
         <aside className="md:col-span-4 flex flex-col gap-6">
-          <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] flex flex-col gap-6 border border-zinc-100 dark:border-zinc-800">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <MdEmojiEvents className="text-[#fcc800] text-xl" />
-                <h3 className="font-bold uppercase tracking-widest text-sm text-zinc-900 dark:text-white">Ranking</h3>
-              </div>
-            </div>
-            <Leaderboard category={`${category}:${gameMode}`} currentPlayer={playerName} game="trivia" />
-          </div>
+          <Leaderboard category={`${category}:${gameMode}`} currentPlayer={playerName} game="trivia" />
 
           {/* Additional Stats Card */}
           <div className="bg-gradient-to-br from-[#b50058] to-[#ff5290] rounded-2xl p-6 text-white flex flex-col gap-4 relative overflow-hidden group shadow-xl">
@@ -954,64 +981,114 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
         {/* Left Column: Game Canvas */}
         <div className="lg:col-span-8 space-y-8">
           {/* Penalty Alert Header */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl shadow-[0_4px_20px_rgba(181,0,88,0.05)] border-l-4 border-[#b50058]">
-              <div className="flex items-center gap-3">
-                <MdAddCircle className="text-[#b50058] text-2xl" />
+          <style dangerouslySetInnerHTML={{
+            __html: `
+  @keyframes insane-glitch {
+    0% { transform: translate(0) skew(0deg); }
+    20% { transform: translate(-2px, 2px) skew(-1deg); text-shadow: -1px 0 #FF007F, 1px 0 #00E5FF; }
+    40% { transform: translate(2px, -2px) skew(1deg); text-shadow: 1px 0 #FF007F, -1px 0 #00E5FF; }
+    60% { transform: translate(-1px, 1px) skew(0deg); }
+    80% { transform: translate(1px, -1px) skew(-1deg); text-shadow: -1px 0 #FF007F, 1px 0 #00E5FF; }
+    100% { transform: translate(0) skew(0deg); }
+  }
+  .animate-insane-glitch {
+    animation: insane-glitch 0.3s cubic-bezier(.46,.29,.58,.9) infinite;
+  }
+` }} />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 px-2 md:px-0">
+            {/* Tablero CORRECT - Recompensa (Amarillo/Ámbar) */}
+            <div className="relative bg-[#fffbeb] dark:bg-zinc-950 border-2 border-amber-500/50 dark:border-yellow-500/50 p-4 rounded-xl shadow-[0_10px_30px_rgba(245,158,11,0.15)] dark:shadow-[0_0_25px_rgba(234,179,8,0.2)] overflow-hidden">
+              <div className="absolute inset-0 scanline-overlay opacity-20 dark:opacity-30"></div>
+              <div className="relative z-10 flex items-center gap-4">
+                <div className="p-2 border border-amber-600 dark:border-yellow-500">
+                  <MdAddCircle className="text-amber-600 dark:text-yellow-400 text-2xl" />
+                </div>
                 <div>
-                  <p className="font-['Space_Grotesk'] text-xs tracking-widest text-zinc-500 uppercase">Correct</p>
-                  <p className="font-['Space_Grotesk'] text-lg font-bold text-[#b50058]">+10 PTS</p>
+                  <p className="font-mono text-[9px] font-bold uppercase tracking-widest text-amber-700 dark:text-yellow-300 opacity-70 leading-none mb-1">Status: Reward</p>
+                  <p className="font-mono text-xl font-black text-amber-600 dark:text-yellow-400 leading-none animate-insane-glitch">
+                    +10 PTS
+                  </p>
                 </div>
               </div>
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-[repeating-linear-gradient(45deg,#f59e0b,#f59e0b_5px,#fffbeb_5px,#fffbeb_10px)] dark:bg-[repeating-linear-gradient(45deg,#EA7E08,#EA7E08_5px,#000_5px,#000_10px)]"></div>
             </div>
-            <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl shadow-[0_4px_20px_rgba(181,0,88,0.05)] border-l-4 border-red-600">
-              <div className="flex items-center gap-3">
-                <MdRemoveCircle className="text-red-600 text-2xl" />
+
+            {/* Tablero INCORRECT - Penalización de Fallo (Rojo) */}
+            <div className="relative bg-[#fef2f2] dark:bg-black border-2 border-red-500/50 dark:border-red-600/50 p-4 rounded-xl shadow-[0_10px_30px_rgba(239,68,68,0.15)] dark:shadow-[0_0_25px_rgba(220,38,38,0.3)] overflow-hidden">
+              <div className="absolute inset-0 scanline-overlay opacity-30 dark:opacity-40"></div>
+              <div className="relative z-10 flex items-center gap-4">
+                <div className="p-2 border border-red-600">
+                  <MdRemoveCircle className="text-red-600 dark:text-red-500 text-2xl" />
+                </div>
                 <div>
-                  <p className="font-['Space_Grotesk'] text-xs tracking-widest text-zinc-500 uppercase">Incorrect</p>
-                  <p className="font-['Space_Grotesk'] text-lg font-bold text-red-600">-3 PTS</p>
+                  <p className="font-mono text-[9px] font-bold uppercase tracking-widest text-red-700 dark:text-red-300 opacity-70 leading-none mb-1">Status: Failed</p>
+                  <p className="font-mono text-xl font-black text-red-600 dark:text-red-500 leading-none animate-insane-glitch">
+                    -05 PTS
+                  </p>
                 </div>
               </div>
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-[repeating-linear-gradient(45deg,#dc2626,#dc2626_5px,#fef2f2_5px,#fef2f2_10px)] dark:bg-[repeating-linear-gradient(45deg,#DC2626,#DC2626_5px,#000_5px,#000_10px)]"></div>
+            </div>
+
+            {/* Tablero AUDIO COST - Penalización de Pista (Cian/Azul) */}
+            <div className="relative bg-[#f0f9ff] dark:bg-zinc-900 border-2 border-cyan-500/50 dark:border-cyan-400/30 p-4 rounded-xl shadow-[0_10px_30px_rgba(6,182,212,0.15)] dark:shadow-[0_0_25px_rgba(34,211,238,0.1)] overflow-hidden">
+              <div className="absolute inset-0 scanline-overlay opacity-10"></div>
+              <div className="relative z-10 flex items-center gap-4">
+                <div className="p-2 border border-cyan-600 dark:border-cyan-400">
+                  <MdHeadphones className="text-cyan-600 dark:text-cyan-400 text-2xl" />
+                </div>
+                <div>
+                  <p className="font-mono text-[9px] font-bold uppercase tracking-widest text-cyan-700 dark:text-cyan-300 opacity-70 leading-none mb-1">Status: Cost</p>
+                  <p className="font-mono text-xl font-black text-cyan-600 dark:text-cyan-400 leading-none animate-insane-glitch" style={{ animationDelay: '0.2s' }}>
+                    -03 PTS
+                  </p>
+                </div>
+              </div>
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-[repeating-linear-gradient(45deg,#06b6d4,#06b6d4_5px,#f0f9ff_5px,#f0f9ff_10px)] dark:bg-[repeating-linear-gradient(45deg,#22d3ee,#22d3ee_5px,#18181b_5px,#18181b_10px)]"></div>
             </div>
           </div>
 
           {/* Main Song Card */}
-          <div className="relative min-h-[300px] md:h-[400px] rounded-3xl overflow-hidden border border-[#b50058]/20 group shadow-2xl">
-            <img
-              src={current.image || "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop"}
-              alt="Song Background"
-              className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-1000"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-900/60 to-zinc-900"></div>
-            <div className="scanline-overlay-insane absolute inset-0"></div>
-            <div className="relative z-10 h-full flex flex-col items-center justify-center text-center p-8 md:p-12 space-y-8">
-              <div className="space-y-2">
-                <span className="font-['Space_Grotesk'] text-xs tracking-[0.2em] text-[#ff709e] font-bold uppercase drop-shadow-[0_0_10px_rgba(255,112,158,0.5)]">Ahora suena</span>
-                <div className="h-1 w-12 bg-[#b50058] mx-auto rounded-full"></div>
-              </div>
+          <div className="relative w-full max-w-4xl mx-auto mt-6 md:mt-10 group px-2 md:px-0">
+            {/* Fondo con imagen - Bordes gruesos y sombras sólidas (Estilo Rompecabeza) */}
+            <div className="absolute inset-0 rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border-[4px] md:border-[6px] border-black shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
+              <img
+                src={current.image || "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop"}
+                alt="Song Background"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms] opacity-50 dark:opacity-40"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40"></div>
+              {/* Overlay de líneas de escaneo más marcado para el modo Insane */}
+              <div className="absolute inset-0 scanline-overlay opacity-20 pointer-events-none"></div>
+            </div>
 
-              {/* Lyric Display */}
-              <div className="max-w-md mx-auto py-8 px-6 bg-black/40 backdrop-blur-md rounded-2xl border border-white/5 shadow-inner">
-                <p className="font-['Space_Grotesk'] text-2xl md:text-3xl font-bold leading-tight tracking-tight text-white drop-shadow-lg text-center">
+            {/* Contenido del Acertijo y Controles */}
+            <div className="relative z-10 flex flex-col items-center justify-center py-10 md:py-16 px-6 space-y-10">
+
+              {/* Visualizador de la Letra (Lyric Display) - Estilo Rompecabeza */}
+              <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 border-[6px] border-black p-8 md:p-12 shadow-[12px_12px_0px_0px_#FF007F] transform rotate-1">
+                <p className="text-xl md:text-3xl font-black italic uppercase tracking-tighter text-black dark:text-white text-center leading-tight">
                   "{current.question}"
                 </p>
               </div>
-
-              {/* Audio Trigger & Timer */}
-              <div className="flex flex-col items-center gap-4 w-full max-w-md">
+              <div className="flex flex-col items-center gap-6 w-full max-w-md">
                 <button
                   onClick={handleManualPlay}
                   disabled={hasPlayedAudio || isAudioPlaying || answered}
-                  className="group relative flex items-center justify-center gap-3 px-10 py-5 bg-gradient-to-tr from-[#b50058] to-[#ff5290] rounded-full text-white font-['Space_Grotesk'] font-bold tracking-widest uppercase active:scale-95 transition-all shadow-[0_10px_20px_rgba(181,0,88,0.3)] disabled:opacity-50"
+                  className="w-full bg-gradient-to-tr from-[#FF007F] to-[#ff709e] px-10 py-5 rounded-full flex items-center justify-center gap-3 active:scale-95 transition-all shadow-[0_10px_30px_rgba(255,0,127,0.4)] hover:shadow-[0_15px_40px_rgba(255,0,127,0.6)] disabled:opacity-50 disabled:grayscale relative z-10"
                 >
-                  <MdPlayCircle className="text-2xl" />
-                  <span>{isAudioPlaying ? 'REPRODUCIENDO...' : hasPlayedAudio ? 'AUDIO USADO' : 'REPRODUCIR'}</span>
+                  <MdPlayCircle className="text-white text-3xl" />
+                  <span className="font-black italic uppercase tracking-tighter text-white text-xl">
+                    {isAudioPlaying ? 'SONANDO...' : hasPlayedAudio ? 'USADO' : 'REPRODUCIR CANCIÓN'}
+                  </span>
                 </button>
 
+                {/* Barra de Tiempo Estilo Retro (Aparece al usar el audio) */}
                 {hasPlayedAudio && !answered && (
-                  <div className="w-full bg-zinc-100 dark:bg-black rounded-full h-4 overflow-hidden shadow-inner border border-zinc-200 dark:border-zinc-800">
+                  <div className="w-full h-5 bg-zinc-200 dark:bg-black border-[3px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                     <div
-                      className="h-full bg-[#b50058] transition-all duration-1000 ease-linear shadow-[0_0_10px_#b50058]"
+                      className="h-full bg-[#FF007F] transition-all duration-1000 ease-linear border-r-[3px] border-black"
                       style={{ width: `${(remaining / INSANE_MODE_TIMER) * 100}%` }}
                     />
                   </div>
@@ -1021,30 +1098,38 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
           </div>
 
           {/* Options Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
             {current.options.map((opt, i) => {
               const isSelected = selectedAnswers.includes(i);
               const isCorrect = correctAnswerIndexes.includes(i);
 
-              let btnClass = "flex items-center p-5 bg-white dark:bg-zinc-900 rounded-xl transition-all group border border-transparent shadow-sm hover:border-[#b50058]/20 hover:bg-[#b50058]/5 ";
-              let idxClass = "w-10 h-10 flex items-center justify-center rounded-lg font-['Space_Grotesk'] font-extrabold transition-all mr-4 ";
+              // ESTILO BASE: Interfaz de terminal/tecnológica
+              let btnClass = "relative overflow-hidden transition-all duration-200 border-2 ";
+              let idxClass = "font-mono font-bold text-xl px-4 border-r-2 flex items-center justify-center ";
+              let textClass = "flex-1 px-6 py-4 font-black italic uppercase tracking-tighter text-lg md:text-xl text-left ";
 
               if (answered) {
                 if (isCorrect) {
-                  btnClass += "border-green-500 bg-green-50/50 dark:bg-green-500/10 ";
-                  idxClass += "bg-green-500 text-white ";
+                  // Estilo de SISTEMA CORRECTO (Verde Matrix)
+                  btnClass += "bg-green-500/10 border-green-500 text-green-500 shadow-[0_0_20px_rgba(34,197,94,0.3)] ";
+                  idxClass += "border-green-500 bg-green-500/20 ";
                 } else if (isSelected) {
-                  btnClass += "border-red-500 bg-red-50/50 dark:bg-red-500/10 ";
-                  idxClass += "bg-red-500 text-white ";
+                  // Estilo de ERROR CRÍTICO (Rojo Alerta)
+                  btnClass += "bg-red-500/10 border-red-500 text-red-500 animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.4)] ";
+                  idxClass += "border-red-500 bg-red-500/20 ";
                 } else {
-                  btnClass += "opacity-50 ";
-                  idxClass += "bg-zinc-100 dark:bg-zinc-800 text-zinc-400 ";
+                  // Neutralización del resto
+                  btnClass += "bg-transparent border-zinc-800 opacity-30 ";
+                  idxClass += "border-zinc-800 text-zinc-600 ";
                 }
               } else if (isSelected) {
-                btnClass += "border-[#b50058] bg-[#b50058]/5 ";
-                idxClass += "bg-[#b50058] text-white ";
+                // Estilo SELECCIONADO (Cian Eléctrico)
+                btnClass += "bg-cyan-500/20 border-cyan-400 text-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.4)] translate-x-1 ";
+                idxClass += "border-cyan-400 bg-cyan-400/30 ";
               } else {
-                idxClass += "bg-zinc-100 dark:bg-zinc-800 text-[#b50058] group-hover:bg-[#b50058] group-hover:text-white ";
+                // Estilo REPOSO (Modo Claro/Oscuro adaptado)
+                btnClass += "bg-white/5 dark:bg-black/40 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 hover:border-[#FF007F] hover:bg-[#FF007F]/5 hover:shadow-[0_0_15px_rgba(255,0,127,0.2)] ";
+                idxClass += "border-zinc-300 dark:border-zinc-700 text-zinc-500 group-hover:text-[#FF007F] ";
               }
 
               return (
@@ -1052,41 +1137,72 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                   key={i}
                   disabled={answered}
                   onClick={() => handleOptionClick(i)}
-                  className={btnClass}
+                  className={`${btnClass} group flex items-stretch group`}
                 >
-                  <span className={idxClass}>{String.fromCharCode(65 + i)}</span>
-                  <span className="font-['Plus_Jakarta_Sans'] font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">{opt}</span>
+                  {/* Línea de escaneo interna solo para el botón */}
+                  <div className="absolute inset-0 scanline-overlay opacity-[0.05] pointer-events-none"></div>
+
+                  {/* Indicador lateral de selección */}
+                  <div className={`w-1 transition-all ${isSelected ? 'bg-cyan-400' : 'bg-transparent'}`}></div>
+
+                  <span className={idxClass}>
+                    {String.fromCharCode(65 + i)}
+                  </span>
+
+                  <span className={textClass}>
+                    {opt}
+                  </span>
+
+                  {/* Esquinas decorativas de "interfaz" */}
+                  <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-current opacity-30"></div>
+                  <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-current opacity-30"></div>
                 </button>
               );
             })}
           </div>
 
-          <div className="flex justify-end pt-4">
+          <div className="flex justify-end pt-8">
             <button
               onClick={nextQuestion}
               disabled={!answered}
-              className={`flex items-center gap-3 px-10 py-5 rounded-full font-['Space_Grotesk'] font-bold tracking-widest uppercase transition-all shadow-[0_10px_20px_rgba(181,0,88,0.2)] active:scale-95
-                ${answered
-                  ? 'bg-[#b50058] text-white hover:bg-[#9f004d]'
-                  : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed'}`}
+              className={`
+      relative group overflow-hidden transition-all duration-300
+      flex items-center gap-4 px-12 py-4
+      font-black italic uppercase tracking-[0.2em] text-lg
+      ${answered
+                  ? 'bg-transparent border-2 border-cyan-500 text-cyan-500 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:bg-cyan-500 hover:text-black hover:shadow-[0_0_40px_rgba(6,182,212,0.6)]'
+                  : 'bg-zinc-900/50 border-2 border-zinc-800 text-zinc-600 cursor-not-allowed opacity-50'}
+    `}
+              style={{
+                clipPath: 'polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)'
+              }}
             >
-              <span>SIGUIENTE</span>
-              <MdArrowForwardIos className="text-sm" />
+              {/* Efecto de brillo de escaneo (Solo cuando está activo) */}
+              {answered && (
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent -translate-x-full group-hover:animate-[scan_2s_infinite]"></div>
+              )}
+
+              <span className="relative z-10">Siguiente</span>
+              <MdArrowForwardIos className={`relative z-10 text-xl transition-transform duration-300 ${answered ? 'group-hover:translate-x-2' : ''}`} />
+
+              {/* Decoración de esquinas tecnológicas */}
+              <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-current"></div>
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-current"></div>
             </button>
           </div>
+
+          {/* Añade este keyframe a tu archivo de estilos o bloque Style */}
+          <style dangerouslySetInnerHTML={{
+            __html: `
+  @keyframes scan {
+    100% { transform: translateX(100%); }
+  }
+` }} />
         </div>
 
         {/* Right Column: Sidebar */}
         <aside className="lg:col-span-4 space-y-6">
-          <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-[0_4px_20px_rgba(181,0,88,0.05)] sticky top-28 border border-zinc-100 dark:border-zinc-800">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-2">
-                <MdEmojiEvents className="text-[#b50058] text-xl" />
-                <h2 className="font-['Space_Grotesk'] font-bold tracking-widest uppercase text-sm text-zinc-900 dark:text-white">Top Ranking</h2>
-              </div>
-            </div>
-            <Leaderboard category={`${category}:${gameMode}`} currentPlayer={playerName} game="trivia" />
-          </div>
+          <Leaderboard category={`${category}:${gameMode}`} currentPlayer={playerName} game="trivia" />
         </aside>
       </main>
     );
@@ -1103,42 +1219,50 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     };
 
     return (
-      <header className="fixed top-0 left-0 w-full z-50 bg-[#f6f6f6]/80 dark:bg-zinc-900/80 backdrop-blur-md px-6 py-4 border-b border-zinc-200 dark:border-zinc-800">
-        <div className="flex justify-between items-center w-full max-w-7xl mx-auto">
-          <div className="flex items-center gap-6">
-            <span className="text-xl font-black italic neon-text-pink font-['Space_Grotesk'] uppercase tracking-tighter">
+      <header className="fixed top-0 left-0 w-full z-50 bg-[#f6f6f6]/90 dark:bg-zinc-900/90 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 shadow-[0_4px_20px_rgba(181,0,88,0.05)]">
+        <div className="flex justify-between items-center w-full max-w-7xl mx-auto px-6 py-4">
+
+          {/* TÍTULO IZQUIERDO: Con la fuente del Ranking */}
+          <div className="flex items-center gap-4">
+            <span className="text-xl md:text-2xl font-black italic uppercase tracking-tighter text-[#FF007F]">
               {category === 'music' ? 'ADIVINA LA CANCIÓN' : 'PREGUNTADOS'}
             </span>
-            <button
-              onClick={() => handleNavigationClick(() => setCategory(null))}
-              className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-zinc-100 dark:bg-zinc-800 hover:bg-[#ff709e]/10 rounded-full text-[11px] font-black uppercase text-[#FF007F] transition-all border-2 border-[#FF007F]/20 hover:border-[#FF007F]/50 shadow-sm"
-            >
-              <span className="bg-[#FF007F] text-white w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold shadow-[0_0_10px_rgba(255,0,127,0.3)]">A</span>
-              Categoría
-            </button>
           </div>
-          <div className="flex items-center gap-6">
-            <button
-              onClick={() => handleNavigationClick(handleGoHome)}
-              className="hidden md:flex flex-col items-center group relative p-2"
-            >
-              <div className="p-2 bg-zinc-100 dark:bg-zinc-800 rounded-xl group-hover:scale-110 transition-transform duration-200 border-2 border-transparent group-hover:border-[#FF007F]/30">
-                <MdHome className="text-[#FF007F] text-2xl" />
+
+          {/* SECCIÓN DERECHA: Navegación + Score */}
+          <div className="flex items-center gap-4 md:gap-8">
+
+            {/* Navegación con la misma fuente */}
+            <nav className="hidden lg:flex items-center gap-6 text-[11px] font-black italic uppercase tracking-tighter">
+              <button className="text-[#FF007F] border-b-2 border-[#FF007F]">Jugar</button>
+              <button className="text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors">Colección</button>
+              <button className="text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors">Ranking</button>
+            </nav>
+
+            {/* CONTENEDOR SCORE + AVATAR (ESTILO CÁPSULA) */}
+            <div className="flex items-center gap-4 bg-white dark:bg-zinc-800 px-4 py-2 rounded-full border border-zinc-200 dark:border-zinc-700 shadow-sm">
+
+              {/* SCORE: Fuente unificada */}
+              <div className="flex items-center gap-2 border-r border-zinc-200 dark:border-zinc-700 pr-4">
+                <MdStars className="text-[#FF007F] text-xl" />
+                <div className="flex flex-col">
+                  <span className="text-[8px] font-black uppercase italic text-zinc-400 leading-none">Score</span>
+                  <span className="text-base md:text-xl font-black italic uppercase tracking-tighter text-zinc-800 dark:text-zinc-100 leading-none">
+                    {score.toString().padStart(4, '0')}
+                  </span>
+                </div>
               </div>
-              <span className="font-['Space_Grotesk'] text-[8px] tracking-[0.2em] text-[#FF007F] uppercase mt-1 font-black">Home</span>
-            </button>
-            <div className="h-10 w-[2px] bg-gradient-to-b from-transparent via-zinc-200 dark:via-zinc-800 to-transparent hidden md:block"></div>
-            <div className="flex flex-col ml-2 space-y-0.5 items-end"> 
-              <span className="text-[10px] md:text-xs uppercase tracking-tighter font-bold opacity-60 leading-none font-['Space_Grotesk'] text-zinc-500 dark:text-zinc-400">
-                Score
-              </span>
-              <span className="text-xl md:text-2xl font-black leading-none text-[#FF007F] font-['Space_Grotesk'] italic">
-                {score.toString().padStart(4, '0')}
-              </span>
+
+              {/* AVATAR */}
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-[#ff709e]/20 border-2 border-[#FF007F]">
+                <img
+                  className="w-full h-full object-cover"
+                  src={`https://ui-avatars.com/api/?name=${playerName || 'U'}&background=FF007F&color=fff&bold=true`}
+                  alt="Player Avatar"
+                />
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-xl overflow-hidden bg-[#ff709e]/20 border-2 border-[#FF007F]/30 shadow-[0_0_15px_rgba(255,0,127,0.1)]">
-              <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzq9eEE3fqHmv20fgJJ9qBxr3QHXXmz9UahDhYWPqx9cZUI3_TpOpgAuUB4PTM0LdNyf1ecRQyR98rFdT0lpU0gwAgl2hfumOCHwJf_HLdIRA-zmYlDm33XPijiyY5e6CGHCy2bnn8jmXqEyYvoAejWyPLpdcI4OHUkXGfRQ8PcOFN6gTmD-ozK01SQ_9uFG6u7sgB_p9xZ8MIoDDjqm54b-cpeNW1azgoZSM6yC-8IIjIQP_AnuNoimWPddK-8Zic4tH9F_7Xw8" alt="User Avatar" />
-            </div>
+
           </div>
         </div>
       </header>
@@ -1335,7 +1459,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   );
 
   const renderStandardUI = () => (
-    <div className="max-w-7xl mx-auto relative px-4 py-8">
+    <div className="flex flex-col gap-8 mt-10 md:mt-16 animate-fade-in">
       {feedback && (
         <div
           className={`absolute top-[50%] left-1/3 -translate-x-1/2 -translate-y-1/2 z-[80] 
@@ -1350,7 +1474,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
       {/* Timed mode: 3-column grid (stats | game | ranking); others: game + ranking */}
       <div className={`grid grid-cols-1 gap-8 ${gameMode === 'timed'
         ? 'md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)]'
-        : 'md:grid-cols-4'
+        : 'md:grid-cols-3'
         }`}>
         {/* LEFT SIDEBAR: For timed mode, show stats; otherwise just spacer */}
         {gameMode === 'timed' && (
@@ -1415,41 +1539,32 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
         {/* GAME AREA */}
         <div className={gameMode === 'timed' ? '' : 'md:col-span-3'}>
           {gameMode === 'untimed' ? (
+            /* --- VISTA MODO SIN TIEMPO (UNTIMED) --- */
             <div className="flex flex-col gap-6 w-full relative animate-fade-in text-slate-900 dark:text-slate-100">
               <div className="bg-primary-blue/5 backdrop-blur-md border border-primary-blue/10 rounded-2xl p-6 border-l-4 border-l-primary-blue shadow-lg">
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <h1 className="text-primary-blue font-bold uppercase tracking-wider text-xs">Modo Activo</h1>
+                    <h1 className="text-primary-blue font-bold uppercase tracking-wider text-[10px] md:text-xs">Modo Activo</h1>
                     <h2 className="text-2xl font-bold dark:text-white mb-2">Modo Sin Tiempo</h2>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setCategory(null)}
-                        className="px-3 py-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded flex items-center gap-2 text-xs font-black uppercase text-slate-600 dark:text-slate-300 transition-colors"
-                      >
-                        <span className="bg-slate-800 dark:bg-white text-white dark:text-black w-5 h-5 rounded-full flex items-center justify-center text-[10px]">B</span>
-                        Categoría
-                      </button>
-                      <button
-                        onClick={resetToSelection}
-                        className="px-3 py-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 rounded flex items-center gap-1 text-xs font-bold uppercase text-slate-600 dark:text-slate-300 transition-colors"
-                      >
-                        <MdHome /> Juegos
-                      </button>
-                    </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">
-                    <div className="text-lg font-bold text-primary-blue border border-primary-blue/20 bg-primary-blue/10 px-3 py-1 rounded-lg flex items-center shadow-sm relative">
-                      <div className="flex flex-col ml-2 space-y-0.5 mt-2">
-                        <span className="text-[10px] md:text-xs uppercase tracking-tighter font-bold opacity-60 leading-none">
+                    <div className="text-lg font-bold text-primary-blue border border-primary-blue/20 bg-primary-blue/10 px-4 py-2 rounded-lg flex items-center shadow-sm relative overflow-hidden">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] md:text-[9px] uppercase tracking-widest font-black opacity-60 leading-none mb-1">
                           {t('common.score')}
                         </span>
-                        <span className="text-xl md:text-2xl font-black leading-none text-primary-blue dark:text-white">
-                          {score}
-                        </span>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-2xl md:text-3xl font-black leading-none text-primary-blue dark:text-white italic tracking-tighter">
+                            {score}
+                          </span>
+                          <span className="text-xs md:text-sm font-bold opacity-80 leading-none italic uppercase">
+                            PTS
+                          </span>
+                        </div>
                       </div>
-                      <span className="ml-1 text-sm pt-2">PTS</span>
+
                       {scoreChange !== null && (
-                        <div className="absolute right-full mr-2 -translate-y-1/2 top-1/2">
+                        <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2">
                           <ScoreIndicator points={scoreChange} onComplete={() => setScoreChange(null)} />
                         </div>
                       )}
@@ -1473,6 +1588,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                 <h2 className="text-3xl md:text-4xl font-bold text-center leading-tight max-w-2xl text-slate-900 dark:text-white z-10">
                   {current?.question}
                 </h2>
+
                 {isMultipleAnswer && !answered && (
                   <p className="text-sm text-primary-pink font-semibold mt-1 animate-pulse z-10">
                     ({t('games.options.selectMultiple')})
@@ -1516,7 +1632,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                         {isSelected && !answered && (
                           <div className="absolute inset-0 bg-gradient-to-r from-primary-blue/10 to-transparent pointer-events-none opacity-50"></div>
                         )}
-                        <span className={iconClass}>{String.fromCharCode(65 + i)}</span>
+                        <span className={iconClass}>{String.fromCharCode(64 + (i + 1))}</span>
                         <span className={textClass}>{opt}</span>
                       </button>
                     );
@@ -1533,16 +1649,6 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                 )}
 
                 <div className="flex w-full max-w-2xl justify-between pt-6 border-t border-slate-200 dark:border-slate-800 mt-2 z-10 items-center gap-4">
-                  <button
-                    onClick={() => {
-                      setPendingNavigationAction(() => resetToSelection);
-                      setShowNavigationConfirm(true);
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-zinc-900 hover:bg-[#ff709e]/10 rounded-full text-[11px] font-black uppercase text-[#FF007F] transition-all border-2 border-[#FF007F]/20 hover:border-[#FF007F]/50 font-['Space_Grotesk']"
-                  >
-                    <span className="bg-[#FF007F] text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold">B</span>
-                    VOLVER
-                  </button>
                   {isMultipleAnswer && !answered ? (
                     <button
                       onClick={() => submitAnswer()}
@@ -1566,16 +1672,12 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
               </div>
             </div>
           ) : (
+            /* --- VISTA RESTO DE MODOS (TIMED, INSANE, CHAOS) --- */
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors border border-gray-100 dark:border-gray-700 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary-pink/5 rounded-full blur-3xl -z-0 pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-blue/5 rounded-full blur-3xl -z-0 pointer-events-none" />
 
               <div className="relative z-10">
-                {updateMessage && (
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full mb-4 bg-pokemon-yellow text-black px-6 py-2 rounded-full font-black text-sm border-4 border-black shadow-[4px_4px_0px_0px_black] z-[100] whitespace-nowrap animate-fade-in-up">
-                    {updateMessage}
-                  </div>
-                )}
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-2">
                     <button onClick={() => setCategory(null)} className="px-4 py-2 bg-[#0db9f2]/10 hover:bg-[#0db9f2]/20 dark:bg-[#0db9f2]/5 dark:hover:bg-[#0db9f2]/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-[#0db9f2]/30 flex items-center gap-2 text-[#0db9f2] shadow-lg shadow-[#0db9f2]/5">
@@ -1589,7 +1691,9 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
                   <div className="flex items-center gap-4">
                     <div className="text-sm font-semibold uppercase tracking-wider text-gray-400">{category}</div>
-                    <div className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-bold">{index + 1}/{gameMode === 'chaos' ? CHAOS_MODE_QUESTIONS : TOTAL_QUESTIONS}</div>
+                    <div className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-bold">
+                      {index + 1}/{gameMode === 'chaos' ? CHAOS_MODE_QUESTIONS : TOTAL_QUESTIONS}
+                    </div>
                   </div>
 
                   <div className="text-lg relative font-bold text-primary-blue dark:text-primary-pink">
@@ -1598,6 +1702,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                   </div>
                 </div>
 
+                {/* Lógica de Timers específica para cada modo */}
                 {gameMode === 'insane' ? (
                   <div className="mb-8">
                     <div className="flex flex-col items-center gap-4">
@@ -1671,41 +1776,40 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                     );
                   })}
                 </div>
-              </div>
 
-              {showCorrectAnswer && (
-                <div className={`mb-6 p-4 rounded-xl border-l-4 ${selectedAnswers.length === 0 && gameMode === 'timed' ? 'bg-yellow-500/10 border-yellow-500' : 'bg-red-500/10 border-red-500'} animate-fade-in`}>
-                  <p className="font-bold mb-1">{selectedAnswers.length === 0 && gameMode === 'timed' ? t('games.trivia.timeUp') : t('games.trivia.incorrect')}</p>
-                  <p className="text-sm opacity-90">{t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span></p>
-                </div>
-              )}
-
-              <div className="flex justify-between items-center mt-6">
-                {isMultipleAnswer && !answered && (
-                  <button onClick={() => submitAnswer()} disabled={selectedAnswers.length === 0} className={`poke-button-blue ${selectedAnswers.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}>
-                    <MdCatchingPokemon className="animate-spin-slow mr-2" />
-                    {t('games.trivia.submitAnswer')}
-                  </button>
+                {showCorrectAnswer && (
+                  <div className={`mb-6 p-4 rounded-xl border-l-4 ${selectedAnswers.length === 0 && gameMode === 'timed' ? 'bg-yellow-500/10 border-yellow-500' : 'bg-red-500/10 border-red-500'} animate-fade-in`}>
+                    <p className="font-bold mb-1">{selectedAnswers.length === 0 && gameMode === 'timed' ? t('games.trivia.timeUp') : t('games.trivia.incorrect')}</p>
+                    <p className="text-sm opacity-90">{t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span></p>
+                  </div>
                 )}
-                <button onClick={nextQuestion} disabled={!answered} className={`poke-button-pink ml-auto ${!answered ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95 animate-pulse-subtle'}`}>
-                  {t('common.next')}
-                </button>
+
+                <div className="flex justify-between items-center mt-6">
+                  {isMultipleAnswer && !answered && (
+                    <button onClick={() => submitAnswer()} disabled={selectedAnswers.length === 0} className={`poke-button-blue ${selectedAnswers.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}>
+                      <MdCatchingPokemon className="animate-spin-slow mr-2" />
+                      {t('games.trivia.submitAnswer')}
+                    </button>
+                  )}
+                  <button onClick={nextQuestion} disabled={!answered} className={`poke-button-pink ml-auto ${!answered ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95 animate-pulse-subtle'}`}>
+                    {t('common.next')}
+                  </button>
+                </div>
               </div>
             </div>
           )}
-        </div>
-
-        <div className={`sticky top-4 ${gameMode === 'timed' ? '' : 'md:col-span-1'}`}>
-          <Leaderboard category={category === 'music' ? `${category}:${gameMode}` : (category || undefined)} currentPlayer={playerName} game="trivia" />
         </div>
       </div>
     </div>
   );
 
-
   return (
     <div className="min-h-screen bg-background-light dark:bg-[#0a0a0c] text-slate-900 dark:text-slate-100 selection:bg-primary-blue/30 overflow-x-hidden">
-      <div className="container mx-auto px-2 md:px-4 pt-4 pb-8 md:pt-6 md:pb-12">
+
+      {/* Contenedor con ancho dinámico: Ampliado para Shurahiwa */}
+      <div className={`mx-auto px-2 md:px-4 pt-4 pb-8 md:pt-6 md:pb-12 transition-all duration-300 ${category === 'shurahiwa' ? 'max-w-[1450px]' : 'container'
+        }`}>
+
         {!category ? (
           renderCategorySelection()
         ) : !started && !isCountingDown ? (
@@ -1713,25 +1817,57 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
         ) : isCountingDown ? (
           renderCountdown()
         ) : gameOver ? (
-          <div className="w-full max-w-4xl mx-auto"> 
+          <div className="w-full max-w-4xl mx-auto">
             {renderGameOverUI()}
           </div>
-        ) : category === 'music' && (gameMode === 'chaos' || gameMode === 'insane') ? (
-          <div className="animate-fade-in">
+        ) : category === 'shurahiwa' ? (
+          /* --- DISEÑO DE COLUMNAS PARA SHURAHIWA --- */
+          <div className="animate-fade-in w-full">
             {renderGameHeader()}
-            <div className="mt-8">
-              {gameMode === 'chaos' ? renderChaosMode() : renderInsaneMode()}
+
+            <div className="mt-8 flex flex-col lg:flex-row gap-8 items-start">
+
+              {/* ÁREA DE JUEGO (Se expande horizontalmente) */}
+              <div className="flex-1 w-full min-w-0">
+                <div className="bg-white dark:bg-zinc-900/40 rounded-[2.5rem] p-4 md:p-10 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
+                  {/* Renderizamos el modo actual de Shurahiwa */}
+                  {gameMode === 'chaos' ? renderChaosMode() :
+                    gameMode === 'insane' ? renderInsaneMode() :
+                      renderStandardUI()}
+                </div>
+              </div>
+
+              {/* RANKING (Fijo a la derecha en PC) */}
+              <aside className="w-full lg:w-80 shrink-0 lg:sticky lg:top-24">
+                <Leaderboard
+                  game="trivia"
+                  category="shurahiwa"
+                  mode={gameMode || undefined}
+                  currentPlayer={playerName}
+                />
+              </aside>
             </div>
+
             {renderBottomNav()}
           </div>
         ) : (
-          renderStandardUI()
+          /* --- RESTO DE CATEGORÍAS (Ej. Música) --- */
+          <div className="animate-fade-in">
+            {renderGameHeader()}
+            <div className="mt-8">
+              {category === 'music' && gameMode === 'chaos' ? renderChaosMode() :
+                category === 'music' && gameMode === 'insane' ? renderInsaneMode() :
+                  renderStandardUI()}
+            </div>
+            {renderBottomNav()}
+          </div>
         )}
       </div>
 
+      {/* Feedback de respuesta */}
       {feedback && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center pointer-events-none">
-          <div className={`text-4xl md:text-6xl font-black italic tracking-tighter border-8 border-black dark:border-white p-8 bg-white dark:bg-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)] animate-bounce-in ${feedback.type === 'correct' ? 'text-green-500' : 'text-red-500'}`}>
+          <div className={`text-4xl md:text-6xl font-black italic tracking-tighter border-8 border-black dark:border-white p-8 bg-white dark:bg-black shadow-[10px_10px_0px_0px_#FF007F] animate-bounce-in ${feedback.type === 'correct' ? 'text-green-500' : 'text-red-500'}`}>
             {feedback.text}
           </div>
         </div>
@@ -1740,8 +1876,6 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
       {renderCommonModals()}
     </div>
   );
-
-
 };
 
 export default TriviaGame;

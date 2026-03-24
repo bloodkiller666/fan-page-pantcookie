@@ -14,26 +14,27 @@ export default function Terms() {
   const { t } = useLanguage();
 
   useEffect(() => {
-    // Usamos context para una limpieza segura en Next.js
     let ctx = gsap.context(() => {
-      gsap.from(".card-premium", {
-        duration: 6.2, // Increased from 1.2s (+5s)
-        clipPath: "inset(100% 0% 0% 0%)",
-        rotationX: -15,
-        transformOrigin: "50% 100%",
-        opacity: 0,
-        y: 60,
-        ease: "power4.out",
-        stagger: {
-          each: 0.4,
-          from: "start"
-        },
-        scrollTrigger: {
-          trigger: ".card-premium",
-          scroller: "#legal-scroll-container",
-          start: "top 90%",
-          toggleActions: "play none none none",
-        }
+      const cards = gsap.utils.toArray<HTMLElement>(".card-premium");
+
+      cards.forEach((card, index) => {
+        gsap.from(card, {
+          duration: 1.3,
+          clipPath: "inset(100% 0% 0% 0%)",
+          rotationX: -15,
+          transformOrigin: "50% 100%",
+          opacity: 0,
+          y: 60,
+          ease: "power4.out",
+          delay: index * 0.4,
+          scrollTrigger: {
+            trigger: card,
+            scroller: "#legal-scroll-container",
+            start: "top 95%",
+            toggleActions: "play none none none",
+            once: true,
+          }
+        });
       });
     });
 
@@ -104,7 +105,7 @@ export default function Terms() {
             {/* Scrollable Cards */}
             <div id="legal-scroll-container" className="flex-1 overflow-y-auto px-8 pb-12 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#635994] [&::-webkit-scrollbar-thumb]:shadow-[0_0_10px_#635994] [&::-webkit-scrollbar-thumb]:rounded-full">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                
+
                 {/* Section 01 */}
                 <div className="group relative p-6 bg-zinc-50 dark:bg-[#150f1f]/40 border border-zinc-200 dark:border-[#ff007f]/20 hover:border-[#ff007f]/40 transition-all duration-300 rounded-lg card-premium">
                   <div className="absolute -top-3 left-6 px-2 py-0.5 bg-[#ff007f] text-[9px] font-bold tracking-tighter text-white uppercase shadow-[0_0_10px_rgba(255,0,127,0.3)]">01 // Access</div>
@@ -187,7 +188,7 @@ export default function Terms() {
                   <p className="text-sm text-zinc-600 dark:text-[#f8f7ff]/70 leading-relaxed">
                     {t('legal.terms.moderationDesc')}
                   </p>
-                  
+
                   {/* Additional Content Block if needed */}
                   <h3 className="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-[#635994] transition-colors mt-4">{t('legal.terms.recreationalTitle')}</h3>
                   <p className="text-sm text-zinc-600 dark:text-[#f8f7ff]/70 leading-relaxed mt-2">
@@ -198,8 +199,8 @@ export default function Terms() {
 
               {/* Updates Section */}
               <div className="mt-6 p-6 bg-zinc-50 dark:bg-[#150f1f]/20 border border-zinc-200 dark:border-[#ff007f]/20 rounded-lg border-l-4 border-l-[#ff007f] card-premium">
-                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2">{t('legal.terms.changesTitle')}</h3>
-                  <p className="text-sm text-zinc-600 dark:text-[#f8f7ff]/70">{t('legal.terms.changesDesc')}</p>
+                <h3 className="text-lg font-bold text-zinc-900 dark:text-white mb-2">{t('legal.terms.changesTitle')}</h3>
+                <p className="text-sm text-zinc-600 dark:text-[#f8f7ff]/70">{t('legal.terms.changesDesc')}</p>
               </div>
 
             </div>

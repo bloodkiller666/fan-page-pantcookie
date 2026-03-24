@@ -101,7 +101,7 @@ export default function AdminDashboard() {
         const result = await deleteWallMessage(id);
         if (result.success) {
             setMessages(messages.filter(m => m.id !== id));
-            logActivity('Message', `Deleted (#${id.substring(0,5)})`, 'delete');
+            logActivity('Message', `Deleted (#${id.substring(0, 5)})`, 'delete');
         } else {
             alert('Error al eliminar mensaje');
         }
@@ -121,7 +121,7 @@ export default function AdminDashboard() {
 
         if (result.success) {
             setMessages(messages.map(m => m.id === editingId ? { ...m, ...editMessageForm } : m));
-            logActivity('Message', `Updated (#${editingId?.substring(0,5)})`, 'edit');
+            logActivity('Message', `Updated (#${editingId?.substring(0, 5)})`, 'edit');
             setEditingId(null);
         } else {
             alert('Error al actualizar mensaje');
@@ -161,7 +161,7 @@ export default function AdminDashboard() {
         if (error) alert('Error al eliminar');
         else {
             setScores(scores.filter(s => s.id !== id));
-            logActivity('Score', `Deleted (#${id.substring(0,5)})`, 'delete');
+            logActivity('Score', `Deleted (#${id.substring(0, 5)})`, 'delete');
         }
     };
 
@@ -189,7 +189,7 @@ export default function AdminDashboard() {
             alert('Error al actualizar');
         } else {
             setScores(scores.map(s => s.id === editingId ? { ...s, ...editForm } : s));
-            logActivity('Score', `Updated (#${editingId?.substring(0,5)})`, 'edit');
+            logActivity('Score', `Updated (#${editingId?.substring(0, 5)})`, 'edit');
             setEditingId(null);
         }
     };
@@ -206,17 +206,17 @@ export default function AdminDashboard() {
             <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-background-dark p-6 transition-colors duration-300 relative overflow-hidden">
                 {/* Fondo de rejilla ciberpunk adaptado para light mode */}
                 <div className="absolute inset-0 cyber-grid-bg bg-[radial-gradient(circle,rgba(255,31,142,0.1)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,31,142,0.08)_1px,transparent_1px)] opacity-60 dark:opacity-30 pointer-events-none data-grid-bg"></div>
-                
+
                 {/* CAMBIO: Panel de login con fondo blanco sólido en light mode (bg-white), bordes más oscuros y sombra pronunciada */}
                 <form onSubmit={handleLogin} className="relative z-10 glass-panel bg-white dark:bg-slate-900/40 p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-2xl w-full max-w-md border border-zinc-200 dark:border-white/10 backdrop-blur-xl">
                     <div className="flex justify-center mb-8">
                         <div className="w-16 h-16 bg-gradient-to-br from-primary to-purple-600 rounded-2xl flex items-center justify-center rotate-3 shadow-[0_0_20px_rgba(255,31,142,0.4)]">
-                           <MdMonitor className="text-purple-500" />
+                            <MdMonitor className="text-purple-500" />
                         </div>
                     </div>
                     {/* CAMBIO: Texto del logo forzado a zinc-950 en light mode */}
                     <h2 className="text-3xl font-display font-black text-center mb-2 tracking-tighter text-zinc-950 dark:text-white uppercase italic">
-                        SHAKE-<span className="text-primary glow-text">GANG</span>
+                        DASH-<span className="text-primary glow-text">BOARD</span>
                     </h2>
                     <p className="text-center text-xs font-bold text-zinc-600 dark:text-slate-400 tracking-[0.2em] mb-8 uppercase">
                         Admin Access Protocol
@@ -240,9 +240,9 @@ export default function AdminDashboard() {
   dark:hover:shadow-[0_0_25px_rgba(255,31,142,0.5)] 
   border border-primary/70 dark:border-primary/50 
   uppercase transform hover:-translate-y-1 active:scale-[0.98]"
->
-  Authenticate
-</button>
+                        >
+                            Authenticate
+                        </button>
                     </div>
                 </form>
             </div>
@@ -254,7 +254,7 @@ export default function AdminDashboard() {
         <div className="bg-zinc-50 dark:bg-background-dark text-zinc-900 dark:text-slate-100 font-sans min-h-screen selection:bg-primary selection:text-white overflow-x-hidden transition-colors duration-300 relative">
             {/* Fondo de rejilla adaptado */}
             <div className="fixed inset-0 cyber-grid-bg bg-[radial-gradient(circle,rgba(255,31,142,0.08)_1px,transparent_1px)] opacity-40 dark:opacity-30 pointer-events-none"></div>
-            
+
             {/* Elipses de fondo con opacidad reducida en light mode para no ensuciar */}
             <div className="fixed top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/5 dark:bg-primary/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
             <div className="fixed bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#00f2ff]/3 dark:bg-[#00f2ff]/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
@@ -269,7 +269,7 @@ export default function AdminDashboard() {
                             </div>
                             {/* CAMBIO: Texto del logo zinc-950 en light mode */}
                             <span className="font-display font-extrabold text-2xl tracking-tighter uppercase italic text-zinc-950 dark:text-white">
-                                SHAKE-<span className="text-primary glow-text">GANG</span>
+                                DASH-<span className="text-primary glow-text">BOARD</span>
                             </span>
                         </div>
                         <nav className="hidden xl:flex items-center gap-8">
@@ -336,43 +336,42 @@ export default function AdminDashboard() {
                 {/* Main Content Area */}
                 <div className="col-span-12 lg:col-span-8 flex flex-col gap-6">
                     {/* Top Stats Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            {/* CAMBIO: Cards con fondo blanco sólido, borde zinc-200 y sombra suave en light mode */}
-                            <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 p-8 rounded-3xl border border-primary/30 shadow-[0_10px_30px_-10px_rgba(255,31,142,0.1)] dark:shadow-[0_0_15px_rgba(255,31,142,0.1)] relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 dark:bg-primary/10 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-150"></div>
-                                <div className="flex items-center justify-between mb-6 relative z-10">
-                                    <span className="text-[10px] font-bold tracking-widest text-primary uppercase">Total Records</span>
-                                    <MdGroups className="text-primary/60 dark:text-primary/40" />
-                                </div>
-                                <div className="flex items-end gap-2 relative z-10">
-                                    {/* CAMBIO: Texto principal zinc-950 en light mode */}
-                                    <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">{activeTab === 'scores' ? scores.length : messages.length}</h3>
-                                    <span className="text-xs text-[#39ff14] mb-1 font-bold">+Live</span>
-                                </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {/* CAMBIO: Cards con fondo blanco sólido, borde zinc-200 y sombra suave en light mode */}
+                        <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 p-8 rounded-3xl border border-primary/30 shadow-[0_10px_30px_-10px_rgba(255,31,142,0.1)] dark:shadow-[0_0_15px_rgba(255,31,142,0.1)] relative overflow-hidden group">
+                            <div className="flex items-center justify-between mb-6 relative z-10">
+                                <span className="text-[10px] font-bold tracking-widest text-primary uppercase">Total Records</span>
+                                <MdGroups className="text-primary/60 dark:text-primary/40" />
                             </div>
-                            <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 p-8 rounded-3xl border border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none relative overflow-hidden group">
-                                <div className="flex items-center justify-between mb-6">
-                                    <span className="text-[10px] font-bold tracking-widest text-[#00c2cc] dark:text-[#00f2ff] uppercase">Active Sessions</span>
-                                    <MdSensors className="text-[#00c2cc]/60 dark:text-[#00f2ff]/40" />
-                                </div>
-                                <div className="flex items-end gap-2">
-                                    <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">1,204</h3>
-                                    <span className="text-xs text-[#00c2cc] dark:text-[#00f2ff] mb-1 font-bold">Online</span>
-                                </div>
-                            </div>
-                            <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 p-8 rounded-3xl border border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none relative overflow-hidden group">
-                                <div className="flex items-center justify-between mb-6">
-                                    {/* CAMBIO: Texto de categoría zinc-600 en light mode */}
-                                    <span className="text-[10px] font-bold tracking-widest text-zinc-600 dark:text-slate-400 uppercase">Server Uptime</span>
-                                    <MdDns className="text-zinc-500 dark:text-slate-400/40" />
-                                </div>
-                                <div className="flex items-end gap-2">
-                                    <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">99.9<span className="text-sm opacity-50">%</span></h3>
-                                    {/* CAMBIO: Texto secundario zinc-600 en light mode */}
-                                    <span className="text-xs text-zinc-600 dark:text-slate-400 mb-1 font-mono">24d 5h</span>
-                                </div>
+                            <div className="flex items-end gap-2 relative z-10">
+                                {/* CAMBIO: Texto principal zinc-950 en light mode */}
+                                <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">{activeTab === 'scores' ? scores.length : messages.length}</h3>
+                                <span className="text-xs text-[#39ff14] mb-1 font-bold">+Live</span>
                             </div>
                         </div>
+                        <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 p-8 rounded-3xl border border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none relative overflow-hidden group">
+                            <div className="flex items-center justify-between mb-6">
+                                <span className="text-[10px] font-bold tracking-widest text-[#00c2cc] dark:text-[#00f2ff] uppercase">Active Sessions</span>
+                                <MdSensors className="text-[#00c2cc]/60 dark:text-[#00f2ff]/40" />
+                            </div>
+                            <div className="flex items-end gap-2">
+                                <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">1,204</h3>
+                                <span className="text-xs text-[#00c2cc] dark:text-[#00f2ff] mb-1 font-bold">Online</span>
+                            </div>
+                        </div>
+                        <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 p-8 rounded-3xl border border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none relative overflow-hidden group">
+                            <div className="flex items-center justify-between mb-6">
+                                {/* CAMBIO: Texto de categoría zinc-600 en light mode */}
+                                <span className="text-[10px] font-bold tracking-widest text-zinc-600 dark:text-slate-400 uppercase">Server Uptime</span>
+                                <MdDns className="text-zinc-500 dark:text-slate-400/40" />
+                            </div>
+                            <div className="flex items-end gap-2">
+                                <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">99.9<span className="text-sm opacity-50">%</span></h3>
+                                {/* CAMBIO: Texto secundario zinc-600 en light mode */}
+                                <span className="text-xs text-zinc-600 dark:text-slate-400 mb-1 font-mono">24d 5h</span>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Data Table Section */}
                     {/* CAMBIO: Sección de tabla con fondo blanco sólido y sombra pronunciada en light mode */}
@@ -561,7 +560,7 @@ export default function AdminDashboard() {
                                                                 <button onClick={saveEditMessage} className="p-2 rounded-lg bg-[#39ff14]/10 text-[#2db30e] dark:text-[#39ff14] hover:bg-[#39ff14]/20 transition-colors"><FiSave /></button>
                                                                 <button onClick={cancelEdit} className="p-2 rounded-lg bg-zinc-200 dark:bg-white/5 text-zinc-600 dark:text-slate-400 hover:bg-zinc-300 dark:hover:bg-white/10 transition-colors"><FiX /></button>
                                                             </div>
-                                                       ) : (
+                                                        ) : (
                                                             <div className="flex justify-end gap-2 sm:opacity-40 group-hover:opacity-100 transition-opacity">
                                                                 <button onClick={() => startEditMessage(msg)} className="p-2 rounded-lg hover:bg-zinc-200 dark:hover:bg-white/10 text-zinc-600 dark:text-slate-400 hover:text-[#00c2cc] dark:hover:text-[#00f2ff] transition-colors"><MdEdit className="text-xl" /></button>
                                                                 <button onClick={() => handleDeleteMessage(msg.id)} className="p-2 rounded-lg hover:bg-primary/20 text-zinc-600 dark:text-slate-400 hover:text-primary transition-colors"><MdDelete className="text-xl" /></button>
@@ -600,11 +599,11 @@ export default function AdminDashboard() {
                                 <div key={activity.id} className="flex gap-4 relative">
                                     {/* CAMBIO: Icono actividad borde primary/30 en light mode */}
                                     <div className="w-8 h-8 rounded-full bg-primary/10 dark:bg-white/5 flex items-center justify-center flex-shrink-0 z-10 border border-primary/30 dark:border-primary/20 transition-colors duration-300">
-                                        {activity.type === 'auth' ? <MdLogin className="text-primary text-sm" /> : 
-                                         activity.type === 'sync' ? <MdSync className="text-primary text-sm" /> : 
-                                         activity.type === 'refresh' ? <MdRefresh className="text-primary text-sm" /> : 
-                                         activity.type === 'edit' ? <MdEdit className="text-primary text-sm" /> : 
-                                         <MdDelete className="text-primary text-sm" />}
+                                        {activity.type === 'auth' ? <MdLogin className="text-primary text-sm" /> :
+                                            activity.type === 'sync' ? <MdSync className="text-primary text-sm" /> :
+                                                activity.type === 'refresh' ? <MdRefresh className="text-primary text-sm" /> :
+                                                    activity.type === 'edit' ? <MdEdit className="text-primary text-sm" /> :
+                                                        <MdDelete className="text-primary text-sm" />}
                                     </div>
                                     <div className="flex-grow">
                                         {/* CAMBIO: Texto actividad zinc-900 en light mode */}
