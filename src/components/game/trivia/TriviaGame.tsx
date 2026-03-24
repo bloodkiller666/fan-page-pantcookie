@@ -11,6 +11,7 @@ import { submitGameScore, checkExistingScore } from '../../../utils/supabaseScor
 import ScoreOverwriteModal from '../ScoreOverwriteModal';
 import RulesModal from '../RulesModal';
 import PauseMenu from '../PauseMenu';
+import { Combo } from 'next/font/google';
 
 const TIMER_PER_QUESTION = 15;
 const TOTAL_QUESTIONS = 20;
@@ -657,8 +658,6 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     </div>
   );
 
-
-
   const renderModeSelection = () => {
     if (category === 'music') {
       return (
@@ -1271,24 +1270,33 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
   const renderBottomNav = () => {
     return (
-      <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 rounded-t-2xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-t border-zinc-200 dark:border-zinc-800 shadow-[0_-10px_30px_rgba(181,0,88,0.1)]">
-        <div className="flex justify-around items-center px-4 pb-6 pt-2">
+      <nav className="md:hidden fixed bottom-0 left-0 w-full z-[100] rounded-t-[2.5rem] bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl border-t border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+        <div className="flex justify-around items-center px-6 pb-8 pt-4">
+
+          {/* HOME */}
           <button onClick={handleGoHome} className="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 p-2 hover:text-[#FF007F] active:scale-90 transition-all">
             <MdHome className="text-2xl" />
-            <span className="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Home</span>
+            <span className="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Home</span>
           </button>
-          <button onClick={() => setCategory(null)} className="flex flex-col items-center justify-center bg-gradient-to-tr from-[#b50058] to-[#ff5290] text-white rounded-xl px-4 py-2 scale-110 -translate-y-2 active:scale-90 transition-all">
+
+          {/* JUGAR (Botón Central Destacado) */}
+          <button onClick={() => setCategory(null)} className="flex flex-col items-center justify-center bg-gradient-to-tr from-[#b50058] to-[#ff5290] text-white rounded-2xl px-5 py-3 scale-110 shadow-lg shadow-[#b50058]/30 active:scale-95 transition-all">
             <MdVideogameAsset className="text-2xl" />
             <span className="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Jugar</span>
           </button>
+
+          {/* RANKING */}
           <button className="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 p-2 hover:text-[#FF007F] active:scale-90 transition-all">
             <MdEmojiEvents className="text-2xl" />
-            <span className="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Ranking</span>
+            <span className="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Ranking</span>
           </button>
+
+          {/* AJUSTES */}
           <button className="flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-500 p-2 hover:text-[#FF007F] active:scale-90 transition-all">
             <MdSettings className="text-2xl" />
-            <span className="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Ajustes</span>
+            <span className="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Ajustes</span>
           </button>
+
         </div>
       </nav>
     );
@@ -1458,6 +1466,272 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     </>
   );
 
+  const renderShurahiwaTimed = () => {
+    const current = questions[index];
+    return (
+      <div className="flex flex-col gap-4 w-full relative animate-fade-in -mt-6 md:-mt-10">
+        {feedback && (
+          <div
+            className={`absolute top-[50%] left-1/3 -translate-x-1/2 -translate-y-1/2 z-[80] 
+          text-2xl md:text-3xl font-black italic tracking-tighter border-4 border-black 
+          p-4 md:p-2 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-4 ring-[#FF007F]/10 animate-fade-in
+          ${feedback.type === 'correct' ? 'text-[#FF007F]' : 'text-gray-500'}`}
+          >
+            {feedback.text}
+          </div>
+        )}
+        {/* Header Compacto con Cronómetro Rosa */}
+        <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 rounded-[2rem] p-5 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-4 bg-zinc-100/50 dark:bg-zinc-800/50 px-5 py-2 rounded-2xl border border-zinc-200/50 dark:border-zinc-700/50">
+            <div className="relative flex items-center justify-center">
+              <svg className="w-14 h-14 transform -rotate-90">
+                <circle cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-zinc-200 dark:text-zinc-700" />
+                <circle
+                  cx="28" cy="28" r="24" stroke="currentColor" strokeWidth="4" fill="transparent"
+                  strokeDasharray={150.8}
+                  strokeDashoffset={150.8 - (150.8 * remaining) / TIMER_PER_QUESTION}
+                  className={`${remaining <= 5 ? 'text-red-500' : 'text-[#FF007F]'} transition-all duration-1000`}
+                />
+              </svg>
+              <span className={`absolute text-lg font-black ${remaining <= 5 ? 'text-red-500 animate-pulse' : 'text-zinc-800 dark:text-white'}`}>{remaining}</span>
+            </div>
+            <div>
+              <p className="text-[9px] uppercase tracking-widest font-black opacity-50 leading-none mb-1">Tiempo</p>
+              <p className="text-sm font-bold uppercase text-zinc-800 dark:text-white">Segundos</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-[9px] uppercase tracking-widest font-black opacity-50 leading-none mb-1">Puntos</p>
+              <div className="relative flex whitespace-nowrap gap-1">
+                <p className="text-3xl font-black text-[#FF007F] italic tracking-tighter">{score}</p>
+                {scoreChange !== null && <div className="absolute top-0 -right-8"><ScoreIndicator points={scoreChange} onComplete={() => setScoreChange(null)} /></div>}
+              </div>
+            </div>
+            <div className="bg-[#FF007F]/10 px-4 py-2 rounded-xl border border-[#FF007F]/20">
+              <p className="text-[9px] uppercase tracking-widest font-black text-[#FF007F] mb-1">Pregunta</p>
+              <p className="text-sm font-bold text-zinc-800 dark:text-white">{index + 1}/{TOTAL_QUESTIONS}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Contenedor de pregunta idéntico para consistencia */}
+        <div className="flex-1 flex flex-col justify-center items-center py-8 md:py-12 px-6 gap-8 bg-white dark:bg-zinc-900/60 rounded-[2.5rem] shadow-2xl border border-zinc-100 dark:border-zinc-800 relative overflow-hidden">
+          <h2 className="text-2xl md:text-3xl font-bold text-center z-10 w-full">{current?.question}</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            {current?.options.map((opt, i) => {
+              const isCorrectOption = correctAnswerIndexes.includes(i);
+              const isSelected = selectedAnswers.includes(i);
+              let cls = "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:border-primary-blue/50 hover:shadow-lg";
+              if (answered) {
+                if (isCorrectOption) cls = "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400";
+                else if (isSelected && !isCorrectOption) cls = "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400";
+                else cls = "opacity-50 border-gray-200 dark:border-gray-800";
+              } else if (isSelected) cls = "bg-[#FF007F]/10 border-[#FF007F] text-[#FF007F]";
+
+              return (
+                <button key={i} disabled={answered} onClick={() => handleOptionClick(i)} className={`w-full p-4 rounded-xl border-4 font-bold uppercase tracking-wide transition-all duration-200 transform shadow-[4px_4px_0px_0px_black] active:translate-y-1 active:shadow-none flex items-center gap-4 ${cls}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg border-4 ${isSelected || (answered && isCorrectOption) ? 'border-black bg-white text-black' : 'border-black bg-gray-200 text-gray-500'}`}>
+                    {String.fromCharCode(65 + i)}
+                  </div>
+                  <span className="text-left flex-1 leading-tight">{opt}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* TABLA DE ESTADÍSTICAS CORREGIDA */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {/* Pregunta actual */}
+            <div className="bg-zinc-100/50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 p-3 rounded-2xl">
+              <p className="text-[9px] uppercase font-black opacity-50 mb-1">Progreso</p>
+              <p className="text-sm font-bold">{index + 1} / {TOTAL_QUESTIONS}</p>
+            </div>
+
+            {/* Puntuación (Cambiado combo por score o una racha si existe) */}
+            <div className="bg-zinc-100/50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 p-3 rounded-2xl">
+              <p className="text-[9px] uppercase font-black opacity-50 mb-1">Puntos Bonus</p>
+              <p className="text-sm font-bold text-orange-500">
+                ✨ {score > 0 ? (score / (index + 1)).toFixed(0) : 0} avg
+              </p>
+            </div>
+
+            {/* Dificultad */}
+            <div className="bg-zinc-100/50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 p-3 rounded-2xl">
+              <p className="text-[9px] uppercase font-black opacity-50 mb-1">Categoría</p>
+              <p className="text-sm font-bold text-blue-500 uppercase truncate">{category || 'General'}</p>
+            </div>
+
+            {/* Modo */}
+            <div className="bg-zinc-100/50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 p-3 rounded-2xl">
+              <p className="text-[9px] uppercase font-black opacity-50 mb-1">Sistema</p>
+              <p className="text-sm font-bold text-[#FF007F] uppercase tracking-tighter">Normal Mode</p>
+            </div>
+          </div>
+
+          {showCorrectAnswer && (
+            <div className={`mb-2 w-full p-4 rounded-xl border-l-4 ${selectedAnswers.length === 0 ? 'bg-yellow-500/10 border-yellow-500' : 'bg-red-500/10 border-red-500'} animate-fade-in`}>
+              <p className="font-bold mb-1">{selectedAnswers.length === 0 ? t('games.trivia.timeUp') : t('games.trivia.incorrect')}</p>
+              <p className="text-sm opacity-90">{t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current?.options[idx]).join(', ')}</span></p>
+            </div>
+          )}
+
+          <div className="flex justify-between items-center mt-2 w-full">
+            {isMultipleAnswer && !answered && (
+              <button onClick={() => submitAnswer()} disabled={selectedAnswers.length === 0} className={`poke-button-blue ${selectedAnswers.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}>
+                <MdCatchingPokemon className="animate-spin-slow mr-2" />
+                {t('games.trivia.submitAnswer')}
+              </button>
+            )}
+            <button onClick={nextQuestion} disabled={!answered} className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-lg uppercase tracking-wide transition-all ml-auto ${!answered ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 border border-slate-300 dark:border-slate-600 cursor-not-allowed opacity-50' : 'bg-[#FF007F] hover:bg-[#FF007F]/80 text-white shadow-lg shadow-[#FF007F]/20 active:scale-95'}`}>
+              Siguiente
+              <MdArrowForward className="text-xl" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderShurahiwaUntimed = () => {
+    const current = questions[index];
+    return (
+      <div className="flex flex-col gap-4 w-full relative animate-fade-in -mt-6 md:-mt-10">
+        {feedback && (
+          <div
+            className={`absolute top-[50%] left-1/3 -translate-x-1/2 -translate-y-1/2 z-[80] 
+          text-2xl md:text-3xl font-black italic tracking-tighter border-4 border-black 
+          p-4 md:p-2 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-4 ring-primary-blue/10 animate-fade-in
+          ${feedback.type === 'correct' ? 'text-primary-blue' : 'text-gray-500'}`}
+          >
+            {feedback.text}
+          </div>
+        )}
+        <div className="bg-primary-blue/5 backdrop-blur-md border border-primary-blue/10 rounded-2xl p-6 border-l-4 border-l-primary-blue shadow-lg">
+          <div className="flex justify-between items-start mb-3">
+            <div>
+              <h1 className="text-primary-blue font-bold uppercase tracking-wider text-[10px]">Modo Activo</h1>
+              <h2 className="text-2xl font-bold dark:text-white mt-1">Modo Sin Tiempo</h2>
+            </div>
+            <div className="flex flex-col items-end gap-3">
+              <div className="text-lg font-bold text-primary-blue border border-primary-blue/20 bg-primary-blue/10 px-4 py-2 rounded-lg flex items-center shadow-sm relative overflow-hidden">
+                <div className="flex flex-col">
+                  <span className="text-[10px] md:text-[9px] uppercase tracking-widest font-black opacity-60 leading-none mb-1">
+                    {t('common.score')}
+                  </span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl md:text-3xl font-black leading-none text-primary-blue dark:text-white italic tracking-tighter">
+                      {score}
+                    </span>
+                    <span className="text-xs md:text-sm font-bold opacity-80 leading-none italic uppercase">
+                      PTS
+                    </span>
+                  </div>
+                </div>
+
+                {scoreChange !== null && (
+                  <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2">
+                    <ScoreIndicator points={scoreChange} onComplete={() => setScoreChange(null)} />
+                  </div>
+                )}
+              </div>
+              <span className="text-sm font-bold bg-primary-blue/20 text-primary-blue px-3 py-1 rounded-full shadow-sm">
+                Pregunta {index + 1}/{TOTAL_QUESTIONS}
+              </span>
+            </div>
+          </div>
+          <div className="w-full bg-slate-200 dark:bg-slate-800 h-3 rounded-full mt-4 overflow-hidden shadow-inner">
+            <div className="bg-primary-blue h-full shadow-[0_0_15px_rgba(13,185,242,0.5)] transition-all duration-500" style={{ width: `${(index / TOTAL_QUESTIONS) * 100}%` }}></div>
+          </div>
+        </div>
+
+        {/* Cuerpo de pregunta azul */}
+        <div className="flex-1 flex flex-col justify-center items-center py-10 px-6 gap-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary-blue/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+          <h2 className="text-2xl md:text-3xl font-bold text-center z-10 dark:text-white w-full">{current?.question}</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full z-10">
+            {current?.options.map((opt, i) => {
+              const isCorrectOption = correctAnswerIndexes.includes(i);
+              const isSelected = selectedAnswers.includes(i);
+              let btnClass = "group relative flex items-center gap-4 p-5 rounded-xl border-2 transition-all text-left overflow-hidden ";
+              let iconClass = "flex items-center justify-center w-10 h-10 rounded-lg font-bold transition-colors z-10 ";
+              let textClass = "text-lg font-semibold transition-colors z-10 relative ";
+
+              if (answered) {
+                if (isCorrectOption) {
+                  btnClass += "border-green-500 bg-green-500/10";
+                  iconClass += "bg-green-500 text-white shadow-lg shadow-green-500/30";
+                  textClass += "text-green-700 dark:text-green-400";
+                } else if (isSelected && !isCorrectOption) {
+                  btnClass += "border-red-500 bg-red-500/10";
+                  iconClass += "bg-red-500 text-white shadow-lg shadow-red-500/30";
+                  textClass += "text-red-700 dark:text-red-400";
+                } else {
+                  btnClass += "border-gray-200 dark:border-gray-800 bg-transparent opacity-50";
+                  iconClass += "bg-gray-200 dark:bg-gray-800 text-gray-500";
+                  textClass += "text-gray-500";
+                }
+              } else if (isSelected) {
+                btnClass += "border-primary-blue bg-primary-blue/10 shadow-[0_0_20px_rgba(13,185,242,0.1)] scale-[1.02]";
+                iconClass += "bg-primary-blue text-white shadow-lg shadow-primary-blue/40";
+                textClass += "text-primary-blue";
+              } else {
+                btnClass += "border-primary-blue/20 bg-slate-50 dark:bg-slate-800/40 hover:border-primary-blue hover:bg-primary-blue/5 active:scale-[0.98]";
+                iconClass += "bg-primary-blue/10 text-primary-blue group-hover:bg-primary-blue group-hover:text-white";
+                textClass += "text-slate-700 dark:text-slate-300 group-hover:text-primary-blue";
+              }
+
+              return (
+                <button key={i} disabled={answered} onClick={() => handleOptionClick(i)} className={btnClass}>
+                  {isSelected && !answered && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary-blue/10 to-transparent pointer-events-none opacity-50"></div>
+                  )}
+                  <span className={iconClass}>{String.fromCharCode(64 + (i + 1))}</span>
+                  <span className={textClass}>{opt}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {showCorrectAnswer && (
+            <div className={`mt-2 w-full p-4 rounded-xl border-l-4 border-red-500 bg-red-500/10 animate-fade-in z-10`}>
+              <p className="font-bold mb-1 text-red-600 dark:text-red-400">{t('games.trivia.incorrect')}</p>
+              <p className="text-sm opacity-90 text-slate-700 dark:text-slate-300">
+                {t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current?.options[idx]).join(', ')}</span>
+              </p>
+            </div>
+          )}
+
+          <div className="flex w-full justify-between pt-6 border-t border-slate-200 dark:border-slate-800 mt-2 z-10 items-center gap-4">
+            {isMultipleAnswer && !answered ? (
+              <button
+                onClick={() => submitAnswer()}
+                disabled={selectedAnswers.length === 0}
+                className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-lg transition-all ${selectedAnswers.length === 0 ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed' : 'bg-primary-blue hover:bg-primary-blue/80 text-white active:scale-95 shadow-lg shadow-primary-blue/20'}`}
+              >
+                <MdCatchingPokemon className={selectedAnswers.length > 0 ? "animate-spin-slow" : ""} />
+                {t('games.trivia.submitAnswer')}
+              </button>
+            ) : <div />}
+
+            <button
+              onClick={nextQuestion}
+              disabled={!answered}
+              className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-lg uppercase tracking-wide transition-all ml-auto ${!answered ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 border border-slate-300 dark:border-slate-600 cursor-not-allowed opacity-50' : 'bg-primary-blue hover:bg-primary-blue/80 text-white shadow-lg shadow-primary-blue/20 active:scale-95'}`}
+            >
+              Siguiente
+              <MdArrowForward className="text-xl" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderStandardUI = () => (
     <div className="flex flex-col gap-8 mt-10 md:mt-16 animate-fade-in">
       {feedback && (
@@ -1540,7 +1814,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
         <div className={gameMode === 'timed' ? '' : 'md:col-span-3'}>
           {gameMode === 'untimed' ? (
             /* --- VISTA MODO SIN TIEMPO (UNTIMED) --- */
-            <div className="flex flex-col gap-6 w-full relative animate-fade-in text-slate-900 dark:text-slate-100">
+            <div className="flex flex-col gap-4 w-full relative animate-fade-in text-slate-900 dark:text-slate-100 -mt-6 md:-mt-12">
               <div className="bg-primary-blue/5 backdrop-blur-md border border-primary-blue/10 rounded-2xl p-6 border-l-4 border-l-primary-blue shadow-lg">
                 <div className="flex justify-between items-start mb-3">
                   <div>
@@ -1822,22 +2096,18 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
           </div>
         ) : category === 'shurahiwa' ? (
           /* --- DISEÑO DE COLUMNAS PARA SHURAHIWA --- */
-          <div className="animate-fade-in w-full">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 md:pb-10">
             {renderGameHeader()}
-
-            <div className="mt-8 flex flex-col lg:flex-row gap-8 items-start">
-
-              {/* ÁREA DE JUEGO (Se expande horizontalmente) */}
+            <div className="flex flex-col lg:flex-row gap-8 mt-16 md:mt-20">
+              {/* Contenedor del Juego */}
               <div className="flex-1 w-full min-w-0">
                 <div className="bg-white dark:bg-zinc-900/40 rounded-[2.5rem] p-4 md:p-10 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
                   {/* Renderizamos el modo actual de Shurahiwa */}
                   {gameMode === 'chaos' ? renderChaosMode() :
                     gameMode === 'insane' ? renderInsaneMode() :
-                      renderStandardUI()}
+                      gameMode === 'untimed' ? renderShurahiwaUntimed() : renderShurahiwaTimed()}
                 </div>
               </div>
-
-              {/* RANKING (Fijo a la derecha en PC) */}
               <aside className="w-full lg:w-80 shrink-0 lg:sticky lg:top-24">
                 <Leaderboard
                   game="trivia"
