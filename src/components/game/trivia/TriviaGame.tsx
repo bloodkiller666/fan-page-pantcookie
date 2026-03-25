@@ -1466,20 +1466,67 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     </>
   );
 
+  const renderSessionStats = () => {
+    const total = timedStats.correct + timedStats.incorrect;
+    const precision = total === 0 ? 0 : Math.round((timedStats.correct / total) * 100);
+    const isTimed = gameMode === 'timed';
+    const accentColor = isTimed ? 'text-[#ff007f]' : 'text-primary-blue';
+    const bgGradient = isTimed
+      ? 'from-[#ff007f]/10 border-[#ff007f]/20'
+      : 'from-primary-blue/10 border-primary-blue/20';
+
+    return (
+      <div className={`bg-gradient-to-br ${bgGradient} to-transparent border rounded-2xl p-5 animate-fade-in shadow-sm`}>
+        <h4 className={`text-[10px] font-black uppercase ${accentColor} mb-3 tracking-widest flex items-center gap-2`}>
+          <MdLeaderboard className="text-sm" />
+          Tus Estadísticas
+        </h4>
+
+        <div className="space-y-3">
+          <div className="flex justify-between items-center text-xs font-bold italic group">
+            <span className="opacity-60 group-hover:opacity-100 transition-opacity">Racha:</span>
+            <span className={`text-sm ${accentColor} flex items-center gap-1`}>
+              {timedStats.streak} <MdWhatshot className={timedStats.streak > 0 ? 'animate-pulse' : 'opacity-20'} />
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center text-xs font-bold italic group">
+            <span className="opacity-60 group-hover:opacity-100 transition-opacity">Correctas:</span>
+            <span className="text-sm text-green-500">{timedStats.correct}</span>
+          </div>
+
+          <div className="flex justify-between items-center text-xs font-bold italic group">
+            <span className="opacity-60 group-hover:opacity-100 transition-opacity">Incorrectas:</span>
+            <span className="text-sm text-red-500">{timedStats.incorrect}</span>
+          </div>
+
+          <div className="flex justify-between items-center text-xs font-bold italic group pt-2 border-t border-black/5 dark:border-white/5">
+            <span className="opacity-60 group-hover:opacity-100 transition-opacity">Precisión:</span>
+            <div className="flex flex-col items-end">
+              <span className={`text-sm font-black ${precision > 70 ? 'text-green-500' : precision > 40 ? 'text-orange-500' : 'text-red-500'}`}>
+                {precision}%
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Mini barra de precisión visual */}
+        <div className="mt-3 h-1 w-full bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
+          <div
+            className={`h-full transition-all duration-1000 ${precision > 70 ? 'bg-green-500' : precision > 40 ? 'bg-orange-500' : 'bg-red-500'}`}
+            style={{ width: `${precision}%` }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+
   const renderShurahiwaTimed = () => {
     const current = questions[index];
     return (
       <div className="flex flex-col gap-4 w-full relative animate-fade-in -mt-6 md:-mt-10">
-        {feedback && (
-          <div
-            className={`absolute top-[50%] left-1/3 -translate-x-1/2 -translate-y-1/2 z-[80] 
-          text-2xl md:text-3xl font-black italic tracking-tighter border-4 border-black 
-          p-4 md:p-2 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-4 ring-[#FF007F]/10 animate-fade-in
-          ${feedback.type === 'correct' ? 'text-[#FF007F]' : 'text-gray-500'}`}
-          >
-            {feedback.text}
-          </div>
-        )}
+
         {/* Header Compacto con Cronómetro Rosa */}
         <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-zinc-200 dark:border-zinc-800 rounded-[2rem] p-5 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-4 bg-zinc-100/50 dark:bg-zinc-800/50 px-5 py-2 rounded-2xl border border-zinc-200/50 dark:border-zinc-700/50">
@@ -1599,16 +1646,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     const current = questions[index];
     return (
       <div className="flex flex-col gap-4 w-full relative animate-fade-in -mt-6 md:-mt-10">
-        {feedback && (
-          <div
-            className={`absolute top-[50%] left-1/3 -translate-x-1/2 -translate-y-1/2 z-[80] 
-          text-2xl md:text-3xl font-black italic tracking-tighter border-4 border-black 
-          p-4 md:p-2 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-4 ring-primary-blue/10 animate-fade-in
-          ${feedback.type === 'correct' ? 'text-primary-blue' : 'text-gray-500'}`}
-          >
-            {feedback.text}
-          </div>
-        )}
+
         <div className="bg-primary-blue/5 backdrop-blur-md border border-primary-blue/10 rounded-2xl p-6 border-l-4 border-l-primary-blue shadow-lg">
           <div className="flex justify-between items-start mb-3">
             <div>
@@ -1732,221 +1770,263 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     );
   };
 
-  const renderStandardUI = () => (
-    <div className="flex flex-col gap-8 mt-10 md:mt-16 animate-fade-in">
-      {feedback && (
-        <div
-          className={`absolute top-[50%] left-1/3 -translate-x-1/2 -translate-y-1/2 z-[80] 
-        text-2xl md:text-3xl font-black italic tracking-tighter border-4 border-black 
-        p-4 md:p-2 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ring-4 ring-primary-pink/10 animate-fade-in
-        ${feedback.type === 'correct' ? 'text-primary-pink' : 'text-gray-500'}`}
-        >
-          {feedback.text}
-        </div>
-      )}
+  const renderStandardUI = () => {
+    const isPantcookie = category === null || category === 'pantcookie';
 
-      {/* Timed mode: 3-column grid (stats | game | ranking); others: game + ranking */}
-      <div className={`grid grid-cols-1 gap-8 ${gameMode === 'timed'
-        ? 'md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)]'
-        : 'md:grid-cols-3'
-        }`}>
-        {/* LEFT SIDEBAR: For timed mode, show stats; otherwise just spacer */}
-        {gameMode === 'timed' && (
-          <div className="hidden md:flex flex-col gap-4 sticky top-4">
-            <div className="flex flex-col p-4 bg-[#FF007F]/10 dark:bg-[#FF007F]/5 rounded-xl border-2 border-[#FF007F]/30 backdrop-blur-md shadow-[0_0_15px_rgba(255,0,127,0.1)]">
-              <h2 className="text-[#FF007F] text-sm font-black uppercase tracking-tighter italic neon-text-pink">Modo Con Tiempo</h2>
-              <p className="text-zinc-500 dark:text-zinc-400 text-[10px] font-bold uppercase tracking-widest">Trivia Pro Challenge</p>
-            </div>
+    if (isPantcookie && (gameMode === 'untimed' || gameMode === 'timed')) {
+      const current = questions[index];
+      return (
+        <div className="flex flex-col gap-8 mt-10 md:mt-16 animate-fade-in text-slate-900 dark:text-slate-100">
 
-            <div className="bg-white/80 dark:bg-[#101e22]/80 p-5 rounded-2xl border-2 border-[#0db9f2]/20 shadow-[0_0_30px_rgba(13,185,242,0.05)] backdrop-blur-xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#0db9f2]/5 rounded-full blur-3xl -z-0 group-hover:bg-[#0db9f2]/10 transition-colors" />
-              <h3 className="relative z-10 font-black text-xs mb-4 flex items-center gap-2 text-slate-800 dark:text-white uppercase italic tracking-widest">
-                <MdLeaderboard className="text-[#0db9f2] text-lg" />
-                Tus Estadísticas
-              </h3>
-              <div className="flex flex-col gap-3">
-                <div className="flex justify-between items-center p-3 rounded-xl bg-slate-200/60 dark:bg-slate-900/60">
-                  <span className="text-sm text-slate-600 dark:text-slate-300">Puntos</span>
-                  <span className="text-lg font-bold text-[#0db9f2] relative">
-                    {score}
-                    {scoreChange !== null && (
-                      <span className={`absolute -top-4 right-0 text-xs font-bold ${scoreChange > 0 ? 'text-green-500' : scoreChange < 0 ? 'text-red-500' : 'text-slate-400'
-                        }`}>
-                        {scoreChange > 0 ? `+${scoreChange}` : scoreChange}
-                      </span>
-                    )}
-                  </span>
-                </div>
 
-                <div className="flex justify-between items-center p-3 rounded-xl bg-slate-200/60 dark:bg-slate-900/60">
-                  <span className="text-sm text-slate-600 dark:text-slate-300">Racha</span>
-                  <div className="flex items-center gap-1">
-                    <span className="text-lg font-bold text-orange-500">{timedStats.streak}</span>
-                    <MdStar className="text-orange-500" />
-                  </div>
-                </div>
+          <div className="max-w-7xl mx-auto animate-fade-in mt-8">
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* COLUMNA IZQUIERDA: ÁREA DE JUEGO */}
+              <div className="flex-1 flex flex-col gap-6">
 
-                <div className="flex justify-between items-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
-                  <span className="text-sm text-slate-600 dark:text-slate-300">Correctas</span>
-                  <span className="text-lg font-bold text-green-500">{timedStats.correct}</span>
-                </div>
+                {/* HEADER TIPO "CON TIEMPO" O "SIN TIEMPO" */}
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-700 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary-blue/5 rounded-full blur-3xl -z-0 pointer-events-none" />
 
-                <div className="flex justify-between items-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
-                  <span className="text-sm text-slate-600 dark:text-slate-300">Incorrectas</span>
-                  <span className="text-lg font-bold text-red-500">{timedStats.incorrect}</span>
-                </div>
-
-                <div className="flex justify-between items-center p-3 rounded-xl bg-slate-200/60 dark:bg-slate-900/60">
-                  <span className="text-sm text-slate-600 dark:text-slate-300">Precisión</span>
-                  <span className="text-lg font-bold text-amber-500">
-                    {timedStats.correct + timedStats.incorrect === 0
-                      ? '0%'
-                      : `${Math.round((timedStats.correct / (timedStats.correct + timedStats.incorrect)) * 100)}%`
-                    }
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* GAME AREA */}
-        <div className={gameMode === 'timed' ? '' : 'md:col-span-3'}>
-          {gameMode === 'untimed' ? (
-            /* --- VISTA MODO SIN TIEMPO (UNTIMED) --- */
-            <div className="flex flex-col gap-4 w-full relative animate-fade-in text-slate-900 dark:text-slate-100 -mt-6 md:-mt-12">
-              <div className="bg-primary-blue/5 backdrop-blur-md border border-primary-blue/10 rounded-2xl p-6 border-l-4 border-l-primary-blue shadow-lg">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h1 className="text-primary-blue font-bold uppercase tracking-wider text-[10px] md:text-xs">Modo Activo</h1>
-                    <h2 className="text-2xl font-bold dark:text-white mb-2">Modo Sin Tiempo</h2>
-                  </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <div className="text-lg font-bold text-primary-blue border border-primary-blue/20 bg-primary-blue/10 px-4 py-2 rounded-lg flex items-center shadow-sm relative overflow-hidden">
-                      <div className="flex flex-col">
-                        <span className="text-[10px] md:text-[9px] uppercase tracking-widest font-black opacity-60 leading-none mb-1">
-                          {t('common.score')}
-                        </span>
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-2xl md:text-3xl font-black leading-none text-primary-blue dark:text-white italic tracking-tighter">
-                            {score}
-                          </span>
-                          <span className="text-xs md:text-sm font-bold opacity-80 leading-none italic uppercase">
-                            PTS
-                          </span>
-                        </div>
+                  <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => setCategory(null)}
+                        className="p-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-primary-blue/20 rounded-xl transition-all border border-slate-200 dark:border-slate-600 group"
+                      >
+                        <MdArrowBack className="text-xl text-slate-600 dark:text-primary-blue group-hover:-translate-x-1 transition-transform" />
+                      </button>
+                      <div>
+                        <h1 className="text-primary-blue font-black uppercase tracking-tighter text-xs leading-none mb-1">Categoría: {category || 'Pantcookie'}</h1>
+                        <h2 className={`text-2xl font-black italic tracking-tighter ${gameMode === 'timed' ? 'text-[#ff007f]' : 'dark:text-white'}`}>
+                          {gameMode === 'timed' ? 'MODO CON TIEMPO' : 'MODO SIN TIEMPO'}
+                        </h2>
                       </div>
+                    </div>
 
-                      {scoreChange !== null && (
-                        <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2">
-                          <ScoreIndicator points={scoreChange} onComplete={() => setScoreChange(null)} />
+                    <div className="flex items-center gap-6">
+                      {gameMode === 'timed' && (
+                        <div className="text-center bg-[#ff007f]/10 px-4 py-2 rounded-xl">
+                          <p className="text-[10px] font-bold text-[#ff007f] uppercase tracking-widest leading-none mb-1">Tiempo</p>
+                          <p className={`text-2xl font-black leading-none ${remaining < 5 ? 'text-red-500 animate-pulse' : 'text-[#ff007f]'}`}>
+                            {remaining}s
+                          </p>
                         </div>
                       )}
+
+                      <div className="text-right">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Pregunta</p>
+                        <p className="text-xl font-black text-slate-800 dark:text-white leading-none">
+                          {String(index + 1).padStart(2, '0')}<span className="text-slate-300 dark:text-slate-600 mx-1">/</span>{TOTAL_QUESTIONS}
+                        </p>
+                      </div>
+
+                      {/* Score Box Premium */}
+                      <div className="relative">
+                        <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-2 rounded-xl flex flex-col items-center shadow-lg min-w-[100px] border border-white/10 dark:border-black/5">
+                          <span className="text-[9px] font-black uppercase opacity-60 leading-none mb-1">Puntos</span>
+                          <span className="text-2xl font-black italic leading-none tracking-tighter">{score}</span>
+                        </div>
+                        {scoreChange !== null && (
+                          <div className="absolute -left-12 top-1/2 -translate-y-1/2 z-20">
+                            <ScoreIndicator points={scoreChange} onComplete={() => setScoreChange(null)} />
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <span className="text-sm font-bold bg-primary-blue/20 text-primary-blue px-3 py-1 rounded-full shadow-sm">
-                      Pregunta {index + 1}/{TOTAL_QUESTIONS}
+                  </div>
+
+                  {/* Barra de progreso / tiempo */}
+                  <div className="mt-6 h-2 w-full bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden border border-slate-200 dark:border-slate-700">
+                    {gameMode === 'timed' ? (
+                      <div
+                        className={`h-full transition-all duration-1000 ${remaining < 5 ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : 'bg-[#ff007f] shadow-[0_0_10px_#ff007f]'}`}
+                        style={{ width: `${(remaining / TIMER_PER_QUESTION) * 100}%` }}
+                      />
+                    ) : (
+                      <div
+                        className="h-full bg-primary-blue shadow-[0_0_10px_#0db9f2] transition-all duration-700"
+                        style={{ width: `${((index + 1) / TOTAL_QUESTIONS) * 100}%` }}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* CONTENEDOR DE LA PREGUNTA */}
+                <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 md:p-12 border border-gray-100 dark:border-gray-700 relative overflow-hidden flex-1 flex flex-col justify-center min-h-[400px]">
+                  <div className={`absolute -top-24 -left-24 w-64 h-64 rounded-full blur-[100px] pointer-events-none ${gameMode === 'timed' ? 'bg-[#ff007f]/5' : 'bg-primary-blue/5'}`} />
+
+                  <div className="relative z-10 flex flex-col items-center gap-10">
+                    <h3 className="text-2xl md:text-4xl font-bold text-center leading-tight max-w-3xl text-slate-800 dark:text-white">
+                      {current?.question}
+                    </h3>
+
+                    {isMultipleAnswer && !answered && (
+                      <div className="bg-primary-pink/10 text-primary-pink px-4 py-2 rounded-xl border border-primary-pink/20 animate-pulse text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
+                        <MdPriorityHigh className="text-lg" /> Selecciona varias respuestas
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
+                      {current?.options.map((opt, i) => {
+                        const isCorrectOption = correctAnswerIndexes.includes(i);
+                        const isSelected = selectedAnswers.includes(i);
+
+                        let cls = `bg-white dark:bg-gray-900 border-slate-200 dark:border-slate-700 hover:shadow-xl ${gameMode === 'timed' ? 'hover:border-[#ff007f]/50' : 'hover:border-primary-blue/50'}`;
+                        if (answered) {
+                          if (isCorrectOption) cls = "bg-green-500/10 border-green-500 text-green-700 dark:text-green-400";
+                          else if (isSelected) cls = "bg-red-500/10 border-red-500 text-red-700 dark:text-red-400";
+                          else cls = "opacity-40 border-slate-100 dark:border-slate-800 grayscale-[0.5]";
+                        } else if (isSelected) {
+                          cls = gameMode === 'timed'
+                            ? "bg-[#ff007f]/5 border-[#ff007f] text-[#ff007f] ring-2 ring-[#ff007f]/10 scale-[1.02]"
+                            : "bg-primary-blue/5 border-primary-blue text-primary-blue ring-2 ring-primary-blue/10 scale-[1.02]";
+                        }
+
+                        return (
+                          <button
+                            key={i}
+                            disabled={answered}
+                            onClick={() => handleOptionClick(i)}
+                            className={`w-full p-5 rounded-2xl border-4 font-black uppercase tracking-wide transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] active:translate-y-1 active:shadow-none flex items-center gap-4 ${cls}`}
+                          >
+                            <div className={`w-10 h-10 shrink-0 rounded-xl flex items-center justify-center text-lg border-4 ${isSelected || (answered && isCorrectOption) ? 'border-black bg-white text-black' : 'border-slate-300 bg-slate-100 text-slate-400'}`}>
+                              {String.fromCharCode(65 + i)}
+                            </div>
+                            <span className="text-left flex-1 leading-snug">{opt}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* FEEDBACK ERROR (SOLO UNO) */}
+                    {showCorrectAnswer && (
+                      <div className="w-full p-5 rounded-2xl border-l-8 border-red-500 bg-red-500/10 animate-fade-in">
+                        <p className="font-black text-red-600 uppercase text-[10px] tracking-widest mb-1">Respuesta incorrecta</p>
+                        <p className="text-slate-700 dark:text-slate-300 font-bold">
+                          La correcta era: <span className="underline decoration-red-500/40 font-black">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span>
+                        </p>
+                      </div>
+                    )}
+
+                    {/* BOTONES DE NAVEGACIÓN */}
+                    <div className="flex w-full justify-between items-center mt-4 gap-4">
+                      <div className="flex-1">
+                        {isMultipleAnswer && !answered && (
+                          <button onClick={() => submitAnswer()} disabled={selectedAnswers.length === 0} className={`flex items-center gap-2 px-8 py-4 ${gameMode === 'timed' ? 'bg-[#ff007f] shadow-[0_6px_0_0_#d10068]' : 'bg-primary-blue shadow-[0_6px_0_0_#0a96c4]'} text-white rounded-2xl font-black uppercase tracking-tighter hover:brightness-110 active:translate-y-1 active:shadow-none transition-all disabled:opacity-30`}>
+                            <MdCatchingPokemon className="text-2xl animate-spin-slow" />
+                            Enviar Selección
+                          </button>
+                        )}
+                      </div>
+
+                      <button
+                        onClick={nextQuestion}
+                        disabled={!answered}
+                        className={`flex items-center gap-3 px-10 py-4 rounded-2xl font-black uppercase tracking-tighter transition-all ${!answered
+                          ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed border border-slate-300 dark:border-slate-600'
+                          : (gameMode === 'timed' ? 'bg-[#ff007f] text-white hover:brightness-110 shadow-[0_6px_0_0_#d10068]' : 'bg-primary-pink text-white hover:brightness-110 shadow-[0_6px_0_0_#d10068]') + ' active:translate-y-1 active:shadow-none animate-pulse-subtle'
+                          }`}
+                      >
+                        {index + 1 === TOTAL_QUESTIONS ? 'Finalizar' : 'Siguiente'}
+                        <MdArrowForward className="text-xl" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* COLUMNA DERECHA: RANKING */}
+              <aside className="w-full lg:w-80 shrink-0 flex flex-col gap-6">
+                <Leaderboard
+                  game="trivia"
+                  category={category || "pantcookie"}
+                  mode={gameMode || "untimed"}
+                  currentPlayer={playerName}
+                />
+
+                {renderSessionStats()}
+              </aside>
+
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // ORIGINAL ENTIRE RENDERSTANDARDUI FOR EVERYTHING ELSE
+    const current = questions[index];
+    return (
+      <div className="flex flex-col gap-8 mt-10 md:mt-16 animate-fade-in">
+
+
+        {/* Timed mode: 3-column grid (stats | game | ranking); others: game + ranking */}
+        <div className={`grid grid-cols-1 gap-8 ${gameMode === 'timed'
+          ? 'md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)]'
+          : 'md:grid-cols-3'
+          }`}>
+          {/* LEFT SIDEBAR: For timed mode, show stats; otherwise just spacer */}
+          {gameMode === 'timed' && (
+            <div className="hidden md:flex flex-col gap-4 sticky top-4">
+              <div className="flex flex-col p-4 bg-[#FF007F]/10 dark:bg-[#FF007F]/5 rounded-xl border-2 border-[#FF007F]/30 backdrop-blur-md shadow-[0_0_15px_rgba(255,0,127,0.1)]">
+                <h2 className="text-[#FF007F] text-sm font-black uppercase tracking-tighter italic neon-text-pink">Modo Con Tiempo</h2>
+                <p className="text-zinc-500 dark:text-zinc-400 text-[10px] font-bold uppercase tracking-widest">Trivia Pro Challenge</p>
+              </div>
+
+              <div className="bg-white/80 dark:bg-[#101e22]/80 p-5 rounded-2xl border-2 border-[#0db9f2]/20 shadow-[0_0_30px_rgba(13,185,242,0.05)] backdrop-blur-xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#0db9f2]/5 rounded-full blur-3xl -z-0 group-hover:bg-[#0db9f2]/10 transition-colors" />
+                <h3 className="relative z-10 font-black text-xs mb-4 flex items-center gap-2 text-slate-800 dark:text-white uppercase italic tracking-widest">
+                  <MdLeaderboard className="text-[#0db9f2] text-lg" />
+                  Tus Estadísticas
+                </h3>
+                <div className="flex flex-col gap-3">
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-slate-200/60 dark:bg-slate-900/60">
+                    <span className="text-sm text-slate-600 dark:text-slate-300">Puntos</span>
+                    <span className="text-lg font-bold text-[#0db9f2] relative">
+                      {score}
+                      {scoreChange !== null && (
+                        <span className={`absolute -top-4 right-0 text-xs font-bold ${scoreChange > 0 ? 'text-green-500' : scoreChange < 0 ? 'text-red-500' : 'text-slate-400'
+                          }`}>
+                          {scoreChange > 0 ? `+${scoreChange}` : scoreChange}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-slate-200/60 dark:bg-slate-900/60">
+                    <span className="text-sm text-slate-600 dark:text-slate-300">Racha</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-lg font-bold text-orange-500">{timedStats.streak}</span>
+                      <MdStar className="text-orange-500" />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-green-500/10 border border-green-500/20">
+                    <span className="text-sm text-slate-600 dark:text-slate-300">Correctas</span>
+                    <span className="text-lg font-bold text-green-500">{timedStats.correct}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+                    <span className="text-sm text-slate-600 dark:text-slate-300">Incorrectas</span>
+                    <span className="text-lg font-bold text-red-500">{timedStats.incorrect}</span>
+                  </div>
+
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-slate-200/60 dark:bg-slate-900/60">
+                    <span className="text-sm text-slate-600 dark:text-slate-300">Precisión</span>
+                    <span className="text-lg font-bold text-amber-500">
+                      {timedStats.correct + timedStats.incorrect === 0
+                        ? '0%'
+                        : `${Math.round((timedStats.correct / (timedStats.correct + timedStats.incorrect)) * 100)}%`
+                      }
                     </span>
                   </div>
                 </div>
-                <div className="w-full bg-slate-200 dark:bg-slate-800 h-3 rounded-full overflow-hidden mt-4 shadow-inner">
-                  <div
-                    className="bg-primary-blue h-full shadow-[0_0_15px_rgba(13,185,242,0.5)] transition-all duration-500"
-                    style={{ width: `${(index / TOTAL_QUESTIONS) * 100}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              <div className="flex-1 flex flex-col justify-center items-center py-10 px-6 gap-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl transition-colors border border-gray-100 dark:border-gray-700 relative overflow-hidden">
-                <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary-blue/5 rounded-full blur-[100px] pointer-events-none"></div>
-
-                <h2 className="text-3xl md:text-4xl font-bold text-center leading-tight max-w-2xl text-slate-900 dark:text-white z-10">
-                  {current?.question}
-                </h2>
-
-                {isMultipleAnswer && !answered && (
-                  <p className="text-sm text-primary-pink font-semibold mt-1 animate-pulse z-10">
-                    ({t('games.options.selectMultiple')})
-                  </p>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl z-10">
-                  {current?.options.map((opt, i) => {
-                    const isCorrectOption = correctAnswerIndexes.includes(i);
-                    const isSelected = selectedAnswers.includes(i);
-                    let btnClass = "group relative flex items-center gap-4 p-5 rounded-xl border-2 transition-all text-left overflow-hidden ";
-                    let iconClass = "flex items-center justify-center w-10 h-10 rounded-lg font-bold transition-colors z-10 ";
-                    let textClass = "text-lg font-semibold transition-colors z-10 relative ";
-
-                    if (answered) {
-                      if (isCorrectOption) {
-                        btnClass += "border-green-500 bg-green-500/10";
-                        iconClass += "bg-green-500 text-white shadow-lg shadow-green-500/30";
-                        textClass += "text-green-700 dark:text-green-400";
-                      } else if (isSelected && !isCorrectOption) {
-                        btnClass += "border-red-500 bg-red-500/10";
-                        iconClass += "bg-red-500 text-white shadow-lg shadow-red-500/30";
-                        textClass += "text-red-700 dark:text-red-400";
-                      } else {
-                        btnClass += "border-gray-200 dark:border-gray-800 bg-transparent opacity-50";
-                        iconClass += "bg-gray-200 dark:bg-gray-800 text-gray-500";
-                        textClass += "text-gray-500";
-                      }
-                    } else if (isSelected) {
-                      btnClass += "border-primary-blue bg-primary-blue/10 shadow-[0_0_20px_rgba(13,185,242,0.1)] scale-[1.02]";
-                      iconClass += "bg-primary-blue text-white shadow-lg shadow-primary-blue/40";
-                      textClass += "text-primary-blue";
-                    } else {
-                      btnClass += "border-primary-blue/20 bg-slate-50 dark:bg-slate-800/40 hover:border-primary-blue hover:bg-primary-blue/5 active:scale-[0.98]";
-                      iconClass += "bg-primary-blue/10 text-primary-blue group-hover:bg-primary-blue group-hover:text-white";
-                      textClass += "text-slate-700 dark:text-slate-300 group-hover:text-primary-blue";
-                    }
-
-                    return (
-                      <button key={i} disabled={answered} onClick={() => handleOptionClick(i)} className={btnClass}>
-                        {isSelected && !answered && (
-                          <div className="absolute inset-0 bg-gradient-to-r from-primary-blue/10 to-transparent pointer-events-none opacity-50"></div>
-                        )}
-                        <span className={iconClass}>{String.fromCharCode(64 + (i + 1))}</span>
-                        <span className={textClass}>{opt}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {showCorrectAnswer && (
-                  <div className={`mt-2 w-full max-w-2xl p-4 rounded-xl border-l-4 border-red-500 bg-red-500/10 animate-fade-in z-10`}>
-                    <p className="font-bold mb-1 text-red-600 dark:text-red-400">{t('games.trivia.incorrect')}</p>
-                    <p className="text-sm opacity-90 text-slate-700 dark:text-slate-300">
-                      {t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span>
-                    </p>
-                  </div>
-                )}
-
-                <div className="flex w-full max-w-2xl justify-between pt-6 border-t border-slate-200 dark:border-slate-800 mt-2 z-10 items-center gap-4">
-                  {isMultipleAnswer && !answered ? (
-                    <button
-                      onClick={() => submitAnswer()}
-                      disabled={selectedAnswers.length === 0}
-                      className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-lg transition-all ${selectedAnswers.length === 0 ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed' : 'bg-primary-blue hover:bg-primary-blue/80 text-white active:scale-95 shadow-lg shadow-primary-blue/20'}`}
-                    >
-                      <MdCatchingPokemon className={selectedAnswers.length > 0 ? "animate-spin-slow" : ""} />
-                      {t('games.trivia.submitAnswer')}
-                    </button>
-                  ) : <div />}
-
-                  <button
-                    onClick={nextQuestion}
-                    disabled={!answered}
-                    className={`flex items-center gap-2 px-8 py-3 rounded-xl font-bold text-lg uppercase tracking-wide transition-all ml-auto ${!answered ? 'bg-slate-200 dark:bg-slate-700 text-slate-400 border border-slate-300 dark:border-slate-600 cursor-not-allowed opacity-50' : 'bg-primary-blue hover:bg-primary-blue/80 text-white shadow-lg shadow-primary-blue/20 active:scale-95'}`}
-                  >
-                    Siguiente
-                    <MdArrowForward className="text-xl" />
-                  </button>
-                </div>
               </div>
             </div>
-          ) : (
-            /* --- VISTA RESTO DE MODOS (TIMED, INSANE, CHAOS) --- */
+          )}
+
+          {/* GAME AREA */}
+          <div className={gameMode === 'timed' ? '' : 'md:col-span-3'}>
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-colors border border-gray-100 dark:border-gray-700 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary-pink/5 rounded-full blur-3xl -z-0 pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-blue/5 rounded-full blur-3xl -z-0 pointer-events-none" />
@@ -2054,7 +2134,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                 {showCorrectAnswer && (
                   <div className={`mb-6 p-4 rounded-xl border-l-4 ${selectedAnswers.length === 0 && gameMode === 'timed' ? 'bg-yellow-500/10 border-yellow-500' : 'bg-red-500/10 border-red-500'} animate-fade-in`}>
                     <p className="font-bold mb-1">{selectedAnswers.length === 0 && gameMode === 'timed' ? t('games.trivia.timeUp') : t('games.trivia.incorrect')}</p>
-                    <p className="text-sm opacity-90">{t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span></p>
+                    <p className="text-sm opacity-90">{t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current?.options[idx]).join(', ')}</span></p>
                   </div>
                 )}
 
@@ -2071,11 +2151,11 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-background-light dark:bg-[#0a0a0c] text-slate-900 dark:text-slate-100 selection:bg-primary-blue/30 overflow-x-hidden">
@@ -2115,6 +2195,10 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                   mode={gameMode || undefined}
                   currentPlayer={playerName}
                 />
+                
+                <div className="mt-6">
+                  {renderSessionStats()}
+                </div>
               </aside>
             </div>
 

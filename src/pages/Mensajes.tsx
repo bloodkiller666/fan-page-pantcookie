@@ -340,8 +340,20 @@ const MensajesContent = () => {
 
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-pattern dark:bg-pattern pt-20 pb-10">
-      <div className="container mx-auto px-4">
+    <div ref={containerRef} className="min-h-screen pt-20 pb-10 relative overflow-hidden">
+
+      {/* Fondo de Pokébolas Adaptable */}
+      <div
+        className="absolute inset-0 z-0 opacity-[0.04] dark:opacity-[0.25]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg fill='currentColor' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M450.46,256.09C449.35,175.17,399.81,102.71,324,73.79,247.59,44.67,157.49,69,105.82,132.13,54.4,195,46.61,285.58,88.49,355.68c41.8,69.95,123.74,106,203.55,91.63,91-16.37,156.14-98.12,158.35-189.14A20.16,20.16,0,0,0,450.46,256.09ZM119.05,174.38C152.76,118,220.23,87,285,99.43c69.4,13.29,120.43,70.47,128.83,139H318.41c-8.26-27.36-32-48-62.62-48-29.65,0-55.15,20.65-63.11,48H97.74A158,158,0,0,1,119.05,174.38ZM286.13,256.1c-2,38.75-60.67,39.4-60.67,0S284.17,217.33,286.13,256.1Zm24,149.79C246.85,428.58,175,408.74,132.3,356.82a157.53,157.53,0,0,1-34.57-83H192.6c7.91,27.39,33.7,48,63.19,48,30.67,0,54.36-20.68,62.62-48h95.45C406.61,333,367.54,385.32,310.14,405.89Z'/%3E%3C/svg%3E")`,
+          backgroundSize: '100px 100px',
+          backgroundRepeat: 'repeat',
+          color: 'gray' // Esto define el 'currentColor' del fill del SVG
+        }}
+      />
+
+      <div className="container mx-auto px-4 relative z-10">
 
         {/* Header & Tabs */}
         <div className="text-center mb-10">
@@ -520,9 +532,9 @@ const MensajesContent = () => {
                             <button
                               type="button"
                               onClick={() => { setUsername(''); setCountry(''); setMessageText(''); setSelectedImage(null); setImagePreview(null); setErrors({}); }}
-                              className="w-12 h-12 bg-gray-300 rounded-full border-4 border-black flex items-center justify-center btn-gb-press pixel-shadow mb-1"
+                              className="w-16 h-16 bg-gray-300 rounded-full border-4 border-black flex items-center justify-center btn-gb-press pixel-shadow mb-1"
                             >
-                              <span className="font-pixel text-black text-xs">B</span>
+                              <span className="font-pixel text-black text-ls">B</span>
                             </button>
                             <p className="font-pixel text-[7px] text-black">RESET</p>
                           </div>
@@ -571,7 +583,7 @@ const MensajesContent = () => {
 
           {/* READ MODE — Draggable Horizontal Carousel */}
           {activeTab === 'read' && (
-            <div className="relative w-full h-[70vh] flex items-center overflow-hidden rounded-2xl cursor-grab active:cursor-grabbing">
+            <div className="relative w-full h-[85vh] flex items-center overflow-hidden rounded-2xl cursor-grab active:cursor-grabbing mb-15">
               {messages.length === 0 ? (
                 <div className="text-center py-20 flex flex-col items-center text-gray-400 w-full">
                   <FaImage size={64} className="mb-4 opacity-50" />
@@ -591,8 +603,8 @@ const MensajesContent = () => {
                   </div>
 
                   {/* Counter bar */}
-                  <div className="absolute top-0 left-0 right-0 z-20 bg-[var(--poke-pink)]/10 border-b border-[var(--poke-pink)]/20 py-1.5 text-center">
-                    <p className="font-pixel text-[8px] text-[var(--poke-pink)] tracking-[0.4em] animate-pulse">
+                  <div className="absolute top-0 left-0 right-0 z-20 bg-[var(--poke-pink)]/10 border-b border-[var(--poke-pink)]/20 py-3 text-center">
+                    <p className="font-pixel text-[14px] text-[var(--poke-white)] tracking-[0.4em] animate-pulse">
                       REGISTROS DE ENTRENADORES: {messages.length}
                     </p>
                   </div>
@@ -600,7 +612,7 @@ const MensajesContent = () => {
                   {/* Draggable wrapper */}
                   <div
                     ref={cardsWrapperRef}
-                    className="flex flex-nowrap gap-8 px-[8vw] items-center will-change-transform relative z-10 pt-8"
+                    className="flex flex-nowrap gap-8 px-[8vw] items-center will-change-transform relative z-10 pt-24"
                   >
                     {messages.map((msg, index) => (
                       <div
@@ -664,21 +676,21 @@ const MensajesContent = () => {
             <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
               <FaCheckCircle className="text-green-500 text-5xl" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-2">{t('wall.successTitle')}</h3>
-            <p className="text-gray-300 mb-8">{t('wall.successDesc')}</p>
+            <h3 className="text-2xl font-bold text-white mb-2">{t('Mensaje Enviado')}</h3>
+            <p className="text-gray-300 mb-8">{t('Gracias por tu mensaje, será publicado pronto')}</p>
 
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => handleCloseSuccessModal(true)}
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-colors shadow-lg"
               >
-                {t('wall.successView')}
+                {t('Ver mensajes')}
               </button>
               <button
                 onClick={() => handleCloseSuccessModal(false)}
                 className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition-colors"
               >
-                {t('wall.successWriteAnother')}
+                {t('Escribe otro mensaje')}
               </button>
             </div>
           </div>

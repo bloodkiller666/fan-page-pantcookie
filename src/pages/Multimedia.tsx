@@ -1,10 +1,12 @@
 'use client';
-import { useEffect, useRef, useState, useMemo, Suspense } from 'react';
+import { useEffect, useState, useMemo, Suspense, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
+
 import { useLanguage } from '../context/LanguageContext';
 import Gallery from '../components/multimedia/Gallery';
 import VideoPlayer from '../components/multimedia/VideoPlayer';
@@ -47,43 +49,40 @@ const MultimediaContent = () => {
         return () => document.removeEventListener('click', handleClickOutside);
     }, []);
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            // Initial Container Fade In
-            gsap.from(containerRef.current, { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out', delay: 0.8 });
+    useGSAP(() => {
+        // Initial Container Fade In
+        gsap.from(containerRef.current, { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out', delay: 0.5 });
 
-            // Parallax Header
-            gsap.to(headerRef.current, {
-                yPercent: 50,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: 'top top',
-                    end: 'bottom top',
-                    scrub: true
-                }
-            });
+        // Parallax Header
+        gsap.to(headerRef.current, {
+            yPercent: 30,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: containerRef.current,
+                start: 'top top',
+                end: 'bottom top',
+                scrub: true
+            }
+        });
 
-            // Search Bar Scale/Fade In
-            gsap.from(searchRef.current, {
-                scale: 0.8,
-                opacity: 0,
-                duration: 0.8,
-                delay: 1.0,
-                ease: 'back.out(1.7)'
-            });
+        // Search Bar Scale/Fade In
+        gsap.from(searchRef.current, {
+            scale: 0.8,
+            opacity: 0,
+            duration: 0.8,
+            delay: 0.4,
+            ease: 'back.out(1.7)'
+        });
 
-            // Tabs Slide Up
-            gsap.from(tabsRef.current, {
-                y: 50,
-                opacity: 0,
-                duration: 0.8,
-                delay: 1.2,
-                ease: 'power3.out'
-            });
-        }, containerRef);
-        return () => ctx.revert();
-    }, []);
+        // Tabs Slide Up
+        gsap.from(tabsRef.current, {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            delay: 0.6,
+            ease: 'power3.out'
+        });
+    }, { scope: containerRef });
 
     return (
         <div ref={containerRef} className="min-h-screen bg-pattern py-20 transition-colors duration-300">
