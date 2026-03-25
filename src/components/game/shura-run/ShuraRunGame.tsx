@@ -11,6 +11,13 @@ import { MdDirectionsRun, MdSpaceBar, MdSpeed, MdBreakfastDining } from 'react-i
 export default function ShuraRunGame({ playerName }: { playerName: string }) {
     const { t } = useLanguage();
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const assetsRef = useRef({
+        avatar: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
+        tierra: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
+        nube: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
+        enemigo: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement
+    });
+    const [assetsLoaded, setAssetsLoaded] = useState(false);
     const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
@@ -21,10 +28,13 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     const [showOverwriteModal, setShowOverwriteModal] = useState(false);
     const [showRules, setShowRules] = useState(false);
     const [pendingScoreData, setPendingScoreData] = useState<{ score: number, oldScore: number } | null>(null);
-    const GRAVITY = 0.5;
-    const JUMP_FORCE = -15;
-    const INITIAL_SPEED = 3;
-    const MAX_SPEED = 15;
+
+    const CANVAS_WIDTH = 1920;
+    const CANVAS_HEIGHT = 1080;
+    const GRAVITY = 1.2;
+    const JUMP_FORCE = -25;
+    const INITIAL_SPEED = 10;
+    const MAX_SPEED = 30;
     const INITIAL_OBSTACLE_INTERVAL = 1800;
 
     // Audio Refs
@@ -38,13 +48,13 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     const isPausedRef = useRef(false);
     const scoreRef = useRef(0);
     const speedRef = useRef(INITIAL_SPEED);
-    const lastTimeRef = useRef(0);
+    const lastTimeRef = useRef<number>(0);
     const lastObstacleTimeRef = useRef(0);
     const playerRef = useRef({
-        x: 50,
-        y: 200,
-        width: 40,
-        height: 40,
+        x: 150,
+        y: 500,
+        width: 120,
+        height: 120,
         dy: 0,
         grounded: true
     });
@@ -59,6 +69,25 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     }>>([]);
 
     useEffect(() => {
+        const assets = assetsRef.current;
+        assets.avatar.src = '/images/pixil-frame-0.png';
+        assets.tierra.src = '/images/tierra.png';
+        assets.nube.src = '/images/nube.png';
+        assets.enemigo.src = '/images/enemigo-1.png';
+
+        const loadPromises = Object.values(assets).map(img => {
+            return new Promise((resolve) => {
+                if (img.complete) {
+                    resolve(true);
+                } else {
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(true);
+                }
+            });
+        });
+
+        Promise.all(loadPromises).then(() => setAssetsLoaded(true));
+
         const savedScore = localStorage.getItem('shuraRunHighScore');
         if (savedScore) setHighScore(parseInt(savedScore));
 
@@ -134,23 +163,37 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         setPendingScoreData(null);
     };
 
-    const gameLoop = useCallback((time: number) => {
-        if (!isPlayingRef.current || isPausedRef.current) return;
+    const gameLoop = useCallback((timestamp: number) => {
+        if (!isPlayingRef.current || isPausedRef.current || !assetsLoaded) return;
 
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        if (!lastTimeRef.current) lastTimeRef.current = time;
-        const deltaTime = time - lastTimeRef.current;
-        lastTimeRef.current = time;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Calcular Delta Time
+        const deltaTime = lastTimeRef.current ? (timestamp - lastTimeRef.current) / 1000 : 0;
+        lastTimeRef.current = timestamp;
 
+        // 1. LIMPIAR Y DIBUJAR CIELO
+        ctx.fillStyle = '#87CEEB';
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+        // 2. DIBUJAR NUBES (PARALLAX)
+        // La nube se mueve lentamente de derecha a izquierda
+        const cloudSpeed = speedRef.current * 0.1;
+        const cloudGap = 800;
+        for (let i = 0; i < 3; i++) {
+            const cloudX = ((timestamp * 0.02 + i * cloudGap) % (CANVAS_WIDTH + 400)) - 200;
+            ctx.drawImage(assetsRef.current.nube, CANVAS_WIDTH - cloudX, 100 + i * 50, 300, 150);
+        }
+
+        // 3. ACTUALIZAR JUGADOR (CON DELTA TIME)
         const player = playerRef.current;
-        player.dy += GRAVITY;
-        player.y += player.dy;
-        const groundLevel = canvas.height - 20;
+        player.dy += GRAVITY * deltaTime * 60;
+        player.y += player.dy * deltaTime * 60;
+
+        const groundLevel = CANVAS_HEIGHT - 140;
         if (player.y + player.height > groundLevel) {
             player.y = groundLevel - player.height;
             player.dy = 0;
@@ -159,27 +202,52 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             player.grounded = false;
         }
 
+        // 4. DIBUJAR SUELO INFINITO
+        const groundImg = assetsRef.current.tierra;
+        const groundWidth = 400; // Ajusta según el ancho real de tu tierra.png
+        const groundOffset = (timestamp * (speedRef.current * 0.05)) % groundWidth;
+
+        for (let i = 0; i <= CANVAS_WIDTH / groundWidth + 1; i++) {
+            ctx.drawImage(groundImg, (i * groundWidth) - groundOffset, groundLevel, groundWidth, 140);
+        }
+
+        // 5. ACTUALIZAR Y DIBUJAR OBSTÁCULOS
         const speedIncrease = Math.floor(scoreRef.current / 100) * 0.5;
         speedRef.current = Math.min(INITIAL_SPEED + speedIncrease, MAX_SPEED);
         const currentInterval = (INITIAL_SPEED * INITIAL_OBSTACLE_INTERVAL) / speedRef.current;
 
-        // Spawn Obstacles
-        if (time - lastObstacleTimeRef.current > currentInterval) {
+        if (timestamp - lastObstacleTimeRef.current > currentInterval) {
             const isHater = Math.random() > 0.4;
             obstaclesRef.current.push({
-                x: canvas.width,
-                y: isHater ? groundLevel - 40 : groundLevel - 40 - (Math.random() * 50),
-                width: 40,
-                height: 40,
+                x: CANVAS_WIDTH,
+                y: isHater ? groundLevel - 100 : groundLevel - 150 - (Math.random() * 200),
+                width: 100,
+                height: 100,
                 type: isHater ? 'hater' : 'ingredient',
                 markedForDeletion: false
             });
-            lastObstacleTimeRef.current = time;
+            lastObstacleTimeRef.current = timestamp;
         }
 
         obstaclesRef.current.forEach(obs => {
-            obs.x -= speedRef.current;
+            obs.x -= speedRef.current * deltaTime * 60;
 
+            // Dibujar obstáculo
+            if (obs.type === 'hater') {
+                ctx.drawImage(assetsRef.current.enemigo, obs.x, obs.y, obs.width, obs.height);
+            } else {
+                ctx.fillStyle = '#eab308';
+                ctx.beginPath();
+                ctx.arc(obs.x + obs.width / 2, obs.y + obs.height / 2, obs.width / 2.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.font = '40px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('🥞', obs.x + obs.width / 2, obs.y + obs.height / 2 + 5);
+            }
+
+            // Colisión
             if (
                 player.x < obs.x + obs.width &&
                 player.x + player.width > obs.x &&
@@ -195,64 +263,37 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                         collectSound.current.currentTime = 0;
                         collectSound.current.play().catch(() => { });
                     }
-                    scoreRef.current += 50; // Bonus score
+                    scoreRef.current += 50;
                     setScore(scoreRef.current);
                 }
             }
 
-            // Remove off-screen
+            // Eliminar y puntuar
             if (obs.x + obs.width < 0) {
                 obs.markedForDeletion = true;
                 if (obs.type === 'hater') {
-                    scoreRef.current += 10; // Score for surviving
+                    scoreRef.current += 10;
                     setScore(scoreRef.current);
                 }
             }
         });
 
         obstaclesRef.current = obstaclesRef.current.filter(obs => !obs.markedForDeletion);
-        ctx.fillStyle = '#87CEEB';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = '#4ade80';
-        ctx.fillRect(0, groundLevel, canvas.width, 20);
+        // 6. DIBUJAR AVATAR (PIXEL PERFECT)
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(assetsRef.current.avatar, player.x, player.y, player.width, player.height);
 
-        ctx.fillStyle = '#3b82f6';
-        ctx.fillRect(player.x, player.y, player.width, player.height);
-        ctx.fillStyle = 'white';
-        ctx.fillRect(player.x + 25, player.y + 10, 10, 10);
+        // Interfaz
         ctx.fillStyle = 'black';
-        ctx.fillRect(player.x + 30, player.y + 12, 4, 4);
-
-        obstaclesRef.current.forEach(obs => {
-            if (obs.type === 'hater') {
-                ctx.fillStyle = '#ef4444';
-                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-                // Angry face
-                ctx.fillStyle = 'black';
-                ctx.beginPath();
-                ctx.moveTo(obs.x + 10, obs.y + 15);
-                ctx.lineTo(obs.x + 30, obs.y + 15);
-                ctx.stroke();
-            } else {
-                ctx.fillStyle = '#eab308';
-                ctx.beginPath();
-                ctx.arc(obs.x + 20, obs.y + 20, 15, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#fff';
-                ctx.font = '20px Arial';
-                ctx.fillText('🥞', obs.x + 5, obs.y + 25);
-            }
-        });
-
-        ctx.fillStyle = 'black';
-        ctx.font = 'bold 20px Arial';
-        ctx.fillText(`${t('games.shuraRun.score')}: ${scoreRef.current}`, 20, 40);
+        ctx.font = 'bold 40px Arial';
+        ctx.textAlign = 'left';
+        ctx.fillText(`${t('games.shuraRun.score')}: ${scoreRef.current}`, 40, 60);
 
         if (isPlayingRef.current) {
             requestRef.current = requestAnimationFrame(gameLoop);
         }
-    }, [gameOver]);
+    }, [gameOver, assetsLoaded, t]);
 
     const jump = useCallback(() => {
         if (isPlayingRef.current && playerRef.current.grounded) {
@@ -287,7 +328,14 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         setScore(0);
         scoreRef.current = 0;
         speedRef.current = INITIAL_SPEED;
-        playerRef.current = { x: 50, y: 200, width: 40, height: 40, dy: 0, grounded: true };
+        playerRef.current = {
+            x: 150,
+            y: 500,
+            width: 120,
+            height: 120,
+            dy: 0,
+            grounded: true
+        };
         obstaclesRef.current = [];
 
         lastTimeRef.current = 0;
@@ -432,8 +480,8 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             >
                 <canvas
                     ref={canvasRef}
-                    width={800}
-                    height={400}
+                    width={1920}
+                    height={1080}
                     className="w-full max-w-full h-auto block bg-[#87CEEB]"
                 />
 
