@@ -18,7 +18,7 @@ const TOTAL_QUESTIONS = 20;
 
 // Constantes para los nuevos modos
 const INSANE_MODE_QUESTIONS = 20;
-const INSANE_MODE_TIMER = 11; // Segundos tras reproducir
+const INSANE_MODE_TIMER = 10; // Segundos tras reproducir
 const CHAOS_MODE_QUESTIONS = 100;
 const CHAOS_MODE_TIMER = 2400; // Segundos totales
 
@@ -590,7 +590,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
               <div className="bg-white p-1 border border-black rounded-full">
                 <MdPerson className="text-black text-xl" />
               </div>
-              <span className="font-bold text-black uppercase text-sm">
+              <span className="font-bold dark:text-white uppercase text-sm">
                 {playerName || "Invitado"}
               </span>
             </div>
@@ -2195,7 +2195,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                   mode={gameMode || undefined}
                   currentPlayer={playerName}
                 />
-                
+
                 <div className="mt-6">
                   {renderSessionStats()}
                 </div>

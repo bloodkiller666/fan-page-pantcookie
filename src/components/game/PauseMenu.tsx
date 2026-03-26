@@ -16,8 +16,8 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 backdrop-blur-md bg-[#101e22]/80 animate-fade-in">
-            <div className="relative w-full max-w-md bg-[#101e22] border-2 border-[#0db9f2]/30 rounded-xl shadow-2xl shadow-[#0db9f2]/20 overflow-hidden animate-fade-in-up">
+        <div className="fixed inset-0 z-[200] flex items-start md:items-center justify-center p-4 backdrop-blur-md bg-[#101e22]/80 animate-fade-in overflow-y-auto overflow-x-hidden pt-10 md:pt-4">
+            <div className="relative w-full max-w-sm bg-[#101e22] border-2 border-[#0db9f2]/30 rounded-xl shadow-2xl shadow-[#0db9f2]/20 overflow-hidden animate-fade-in-up my-auto transition-all">
                 {/* Glow Effect */}
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#0db9f2]/20 blur-3xl rounded-full"></div>
                 <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#0db9f2]/20 blur-3xl rounded-full"></div>

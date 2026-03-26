@@ -198,19 +198,20 @@ const Navbar = () => {
                             <FiGlobe className="text-lg" />
                             <span className="text-[10px] font-bold uppercase">{language}</span>
                         </button>
-                        <div className="absolute top-full right-0 mt-2 w-32 bg-black/95 border border-[#00f2ff]/30 rounded-xl overflow-hidden opacity-0 invisible group-hover/lang:opacity-100 group-hover/lang:visible transition-all duration-300 z-[100] shadow-[0_10px_30px_rgba(0,242,255,0.2)]">
+                        <div className="absolute top-full right-0 mt-2 w-40 bg-black/95 border border-[#00f2ff]/30 rounded-xl overflow-hidden opacity-0 invisible group-hover/lang:opacity-100 group-hover/lang:visible transition-all duration-300 z-[100] shadow-[0_10px_30px_rgba(0,242,255,0.2)]">
                             {[
-                                { code: 'es', label: 'Español' },
-                                { code: 'en', label: 'English' },
-                                { code: 'ja', label: '日本語' },
-                                { code: 'fr', label: 'Français' }
+                                { code: 'es', label: 'Español', flag: '🌐' },
+                                { code: 'en', label: 'English', flag: '🇺🇸' },
+                                { code: 'ja', label: '日本語', flag: '🇯🇵' },
+                                { code: 'fr', label: 'Français', flag: '🇫🇷' }
                             ].map((lang) => (
                                 <button
                                     key={lang.code}
                                     onClick={() => setLanguage(lang.code)}
-                                    className={`w-full px-4 py-2 text-left text-[10px] font-bold uppercase transition-colors hover:bg-[#00f2ff]/20 ${language === lang.code ? 'text-[#00f2ff] bg-[#00f2ff]/10' : 'text-white'}`}
+                                    className={`w-full px-4 py-3 text-left text-[10px] font-bold uppercase transition-colors hover:bg-[#00f2ff]/20 flex items-center gap-3 ${language === lang.code ? 'text-[#00f2ff] bg-[#00f2ff]/10' : 'text-white'}`}
                                 >
-                                    {lang.label}
+                                    <span className="text-sm scale-125">{lang.flag}</span>
+                                    <span>{lang.label}</span>
                                 </button>
                             ))}
                         </div>
