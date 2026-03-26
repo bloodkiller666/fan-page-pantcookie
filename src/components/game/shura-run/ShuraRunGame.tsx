@@ -15,7 +15,8 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         avatar: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
         tierra: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
         nube: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
-        enemigo: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement
+        enemigo: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
+        pancake: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement
     });
     const [assetsLoaded, setAssetsLoaded] = useState(false);
     const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
@@ -70,10 +71,11 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
 
     useEffect(() => {
         const assets = assetsRef.current;
-        assets.avatar.src = '/images/pixil-frame-0.png';
-        assets.tierra.src = '/images/tierra.png';
-        assets.nube.src = '/images/nube.png';
-        assets.enemigo.src = '/images/enemigo-1.png';
+        assets.avatar.src = 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/avatar.png';
+        assets.tierra.src = 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/tierra.png';
+        assets.nube.src = 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/nube.png';
+        assets.enemigo.src = 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/enemigo-1.png';
+        assets.pancake.src = 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/pancake.png';
 
         const loadPromises = Object.values(assets).map(img => {
             return new Promise((resolve) => {
@@ -236,15 +238,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             if (obs.type === 'hater') {
                 ctx.drawImage(assetsRef.current.enemigo, obs.x, obs.y, obs.width, obs.height);
             } else {
-                ctx.fillStyle = '#eab308';
-                ctx.beginPath();
-                ctx.arc(obs.x + obs.width / 2, obs.y + obs.height / 2, obs.width / 2.5, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#fff';
-                ctx.font = '40px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('🥞', obs.x + obs.width / 2, obs.y + obs.height / 2 + 5);
+                ctx.drawImage(assetsRef.current.pancake, obs.x, obs.y, obs.width, obs.height);
             }
 
             // Colisión
