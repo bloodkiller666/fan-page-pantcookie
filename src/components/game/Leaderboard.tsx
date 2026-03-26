@@ -17,9 +17,10 @@ interface LeaderboardProps {
     currentPlayer: string;
     game?: string;
     mode?: string;
+    className?: string;
 }
 
-const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: LeaderboardProps) => {
+const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle', className }: LeaderboardProps) => {
     const { t } = useLanguage();
     const [scores, setScores] = useState<Score[]>([]);
     const [loading, setLoading] = useState(true);
@@ -68,7 +69,7 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle' }: L
     };
 
     return (
-        <aside className="w-full lg:w-80 shrink-0 animate-fade-in mt-6 lg:mt-0 lg:sticky lg:top-24 h-fit">
+        <aside className={className || "w-full lg:w-80 shrink-0 animate-fade-in mt-6 lg:mt-0 lg:sticky lg:top-24 h-fit"}>
             {/* Contenedor principal con altura dinámica */}
             <div className="bg-white dark:bg-zinc-900 border-[4px] border-black flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,0,127,0.3)] relative group/sidebar">
 

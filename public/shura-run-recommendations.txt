@@ -1,0 +1,37 @@
+RECOMENDACIONES PARA SHURA RUN
+
+1. MECÁNICAS DE JUGABILIDAD (GAMEPLAY)
+------------------------------------
+* Power-ups Temporales:
+    - Escudo: Un "pancake dorado" que te hace invulnerable a un choque.
+    - Imán: Atrae automáticamente los ingredientes cercanos durante 10 segundos.
+    - Doble Salto: Permitir un segundo salto en el aire (muy útil para esquivar obstáculos seguidos).
+* Variedad de Enemigos:
+    - Introducir enemigos que vuelen a diferentes alturas, obligando al jugador a decidir si saltar o pasar por debajo.
+* Sistema de "Combo":
+    - Si recoges muchos ingredientes seguidos sin fallar, los puntos se multiplican (x2, x3). Esto incentiva el riesgo.
+
+2. MEJORAS VISUALES Y DE INMERSIÓN
+----------------------------------
+* Efectos de Partículas:
+    - Añadir una pequeña estela de polvo cuando Shura corre y chispas de neón cuando salta o aterriza.
+* Parallax Avanzado:
+    - Añadir más capas al fondo (edificios distantes, luces de ciudad) moviéndose a diferentes velocidades para dar una sensación de profundidad real.
+* Pantalla de "Game Over" con Datos:
+    - Mostrar una pequeña gráfica de cuánto te faltó para alcanzar el siguiente puesto en el Ranking.
+* Flash de Impacto:
+    - Cuando el jugador choca, hacer que la pantalla vibre ligeramente (Screen Shake) y un breve destello rojo para enfatizar la derrota.
+
+3. SONIDO Y FEEDBACK
+--------------------
+* Música Dinámica:
+    - Hacer que el ritmo de la música (BPM) suba ligeramente cada vez que la velocidad del juego aumenta.
+* Voces o Clips:
+    - Añadir clips de voz cortos de Shura al recoger un item especial o al saltar, para darle más personalidad.
+
+4. INTEGRACIÓN SOCIAL (HALL OF FAME)
+------------------------------------
+* Logros (Achievements):
+    - Desbloquear "insignias" visibles en el perfil por hitos (ej: "Corre 1km sin morir", "Recoge 100 pancakes en una partida").
+* Retos diarios:
+    - Un modo de juego donde todos juegan con la misma semilla de obstáculos para ver quién es el mejor del día.
