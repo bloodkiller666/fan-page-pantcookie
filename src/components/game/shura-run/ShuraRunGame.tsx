@@ -21,7 +21,9 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         sol: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
         casa1: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
         casa2: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
-        casa3: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement
+        casa3: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
+        concha: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
+        salmon: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement
     });
     const [assetsLoaded, setAssetsLoaded] = useState(false);
     const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
@@ -34,6 +36,12 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     const [showOverwriteModal, setShowOverwriteModal] = useState(false);
     const [showRules, setShowRules] = useState(false);
     const [pendingScoreData, setPendingScoreData] = useState<{ score: number, oldScore: number } | null>(null);
+
+    const powerUpsRef = useRef({
+        concha: { active: false, endTime: 0 },
+        salmon: { active: false, endTime: 0 }
+    });
+    const lastClickTimeRef = useRef<number>(0);
 
     const CANVAS_WIDTH = 1920;
     const CANVAS_HEIGHT = 1080;
@@ -64,7 +72,8 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         width: 120,
         height: 120,
         dy: 0,
-        grounded: true
+        grounded: true,
+        doubleJumpAvailable: true
     });
 
     const obstaclesRef = useRef<Array<{
@@ -72,7 +81,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         y: number;
         width: number;
         height: number;
-        type: 'hater' | 'hater2' | 'ingredient';
+        type: 'hater' | 'hater2' | 'ingredient' | 'concha' | 'salmon';
         markedForDeletion: boolean;
     }>>([]);
 
@@ -97,16 +106,18 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
 
     useEffect(() => {
         const assets = assetsRef.current;
-        assets.avatar.src = '/image/avatar.png';
-        assets.tierra.src = 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/tierra.png';
-        assets.nube.src = 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/nube.png';
-        assets.enemigo.src = 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/enemigo-1.png';
-        assets.enemigo2.src = '/image/enemigo-2.png';
+        assets.avatar.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/avatar.png';
+        assets.tierra.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/tierra.png';
+        assets.nube.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/nube.png';
+        assets.enemigo.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/enemigo-1.png';
+        assets.enemigo2.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/enemigo-2.png';
         assets.pancake.src = 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/pancake.png';
-        assets.sol.src = '/image/sol.png';
-        assets.casa1.src = '/image/casa-1.png';
-        assets.casa2.src = '/image/casa-2.png';
-        assets.casa3.src = '/image/casa-3.png';
+        assets.sol.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/sol.png';
+        assets.casa1.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/casa-1.png';
+        assets.casa2.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/casa-2.png';
+        assets.casa3.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/casa-3.png';
+        assets.concha.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/concha.png';
+        assets.salmon.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/salmon.png';
 
         // Configuración para que el pixel art no se vea borroso
         const canvas = canvasRef.current;
@@ -315,21 +326,29 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
 
         if (timestamp - lastObstacleTimeRef.current > currentInterval) {
             const rand = Math.random();
-            const isHater = rand > 0.4;
-            const type: 'hater' | 'hater2' | 'ingredient' = isHater 
-                ? (Math.random() > 0.5 ? 'hater' : 'hater2') 
-                : 'ingredient';
+            let type: 'hater' | 'hater2' | 'ingredient' | 'concha' | 'salmon' = 'ingredient';
+            if (rand > 0.5) {
+                type = Math.random() > 0.5 ? 'hater' : 'hater2';
+            } else if (rand > 0.1) {
+                type = 'ingredient';
+            } else if (rand > 0.05) {
+                type = 'concha';
+            } else {
+                type = 'salmon';
+            }
             
             const lastObs = obstaclesRef.current[obstaclesRef.current.length - 1];
             const minDistance = 400;
             const canSpawn = !lastObs || (CANVAS_WIDTH - lastObs.x > minDistance);
 
             if (canSpawn) {
+                const obsY = (type === 'hater' || type === 'hater2') ? groundLevel - 100 : groundLevel - 150 - (Math.random() * 200);
+                const obsSize = (type === 'hater' || type === 'hater2') ? 100 : 80;
                 obstaclesRef.current.push({
                     x: CANVAS_WIDTH,
-                    y: type !== 'ingredient' ? groundLevel - 100 : groundLevel - 150 - (Math.random() * 200),
-                    width: 100,
-                    height: 100,
+                    y: obsY,
+                    width: obsSize,
+                    height: obsSize,
                     type,
                     markedForDeletion: false
                 });
@@ -344,6 +363,10 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 ctx.drawImage(assetsRef.current.enemigo, obs.x, obs.y, obs.width, obs.height);
             } else if (obs.type === 'hater2') {
                 ctx.drawImage(assetsRef.current.enemigo2, obs.x, obs.y, obs.width, obs.height);
+            } else if (obs.type === 'concha') {
+                ctx.drawImage(assetsRef.current.concha, obs.x, obs.y, obs.width, obs.height);
+            } else if (obs.type === 'salmon') {
+                ctx.drawImage(assetsRef.current.salmon, obs.x, obs.y, obs.width, obs.height);
             } else {
                 ctx.drawImage(assetsRef.current.pancake, obs.x, obs.y, obs.width, obs.height);
             }
@@ -355,15 +378,32 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 player.y + player.height > obs.y
             ) {
                 if (obs.type === 'hater' || obs.type === 'hater2') {
-                    gameOver();
-                    return;
-                } else if (obs.type === 'ingredient' && !obs.markedForDeletion) {
+                    if (powerUpsRef.current.salmon.active) {
+                        if (!obs.markedForDeletion) {
+                            obs.markedForDeletion = true;
+                            scoreRef.current += 100;
+                            setScore(scoreRef.current);
+                        }
+                    } else {
+                        gameOver();
+                        return;
+                    }
+                } else if (!obs.markedForDeletion) {
                     obs.markedForDeletion = true;
                     if (collectSound.current) {
                         collectSound.current.currentTime = 0;
                         collectSound.current.play().catch(() => { });
                     }
-                    scoreRef.current += 50;
+                    if (obs.type === 'ingredient') {
+                        scoreRef.current += 50;
+                    } else if (obs.type === 'concha') {
+                        powerUpsRef.current.concha = { active: true, endTime: performance.now() + 30000 };
+                        playerRef.current.doubleJumpAvailable = true;
+                        scoreRef.current += 200;
+                    } else if (obs.type === 'salmon') {
+                        powerUpsRef.current.salmon = { active: true, endTime: performance.now() + 20000 };
+                        scoreRef.current += 300;
+                    }
                     setScore(scoreRef.current);
                 }
             }
@@ -394,18 +434,108 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             player.width, player.height
         );
 
+        // HUD POWER-UP BAR (estilo Geometry Dash - centrada arriba del canvas)
+        // Verificar expiración de Power-Ups
+        const pNowCheck = performance.now();
+        if (powerUpsRef.current.salmon.active && pNowCheck > powerUpsRef.current.salmon.endTime) {
+            powerUpsRef.current.salmon.active = false;
+        }
+        if (powerUpsRef.current.concha.active && pNowCheck > powerUpsRef.current.concha.endTime) {
+            powerUpsRef.current.concha.active = false;
+            playerRef.current.doubleJumpAvailable = false;
+        }
+
+        const hasSalmon = powerUpsRef.current.salmon.active;
+        const hasConcha = powerUpsRef.current.concha.active;
+        if (hasSalmon || hasConcha) {
+            const barW = 600;
+            const barH = 28;
+            const barX = (CANVAS_WIDTH - barW) / 2;
+            const barY = 30;
+            const pNow = performance.now();
+
+            let pProgress = 0;
+            let barColor1 = '#ff6600';
+            let barColor2 = '#ff2200';
+            let labelText = '';
+
+            if (hasSalmon) {
+                pProgress = Math.max(0, (powerUpsRef.current.salmon.endTime - pNow) / 20000);
+                barColor1 = '#ff9900'; barColor2 = '#cc0000';
+                labelText = '🐟 GOD MODE';
+            } else if (hasConcha) {
+                pProgress = Math.max(0, (powerUpsRef.current.concha.endTime - pNow) / 30000);
+                barColor1 = '#00e5ff'; barColor2 = '#0055cc';
+                labelText = '🐚 DOBLE SALTO';
+            }
+
+            // Fondo oscuro de la barra
+            ctx.save();
+            ctx.fillStyle = 'rgba(0,0,0,0.55)';
+            ctx.beginPath();
+            ctx.roundRect(barX - 10, barY - 10, barW + 20, barH + 30, 12);
+            ctx.fill();
+
+            // Borde externo (glow)
+            ctx.shadowColor = barColor1;
+            ctx.shadowBlur = 18;
+            ctx.strokeStyle = barColor1;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(barX, barY + 14, barW, barH, 8);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Fondo de la barra
+            ctx.fillStyle = 'rgba(255,255,255,0.08)';
+            ctx.beginPath();
+            ctx.roundRect(barX, barY + 14, barW, barH, 8);
+            ctx.fill();
+
+            // Relleno de la barra (progreso)
+            const grad = ctx.createLinearGradient(barX, 0, barX + barW * pProgress, 0);
+            grad.addColorStop(0, barColor1);
+            grad.addColorStop(1, barColor2);
+            ctx.fillStyle = grad;
+            ctx.shadowColor = barColor1;
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.roundRect(barX, barY + 14, barW * pProgress, barH, 8);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Etiqueta
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 22px Arial';
+            ctx.textAlign = 'center';
+            ctx.shadowColor = barColor1;
+            ctx.shadowBlur = 10;
+            ctx.fillText(labelText, CANVAS_WIDTH / 2, barY + 12);
+            ctx.shadowBlur = 0;
+            ctx.restore();
+        }
+
         if (isPlayingRef.current) {
             requestRef.current = requestAnimationFrame(gameLoop);
         }
     }, [gameOver, assetsLoaded, t]);
 
     const jump = useCallback(() => {
-        if (isPlayingRef.current && playerRef.current.grounded) {
-            playerRef.current.dy = JUMP_FORCE;
-            playerRef.current.grounded = false;
-            if (jumpSound.current) {
-                jumpSound.current.currentTime = 0;
-                jumpSound.current.play().catch(() => { });
+        if (isPlayingRef.current) {
+            if (playerRef.current.grounded) {
+                playerRef.current.dy = powerUpsRef.current.concha.active ? JUMP_FORCE * 1.15 : JUMP_FORCE;
+                playerRef.current.grounded = false;
+                if (jumpSound.current) {
+                    jumpSound.current.currentTime = 0;
+                    jumpSound.current.play().catch(() => { });
+                }
+            } else if (powerUpsRef.current.concha.active && playerRef.current.doubleJumpAvailable) {
+                 playerRef.current.dy = JUMP_FORCE * 1.1;
+                 playerRef.current.doubleJumpAvailable = false;
+                 if (jumpSound.current) {
+                    jumpSound.current.currentTime = 0;
+                    jumpSound.current.play().catch(() => { });
+                }
             }
         }
     }, []);
@@ -435,10 +565,15 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         playerRef.current = {
             x: 150,
             y: 500,
-            width: 110,  // Ajustado un poco por el spritesheet de 64x71
+            width: 110,
             height: 122,
             dy: 0,
-            grounded: true
+            grounded: true,
+            doubleJumpAvailable: true
+        };
+        powerUpsRef.current = {
+            concha: { active: false, endTime: 0 },
+            salmon: { active: false, endTime: 0 }
         };
         obstaclesRef.current = [];
         decorationsRef.current = [];
@@ -534,8 +669,19 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         };
 
         const handleMouseDown = (e: MouseEvent) => {
-            if (gameState === 'playing') {
-                if (!isPausedRef.current) jump();
+            if (gameState === 'playing' && !isPausedRef.current) {
+                const now = performance.now();
+                const diff = now - lastClickTimeRef.current;
+                if (diff < 300) {
+                    // Doble click rapido: doble salto si concha activo
+                    jump();
+                } else {
+                    // Primer click: salto normal
+                    jump();
+                }
+                lastClickTimeRef.current = now;
+            } else if (gameState !== 'playing') {
+                startGame();
             }
         };
 
