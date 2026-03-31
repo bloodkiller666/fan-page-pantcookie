@@ -13,6 +13,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const assetsRef = useRef({
         avatar: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
+        avatarSalto: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
         tierra: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
         nube: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
         enemigo: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
@@ -23,10 +24,13 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         casa2: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
         casa3: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
         concha: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
-        salmon: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement
+        salmon: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
+        muerteCaida: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
+        muerteLoop: typeof window !== 'undefined' ? new Image() : {} as HTMLImageElement,
     });
     const [assetsLoaded, setAssetsLoaded] = useState(false);
     const [gameState, setGameState] = useState<'start' | 'playing' | 'gameover'>('start');
+    const [showGameOverUI, setShowGameOverUI] = useState(false);
     const [score, setScore] = useState(0);
     const [highScore, setHighScore] = useState(0);
     const [updateMessage, setUpdateMessage] = useState<string | null>(null);
@@ -54,8 +58,11 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     // Audio Refs
     const jumpSound = useRef<HTMLAudioElement | null>(null);
     const collectSound = useRef<HTMLAudioElement | null>(null);
+    const deathSound = useRef<HTMLAudioElement | null>(null);
     const gameOverSound = useRef<HTMLAudioElement | null>(null);
     const bgMusic = useRef<HTMLAudioElement | null>(null);
+
+    const deathTimestampRef = useRef<number>(0);
 
     const requestRef = useRef<number | null>(null);
     const isPlayingRef = useRef(false);
@@ -107,6 +114,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     useEffect(() => {
         const assets = assetsRef.current;
         assets.avatar.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/avatar.png';
+        assets.avatarSalto.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/salto.png';
         assets.tierra.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/tierra.png';
         assets.nube.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/nube.png';
         assets.enemigo.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/enemigo-1.png';
@@ -118,6 +126,8 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         assets.casa3.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/casa-3.png';
         assets.concha.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/concha.png';
         assets.salmon.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/salmon.png';
+        assets.muerteCaida.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/muerte%20part1.png';
+        assets.muerteLoop.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/muerte%20part2.png';
 
         // Configuración para que el pixel art no se vea borroso
         const canvas = canvasRef.current;
@@ -143,10 +153,11 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         if (savedScore) setHighScore(parseInt(savedScore));
 
         // Initialize Audio
-        jumpSound.current = new Audio('/audio/jump.mp3');
-        collectSound.current = new Audio('/audio/collect.mp3');
-        gameOverSound.current = new Audio('/audio/gameover.mp3');
-        bgMusic.current = new Audio('/audio/bg-music.mp3');
+        jumpSound.current = new Audio('https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/jump.mp3');
+        collectSound.current = new Audio('https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/collect.mp3');
+        deathSound.current = new Audio('https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/death.mp3');
+        gameOverSound.current = new Audio('https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/game-over.mp3');
+        bgMusic.current = new Audio('https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/bg-music.mp3');
         if (bgMusic.current) {
             bgMusic.current.loop = true;
             bgMusic.current.volume = 0.4;
@@ -163,13 +174,15 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     const gameOver = useCallback(async () => {
         isPlayingRef.current = false;
         setGameState('gameover');
-        if (gameOverSound.current) {
-            gameOverSound.current.currentTime = 0;
-            gameOverSound.current.play().catch(() => { });
+        deathTimestampRef.current = performance.now();
+        // Sonido de muerte al instante
+        if (deathSound.current) {
+            deathSound.current.currentTime = 0;
+            deathSound.current.play().catch(() => { });
         }
         if (bgMusic.current) bgMusic.current.pause();
 
-        if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        // The requestRef will be handled by the gameLoop which continues if gameState === 'gameover'
         const currentHigh = parseInt(localStorage.getItem('shuraRunHighScore') || '0');
         if (scoreRef.current > currentHigh) {
             localStorage.setItem('shuraRunHighScore', scoreRef.current.toString());
@@ -215,7 +228,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     };
 
     const gameLoop = useCallback((timestamp: number) => {
-        if (!isPlayingRef.current || isPausedRef.current || !assetsLoaded) return;
+        if (gameState === 'start' || isPausedRef.current || !assetsLoaded) return;
 
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -223,76 +236,50 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         if (!ctx) return;
 
         // Calcular Delta Time
-        const deltaTime = lastTimeRef.current ? (timestamp - lastTimeRef.current) / 1000 : 0;
+        let deltaTime = lastTimeRef.current ? (timestamp - lastTimeRef.current) / 1000 : 0;
+        if (deltaTime > 0.1) deltaTime = 0.016; 
+        
         lastTimeRef.current = timestamp;
         frameCountRef.current++;
 
-        // 1. LIMPIAR Y DIBUJAR CIELO
-        ctx.fillStyle = '#87CEEB';
-        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        // --- 1. ACTUALIZAR (Solo si está en juego) ---
+        if (gameState === 'playing') {
+            // Actualizar jugador
+            const player = playerRef.current;
+            player.dy += GRAVITY * deltaTime * 60;
+            player.y += player.dy * deltaTime * 60;
 
-        // 2. DIBUJAR EL SOL (Estático pero en el recorrido)
-        ctx.drawImage(assetsRef.current.sol, CANVAS_WIDTH - 400, 100, 200, 200);
+            const groundLevel = CANVAS_HEIGHT - 140;
+            if (player.y + player.height > groundLevel) {
+                player.y = groundLevel - player.height;
+                player.dy = 0;
+                player.grounded = true;
+            } else {
+                player.grounded = false;
+            }
 
-        // 3. DIBUJAR NUBES (PARALLAX)
-        const cloudSpeed = speedRef.current * 0.1;
-        const cloudGap = 800;
-        for (let i = 0; i < 3; i++) {
-            const cloudX = ((timestamp * 0.02 + i * cloudGap) % (CANVAS_WIDTH + 400)) - 200;
-            ctx.drawImage(assetsRef.current.nube, CANVAS_WIDTH - cloudX, 100 + i * 50, 300, 150);
-        }
-
-        const groundLevel = CANVAS_HEIGHT - 140;
-
-        // 4. ACTUALIZAR Y DIBUJAR DECORACIONES (CASAS - DETRÁS DE LA TIERRA)
-        if (isPlayingRef.current && timestamp - lastDecorationTimeRef.current > 2000 + Math.random() * 3000) {
-            const houseTypes: Array<'casa1' | 'casa2' | 'casa3'> = ['casa1', 'casa2', 'casa3'];
-            const randomHouse = houseTypes[Math.floor(Math.random() * houseTypes.length)];
-            decorationsRef.current.push({
-                x: CANVAS_WIDTH,
-                y: groundLevel - 200, 
-                width: 250,
-                height: 250,
-                asset: randomHouse,
-                markedForDeletion: false
+            // Actualizar decoraciones
+            if (timestamp - lastDecorationTimeRef.current > 2000 + Math.random() * 3000) {
+                const houseTypes: Array<'casa1' | 'casa2' | 'casa3'> = ['casa1', 'casa2', 'casa3'];
+                const randomHouse = houseTypes[Math.floor(Math.random() * houseTypes.length)];
+                decorationsRef.current.push({
+                    x: CANVAS_WIDTH,
+                    y: groundLevel - 200, 
+                    width: 250,
+                    height: 250,
+                    asset: randomHouse,
+                    markedForDeletion: false
+                });
+                lastDecorationTimeRef.current = timestamp;
+            }
+            decorationsRef.current.forEach(dec => {
+                dec.x -= speedRef.current * deltaTime * 60;
+                if (dec.x + dec.width < 0) dec.markedForDeletion = true;
             });
-            lastDecorationTimeRef.current = timestamp;
-        }
+            decorationsRef.current = decorationsRef.current.filter(dec => !dec.markedForDeletion);
 
-        decorationsRef.current.forEach(dec => {
-            dec.x -= speedRef.current * deltaTime * 60;
-            ctx.globalAlpha = 0.5; // Bajar intensidad decoraciones
-            ctx.drawImage(assetsRef.current[dec.asset], dec.x, dec.y, dec.width, dec.height);
-            ctx.globalAlpha = 1.0;
-            if (dec.x + dec.width < 0) dec.markedForDeletion = true;
-        });
-        decorationsRef.current = decorationsRef.current.filter(dec => !dec.markedForDeletion);
-
-        // 5. ACTUALIZAR JUGADOR (CON DELTA TIME)
-        const player = playerRef.current;
-        player.dy += GRAVITY * deltaTime * 60;
-        player.y += player.dy * deltaTime * 60;
-
-        if (player.y + player.height > groundLevel) {
-            player.y = groundLevel - player.height;
-            player.dy = 0;
-            player.grounded = true;
-        } else {
-            player.grounded = false;
-        }
-
-        // 6. DIBUJAR SUELO INFINITO (ADELANTE DE LAS CASAS)
-        const groundImg = assetsRef.current.tierra;
-        const groundWidth = 400;
-        const groundOffset = (timestamp * (speedRef.current * 0.05)) % groundWidth;
-
-        for (let i = 0; i <= CANVAS_WIDTH / groundWidth + 1; i++) {
-            ctx.drawImage(groundImg, (i * groundWidth) - groundOffset, groundLevel, groundWidth, 140);
-        }
-
-        // 8. EFECTO DE ESTELA DE POLVO
-        if (player.grounded && isPlayingRef.current) {
-            if (frameCountRef.current % 5 === 0) {
+            // Actualizar estela
+            if (player.grounded && frameCountRef.current % 5 === 0) {
                 particlesRef.current.push({
                     x: player.x + 20,
                     y: player.y + player.height - 10,
@@ -303,143 +290,217 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                     markedForDeletion: false
                 });
             }
+
+            // Actualizar partículas
+            particlesRef.current.forEach(p => {
+                p.x += p.vx * deltaTime * 60;
+                p.y += p.vy * deltaTime * 60;
+                p.opacity -= 0.02 * deltaTime * 60;
+                p.size *= Math.pow(0.98, deltaTime * 60);
+                if (p.opacity <= 0) p.markedForDeletion = true;
+            });
+            particlesRef.current = particlesRef.current.filter(p => !p.markedForDeletion);
+
+            // Actualizar y spawneo de obstáculos
+            const speedIncrease = Math.floor(scoreRef.current / 100) * 0.5;
+            speedRef.current = Math.min(INITIAL_SPEED + speedIncrease, MAX_SPEED);
+            const currentInterval = (INITIAL_SPEED * INITIAL_OBSTACLE_INTERVAL) / speedRef.current;
+
+            if (timestamp - lastObstacleTimeRef.current > currentInterval) {
+                const rand = Math.random();
+                let type: 'hater' | 'hater2' | 'ingredient' | 'concha' | 'salmon' = 'ingredient';
+                if (rand > 0.5) type = Math.random() > 0.5 ? 'hater' : 'hater2';
+                else if (rand > 0.1) type = 'ingredient';
+                else if (rand > 0.05) type = 'concha';
+                else type = 'salmon';
+                
+                const lastObs = obstaclesRef.current[obstaclesRef.current.length - 1];
+                if (!lastObs || (CANVAS_WIDTH - lastObs.x > 400)) {
+                    const obsY = (type === 'hater' || type === 'hater2') ? groundLevel - 100 : groundLevel - 150 - (Math.random() * 200);
+                    obstaclesRef.current.push({
+                        x: CANVAS_WIDTH,
+                        y: obsY,
+                        width: (type === 'hater' || type === 'hater2') ? 100 : 80,
+                        height: (type === 'hater' || type === 'hater2') ? 100 : 80,
+                        type,
+                        markedForDeletion: false
+                    });
+                    lastObstacleTimeRef.current = timestamp;
+                }
+            }
+
+            // Mover obstáculos y Colisiones
+            obstaclesRef.current.forEach(obs => {
+                obs.x -= speedRef.current * deltaTime * 60;
+                if (
+                    player.x < obs.x + obs.width &&
+                    player.x + player.width > obs.x &&
+                    player.y < obs.y + obs.height &&
+                    player.y + player.height > obs.y
+                ) {
+                    if (obs.type === 'hater' || obs.type === 'hater2') {
+                        if (powerUpsRef.current.salmon.active) {
+                            if (!obs.markedForDeletion) {
+                                obs.markedForDeletion = true;
+                                scoreRef.current += 100;
+                                setScore(scoreRef.current);
+                            }
+                        } else {
+                            gameOver();
+                            return;
+                        }
+                    } else if (!obs.markedForDeletion) {
+                        obs.markedForDeletion = true;
+                        if (collectSound.current) {
+                            collectSound.current.currentTime = 0;
+                            collectSound.current.play().catch(() => { });
+                        }
+                        if (obs.type === 'ingredient') scoreRef.current += 50;
+                        else if (obs.type === 'concha') {
+                            powerUpsRef.current.concha = { active: true, endTime: performance.now() + 30000 };
+                            playerRef.current.doubleJumpAvailable = true;
+                            scoreRef.current += 200;
+                        } else if (obs.type === 'salmon') {
+                            powerUpsRef.current.salmon = { active: true, endTime: performance.now() + 20000 };
+                            scoreRef.current += 300;
+                        }
+                        setScore(scoreRef.current);
+                    }
+                }
+                if (obs.x + obs.width < 0) {
+                    obs.markedForDeletion = true;
+                    if (obs.type === 'hater' || obs.type === 'hater2') {
+                        scoreRef.current += 10;
+                        setScore(scoreRef.current);
+                    }
+                }
+            });
+            obstaclesRef.current = obstaclesRef.current.filter(obs => !obs.markedForDeletion);
         }
 
-        particlesRef.current.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            p.opacity -= 0.02;
-            p.size *= 0.98;
-            if (p.opacity <= 0) p.markedForDeletion = true;
+        // --- 2. DIBUJAR (Siempre que el loop esté activo) ---
+        // Fondo y Cielo
+        ctx.fillStyle = '#87CEEB';
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.drawImage(assetsRef.current.sol, CANVAS_WIDTH - 400, 100, 200, 200);
 
+        // Nubes (Parallax - basado en speedRef que sigue existiendo)
+        const cloudGap = 800;
+        for (let i = 0; i < 3; i++) {
+            const cloudX = ((timestamp * 0.02 + i * cloudGap) % (CANVAS_WIDTH + 400)) - 200;
+            ctx.drawImage(assetsRef.current.nube, CANVAS_WIDTH - cloudX, 100 + i * 50, 300, 150);
+        }
+
+        // Decoraciones (Casas)
+        decorationsRef.current.forEach(dec => {
+            ctx.globalAlpha = 0.5;
+            ctx.drawImage(assetsRef.current[dec.asset], dec.x, dec.y, dec.width, dec.height);
+            ctx.globalAlpha = 1.0;
+        });
+
+        const groundLevel = CANVAS_HEIGHT - 140;
+
+        // Suelo Infinito (Parallax - basado en timestamp * speed, el speed no varía si murió)
+        const groundImg = assetsRef.current.tierra;
+        const groundWidth = 400;
+        const groundOffset = (gameState === 'playing') 
+            ? (timestamp * (speedRef.current * 0.05)) % groundWidth
+            : (lastTimeRef.current * (speedRef.current * 0.05)) % groundWidth; // Se congela si no está jugando? 
+            // Wait, el usuario quiere que se vea quieto? Si "updatePhysics" no corre, x no cambia. 
+            // El suelo depende del cálculo (timestamp * speed). Debo fijar el offset si no juega.
+        
+        // Corregir offset para que se detenga visualmente
+        const currentGroundOffset = (gameState === 'playing') 
+            ? (timestamp * (speedRef.current * 0.05)) % groundWidth
+            : (deathTimestampRef.current * (speedRef.current * 0.05)) % groundWidth;
+
+        for (let i = 0; i <= CANVAS_WIDTH / groundWidth + 1; i++) {
+            ctx.drawImage(groundImg, (i * groundWidth) - currentGroundOffset, groundLevel, groundWidth, 140);
+        }
+
+        // Partículas
+        particlesRef.current.forEach(p => {
             ctx.fillStyle = `rgba(200, 200, 200, ${p.opacity})`;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
         });
-        particlesRef.current = particlesRef.current.filter(p => !p.markedForDeletion);
 
-        // 9. ACTUALIZAR Y DIBUJAR OBSTÁCULOS
-        const speedIncrease = Math.floor(scoreRef.current / 100) * 0.5;
-        speedRef.current = Math.min(INITIAL_SPEED + speedIncrease, MAX_SPEED);
-        const currentInterval = (INITIAL_SPEED * INITIAL_OBSTACLE_INTERVAL) / speedRef.current;
-
-        if (timestamp - lastObstacleTimeRef.current > currentInterval) {
-            const rand = Math.random();
-            let type: 'hater' | 'hater2' | 'ingredient' | 'concha' | 'salmon' = 'ingredient';
-            if (rand > 0.5) {
-                type = Math.random() > 0.5 ? 'hater' : 'hater2';
-            } else if (rand > 0.1) {
-                type = 'ingredient';
-            } else if (rand > 0.05) {
-                type = 'concha';
-            } else {
-                type = 'salmon';
-            }
-            
-            const lastObs = obstaclesRef.current[obstaclesRef.current.length - 1];
-            const minDistance = 400;
-            const canSpawn = !lastObs || (CANVAS_WIDTH - lastObs.x > minDistance);
-
-            if (canSpawn) {
-                const obsY = (type === 'hater' || type === 'hater2') ? groundLevel - 100 : groundLevel - 150 - (Math.random() * 200);
-                const obsSize = (type === 'hater' || type === 'hater2') ? 100 : 80;
-                obstaclesRef.current.push({
-                    x: CANVAS_WIDTH,
-                    y: obsY,
-                    width: obsSize,
-                    height: obsSize,
-                    type,
-                    markedForDeletion: false
-                });
-                lastObstacleTimeRef.current = timestamp;
-            }
-        }
-
+        // Obstáculos
         obstaclesRef.current.forEach(obs => {
-            obs.x -= speedRef.current * deltaTime * 60;
-
-            if (obs.type === 'hater') {
-                ctx.drawImage(assetsRef.current.enemigo, obs.x, obs.y, obs.width, obs.height);
-            } else if (obs.type === 'hater2') {
-                ctx.drawImage(assetsRef.current.enemigo2, obs.x, obs.y, obs.width, obs.height);
-            } else if (obs.type === 'concha') {
-                ctx.drawImage(assetsRef.current.concha, obs.x, obs.y, obs.width, obs.height);
-            } else if (obs.type === 'salmon') {
-                ctx.drawImage(assetsRef.current.salmon, obs.x, obs.y, obs.width, obs.height);
-            } else {
-                ctx.drawImage(assetsRef.current.pancake, obs.x, obs.y, obs.width, obs.height);
-            }
-
-            if (
-                player.x < obs.x + obs.width &&
-                player.x + player.width > obs.x &&
-                player.y < obs.y + obs.height &&
-                player.y + player.height > obs.y
-            ) {
-                if (obs.type === 'hater' || obs.type === 'hater2') {
-                    if (powerUpsRef.current.salmon.active) {
-                        if (!obs.markedForDeletion) {
-                            obs.markedForDeletion = true;
-                            scoreRef.current += 100;
-                            setScore(scoreRef.current);
-                        }
-                    } else {
-                        gameOver();
-                        return;
-                    }
-                } else if (!obs.markedForDeletion) {
-                    obs.markedForDeletion = true;
-                    if (collectSound.current) {
-                        collectSound.current.currentTime = 0;
-                        collectSound.current.play().catch(() => { });
-                    }
-                    if (obs.type === 'ingredient') {
-                        scoreRef.current += 50;
-                    } else if (obs.type === 'concha') {
-                        powerUpsRef.current.concha = { active: true, endTime: performance.now() + 30000 };
-                        playerRef.current.doubleJumpAvailable = true;
-                        scoreRef.current += 200;
-                    } else if (obs.type === 'salmon') {
-                        powerUpsRef.current.salmon = { active: true, endTime: performance.now() + 20000 };
-                        scoreRef.current += 300;
-                    }
-                    setScore(scoreRef.current);
-                }
-            }
-
-            if (obs.x + obs.width < 0) {
-                obs.markedForDeletion = true;
-                if (obs.type === 'hater' || obs.type === 'hater2') {
-                    scoreRef.current += 10;
-                    setScore(scoreRef.current);
-                }
-            }
+            const assetName = obs.type === 'hater' ? 'enemigo' : 
+                              obs.type === 'hater2' ? 'enemigo2' : 
+                              obs.type === 'concha' ? 'concha' : 
+                              obs.type === 'salmon' ? 'salmon' : 'pancake';
+            ctx.drawImage(assetsRef.current[assetName as keyof typeof assetsRef.current], obs.x, obs.y, obs.width, obs.height);
         });
 
-        obstaclesRef.current = obstaclesRef.current.filter(obs => !obs.markedForDeletion);
+        // Avatar / Muerte
+        const player = playerRef.current;
+        if (gameState === 'gameover') {
+            const timeSinceDeath = timestamp - deathTimestampRef.current;
+            const dropDuration = 400;
 
-        // 10. DIBUJAR AVATAR (Sprite Animado - Siempre al frente)
-        const FRAME_W = 64;
-        const FRAME_H = 71;
-        const TOTAL_FRAMES = 10;
-        const currentFrame = Math.floor(frameCountRef.current / 6) % TOTAL_FRAMES;
+            if (timeSinceDeath < dropDuration) {
+                // ESCENA 1: CAÍDA
+                const frame = Math.floor(timeSinceDeath / 100);
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(
+                    assetsRef.current.muerteCaida,
+                    (frame % 4) * 64, 0,
+                    64, 83,
+                    player.x, player.y,
+                    player.width, player.height
+                );
+            } else {
+                // ESCENA 2: MAREO (Loop)
+                const loopFrame = Math.floor((timeSinceDeath - dropDuration) / 150) % 2;
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(
+                    assetsRef.current.muerteLoop,
+                    loopFrame * 64, 0,
+                    64, 83,
+                    player.x, player.y,
+                    player.width, player.height
+                );
+                
+                // Mostrar UI demorada
+                if (timeSinceDeath - dropDuration > 3000 && !showGameOverUI) {
+                    setShowGameOverUI(true);
+                }
+            }
+        } else {
+            // Animación Normal
+            const isJumping = !player.grounded;
+            const activeAvatar = isJumping ? assetsRef.current.avatarSalto : assetsRef.current.avatar;
+            const FRAME_W = 64;
+            const FRAME_H = isJumping ? 83 : 71;
+            const TOTAL_FRAMES = isJumping ? 5 : 10;
+            
+            let currentFrame = 0;
+            if (isJumping) {
+                if (player.dy < -15) currentFrame = 0;
+                else if (player.dy < -5) currentFrame = 1;
+                else if (player.dy < 5) currentFrame = 2;
+                else if (player.dy < 15) currentFrame = 3;
+                else currentFrame = 4;
+            } else {
+                currentFrame = Math.floor(timestamp / 80) % TOTAL_FRAMES;
+            }
 
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(
-            assetsRef.current.avatar,
-            currentFrame * FRAME_W, 0,
-            FRAME_W, FRAME_H,
-            player.x, player.y,
-            player.width, player.height
-        );
-
-        // HUD POWER-UP BAR (estilo Geometry Dash - centrada arriba del canvas)
-        // Verificar expiración de Power-Ups
-        const pNowCheck = performance.now();
-        if (powerUpsRef.current.salmon.active && pNowCheck > powerUpsRef.current.salmon.endTime) {
-            powerUpsRef.current.salmon.active = false;
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(
+                activeAvatar,
+                currentFrame * FRAME_W, 0,
+                FRAME_W, FRAME_H,
+                player.x, player.y,
+                player.width, player.height
+            );
         }
+
+        // HUD Power-ups
+        const pNowCheck = performance.now();
+        if (powerUpsRef.current.salmon.active && pNowCheck > powerUpsRef.current.salmon.endTime) powerUpsRef.current.salmon.active = false;
         if (powerUpsRef.current.concha.active && pNowCheck > powerUpsRef.current.concha.endTime) {
             powerUpsRef.current.concha.active = false;
             playerRef.current.doubleJumpAvailable = false;
@@ -447,78 +508,48 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
 
         const hasSalmon = powerUpsRef.current.salmon.active;
         const hasConcha = powerUpsRef.current.concha.active;
-        if (hasSalmon || hasConcha) {
-            const barW = 600;
-            const barH = 28;
-            const barX = (CANVAS_WIDTH - barW) / 2;
-            const barY = 30;
-            const pNow = performance.now();
-
-            let pProgress = 0;
-            let barColor1 = '#ff6600';
-            let barColor2 = '#ff2200';
-            let labelText = '';
-
-            if (hasSalmon) {
-                pProgress = Math.max(0, (powerUpsRef.current.salmon.endTime - pNow) / 20000);
-                barColor1 = '#ff9900'; barColor2 = '#cc0000';
-                labelText = '🐟 GOD MODE';
-            } else if (hasConcha) {
-                pProgress = Math.max(0, (powerUpsRef.current.concha.endTime - pNow) / 30000);
-                barColor1 = '#00e5ff'; barColor2 = '#0055cc';
-                labelText = '🐚 DOBLE SALTO';
-            }
-
-            // Fondo oscuro de la barra
-            ctx.save();
-            ctx.fillStyle = 'rgba(0,0,0,0.55)';
-            ctx.beginPath();
-            ctx.roundRect(barX - 10, barY - 10, barW + 20, barH + 30, 12);
-            ctx.fill();
-
-            // Borde externo (glow)
-            ctx.shadowColor = barColor1;
-            ctx.shadowBlur = 18;
-            ctx.strokeStyle = barColor1;
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.roundRect(barX, barY + 14, barW, barH, 8);
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-
-            // Fondo de la barra
-            ctx.fillStyle = 'rgba(255,255,255,0.08)';
-            ctx.beginPath();
-            ctx.roundRect(barX, barY + 14, barW, barH, 8);
-            ctx.fill();
-
-            // Relleno de la barra (progreso)
-            const grad = ctx.createLinearGradient(barX, 0, barX + barW * pProgress, 0);
-            grad.addColorStop(0, barColor1);
-            grad.addColorStop(1, barColor2);
-            ctx.fillStyle = grad;
-            ctx.shadowColor = barColor1;
-            ctx.shadowBlur = 12;
-            ctx.beginPath();
-            ctx.roundRect(barX, barY + 14, barW * pProgress, barH, 8);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            // Etiqueta
-            ctx.fillStyle = 'white';
-            ctx.font = 'bold 22px Arial';
-            ctx.textAlign = 'center';
-            ctx.shadowColor = barColor1;
-            ctx.shadowBlur = 10;
-            ctx.fillText(labelText, CANVAS_WIDTH / 2, barY + 12);
-            ctx.shadowBlur = 0;
-            ctx.restore();
+        if ((hasSalmon || hasConcha) && gameState === 'playing') {
+             const barW = 600;
+             const barH = 28;
+             const barX = (CANVAS_WIDTH - barW) / 2;
+             const barY = 30;
+             const pNow = performance.now();
+ 
+             let pProgress = 0;
+             let barColor1 = '#ff6600';
+             let barColor2 = '#ff2200';
+             let labelText = '';
+ 
+             if (hasSalmon) {
+                 pProgress = Math.max(0, (powerUpsRef.current.salmon.endTime - pNow) / 20000);
+                 barColor1 = '#ff9900'; barColor2 = '#cc0000';
+                 labelText = '🐟 GOD MODE';
+             } else if (hasConcha) {
+                 pProgress = Math.max(0, (powerUpsRef.current.concha.endTime - pNow) / 30000);
+                 barColor1 = '#00e5ff'; barColor2 = '#0055cc';
+                 labelText = '🐚 DOBLE SALTO';
+             }
+ 
+             ctx.save();
+             ctx.fillStyle = 'rgba(0,0,0,0.55)';
+             ctx.beginPath(); ctx.roundRect(barX - 10, barY - 10, barW + 20, barH + 30, 12); ctx.fill();
+             ctx.shadowColor = barColor1; ctx.shadowBlur = 18; ctx.strokeStyle = barColor1; ctx.lineWidth = 2;
+             ctx.beginPath(); ctx.roundRect(barX, barY + 14, barW, barH, 8); ctx.stroke(); ctx.shadowBlur = 0;
+             ctx.fillStyle = 'rgba(255,255,255,0.08)';
+             ctx.beginPath(); ctx.roundRect(barX, barY + 14, barW, barH, 8); ctx.fill();
+             const grad = ctx.createLinearGradient(barX, 0, barX + barW * pProgress, 0);
+             grad.addColorStop(0, barColor1); grad.addColorStop(1, barColor2);
+             ctx.fillStyle = grad; ctx.shadowBlur = 12;
+             ctx.beginPath(); ctx.roundRect(barX, barY + 14, barW * pProgress, barH, 8); ctx.fill();
+             ctx.shadowBlur = 0;
+             ctx.fillStyle = 'white'; ctx.font = 'bold 22px Arial'; ctx.textAlign = 'center'; ctx.shadowBlur = 10;
+             ctx.fillText(labelText, CANVAS_WIDTH / 2, barY + 12); ctx.restore();
         }
 
-        if (isPlayingRef.current) {
+        if (gameState === 'playing' || gameState === 'gameover') {
             requestRef.current = requestAnimationFrame(gameLoop);
         }
-    }, [gameOver, assetsLoaded, t]);
+    }, [gameOver, assetsLoaded, showGameOverUI, t, gameState]);
 
     const jump = useCallback(() => {
         if (isPlayingRef.current) {
@@ -559,6 +590,8 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         setHighScore(savedHigh ? parseInt(savedHigh) : 0);
 
         setGameState('playing');
+        setShowGameOverUI(false);
+        deathTimestampRef.current = 0;
         setScore(0);
         scoreRef.current = 0;
         speedRef.current = INITIAL_SPEED;
@@ -623,6 +656,10 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             isPlayingRef.current = true;
             if (requestRef.current) cancelAnimationFrame(requestRef.current);
             requestRef.current = requestAnimationFrame(gameLoop);
+        } else if (gameState === 'gameover') {
+            isPlayingRef.current = false;
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+            requestRef.current = requestAnimationFrame(gameLoop);
         } else {
             isPlayingRef.current = false;
             if (requestRef.current) cancelAnimationFrame(requestRef.current);
@@ -634,12 +671,24 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         };
     }, [gameState, gameLoop]);
 
+    // Reproducir sonido de gameover cuando aparece el UI
+    useEffect(() => {
+        if (showGameOverUI) {
+            if (gameOverSound.current) {
+                gameOverSound.current.currentTime = 0;
+                gameOverSound.current.play().catch(() => { });
+            }
+        }
+    }, [showGameOverUI]);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.code === 'Space' || e.code === 'ArrowUp') {
                 e.preventDefault();
+                // Bloquear durante animación de muerte
+                if (gameState === 'gameover' && !showGameOverUI) return;
                 if (gameState === 'playing') jump();
-                else startGame();
+                else if (gameState !== 'gameover') startGame();
             }
             if (e.code === 'ArrowDown') {
                 e.preventDefault();
@@ -658,10 +707,13 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         };
 
         const handleTouchStart = (e: TouchEvent) => {
+            // Bloquear durante animación de muerte
+            if (gameState === 'gameover' && !showGameOverUI) return;
             if (gameState === 'playing') {
                 if (!isPausedRef.current) jump();
+            } else if (gameState !== 'gameover') {
+                startGame();
             }
-            else startGame();
         };
 
         const handleTouchEnd = (e: TouchEvent) => {
@@ -669,20 +721,16 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         };
 
         const handleMouseDown = (e: MouseEvent) => {
+            // Bloquear durante animación de muerte
+            if (gameState === 'gameover' && !showGameOverUI) return;
             if (gameState === 'playing' && !isPausedRef.current) {
-                const now = performance.now();
-                const diff = now - lastClickTimeRef.current;
-                if (diff < 300) {
-                    // Doble click rapido: doble salto si concha activo
-                    jump();
-                } else {
-                    // Primer click: salto normal
-                    jump();
-                }
-                lastClickTimeRef.current = now;
-            } else if (gameState !== 'playing') {
+                jump();
+                lastClickTimeRef.current = performance.now();
+            } else if (gameState === 'start') {
                 startGame();
             }
+            // Si gameState === 'gameover' y showGameOverUI === true,
+            // el botón de reintentar maneja el reinicio.
         };
 
         const handleMouseUp = (e: MouseEvent) => {
@@ -704,7 +752,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             window.removeEventListener('mousedown', handleMouseDown);
             window.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [gameState, jump, cutJump, fastFall, togglePause]);
+    }, [gameState, jump, cutJump, fastFall, togglePause, showGameOverUI, startGame]);
 
     const gameOverContainerRef = useRef<HTMLDivElement>(null);
     const [prevGameState, setPrevGameState] = useState<'start' | 'playing' | 'gameover'>('start');
@@ -814,7 +862,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                 </div>
                             )}
 
-                            {gameState === 'gameover' && (
+                            {gameState === 'gameover' && showGameOverUI && (
                                 <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-30 overflow-hidden">
                                     <div 
                                         ref={gameOverContainerRef}

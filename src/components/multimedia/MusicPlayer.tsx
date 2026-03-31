@@ -37,6 +37,8 @@ const MusicPlayer = () => {
     const [showLyrics, setShowLyrics] = useState(false);
     const [showPlaylist, setShowPlaylist] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [isShuffle, setIsShuffle] = useState(false);
+    const [isLoop, setIsLoop] = useState(false);
 
     // -- Search State --
     const [searchQuery, setSearchQuery] = useState('');
@@ -357,8 +359,31 @@ const MusicPlayer = () => {
     const handlePlayPause = () => setIsPlaying(!isPlaying);
     const handleTimeUpdate = () => { if (audioRef.current) setCurrentTime(audioRef.current.currentTime); };
     const handleLoadedMetadata = () => { if (audioRef.current) setDuration(audioRef.current.duration); };
-    const handleNext = () => { setCurrentSongIndex((prev) => (prev + 1) % playlist.length); setIsPlaying(true); };
-    const handlePrevious = () => { setCurrentSongIndex((prev) => (prev - 1 + playlist.length) % playlist.length); setIsPlaying(true); };
+    const handleNext = () => {
+        if (isShuffle) {
+            let nextIndex = Math.floor(Math.random() * playlist.length);
+            // Try to pick a different song if there's more than one
+            if (playlist.length > 1 && nextIndex === currentSongIndex) {
+                nextIndex = (nextIndex + 1) % playlist.length;
+            }
+            setCurrentSongIndex(nextIndex);
+        } else {
+            setCurrentSongIndex((prev) => (prev + 1) % playlist.length);
+        }
+        setIsPlaying(true);
+    };
+    const handlePrevious = () => {
+        if (isShuffle) {
+            let prevIndex = Math.floor(Math.random() * playlist.length);
+            if (playlist.length > 1 && prevIndex === currentSongIndex) {
+                prevIndex = (prevIndex - 1 + playlist.length) % playlist.length;
+            }
+            setCurrentSongIndex(prevIndex);
+        } else {
+            setCurrentSongIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
+        }
+        setIsPlaying(true);
+    };
     const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => { const time = Number(e.target.value); if (audioRef.current) audioRef.current.currentTime = time; setCurrentTime(time); };
     const formatTime = (time: number) => { const mins = Math.floor(time / 60); const secs = Math.floor(time % 60); return `${mins}:${secs < 10 ? '0' : ''}${secs}`; };
     const parseTimestamp = (timestamp: string | number) => { if (typeof timestamp === 'number') return timestamp; if (typeof timestamp === 'string' && timestamp.includes(':')) { const [mins, secs] = timestamp.split(':').map(Number); return mins * 60 + secs; } return Number(timestamp) || 0; };
@@ -664,13 +689,27 @@ const MusicPlayer = () => {
                             </div>
 
                             <div className="flex items-center gap-8">
-                                <button className="text-slate-400 hover:text-white transition-colors"><MdShuffle /></button>
+                                <button 
+                                    onClick={() => setIsShuffle(!isShuffle)} 
+                                    className={`transition-colors ${isShuffle ? 'text-white' : 'text-slate-400 hover:text-white'}`}
+                                    style={{ color: isShuffle ? playerColor : '' }}
+                                    title="Shuffle"
+                                >
+                                    <MdShuffle />
+                                </button>
                                 <button onClick={handlePrevious} className="text-white text-3xl hover:text-white transition-colors" style={{ color: playerColor }}><MdSkipPrevious /></button>
-                                <button onClick={handlePlayPause} className="size-14 rounded-full flex items-center justify-center text-[#080c0e] shadow-lg hover:scale-105 active:scale-95 transition-all" style={{ backgroundColor: playerColor, boxShadow: `0 10px 15px -3px ${playerColor}66` }}>
+                                <button onClick={handlePlayPause} className="size-14 rounded-full flex items-center justify-center text-[#080c0e] shadow-lg hover:scale-105 active:scale-[0.98] transition-all" style={{ backgroundColor: playerColor, boxShadow: `0 10px 15px -3px ${playerColor}66` }}>
                                     {isPlaying ? <MdPause className="text-4xl" /> : <MdPlayArrow className="text-4xl" />}
                                 </button>
                                 <button onClick={handleNext} className="text-white text-3xl hover:text-white transition-colors" style={{ color: playerColor }}><MdSkipNext /></button>
-                                <button className="text-slate-400 hover:text-white transition-colors"><MdRepeat /></button>
+                                <button 
+                                    onClick={() => setIsLoop(!isLoop)} 
+                                    className={`transition-colors ${isLoop ? 'text-white' : 'text-slate-400 hover:text-white'}`}
+                                    style={{ color: isLoop ? playerColor : '' }}
+                                    title="Repeat One"
+                                >
+                                    <MdRepeat />
+                                </button>
                             </div>
 
                             <div className="flex items-center justify-end gap-6 w-1/4">
@@ -694,7 +733,23 @@ const MusicPlayer = () => {
                 </footer>
             </div>
 
-            <audio ref={audioRef} src={currentSong?.audioUrl || ""} crossOrigin="anonymous" onTimeUpdate={handleTimeUpdate} onLoadedMetadata={handleLoadedMetadata} onEnded={handleNext} />
+            <audio 
+                ref={audioRef} 
+                src={currentSong?.audioUrl || ""} 
+                crossOrigin="anonymous" 
+                onTimeUpdate={handleTimeUpdate} 
+                onLoadedMetadata={handleLoadedMetadata} 
+                onEnded={() => {
+                    if (isLoop) {
+                        if (audioRef.current) {
+                            audioRef.current.currentTime = 0;
+                            audioRef.current.play();
+                        }
+                    } else {
+                        handleNext();
+                    }
+                }} 
+            />
 
             <style jsx>{`
                 .glass { background: rgba(16, 30, 34, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }

@@ -111,8 +111,8 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="w-full z-50 font-orbitron">
-            <div className="glass-panel bg-holo-dark dark:bg-black/90 px-8 py-0 flex items-center justify-between transition-all duration-300 min-h-[70px] border-none shadow-none">
+        <nav className="fixed top-0 left-0 w-full z-[9999] font-orbitron">
+            <div className="glass-panel bg-white dark:bg-black/90 px-8 py-0 flex items-center justify-between transition-all duration-300 min-h-[70px] border-b border-black/5 dark:border-[#00f2ff]/20 shadow-lg">
 
                 {/* Logo Section */}
                 <Link
@@ -131,15 +131,15 @@ const Navbar = () => {
                         </div>
                     </div>
                     <div className="hidden md:block">
-                        <h1 className="text-white text-2xl font-black tracking-tighter italic drop-shadow-holo-glow leading-none">
+                        <h1 className="text-gray-900 dark:text-white text-2xl font-black tracking-tighter italic drop-shadow-holo-glow leading-none">
                             SHAKE-<span className="text-[#ff00e5]">GANG</span>
                         </h1>
-                        <p className="text-[10px] text-[#00f2ff] tracking-[0.3em] uppercase opacity-70">Community Network</p>
+                        <p className="text-[10px] text-[#009dad] dark:text-[#00f2ff] tracking-[0.3em] uppercase opacity-70">Community Network</p>
                     </div>
                 </Link>
 
                 {/* Desktop Navigation */}
-                <ul className="hidden lg:flex items-center space-x-8 text-sm font-bold tracking-widest text-white h-full">
+                <ul className="hidden lg:flex items-center space-x-8 text-sm font-bold tracking-widest text-gray-900 dark:text-white h-full">
                     {navLinks.map((link) => {
                         const safePathname = pathname || '';
                         const active = safePathname === link.path || safePathname.startsWith(link.path + '/') || (link.path !== '/' && safePathname.startsWith(link.path));
@@ -156,7 +156,7 @@ const Navbar = () => {
                             >
                                 <Link
                                     href={link.path}
-                                    className={`nav-link text-sm transition-all duration-300 hover:text-[#00f2ff] flex items-center gap-2 py-4 ${actualActive ? 'text-[#00f2ff] border-b-2 border-[#00f2ff]' : 'text-white border-b-2 border-transparent hover:border-[#00f2ff]/30'}`}
+                                    className={`nav-link text-sm transition-all duration-300 hover:text-[#00f2ff] flex items-center gap-2 py-4 ${actualActive ? 'text-[#00a0b0] dark:text-[#00f2ff] border-b-2 border-[#00a0b0] dark:border-[#00f2ff]' : 'text-gray-900 dark:text-white border-b-2 border-transparent hover:border-[#00f2ff]/30'}`}
                                     onClick={(e) => handleNav(e, link.path)}
                                 >
                                     {link.label.toUpperCase()}
@@ -165,14 +165,14 @@ const Navbar = () => {
 
                                 {/* Dropdown Menu */}
                                 {hasSubMenu && isDropdownOpen && (
-                                    <div className="absolute top-full left-0 mt-[2px] w-56 z-[100] animate-fade-in-up">
-                                        <div className="bg-black/95 backdrop-blur-2xl border border-[#00f2ff]/30 rounded-xl shadow-[0_20px_50px_rgba(0,242,255,0.3)] overflow-hidden">
+                                    <div className="absolute top-full left-0 mt-[2px] w-56 z-[1000] animate-fade-in-up">
+                                        <div className="bg-white dark:bg-[#050505] border border-gray-200 dark:border-[#00f2ff]/40 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_50px_rgba(0,242,255,0.2)] overflow-hidden">
                                             <div className="flex flex-col">
                                                 {link.subItems!.map((sub) => (
                                                     <Link
                                                         key={sub.path}
                                                         href={sub.path}
-                                                        className="flex items-center gap-3 px-6 py-4 text-xs hover:bg-[#00f2ff]/10 text-white hover:text-[#00f2ff] transition-all border-b border-white/5 last:border-none uppercase font-bold"
+                                                        className="flex items-center gap-3 px-6 py-4 text-xs hover:bg-[#00f2ff]/10 text-gray-900 dark:text-white hover:text-[#00f2ff] transition-all border-b border-black/5 dark:border-white/5 last:border-none uppercase font-bold"
                                                         onClick={(e) => {
                                                             handleNav(e, sub.path);
                                                             setActiveDropdown(null);
@@ -194,7 +194,7 @@ const Navbar = () => {
                 {/* Theme Toggle / Mobile Menu Toggle */}
                 <div className="flex items-center gap-4">
                     <div className="relative group/lang">
-                        <button className="flex items-center gap-2 text-white/80 hover:text-[#00f2ff] transition-colors p-2 rounded-lg bg-white/5 dark:bg-white/5 border border-white/10">
+                        <button className="flex items-center gap-2 text-gray-700 dark:text-white/80 hover:text-[#00f2ff] transition-colors p-2 rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
                             <FiGlobe className="text-lg" />
                             <span className="text-[10px] font-bold uppercase">{language}</span>
                         </button>
@@ -234,13 +234,13 @@ const Navbar = () => {
             {/* GSAP Side Mobile Menu */}
             <div
                 ref={overlayRef}
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] hidden opacity-0"
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1001] hidden opacity-0"
                 onClick={() => setIsMenuOpen(false)}
             />
 
             <div
                 ref={mobileMenuRef}
-                className="fixed top-0 right-0 h-full w-[80vw] max-w-sm bg-black/95 border-l border-[#00f2ff]/30 z-[70] shadow-2xl opacity-0 translate-x-full overflow-y-auto"
+                className="fixed top-0 right-0 h-full w-[80vw] max-w-sm bg-black/95 border-l border-[#00f2ff]/30 z-[1002] shadow-2xl opacity-0 translate-x-full overflow-y-auto"
             >
                 <div className="p-8">
                     <div className="flex items-center justify-between mb-12">

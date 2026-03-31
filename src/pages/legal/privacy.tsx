@@ -46,33 +46,35 @@ export default function Privacy() {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header HUD */}
-        <header className="mb-16 border-b border-zinc-200 dark:border-[#635994]/40 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 scifi-panel">
-          <div className="relative">
-            {/* HUD Bracket UI */}
-            <div className="absolute -left-4 top-0 w-2 h-2 border-t-2 border-l-2 border-[#ff007f]"></div>
-            <div className="absolute -left-4 bottom-0 w-2 h-2 border-b-2 border-l-2 border-[#ff007f]"></div>
-            
-            <div className="flex items-center gap-3 mb-4">
-              <MdPolicy className="text-[#ff007f] animate-pulse" />
-              <span className="text-[10px] font-mono tracking-[0.3em] text-[#ff007f] uppercase">Protocol Division</span>
+        <header className="mb-16 border-b border-zinc-200 dark:border-[#635994]/40 pb-8 flex flex-col gap-8 scifi-panel">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 w-full">
+            <div className="relative">
+              {/* HUD Bracket UI */}
+              <div className="absolute -left-4 top-0 w-2 h-2 border-t-2 border-l-2 border-[#ff007f]"></div>
+              <div className="absolute -left-4 bottom-0 w-2 h-2 border-b-2 border-l-2 border-[#ff007f]"></div>
+              
+              <div className="flex items-center gap-3 mb-4">
+                <MdPolicy className="text-[#ff007f] animate-pulse" />
+                <span className="text-[10px] font-mono tracking-[0.3em] text-[#ff007f] uppercase">Protocol Division</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-zinc-900 dark:text-white mb-2">
+                {t('footer.legal.privacyTitle') || 'Política de Privacidad'}
+              </h1>
+              <p className="text-sm font-mono text-zinc-500 dark:text-cyan-500/60 uppercase tracking-widest">
+                DOC_ID: SHK-PRV-99 // REV: 3.1
+              </p>
             </div>
-            
-            <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tight text-zinc-900 dark:text-white mb-2">
-              {t('footer.legal.privacyTitle') || 'Política de Privacidad'}
-            </h1>
-            <p className="text-sm font-mono text-zinc-500 dark:text-cyan-500/60 uppercase tracking-widest">
-              DOC_ID: SHK-PRV-99 // REV: 3.1
-            </p>
-          </div>
 
-          <div className="flex bg-white dark:bg-black/40 border border-zinc-200 dark:border-cyan-900/50 p-3 rounded-lg backdrop-blur-sm self-start">
-            <div className="text-center px-4 border-r border-zinc-200 dark:border-cyan-900/50">
-              <div className="text-[9px] text-zinc-500 dark:text-cyan-500/60 font-mono mb-1">STATUS</div>
-              <div className="text-xs font-bold text-green-600 dark:text-green-400">ACTIVE</div>
-            </div>
-            <div className="text-center px-4">
-              <div className="text-[9px] text-zinc-500 dark:text-cyan-500/60 font-mono mb-1">ENCRYPTION</div>
-              <div className="text-xs font-bold text-[#635994]">E2E</div>
+            <div className="flex bg-white dark:bg-black/40 border border-zinc-200 dark:border-cyan-900/50 p-3 rounded-lg backdrop-blur-sm self-start md:self-center shrink-0 shadow-[0_0_15px_rgba(0,229,255,0.1)]">
+              <div className="text-center px-4 border-r border-zinc-200 dark:border-cyan-900/50">
+                <div className="text-[9px] text-zinc-500 dark:text-cyan-500/60 font-mono mb-1">STATUS</div>
+                <div className="text-xs font-bold text-green-600 dark:text-green-400">ACTIVE</div>
+              </div>
+              <div className="text-center px-4">
+                <div className="text-[9px] text-zinc-500 dark:text-cyan-500/60 font-mono mb-1">ENCRYPTION</div>
+                <div className="text-xs font-bold text-[#635994]">E2E</div>
+              </div>
             </div>
           </div>
         </header>

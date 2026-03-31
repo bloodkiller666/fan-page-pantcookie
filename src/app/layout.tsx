@@ -41,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en">
             <head />
-            <body>
+            <body className="bg-white text-gray-900 dark:bg-[#0a0a0a] dark:text-white transition-colors duration-300">
                 <LanguageProvider>
                     <TransitionProvider>
                         <ClientTransitionHandler>

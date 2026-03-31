@@ -301,32 +301,49 @@ export const translations = {
                 cookiesTitle: "Cookies",
                 cookiesDesc: "Utilizamos cookies funcionales y analíticas básicas para garantizar el correcto funcionamiento del sitio y mejorar la experiencia del usuario. Puedes deshabilitarlas desde la configuración de tu navegador, aunque esto podría afectar algunas funcionalidades del sitio."
             },
-            faqList: [
-                {
-                    question: "¿Quién es ShuraHiwa?",
-                    answer: "VTuber y líder de la ShakeGang. Esta fan page celebra su contenido y a la comunidad."
+            supportCenter: "Centro de Soporte",
+            faqSubtitle: "Todo lo que necesitas saber para dominar el ecosistema. Si no encuentras lo que buscas, nuestro equipo está a un clic de distancia.",
+            searchPlaceholder: "Busca una respuesta (ej. 'Suscripciones', 'Torneos')...",
+            faqCategories: {
+                general: {
+                    title: "GENERAL & COMUNIDAD",
+                    items: [
+                        {
+                            question: "¿Qué es la SHAKE-GANG?",
+                            answer: "SHAKE-GANG es una plataforma de entretenimiento y comunicación dirigida para los Pantcookies en general. Ofrece contenido, juegos, mensajes y un ecosistema muy amigable y dinámico."
+                        },
+                        {
+                            question: "¿Se necesita una cuenta para entrar?",
+                            answer: "Por el momento no está disponible el registro de cuentas, pero puedes disfrutar del contenido y las actividades. Con excepción de los juegos y mensajes que solo requieren de un NICKNAME."
+                        },
+                        {
+                            question: "¿Se requiere ser subscriptor o seguidor de YT o Twitch para entrar?",
+                            answer: "No, no se requiere ser subscriptor o seguidor de YT o Twitch para entrar a la plataforma. Pero sería bueno que a dejaras tu follow o sub para apoyar. (Sus canales los encuentras en Sobre de)"
+                        },
+                        {
+                            question: "¿Quién es ShuraHiwa y los Pantcookies?",
+                            answer: "ShuraHiwa es una VTuber y streamer que transmite contenido de entretenimiento para el público en general. Los Pantcookies es el nombre de la comunidad en general. Una vez dentro ya no querrás salirte de ella."
+                        }
+                    ]
                 },
-                {
-                    question: "¿Qué es un Pantcookie?",
-                    answer: "Miembros de la comunidad. Participan en juegos, eventos y actividades creativas."
-                },
-                {
-                    question: "¿Cómo funcionan los juegos y rankings?",
-                    answer: "Son recreativos. Guardamos puntajes locales y, en algunos casos, rankings para motivar la participación."
-                },
-                {
-                    question: "¿Cómo me uno?",
-                    answer: "Únete a los canales de la comunidad y participa en el chat y los eventos."
-                },
-                {
-                    question: "¿Se recopilan datos personales?",
-                    answer: "Solo los necesarios para la experiencia. Consulta la Política de Privacidad para más detalles."
-                },
-                {
-                    question: "¿Dónde contacto?",
-                    answer: "Usa los canales oficiales de la comunidad. Responderemos en la medida de lo posible."
+                technical: {
+                    title: "SOPORTE TÉCNICO",
+                    items: [
+                        {
+                            question: "¿Problemas con la carga de Multimedia?",
+                            answer: "Nuestra plataforma utiliza aceleración por hardware. Si experimentas lag, te recomendamos limpiar el caché de tu navegador o verificar que los controladores de tu GPU estén actualizados. SHAKE-GANG está optimizado para Chrome, Brave, Opera GX y navegadores basados en Chromium."
+                        },
+                        {
+                            question: "¿En que dispositivos se puede acceder a la plataforma?",
+                            answer: "Puedes acceder a la plataforma desde cualquier dispositivo con conexión a internet. (PC, Laptop, Móvil y Tablet)"
+                        },
+                        {
+                            question: "¿Donde generar ticket de reclamo o consulta?",
+                            answer: "Puedes generar un ticket de reclamo o consulta en el botón de 'Soporte' en el pie de página AYUDA."
+                        }
+                    ]
                 }
-            ]
+            }
         },
         wall: {
             title: "Muro de Pantcookies",
@@ -727,32 +744,41 @@ export const translations = {
                 cookiesTitle: "Cookies",
                 cookiesDesc: "We use functional and basic analytics cookies to ensure the proper functionality of the site and improve the user experience. You can disable them from your browser settings, although this may affect some site features."
             },
-            faqList: [
-                {
-                    question: "Who is ShuraHiwa?",
-                    answer: "VTuber and leader of the ShakeGang. This fan page celebrates her content and the community."
+            supportCenter: "Support Center",
+            faqSubtitle: "Everything you need to know to master the ecosystem. If you can't find what you're looking for, our team is just a click away.",
+            searchPlaceholder: "Search for an answer (e.g., 'Subscriptions', 'Tournaments')...",
+            faqCategories: {
+                general: {
+                    title: "GENERAL & COMMUNITY",
+                    items: [
+                        {
+                            question: "What exactly is SHAKE-GANG?",
+                            answer: "SHAKE-GANG is more than just a platform; it's a cutting-edge digital publisher and a community dedicated to high-level gaming. We offer exclusive content, integrated chat tools, and a competitive gaming ecosystem designed for creators and neon-noir aesthetic enthusiasts."
+                        },
+                        {
+                            question: "How can I join exclusive tournaments?",
+                            answer: "To participate in our events, simply go to the GAMES section in the main menu. There you will find the calendar of upcoming events. Make sure to have your profile verified to access cash prizes and global rankings."
+                        },
+                        {
+                            question: "Are there premium memberships?",
+                            answer: "We have the \"NEON-ELITE\" level, which provides access to private chat rooms, uncompressed 4K multimedia, and exclusive cosmetics for your user profile. You can check the plans in your account settings."
+                        }
+                    ]
                 },
-                {
-                    question: "What is a Pantcookie?",
-                    answer: "Members of the community. They participate in games, events, and creative activities."
-                },
-                {
-                    question: "How do games and rankings work?",
-                    answer: "They are recreational. We save local scores and, in some cases, rankings to motivate participation."
-                },
-                {
-                    question: "How do I join?",
-                    answer: "Join the community channels and participate in chat and events."
-                },
-                {
-                    question: "Is personal data collected?",
-                    answer: "Only what is necessary for the experience. Check the Privacy Policy for more details."
-                },
-                {
-                    question: "Where can I contact you?",
-                    answer: "Use the official community channels. We will respond as much as possible."
+                technical: {
+                    title: "TECHNICAL SUPPORT",
+                    items: [
+                        {
+                            question: "Problems with Multimedia loading?",
+                            answer: "Our platform uses hardware acceleration. If you experience lag, we recommend clearing your browser cache or checking that your GPU drivers are up to date. SHAKE-GANG is optimized for Chrome and Chromium-based browsers."
+                        },
+                        {
+                            question: "Is my user profile secure?",
+                            answer: "We use military-grade encryption and two-factor authentication (2FA). Your data is protected under our \"Zero-Knowledge\" privacy policy, ensuring that your gaming identity remains private and secure."
+                        }
+                    ]
                 }
-            ]
+            }
         },
         wall: {
             title: "Pantcookie Wall",

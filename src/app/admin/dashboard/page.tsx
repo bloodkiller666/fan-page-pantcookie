@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../../utils/supabaseClient';
 import { getAllWallMessages, deleteWallMessage, updateWallMessage } from '../../../utils/firebase';
-import { FiTrash2, FiEdit2, FiSave, FiX, FiFilter, FiSearch, FiLock } from 'react-icons/fi';
+import { FiTrash2, FiEdit2, FiSave, FiX, FiFilter, FiSearch, FiLock, FiMonitor } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { MdBolt, MdDelete, MdDns, MdEdit, MdForum, MdGroups, MdLogout, MdMonitor, MdRefresh, MdSensors, MdShield, MdSportsEsports, MdLogin, MdSync } from 'react-icons/md';
@@ -211,7 +211,7 @@ export default function AdminDashboard() {
                 <form onSubmit={handleLogin} className="relative z-10 glass-panel bg-white dark:bg-slate-900/40 p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-2xl w-full max-w-md border border-zinc-200 dark:border-white/10 backdrop-blur-xl">
                     <div className="flex justify-center mb-8">
                         <div className="w-16 h-16 bg-gradient-to-br from-primary to-purple-600 rounded-2xl flex items-center justify-center rotate-3 shadow-[0_0_20px_rgba(255,31,142,0.4)]">
-                            <MdMonitor className="text-purple-500" />
+                            <FiMonitor className="text-white text-3xl" />
                         </div>
                     </div>
                     {/* CAMBIO: Texto del logo forzado a zinc-950 en light mode */}
@@ -219,7 +219,7 @@ export default function AdminDashboard() {
                         DASH-<span className="text-primary glow-text">BOARD</span>
                     </h2>
                     <p className="text-center text-xs font-bold text-zinc-600 dark:text-slate-400 tracking-[0.2em] mb-8 uppercase">
-                        Admin Access Protocol
+                        Acceso
                     </p>
                     <div className="space-y-6">
                         <div className="relative">
@@ -241,7 +241,7 @@ export default function AdminDashboard() {
   border border-primary/70 dark:border-primary/50 
   uppercase transform hover:-translate-y-1 active:scale-[0.98]"
                         >
-                            Authenticate
+                            Iniciar Sesión
                         </button>
                     </div>
                 </form>
@@ -265,7 +265,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-10">
                         <div className="flex items-center gap-3 group cursor-pointer">
                             <div className="w-10 h-10 bg-gradient-to-br from-primary to-purple-600 rounded-lg flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform shadow-[0_0_15px_rgba(255,31,142,0.4)]">
-                                <MdBolt className="text-2xl" />
+                                <FiMonitor className="text-white text-xl" />
                             </div>
                             {/* CAMBIO: Texto del logo zinc-950 en light mode */}
                             <span className="font-display font-extrabold text-2xl tracking-tighter uppercase italic text-zinc-950 dark:text-white">
