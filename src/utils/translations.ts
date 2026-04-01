@@ -5,25 +5,25 @@ export const translations = {
             multimedia: "Multimedia",
             games: "Juegos",
             chat: "Chat",
-            about: "Sobre de",
+            about: "Sobre nosotros",
             mensajes: "Mensajes",
-            language: "Lenguaje",
+            language: "Idioma",
             multimediaPhotos: "Fotos",
             multimediaVideos: "Videos",
             multimediaCovers: "Covers",
             gamesPuzzle: "Rompecabezas",
-            gamesTrivia: "Preguntados",
+            gamesTrivia: "Trivias",
             gamesShuraRun: "Shura Run",
             mensajesWrite: "Escribir Mensaje",
             mensajesRead: "Leer Mensajes"
         },
         footer: {
-            thanks: "¡Bienvenido a casa!",
-            description: "Este espacio especial está dedicado a ShuraHiwa y todos los Pantcookies que hacen de esta comunidad algo único.",
+            thanks: "¡Gracias por ser parte de la comunidad Pantcookie!",
+            description: "Este espacio especial está dedicado a ShuraHiwa y a todos los Pantcookies que hacen de esta comunidad algo único.",
             copyright: "© 2025 Fan Page Pantcookie. Creado con ❤️ para la comunidad.",
             terms: "Términos y Condiciones",
             privacy: "Privacidad",
-            faq: "Preguntas Frecuentes",
+            faq: "FAQ",
             legal: {
                 termsTitle: "Términos y Condiciones",
                 privacyTitle: "Política de Privacidad",
@@ -33,25 +33,22 @@ export const translations = {
         home: {
             specialMoments: "Momentos Especiales",
             specialMomentsDesc: "Revive los mejores momentos de la comunidad Pantcookie",
-            exploreContent: "Explora el Contenido",
-            exploreContentDesc: "Descubre todo lo que tenemos preparado para ti",
+            exploreContent: "Explorar Contenido",
+            exploreContentDesc: "Descubre todo lo que hemos preparado para ti",
             weeklyCalendar: "Calendario Semanal",
             heroTitle: "¡Bienvenido al mundo de la ShakeGang!",
             heroSubtitle: "La comunidad dedicada a ShuraHiwa. Explora contenido exclusivo, juega y diviértete con nosotros.",
-            heroBadge: "Gamer Mode: ON",
             heroMultimedia: "Ver Multimedia",
             heroGames: "Jugar Ahora",
             features: {
                 multimediaDesc: "Explora nuestra galería de fotos y videos de la comunidad Pantcookie",
-                gamesDesc: "Diviértete con nuestros juegos interactivos y compite en el ranking",
-                aboutDesc: "Conoce más sobre ShuraHiwa y la comunidad Pantcookie",
-                chatDesc: "Interactúa en tiempo real con Shura y la comunidad en nuestro chat exclusivo",
-                messagesDesc: "Lee y envía mensajes especiales en el muro de la comunidad Pantcookie"
+                gamesDesc: "¡Diviértete con nuestros juegos interactivos y compite en los rankings!",
+                aboutDesc: "Conoce más sobre ShuraHiwa y la comunidad Pantcookie"
             }
         },
         multimedia: {
             title: "Multimedia",
-            subtitle: "Explora nuestra colección de fotos y videos de la comunidad Pantcookie",
+            subtitle: "Descubre nuestra colección de fotos y videos de la comunidad Pantcookie",
             searchPlaceholder: "Buscar contenido...",
             tabs: {
                 photos: "Fotos",
@@ -59,77 +56,120 @@ export const translations = {
                 covers: "Covers"
             },
             gallery: {
-                img1: "Robert siendo Robert en su habitat natural",
+                img1: "Robert siendo Robert en su hábitat natural",
                 img2: "El famoso Salmonsito haciendo de las suyas",
                 img3: "Un vistazo al nuevo estilo de Chura",
                 img4: "Recuerdos inolvidables de la comunidad",
-                img5: "Arte fan impresionante dedicado a Shura",
+                img5: "Impresionante fan art dedicado a Shura",
                 img6: "Momentos épicos capturados en cámara",
-                img7: "La pandilla reunida divirtiéndose",
-                img8: "Detrás de escenas de nuestro último evento",
-                fanArt: "Arte Fan"
+                img7: "La gang reunida para divertirse",
+                img8: "Detrás de cámaras de nuestro último evento",
+                fanArt: "Fan Art"
             }
         },
         games: {
-            title: "¿Qué deseas jugar?",
+            welcomeTitle: "¡BIENVENIDO JUGADOR!",
+            welcomeSubtitle: "INGRESA TU NICKNAME PARA GUARDAR TUS RÉCORDS",
+            title: "¿Qué quieres jugar?",
             subtitle: "Elige un juego para comenzar",
             difficulty: "Dificultad",
             options: {
                 puzzleTitle: "Rompecabezas",
-                triviaTitle: "Preguntados",
+                triviaTitle: "Trivia",
                 playPuzzle: "Jugar Rompecabezas",
-                playTrivia: "Jugar Preguntados",
+                playTrivia: "Jugar Trivia",
                 playShuraRun: "Jugar Shura Run",
-                triviaDesc: "¿Eres capaz de responder a todas las preguntas en sus tres modalidades?",
+                triviaDesc: "¿Eres capaz de responder todas las preguntas en sus tres modalidades?",
                 shuraRunTitle: "Shura Run",
-                shuraRunDesc: "¡Corre con Shura, esquiva a los haters y recoge ingredientes! ¿Qué tan lejos podrás llegar?",
+                shuraRunDesc: "¡Corre con Shura, evita a los haters y recolecta ingredientes! ¿Qué tan lejos llegarás?",
                 timedMode: "Con Tiempo",
                 untimedMode: "Sin Tiempo",
                 chooseMode: "Selecciona el Modo de Juego",
-                selectCategory: "Selecciona la Categoría",
-                scoringLegend: "Leyenda de Puntos",
-                legendCorrect: "Correcto",
-                legendPartial: "Parcial",
-                legendIncorrect: "Incorrecto",
-                legendTimedBonus: "Bono de tiempo incluido",
-                selectMultiple: "Selecciona todas las respuestas correctas"
+                selectCategory: "Selecciona la Categoría"
             },
             puzzle: {
-                loading: "Cargando rompecabezas...",
+                loading: "Cargando puzzle...",
                 congrats: "¡Felicidades {name}!",
-                completeIn: "Completaste el rompecabezas en",
-                playAgain: "Jugar de Nuevo",
+                completeIn: "Completaste el puzzle en",
+                playAgain: "Jugar de nuevo",
                 restart: "Reiniciar",
                 alertName: "Por favor ingresa tu nombre antes de comenzar",
                 pause: "Pausa",
                 continue: "Continuar",
                 exit: "Salir",
-                startGame: "Comenzar Juego",
-                instruction: "Intercambia piezas para completar la imagen",
                 rulesTitle: "🧩 Reglas del Puzzle",
                 rule1: "1. Arrastra las piezas para completar la imagen original.",
-                rule2: "2. Completa el rompecabezas en el menor tiempo posible para entrar al ranking.",
+                rule2: "2. Completa el puzzle en el menor tiempo posible para entrar al ranking.",
                 rule3: "3. Puedes cambiar la dificultad, pero perderás tu progreso actual.",
-                ruleLuck: "¡Buena suerte, pantcake! 🥞",
-                restartConfirm: "¿Estás seguro de reiniciar?",
-                exitConfirm: "¿Estás seguro de salir?",
+                ruleLuck: "¡Buena suerte, panqueque! 🥞",
+                restartConfirm: "¿Estás seguro de querer reiniciar?",
+                exitConfirm: "¿Estás seguro de querer salir?",
                 yes: "Sí",
                 no: "No",
-                gameOver: "FIN DE JUEGO"
+                gameOver: "Juego Terminado",
+                copied: "¡Resultado copiado al portapapeles!",
+                selectDifficulty: "Selecciona la Dificultad",
+                difficultyDesc: "Elige el tamaño del tablero para comenzar tu desafío",
+                victoryTitle: "¡Victoria Magistral!",
+                victoryDesc: "Tu agilidad mental es impresionante...",
+                share: "Compartir Resultados",
+                needHelp: "¿Necesitas ayuda?",
+                useHint: "Usa una pista...",
+                useHintBtn: "Usar Pista (3 Libres)",
+                weeklyChallenge: "Desafío Semanal",
+                weeklyGoal: "Completa 3 puzzles en dificultad DIFÍCIL para ganar una insignia exclusiva.",
+                weeklyProgress: "2 / 3 COMPLETADOS",
+                rulesMueve: "Mueve las piezas",
+                rulesMueveDesc: "Arrastra las piezas para completar la imagen correctamente.",
+                rulesVelocidad: "Velocidad es clave",
+                rulesVelocidadDesc: "Completa en el menor tiempo posible para subir en el ranking.",
+                rulesCuidado: "Cuidado al cambiar",
+                rulesCuidadoDesc: "Cambiar la dificultad reiniciará tu progreso actual de inmediato.",
+                startGame: "Comenzar Juego"
             },
             shuraRun: {
-                score: "Score",
-                highScore: "High Score",
+                score: "Puntaje",
+                highScore: "Mejor Puntaje",
                 tapToJump: "Presiona ESPACIO o TOCA para saltar.",
-                instructions: "Esquiva los cuadrados rojos (Haters) y come Pantcakes 🥞.",
+                instructions: "Evita los cuadrados rojos (Haters) y come Pantcakes 🥞.",
                 playNow: "¡JUGAR AHORA!",
-                updatingScore: "¡Actualizando puntuación! Nuevo récord detectado.",
-                gameOver: "¡Game Over!",
+                updatingScore: "¡Actualizando puntaje! Nuevo récord detectado.",
+                gameOver: "¡Juego Terminado!",
                 retry: "REINTENTAR",
-                best: "Mejor"
+                best: "Mejor",
+                menuPlay: "JUGAR",
+                menuSettings: "AJUSTES",
+                menuControls: "CONTROLES",
+                pauseTitle: "PAUSA",
+                pauseSubtitle: "JUEGO EN ESPERA",
+                pauseContinue: "CONTINUAR",
+                pauseRestart: "REINICIAR",
+                pauseExit: "SALIR",
+                pauseHintTitle: "¿NECESITAS UN RESPIRO?",
+                pauseHintDesc: "TU PROGRESO SE MANTENDRÁ HASTA QUE SALGAS.",
+                settingsTitle: "AJUSTES",
+                settingsMusic: "MÚSICA",
+                settingsSfx: "EFECTOS SFX",
+                settingsFullscreen: "PANTALLA COMPLETA",
+                controlsTitle: "CONTROLES",
+                controlsJump: "SALTAR",
+                controlsTap: "TOCAR",
+                controlsQuickFall: "CAÍDA RÁPIDA",
+                controlsPause: "PAUSAR",
+                continue: "¿CONTINUAR?",
+                hallOfFame: "Salón de la Fama",
+                progressLabel: "Progreso al Récord",
+                back: "VOLVER",
+                godMode: "🐟 MODO DIOS",
+                doubleJump: "🐚 DOBLE SALTO",
+                godModeStatus: "MODO DIOS: {status}",
+                quickStart: "INICIO RÁPIDO",
+                jump: "SALTAR",
+                pause: "PAUSAR",
+                pressStart: "PRESIONA ESPACIO O TOCA PARA JUGAR"
             },
             difficultyOptions: {
-                select: "Selecciona la Dificultad",
+                select: "Selecciona la dificultad",
                 easy: "Fácil",
                 medium: "Medio",
                 hard: "Difícil"
@@ -137,13 +177,13 @@ export const translations = {
             leaderboard: {
                 title: "Ranking",
                 loading: "Cargando ranking...",
-                noScores: "No hay puntuaciones aún.",
+                noScores: "Aún no hay puntajes.",
                 beFirst: "¡Sé el primero!"
             },
             trivia: {
                 categoryPantcookie: "PantCookie",
                 categoryShura: "ShuraHiwa",
-                categoryMusicTitle: "Canciones",
+                categoryMusicTitle: "Música",
                 categoryMusic: "Adivina la Canción",
                 incorrectFeedback: "¡Incorrecto!",
                 excellent: "¡Excelente!",
@@ -190,6 +230,72 @@ export const translations = {
                 legendChaosWrong: "Incorrecto: -3pts"
             }
         },
+        admin: {
+            loginTitle: "DASHBOARD",
+            loginSubtitle: "Acceso",
+            masterPassword: "Master Password",
+            loginButton: "Iniciar Sesión",
+            wrongPassword: "Contraseña incorrecta",
+            tabs: {
+                scores: "PUNTAJES",
+                messages: "MENSAJES",
+                analytics: "ANALÍTICAS",
+                moderation: "MODERACIÓN"
+            },
+            status: {
+                live: "Live System",
+                nodes: "Nodos: 14 Activos",
+                uptime: "Tiempo de actividad del servidor",
+                activeSessions: "Sesiones Activas",
+                totalRecords: "Registros Totales",
+                online: "En línea"
+            },
+            dashboard: {
+                globalScores: "Puntajes Globales",
+                wallOfFame: "Muro de la Fama",
+                dbRecords: "Registros de Base de Datos en Vivo",
+                searchPlayer: "Buscar jugador...",
+                allGames: "Todos los juegos",
+                refresh: "REFRESH",
+                displaying: "Mostrando {count} registros"
+            },
+            table: {
+                identity: "Identidad",
+                gameZone: "Zona de Juego",
+                score: "Puntuación",
+                timestamp: "Timestamp",
+                action: "Acción",
+                message: "Mensaje",
+                location: "Ubicación",
+                loading: "Esperando flujos de datos...",
+                noRecords: "No se encontraron registros."
+            },
+            moderation: {
+                title: "Centro de Moderación",
+                subtitle: "Lista Negra / Mensajes Restringidos por IA",
+                empty: "No hay mensajes en el purgatorio",
+                approve: "Aprobar Mensaje",
+                flagged: "MARCADO"
+            },
+            activity: {
+                title: "Actividad Reciente",
+                logged_in: "Inició sesión",
+                logged_out: "Cerró sesión",
+                synced: "Sincronizado",
+                refreshed: "Actualizado",
+                deleted: "Eliminado",
+                updated: "Actualizado",
+                message: "Mensaje",
+                score: "Puntaje"
+            },
+            hardware: {
+                title: "Carga de Hardware",
+                cpu: "Uso de CPU",
+                memory: "Memoria",
+                ping: "Ping",
+                loss: "Pérdida"
+            }
+        },
         chat: {
             title: "Habla Conmigo",
             subtitle: "Charla con nuestro bot oficial. Pregunta sobre juegos, fotos o simplemente saluda.",
@@ -210,9 +316,8 @@ export const translations = {
             joinDiscord: "Únete al Discord",
             shuraTitle: "ShuraHiwa",
             shuraDesc1: "ShuraHiwa es una VTuber mexicana que debutó el 11 de junio de 2023. Hace streams en Twitch y YouTube, donde crea contenido variado como Just Chatting, videojuegos, karaokes, handcams y collabs. Su nombre significa «Defensora de la Esperanza» le gustá del salmón ahumado, las siestas y la diversión. Destaca por su personalidad dulce y maternal, con la meta de reclutar miembros para su «pandilla», a quienes recibe de forma cálida para crear un espacio seguro y reconfortante. Visualmente es una pantera motociclista: cabello azul con rosa, orejas de pantera, ojos rosa intenso que hipnotizan a los pantcookies, chaqueta azul y un bate con la palabra Oyazumi para usar si alguien se porta mal. Tiene cinco lunares visibles y varios accesorios llamativos como guantes de motociclista, shorts azul oscuro, botas, un tamagotchi en el cinturón y gafas sobre la cabeza. Y, sobre todo (y no, no hablo de su frente), destacan sus orejas y cola, cuyo origen sigue en debate: ¿pantera o gato? (aunque las panteras también son gatos).",
+            shuraDesc2: "A través de sus streams...",
             communityDesc1: "¡Bienvenidos a la familia! Los PantCookies o Pantcakes somos la comunidad fan oficial de ShuraHiwa, somos como un dorayakis con casco y un cubito de mantequilla. ¿Cuál es nuestro rol? Pues, solo ser fiel y apoyar a ShuraHiwa en sus streams o fuera de stream. Demostrar que no solo somos más que fans, sino una familia o un grupo que solo busca acoger amablemente nueva gente e integrarlo a la comunidad divertirnos y socializarnos son nuestras funciones pero como misión principal es <<Llevarnos bien con unos a los otros>> nuestro lugar de reuniones aparte de los streams siempre será Discord en donde jugamos, charlmos, hacemos chupi (a veces) y vemos películas y/o series (legalmente). Si desobedecemos o no cumplimos con alguno de estas acciones seremos el desayuno de ShuraHiwa.",
-            communityDesc2: "Aquí celebramos la creatividad, nos apoyamos mutuamente y compartimos momentos inolvidables. Desde memes legendarios hasta fanarts impresionantes, cada PantCookie aporta su chispa única a este grupo.",
-            communityDesc3: "Si buscas un lugar donde ser tú mismo y compartir tu afición, ¡has llegado a casa!",
             values: {
                 friendship: "Amistad",
                 inclusion: "Inclusión",
@@ -225,27 +330,13 @@ export const translations = {
         },
         common: {
             enterName: "Ingresa tu nombre",
-            playerName: "Ingresa tu nombre de jugador",
-            namePlaceholder: "Tu nombre...",
+            playerName: "Nombre del Jugador",
             placeholderNickname: "Escribe tu nickname...",
+            namePlaceholder: "Tu nombre...",
             startGame: "Comenzar Juego",
             backToSelection: "Volver a Selección",
             score: "Puntuación",
-            question: "Pregunta",
-            next: "Siguiente",
-            timeLeft: "Tiempo restante",
-            progressLostWarning: "Si cambias la dificultad ahora, perderás tu progreso actual. ¿Deseas continuar?",
-            difficulty: "Dificultad",
-            overwriteTitle: "¡Usuario Existente!",
-            overwriteMessage: "Ya hay una mejor puntuación con este nombre. ¿Deseas sobrescribirla con tu nueva marca?",
-            continue: "Sobrescribir",
-            downloadVideo: "Descargar Video",
-            videoNotSupported: "Tu navegador no soporta el elemento de video.",
-            close: "Cerrar",
-            recommended: "Recomendado",
-            shareResults: "Compartir Resultados",
-            viewFullRanking: "Ver Ranking Completo",
-            trendingUp: "En Tendencia"
+            close: "Cerrar"
         },
         musicPlayer: {
             originalBy: "Original por"
@@ -302,44 +393,45 @@ export const translations = {
                 cookiesDesc: "Utilizamos cookies funcionales y analíticas básicas para garantizar el correcto funcionamiento del sitio y mejorar la experiencia del usuario. Puedes deshabilitarlas desde la configuración de tu navegador, aunque esto podría afectar algunas funcionalidades del sitio."
             },
             supportCenter: "Centro de Soporte",
-            faqSubtitle: "Todo lo que necesitas saber para dominar el ecosistema. Si no encuentras lo que buscas, nuestro equipo está a un clic de distancia.",
-            searchPlaceholder: "Busca una respuesta (ej. 'Suscripciones', 'Torneos')...",
+            faqSubtitle: "Todo lo que necesitas saber para dominar el ecosistema de la comunidad. Si no encuentras lo que buscas, nuestro equipo está a un clic de distancia en Discord.",
+            searchPlaceholder: "Busca una respuesta...",
             faqCategories: {
                 general: {
-                    title: "GENERAL & COMUNIDAD",
+                    title: "Preguntas Generales",
                     items: [
                         {
-                            question: "¿Qué es la SHAKE-GANG?",
-                            answer: "SHAKE-GANG es una plataforma de entretenimiento y comunicación dirigida para los Pantcookies en general. Ofrece contenido, juegos, mensajes y un ecosistema muy amigable y dinámico."
+                            question: "¿Qué es esta página?",
+                            answer: "Es la Fan Page oficial de Pantcookie, un espacio creado por y para la comunidad de ShuraHiwa donde encontrarás fotos, videos, juegos interactivos y nuestro Muro de Pantcookies."
                         },
                         {
-                            question: "¿Se necesita una cuenta para entrar?",
-                            answer: "Por el momento no está disponible el registro de cuentas, pero puedes disfrutar del contenido y las actividades. Con excepción de los juegos y mensajes que solo requieren de un NICKNAME."
+                            question: "¿Quién es ShuraHiwa?",
+                            answer: "ShuraHiwa es una VTuber, mamá pantera y comandante de la ShakeGang que hace streams en Twitch y Youtube para divertir a sus adorados Pantcookies."
+                        }
+                    ]
+                },
+                games: {
+                    title: "Juegos y Clasificaciones",
+                    items: [
+                        {
+                            question: "¿Cómo se guardan mis puntajes?",
+                            answer: "Tus puntajes se guardan y sincronizan automáticamente utilizando el nickname que proveíste al inicio. Si cambias de navegador, serás invitado a ingresarlo nuevamente."
                         },
                         {
-                            question: "¿Se requiere ser subscriptor o seguidor de YT o Twitch para entrar?",
-                            answer: "No, no se requiere ser subscriptor o seguidor de YT o Twitch para entrar a la plataforma. Pero sería bueno que a dejaras tu follow o sub para apoyar. (Sus canales los encuentras en Sobre de)"
-                        },
-                        {
-                            question: "¿Quién es ShuraHiwa y los Pantcookies?",
-                            answer: "ShuraHiwa es una VTuber y streamer que transmite contenido de entretenimiento para el público en general. Los Pantcookies es el nombre de la comunidad en general. Una vez dentro ya no querrás salirte de ella."
+                            question: "¿Cuáles son las reglas de Shura Run?",
+                            answer: "En Shura Run, tu objetivo es recolectar Pantcakes dorados (10 pts) y clásicos, mientras evitas las cajas rojas. ¡Cuidado, la velocidad aumentará!"
                         }
                     ]
                 },
                 technical: {
-                    title: "SOPORTE TÉCNICO",
+                    title: "Soporte Técnico",
                     items: [
                         {
-                            question: "¿Problemas con la carga de Multimedia?",
-                            answer: "Nuestra plataforma utiliza aceleración por hardware. Si experimentas lag, te recomendamos limpiar el caché de tu navegador o verificar que los controladores de tu GPU estén actualizados. SHAKE-GANG está optimizado para Chrome, Brave, Opera GX y navegadores basados en Chromium."
+                            question: "¿Por qué no cargan algunos videos o imágenes?",
+                            answer: "Asegúrate de no tener extensiones bloqueadoras muy agresivas activas en el sitio, ya que muchas galerías se sirven desde dominios en la nube o incrustados."
                         },
                         {
-                            question: "¿En que dispositivos se puede acceder a la plataforma?",
-                            answer: "Puedes acceder a la plataforma desde cualquier dispositivo con conexión a internet. (PC, Laptop, Móvil y Tablet)"
-                        },
-                        {
-                            question: "¿Donde generar ticket de reclamo o consulta?",
-                            answer: "Puedes generar un ticket de reclamo o consulta en el botón de 'Soporte' en el pie de página AYUDA."
+                            question: "Tengo un bug en el chat interactivo",
+                            answer: "Nuestro bot está conectado a la IA en tiempo real. Si experimentas problemas, verifica tu conexión a internet o intenta refrescar la página. Si el bot indica que está 'descansando', es porque la API alcanzó su límite."
                         }
                     ]
                 }
@@ -369,85 +461,7 @@ export const translations = {
             submitError: "Error al enviar el mensaje. Intenta de nuevo.",
             emptyWall: "El muro está vacío...",
             emptySub: "¡Sé el primero en escribir un mensaje!",
-            emptyGoWrite: "Ir a escribir",
-            difficultyOptions: {
-                select: "Selecciona la Dificultad",
-                easy: "Fácil",
-                medium: "Medio",
-                hard: "Difícil"
-            },
-            leaderboard: {
-                title: "Ranking",
-                loading: "Cargando ranking...",
-                noScores: "No hay puntuaciones aún.",
-                beFirst: "¡Sé el primero!"
-            },
-            puzzle: {
-                pause: "Pausa",
-                continue: "Continuar",
-                restart: "Reiniciar",
-                exit: "Salir",
-                rulesTitle: "🧩 Reglas del Puzzle",
-                rule1: "1. Arrastra las piezas para completar la imagen original.",
-                rule2: "2. Completa el rompecabezas en el menor tiempo posible para entrar al ranking.",
-                rule3: "3. Puedes cambiar la dificultad, pero perderás tu progreso actual.",
-                ruleLuck: "¡Buena suerte, pantcake! 🥞",
-                restartConfirm: "¿Estás seguro de reiniciar?",
-                exitConfirm: "¿Estás seguro de salir?",
-                yes: "Sí",
-                no: "No",
-                playAgain: "Jugar de nuevo",
-                completeIn: "Completado en",
-                congrats: "¡Felicidades {name}!"
-            },
-            shuraRun: {
-                score: "Score",
-                highScore: "High Score",
-                tapToJump: "Presiona ESPACIO o TOCA para saltar.",
-                instructions: "Esquiva los cuadrados rojos (Haters) y come Pantcakes 🥞.",
-                playNow: "¡JUGAR AHORA!",
-                updatingScore: "¡Actualizando puntuación! Nuevo récord detectado.",
-                gameOver: "¡Game Over!",
-                retry: "REINTENTAR",
-                best: "Mejor"
-            },
-            trivia: {
-                hardcore: "Hardcore",
-                insaneMode: "Modo Insano",
-                insaneDesc1: "Adivina con solo el acertijo (5pts).",
-                insaneDesc2: "Si reproduces la canción (3pts + 7s timer).",
-                speedrun: "Speedrun",
-                chaosMode: "Modo Caos",
-                chaosDesc1: "100 canciones en 120s.",
-                chaosDesc2: "+10pts Correcto / -3pts Incorrecto.",
-                musicRulesTitle: "🧠 Reglas Musicales",
-                musicInsaneRule1: "1. Lee el acertijo e intenta adivinar sin escuchar.",
-                musicInsaneRule2: "2. Si aciertas directo: ",
-                musicInsaneRule3: "3. Si usas el reproductor, no habrá ninguna penalización ",
-                musicInsaneRule3b: " y tendrás solo ",
-                musicChaosRule1: "1. Carrera contra el reloj: 2400 segundos totales.",
-                musicChaosRule2: "2. Adivina tantas como puedas (Total 100).",
-                musicChaosRule3: "3. Lee y escucha el acertijo y luego marca la resputas correcta",
-                musicChaosRule3b: ". Incorrecta: ",
-                musicChaosRule4: "4. Puedes usar el reproductor sin penalización.",
-                recommendedAudio: "Recomendado: Usa audífonos para una mejor experiencia.",
-                playLetGo: "¡A darle!",
-                triviaRulesTitle: "🧠 Reglas de Trivia",
-                triviaRule1: "1. Selecciona la respuesta correcta antes de que se acabe el tiempo (si eliges modo con tiempo).",
-                triviaRule2: "2. Cada respuesta correcta suma puntos. ¡Las rachas dan bonificación!",
-                triviaRule3: "3. Diviértete y demuestra cuánto sabes de la ShakeGang.",
-                triviaTimedWarn: "⚠️ Modo Con Tiempo: Tienes 15 segundos por pregunta.",
-                prep: "Prepárate",
-                focus: "Concentrate",
-                ready: "Listos",
-                play: "A jugar",
-                gameOver: "FIN DE JUEGO",
-                pts5: "5 puntos",
-                pts3: "3 puntos",
-                sec11: "11 segundos",
-                pts10: "+10 pts",
-                ptsMinus3: "-3 pts"
-            }
+            emptyGoWrite: "Ir a escribir"
         }
     },
     en: {
@@ -465,13 +479,13 @@ export const translations = {
             gamesPuzzle: "Puzzle",
             gamesTrivia: "Trivia",
             gamesShuraRun: "Shura Run",
-            mensajesWrite: "Write Message",
+            mensajesWrite: "Write a Message",
             mensajesRead: "Read Messages"
         },
         footer: {
-            thanks: "Thank you for being part of the Pantcookie community!",
-            description: "This special space is dedicated to ShuraHiwa and all the Pantcookies who make this community unique.",
-            copyright: "© 2025 Fan Page Pantcookie. Created with ❤️ for the community.",
+            thanks: "Thanks for being part of the Pantcookie community!",
+            description: "This special space is dedicated to ShuraHiwa and all the Pantcookies who make this community something unique.",
+            copyright: "© 2025 Pantcookie Fan Page. Created with ❤️ for the community.",
             terms: "Terms & Conditions",
             privacy: "Privacy Policy",
             faq: "FAQ",
@@ -487,21 +501,19 @@ export const translations = {
             exploreContent: "Explore Content",
             exploreContentDesc: "Discover everything we have prepared for you",
             weeklyCalendar: "Weekly Calendar",
-            heroTitle: "Welcome to the world of ShakeGang!",
-            heroSubtitle: "The community dedicated to ShuraHiwa. Explore exclusive content, play and have fun with us.",
-            heroMultimedia: "View Multimedia",
+            heroTitle: "Welcome to the world of the ShakeGang!",
+            heroSubtitle: "The community dedicated to ShuraHiwa. Explore exclusive content, play, and have fun with us.",
+            heroMultimedia: "See Multimedia",
             heroGames: "Play Now",
             features: {
                 multimediaDesc: "Explore our photo and video gallery of the Pantcookie community",
-                gamesDesc: "Have fun with our interactive games and compete in the rankings",
-                aboutDesc: "Learn more about ShuraHiwa and the Pantcookie community",
-                chatDesc: "Interact in real-time with Shura and the community in our exclusive chat",
-                messagesDesc: "Read and send special messages on the Pantcookie community wall"
+                gamesDesc: "Have fun with our interactive games and compete in the leaderboards!",
+                aboutDesc: "Learn more about ShuraHiwa and the Pantcookie community"
             }
         },
         multimedia: {
             title: "Multimedia",
-            subtitle: "Explore our collection of photos and videos from the Pantcookie community",
+            subtitle: "Discover our collection of photos and videos from the Pantcookie community",
             searchPlaceholder: "Search content...",
             tabs: {
                 photos: "Photos",
@@ -515,12 +527,14 @@ export const translations = {
                 img4: "Unforgettable community memories",
                 img5: "Impressive fan art dedicated to Shura",
                 img6: "Epic moments captured on camera",
-                img7: "The gang gathered having fun",
+                img7: "The gang gathered to have fun",
                 img8: "Behind the scenes of our last event",
                 fanArt: "Fan Art"
             }
         },
         games: {
+            welcomeTitle: "WELCOME PLAYER!",
+            welcomeSubtitle: "ENTER YOUR NICKNAME TO SAVE YOUR RECORDS",
             title: "What do you want to play?",
             subtitle: "Choose a game to start",
             difficulty: "Difficulty",
@@ -530,54 +544,97 @@ export const translations = {
                 playPuzzle: "Play Puzzle",
                 playTrivia: "Play Trivia",
                 playShuraRun: "Play Shura Run",
-                triviaDesc: "Are you able to answer all the questions in all three formats?",
+                triviaDesc: "Are you able to answer all the questions in their three modalities?",
                 shuraRunTitle: "Shura Run",
-                shuraRunDesc: "Run with Shura, dodge haters, and collect ingredients! How far can you go?",
+                shuraRunDesc: "Run with Shura, avoid haters and collect ingredients! How far will you go?",
                 timedMode: "Timed",
                 untimedMode: "Untimed",
                 chooseMode: "Select Game Mode",
-                selectCategory: "Select Category",
-                scoringLegend: "Scoring Legend",
-                legendCorrect: "Correct",
-                legendPartial: "Partial",
-                legendIncorrect: "Incorrect",
-                legendTimedBonus: "Time bonus included",
-                selectMultiple: "Select all correct answers"
+                selectCategory: "Select Category"
             },
             puzzle: {
                 loading: "Loading puzzle...",
                 congrats: "Congratulations {name}!",
                 completeIn: "You completed the puzzle in",
-                playAgain: "Play Again",
-                restart: "Restart",
+                playAgain: "Play again",
+                restart: "Reset",
                 alertName: "Please enter your name before starting",
                 pause: "Pause",
                 continue: "Continue",
                 exit: "Exit",
                 rulesTitle: "🧩 Puzzle Rules",
                 rule1: "1. Drag the pieces to complete the original image.",
-                rule2: "2. Complete the puzzle in the shortest time possible to enter the ranking.",
-                rule3: "3. You can change difficulty, but you will lose your current progress.",
-                ruleLuck: "Good luck, pantcake! 🥞",
+                rule2: "2. Complete the puzzle in minimum time to enter the leaderboard.",
+                rule3: "3. You can change the difficulty, but you will lose your current progress.",
+                ruleLuck: "Good luck, pancake! 🥞",
                 restartConfirm: "Are you sure you want to restart?",
                 exitConfirm: "Are you sure you want to exit?",
                 yes: "Yes",
                 no: "No",
-                gameOver: "GAME OVER"
+                gameOver: "Game Over",
+                copied: "Result copied to clipboard!",
+                selectDifficulty: "Select Difficulty",
+                difficultyDesc: "Choose board size to start your challenge",
+                victoryTitle: "Masterly Victory!",
+                victoryDesc: "Your mental agility is impressive...",
+                share: "Share Results",
+                needHelp: "Need help?",
+                useHint: "Use a hint...",
+                useHintBtn: "Use Hint (3 Free)",
+                weeklyChallenge: "Weekly Challenge",
+                weeklyGoal: "Complete 3 puzzles in HARD difficulty to earn an exclusive badge.",
+                weeklyProgress: "2 / 3 COMPLETED",
+                rulesMueve: "Move the pieces",
+                rulesMueveDesc: "Drag the pieces to complete the original image correctly.",
+                rulesVelocidad: "Speed is key",
+                rulesVelocidadDesc: "Complete in the shortest time possible to climb the leaderboard.",
+                rulesCuidado: "Careful when changing",
+                rulesCuidadoDesc: "Changing the difficulty will reset your current progress immediately.",
+                startGame: "Start Game"
             },
             shuraRun: {
                 score: "Score",
                 highScore: "High Score",
                 tapToJump: "Press SPACE or TAP to jump.",
-                instructions: "Dodge the red squares (Haters) and eat Pantcakes 🥞.",
+                instructions: "Avoid the red squares (Haters) and eat Pantcakes 🥞.",
                 playNow: "PLAY NOW!",
                 updatingScore: "Updating score! New record detected.",
                 gameOver: "Game Over!",
                 retry: "RETRY",
-                best: "Best"
+                best: "Best",
+                menuPlay: "PLAY",
+                menuSettings: "SETTINGS",
+                menuControls: "CONTROLS",
+                pauseTitle: "PAUSE",
+                pauseSubtitle: "GAME STANDBY",
+                pauseContinue: "CONTINUE",
+                pauseRestart: "RESTART",
+                pauseExit: "EXIT",
+                pauseHintTitle: "NEED A BREATHER?",
+                pauseHintDesc: "YOUR PROGRESS WILL BE KEPT UNTIL YOU QUIT.",
+                settingsTitle: "SETTINGS",
+                settingsMusic: "BGM",
+                settingsSfx: "SFX",
+                settingsFullscreen: "FULLSCREEN",
+                controlsTitle: "CONTROLS",
+                controlsJump: "JUMP",
+                controlsTap: "TAP",
+                controlsQuickFall: "QUICK FALL",
+                controlsPause: "PAUSE",
+                continue: "CONTINUE?",
+                hallOfFame: "Hall of Fame",
+                progressLabel: "Progress to Record",
+                back: "BACK",
+                godMode: "🐟 GOD MODE",
+                doubleJump: "🐚 DOUBLE JUMP",
+                godModeStatus: "GOD MODE: {status}",
+                quickStart: "QUICK START",
+                jump: "JUMP",
+                pause: "PAUSE",
+                pressStart: "PRESS SPACE OR TAP TO PLAY"
             },
             difficultyOptions: {
-                select: "Select Difficulty",
+                select: "Select difficulty",
                 easy: "Easy",
                 medium: "Medium",
                 hard: "Hard"
@@ -592,50 +649,100 @@ export const translations = {
                 categoryPantcookie: "PantCookie",
                 categoryShura: "ShuraHiwa",
                 categoryMusicTitle: "Music",
-                categoryMusic: "Guess the Song",
+                categoryMusic: "Guess the song",
                 incorrectFeedback: "Incorrect!",
                 excellent: "Excellent!",
                 correctFeedback: "Correct!",
                 scoreUpdating: "Updating score...",
                 insaneMode: "Insane Mode",
-                insaneModeDesc: "Guess with only the riddle (5pts).\nIf you play the song (3pts + 7s timer).",
+                insaneModeDesc: "Guess with only the riddle (5pts).\nIf playing the song (3pts + 7s timer).",
                 chaosMode: "Chaos Mode",
                 chaosModeDesc: "100 songs in 120s.\n+10pts Correct / -3pts Incorrect.",
                 musicRulesTitle: "🧠 Music Rules",
                 musicInsane1: "1. Read the riddle and try to guess without listening.",
-                musicInsane2: "2. Direct correct guess: ",
-                musicInsane3: "3. Using the player: ",
+                musicInsane2: "2. If you guess directly: ",
+                musicInsane3: "3. If you use the player: ",
                 headphonesRecommended: "Recommended: Use headphones for a better experience.",
-                musicChaos1: "1. Race against the clock: 2400 total seconds.",
-                musicChaos2: "2. Guess as many as you can (100 Total).",
+                musicChaos1: "1. Race against time: 2400 seconds total.",
+                musicChaos2: "2. Guess as many as you can (Total 100).",
                 musicChaos3: "3. Correct: ",
                 musicChaos4: "4. You can use the player without penalty.",
-                go: "Let's Go!",
+                go: "Let's go!",
                 rulesTitle: "🧠 Trivia Rules",
-                rule1: "1. Select the correct answer before time runs out (if timed mode is chosen).",
+                rule1: "1. Select the correct answer before time runs out (if timed mode is selected).",
                 rule2: "2. Every correct answer adds points. Streaks give bonuses!",
                 rule3: "3. Have fun and show how much you know about the ShakeGang.",
-                timedWarning: "⚠️ Timed Mode: You have 15 seconds per question.",
-                countdownReady: "Get Ready",
+                timedWarning: "⚠️ Timed Mode: 15 seconds per question.",
+                countdownReady: "Ready",
                 countdownSet: "Focus",
                 countdownSteady: "Set",
-                countdownGo: "Go!",
-                back: "← Back",
-                incorrect: "Incorrect!",
-                correctAnswerIs: "The correct answer was",
-                submitAnswer: "Submit Answer",
-                timeUp: "Time's up!",
-                chaosCorrect: "Correct",
-                chaosIncorrect: "Incorrect",
-                totalTime: "Total time",
-                audioPlaying: "♪ Playing...",
-                audioUsed: "Already used",
-                playTrack: "▶ Play Track",
-                playSong: "▶ Play Song",
-                legendInsaneRight: "No audio: 5pts",
-                legendInsaneAudio: "With audio: 3pts + 7s",
-                legendChaosRight: "Correct: +10pts",
-                legendChaosWrong: "Incorrect: -3pts"
+                countdownGo: "Go!"
+            }
+        },
+        admin: {
+            loginTitle: "DASHBOARD",
+            loginSubtitle: "Access",
+            masterPassword: "Master Password",
+            loginButton: "Sign In",
+            wrongPassword: "Incorrect password",
+            tabs: {
+                scores: "SCORES",
+                messages: "MESSAGES",
+                analytics: "ANALYTICS",
+                moderation: "MODERATION"
+            },
+            status: {
+                live: "Live System",
+                nodes: "Nodes: 14 Active",
+                uptime: "Server Uptime",
+                activeSessions: "Active Sessions",
+                totalRecords: "Total Records",
+                online: "Online"
+            },
+            dashboard: {
+                globalScores: "Global Scores",
+                wallOfFame: "Wall of Fame",
+                dbRecords: "Live Database Records",
+                searchPlayer: "Search player...",
+                allGames: "All Games",
+                refresh: "REFRESH",
+                displaying: "Displaying {count} records"
+            },
+            table: {
+                identity: "Identity",
+                gameZone: "Game Zone",
+                score: "Score",
+                timestamp: "Timestamp",
+                action: "Action",
+                message: "Message",
+                location: "Location",
+                loading: "Awaiting Data Streams...",
+                noRecords: "No Database Records Found."
+            },
+            moderation: {
+                title: "Moderation Center",
+                subtitle: "Blacklist / AI Restricted Messages",
+                empty: "No messages in purgatory",
+                approve: "Approve Message",
+                flagged: "FLAGGED"
+            },
+            activity: {
+                title: "Recent Activity",
+                logged_in: "logged in",
+                logged_out: "logged out",
+                synced: "Synced",
+                refreshed: "Refreshed",
+                deleted: "Deleted",
+                updated: "Updated",
+                message: "Message",
+                score: "Score"
+            },
+            hardware: {
+                title: "Hardware Load",
+                cpu: "CPU Usage",
+                memory: "Memory",
+                ping: "Ping",
+                loss: "Loss"
             }
         },
         chat: {
@@ -657,11 +764,7 @@ export const translations = {
             communityTitle: "PantCookie Community",
             joinDiscord: "Join Discord",
             shuraTitle: "ShuraHiwa",
-            shuraDesc1: "ShuraHiwa is a talented VTuber who has captured the hearts of thousands of fans with her charisma, creativity, and dedication. Her unique content and authentic personality have made her a beloved figure in the community.",
-            shuraDesc2: "Through her streams, videos, and interactions, she has created a universe where fun and spontaneity are never lacking.",
-            communityDesc1: "Welcome to the family! PantCookies are much more than followers; we are a vibrant and diverse community united by the laughter and fun chaos that ShuraHiwa inspires.",
-            communityDesc2: "Here we celebrate creativity, support each other, and share unforgettable moments. From legendary memes to impressive fan arts, every PantCookie brings their unique spark to this group.",
-            communityDesc3: "If you're looking for a place where you can be yourself and share your passion, you've come home!",
+            shuraDesc1: "ShuraHiwa is a talented VTuber...",
             values: {
                 friendship: "Friendship",
                 inclusion: "Inclusion",
@@ -674,20 +777,12 @@ export const translations = {
         },
         common: {
             enterName: "Enter your name",
+            playerName: "Player Name",
+            placeholderNickname: "Enter your nickname...",
             namePlaceholder: "Your name...",
             startGame: "Start Game",
             backToSelection: "Back to Selection",
             score: "Score",
-            question: "Question",
-            next: "Next",
-            timeLeft: "Time Left",
-            progressLostWarning: "If you change difficulty now, you will lose your current progress. Do you want to continue?",
-            difficulty: "Difficulty",
-            overwriteTitle: "Existing User!",
-            overwriteMessage: "There is already a better score with this name. Do you want to overwrite it with your new score?",
-            continue: "Overwrite",
-            downloadVideo: "Download Video",
-            videoNotSupported: "Your browser does not support the video tag.",
             close: "Close"
         },
         musicPlayer: {
@@ -696,85 +791,82 @@ export const translations = {
         legal: {
             terms: {
                 acceptanceTitle: "Acceptance of Use",
-                acceptanceDesc: "By accessing and using this site, you accept these Terms and Conditions of Use. If you do not agree with any of them, we ask that you do not use the Pantcookie Fan Page.",
+                acceptanceDesc: "By accessing and using this site, you accept these Terms and Conditions of Use.",
                 usageTitle: "Site Usage",
-                usageDesc1: "The use of the site must be carried out responsibly and respectfully, both with the community and with ShuraHiwa. In particular:",
-                usagePoint1: "1. Sending spam, harassing other users, or carrying out illegal activities is not allowed.",
-                usagePoint2: "2. Games, rankings, and interactive content are for recreational purposes; the use of cheats, manipulation, or any practice that alters their function is not allowed.",
+                usageDesc1: "The use of the site must be carried out responsibly...",
                 intellectualTitle: "Intellectual Property",
-                intellectualDesc: "All content belongs to their respective original authors. This site is an unofficial project, created by fans, and does not claim ownership over referenced brands, images, music, or other materials.",
+                intellectualDesc: "All content belongs to their respective original authors.",
                 changesTitle: "Changes and Contact",
-                changesDesc: "We reserve the right to modify these Terms and Conditions at any time. Any updates will be published on this same page. For questions or clarifications, you can use the community's contact channels.",
+                changesDesc: "We reserve the right to modify these Terms and Conditions at any time.",
                 userContentTitle: "User Content",
-                userContentDesc: "By submitting messages, scores, comments, or other content, you guarantee that you have the right to share it and that such content does not infringe on the rights of third parties. You also agree that it may be displayed on the site in accordance with its purpose.",
+                userContentDesc: "By submitting messages, scores, comments...",
                 cookiesTitle: "Cookies and Analytics",
-                cookiesDesc: "We use functional cookies and basic analytics metrics to improve user experience and site performance. We do not sell or trade personal data.",
+                cookiesDesc: "We use functional cookies and basic analytics metrics...",
                 moderationTitle: "Content Moderation",
-                moderationDesc: "We reserve the right to review, moderate, hide, or remove any content submitted by users that does not comply with these rules or that negatively affects the community.",
+                moderationDesc: "We reserve the right to review, moderate...",
                 recreationalTitle: "Recreational Use of Content",
-                recreationalDesc: "Games, rankings, leaderboards, and other interactive content on the site are strictly for recreational and community purposes. They have no official commercial, economic, or competitive value."
+                recreationalDesc: "Games, rankings, leaderboards..."
             },
             privacy: {
                 dataTitle: "Data Collection",
-                dataDesc: "We only collect the necessary information for the proper functioning of the site and the user experience, including:",
-                dataPoint1: "1. Name or alias you enter when participating in games or completing forms.",
-                dataPoint2: "2. Scores, statistics, and game metrics used to display leaderboards and rankings.",
-                dataPoint3: "3. Minimal technical metrics (like performance and stability) to improve the functioning of the site.",
+                dataDesc: "We only collect the necessary information...",
                 purposeTitle: "Purposes",
-                purposeDesc: "The collected data will be used responsibly and solely for the following purposes:",
-                purposePoint1: "1. Improve and optimize the user experience, including the display of rankings and results.",
-                purposePoint2: "2. Guarantee the proper functioning of the site, as well as its security, stability, and protection against misuse.",
-                purposePoint3: "3. Facilitate communication within the community, always without commercial or advertising purposes.",
+                purposeDesc: "The collected data will be used responsibly...",
                 userContentTitle: "User Submitted Content",
-                userContentDesc1: "Users can send messages, texts, and images through the site. Such content may be visible to other members of the community. By submitting content, the user declares to have the necessary rights to share it and authorizes its use and display within the site, always without commercial purposes.",
-                userContentDesc2: "To maintain a respectful and pleasant environment for everyone, please do not post offensive, violent, sexually explicit, discriminatory, or inappropriate content for the community. We reserve the right to moderate, hide, or remove content that does not comply with these statements.",
+                userContentDesc1: "Users can send messages, texts, and images...",
                 linksTitle: "Links to Third-Party Sites",
-                linksDesc: "The site may include links or integrated content from third-party platforms. We are not responsible for the privacy practices, content, or functioning of such external sites.",
+                linksDesc: "The site may include links or integrated content...",
                 storageTitle: "Storage and Security",
-                storageDesc: "The collected data is retained only for the time necessary to fulfill the described purposes. We apply reasonable security measures to protect the information from unauthorized access, loss, or misuse. Under no circumstances do we sell or trade personal information.",
+                storageDesc: "The collected data is retained only for the time necessary...",
                 aiTitle: "AI Chatbot Usage",
-                aiDesc: "The site includes a chatbot that uses artificial intelligence to generate automatic responses. Interactions may be used to improve its functionality and user experience. The chatbot does not replace professional advice and does not guarantee the total accuracy of its responses.",
+                aiDesc: "The site includes a chatbot...",
                 rightsTitle: "Your Rights",
-                rightsDesc: "As a user, you have the right to:",
-                rightsPoint1: "1. Access, rectify, or request the deletion of your personal information.",
-                rightsPoint2: "2. Request details about data processing and the purposes for which it is used.",
-                rightsPoint3: "3. Withdraw your consent where appropriate, in accordance with applicable regulations.",
+                rightsDesc: "As a user, you have the right to...",
                 ageTitle: "Minimum Age",
-                ageDesc: "The site is intended for users over 13 years old. If you are younger, it is recommended to have the consent of a responsible adult to use the site and its functions.",
+                ageDesc: "The site is intended for users over 13 years old.",
                 cookiesTitle: "Cookies",
-                cookiesDesc: "We use functional and basic analytics cookies to ensure the proper functionality of the site and improve the user experience. You can disable them from your browser settings, although this may affect some site features."
+                cookiesDesc: "We use functional and basic analytics cookies..."
             },
             supportCenter: "Support Center",
-            faqSubtitle: "Everything you need to know to master the ecosystem. If you can't find what you're looking for, our team is just a click away.",
-            searchPlaceholder: "Search for an answer (e.g., 'Subscriptions', 'Tournaments')...",
+            faqSubtitle: "Everything you need to know about the community ecosystem. If you can't find what you're looking for, our team is just a click away on Discord.",
+            searchPlaceholder: "Search for an answer...",
             faqCategories: {
                 general: {
-                    title: "GENERAL & COMMUNITY",
+                    title: "General Questions",
                     items: [
                         {
-                            question: "What exactly is SHAKE-GANG?",
-                            answer: "SHAKE-GANG is more than just a platform; it's a cutting-edge digital publisher and a community dedicated to high-level gaming. We offer exclusive content, integrated chat tools, and a competitive gaming ecosystem designed for creators and neon-noir aesthetic enthusiasts."
+                            question: "What is this page?",
+                            answer: "It is the official Pantcookie Fan Page, an interactive space created for the ShuraHiwa community where you can find photos, videos, games, and our message wall."
                         },
                         {
-                            question: "How can I join exclusive tournaments?",
-                            answer: "To participate in our events, simply go to the GAMES section in the main menu. There you will find the calendar of upcoming events. Make sure to have your profile verified to access cash prizes and global rankings."
+                            question: "Who is ShuraHiwa?",
+                            answer: "ShuraHiwa is a VTuber, panther mom, and commander of the ShakeGang who streams on Twitch and YouTube to entertain her beloved Pantcookies."
+                        }
+                    ]
+                },
+                games: {
+                    title: "Games & Leaderboards",
+                    items: [
+                        {
+                            question: "How are my scores saved?",
+                            answer: "Your scores are automatically saved and synced using the nickname you provided at the beginning. If you switch browsers, you will be prompted to enter it again."
                         },
                         {
-                            question: "Are there premium memberships?",
-                            answer: "We have the \"NEON-ELITE\" level, which provides access to private chat rooms, uncompressed 4K multimedia, and exclusive cosmetics for your user profile. You can check the plans in your account settings."
+                            question: "What are the rules for Shura Run?",
+                            answer: "In Shura Run, your goal is to collect golden Pantcakes (10 pts) and classic ones, while avoiding red boxes. Watch out, the speed will increase!"
                         }
                     ]
                 },
                 technical: {
-                    title: "TECHNICAL SUPPORT",
+                    title: "Technical Support",
                     items: [
                         {
-                            question: "Problems with Multimedia loading?",
-                            answer: "Our platform uses hardware acceleration. If you experience lag, we recommend clearing your browser cache or checking that your GPU drivers are up to date. SHAKE-GANG is optimized for Chrome and Chromium-based browsers."
+                            question: "Why aren't some videos or images loading?",
+                            answer: "Make sure you don't have aggressive ad-blockers running, as many galleries are served from cloud or embedded domains."
                         },
                         {
-                            question: "Is my user profile secure?",
-                            answer: "We use military-grade encryption and two-factor authentication (2FA). Your data is protected under our \"Zero-Knowledge\" privacy policy, ensuring that your gaming identity remains private and secure."
+                            question: "I found a bug in the interactive chat",
+                            answer: "Our bot is connected to AI in real time. If you experience issues, check your internet connection or try refreshing the page. If the bot says it's 'resting', the API limit has been reached."
                         }
                     ]
                 }
@@ -804,85 +896,7 @@ export const translations = {
             submitError: "Error sending message. Please try again.",
             emptyWall: "The wall is empty...",
             emptySub: "Be the first to write a message!",
-            emptyGoWrite: "Go write one",
-            difficultyOptions: {
-                select: "Select Difficulty",
-                easy: "Easy",
-                medium: "Medium",
-                hard: "Hard"
-            },
-            leaderboard: {
-                title: "Leaderboard",
-                loading: "Loading ranking...",
-                noScores: "No scores yet.",
-                beFirst: "Be the first one!"
-            },
-            puzzle: {
-                pause: "Pause",
-                continue: "Continue",
-                restart: "Restart",
-                exit: "Exit",
-                rulesTitle: "🧩 Puzzle Rules",
-                rule1: "1. Drag the pieces to complete the original image.",
-                rule2: "2. Complete the puzzle in the shortest time possible to enter the ranking.",
-                rule3: "3. You can change difficulty, but you will lose your current progress.",
-                ruleLuck: "Good luck, pantcake! 🥞",
-                restartConfirm: "Are you sure you want to restart?",
-                exitConfirm: "Are you sure you want to exit?",
-                yes: "Yes",
-                no: "No",
-                playAgain: "Play Again",
-                completeIn: "Completed in",
-                congrats: "Congratulations {name}!"
-            },
-            shuraRun: {
-                score: "Score",
-                highScore: "High Score",
-                tapToJump: "Press SPACE or TAP to jump.",
-                instructions: "Dodge the red squares (Haters) and eat Pantcakes 🥞.",
-                playNow: "PLAY NOW!",
-                updatingScore: "Updating score! New record detected.",
-                gameOver: "Game Over!",
-                retry: "RETRY",
-                best: "Best"
-            },
-            trivia: {
-                hardcore: "Hardcore",
-                insaneMode: "Insane Mode",
-                insaneDesc1: "Guess with only the riddle (5pts).",
-                insaneDesc2: "If you play the song (3pts + 7s timer).",
-                speedrun: "Speedrun",
-                chaosMode: "Chaos Mode",
-                chaosDesc1: "100 songs in 120s.",
-                chaosDesc2: "+10pts Correct / -3pts Incorrect.",
-                musicRulesTitle: "🧠 Music Rules",
-                musicInsaneRule1: "1. Read the riddle and try to guess without listening.",
-                musicInsaneRule2: "2. Direct correct guess: ",
-                musicInsaneRule3: "3. Using the player: ",
-                musicInsaneRule3b: " and you will only have ",
-                musicChaosRule1: "1. Race against the clock: 2400 total seconds.",
-                musicChaosRule2: "2. Guess as many as you can (100 Total).",
-                musicChaosRule3: "3. Correct: ",
-                musicChaosRule3b: ". Incorrect: ",
-                musicChaosRule4: "4. You can use the player without penalty.",
-                recommendedAudio: "Recommended: Use headphones for a better experience.",
-                playLetGo: "Let's Go!",
-                triviaRulesTitle: "🧠 Trivia Rules",
-                triviaRule1: "1. Select the correct answer before time runs out (if timed mode is chosen).",
-                triviaRule2: "2. Every correct answer adds points. Streaks give bonuses!",
-                triviaRule3: "3. Have fun and show how much you know about the ShakeGang.",
-                triviaTimedWarn: "⚠️ Timed Mode: You have 15 seconds per question.",
-                prep: "Get Ready",
-                focus: "Focus",
-                ready: "Set",
-                play: "Go!",
-                gameOver: "GAME OVER",
-                pts5: "5 points",
-                pts3: "3 points",
-                sec11: "11 seconds",
-                pts10: "+10 pts",
-                ptsMinus3: "-3 pts"
-            }
+            emptyGoWrite: "Go write one"
         }
     },
     ja: {
@@ -954,6 +968,8 @@ export const translations = {
             }
         },
         games: {
+            welcomeTitle: "ようこそプレイヤー！",
+            welcomeSubtitle: "記録を保存するためにニックネームを入力してください",
             title: "何をプレイしますか？",
             subtitle: "ゲームを選んで開始",
             difficulty: "難易度",
@@ -969,18 +985,12 @@ export const translations = {
                 timedMode: "タイムモード",
                 untimedMode: "ノータイムモード",
                 chooseMode: "ゲームモードを選択",
-                selectCategory: "カテゴリーを選択",
-                scoringLegend: "スコア解説",
-                legendCorrect: "正解",
-                legendPartial: "一部正解",
-                legendIncorrect: "不正解",
-                legendTimedBonus: "タイムボーナス込み",
-                selectMultiple: "すべての正解を選択してください"
+                selectCategory: "カテゴリーを選択"
             },
             puzzle: {
                 loading: "パズルを読み込み中...",
                 congrats: "おめでとうございます、{name}さん！",
-                completeIn: "パズルを完成させた時間：",
+                completeIn: "完了時間：",
                 playAgain: "もう一度プレイ",
                 restart: "リセット",
                 alertName: "開始する前に名前を入力してください",
@@ -996,7 +1006,26 @@ export const translations = {
                 exitConfirm: "本当に終了しますか？",
                 yes: "はい",
                 no: "いいえ",
-                gameOver: "ゲームオーバー"
+                gameOver: "ゲームオーバー",
+                copied: "結果をクリップボードにコピーしました！",
+                selectDifficulty: "難易度を選択",
+                difficultyDesc: "ボードのサイズを選んで挑戦を開始してください",
+                victoryTitle: "見事な勝利！",
+                victoryDesc: "あなたの思考力は素晴らしいです...",
+                share: "結果を共有",
+                needHelp: "助けが必要ですか？",
+                useHint: "ヒントを使う...",
+                useHintBtn: "ヒントを使う (残り3回)",
+                weeklyChallenge: "今週のチャレンジ",
+                weeklyGoal: "「難しい」難易度で3つのパズルを完成させて限定バッジを獲得しましょう。",
+                weeklyProgress: "2 / 3 完了",
+                rulesMueve: "ピースを動かす",
+                rulesMueveDesc: "ピースをドラッグして元の画像を正しく完成させます。",
+                rulesVelocidad: "スピードが鍵",
+                rulesVelocidadDesc: "最短時間で完成させてランキングを上げましょう。",
+                rulesCuidado: "変更に注意",
+                rulesCuidadoDesc: "難易度を変更すると、現在の進行状況がすぐにリセットされます。",
+                startGame: "ゲームを開始する"
             },
             shuraRun: {
                 score: "スコア",
@@ -1007,7 +1036,37 @@ export const translations = {
                 updatingScore: "スコアを更新中！新記録が検出されました。",
                 gameOver: "ゲームオーバー！",
                 retry: "リトライ",
-                best: "最高"
+                best: "最高",
+                menuPlay: "プレイ",
+                menuSettings: "設定",
+                menuControls: "操作方法",
+                pauseTitle: "ポーズ",
+                pauseSubtitle: "一時停止中",
+                pauseContinue: "再開",
+                pauseRestart: "やり直し",
+                pauseExit: "終了",
+                pauseHintTitle: "休憩が必要ですか？",
+                pauseHintDesc: "進行状況は終了するまで保持されます。",
+                settingsTitle: "設定",
+                settingsMusic: "BGM",
+                settingsSfx: "効果音",
+                settingsFullscreen: "全画面表示",
+                controlsTitle: "操作方法",
+                controlsJump: "ジャンプ",
+                controlsTap: "タップ",
+                controlsQuickFall: "急降下",
+                controlsPause: "一時停止",
+                continue: "コンティニュー？",
+                hallOfFame: "殿堂入り",
+                progressLabel: "記録までの進捗",
+                back: "戻る",
+                godMode: "🐟 ゴッドモード",
+                doubleJump: "🐚 2段ジャンプ",
+                godModeStatus: "ゴッドモード: {status}",
+                quickStart: "クイックスタート",
+                jump: "ジャンプ",
+                pause: "一時停止",
+                pressStart: "スペースキーまたはタップで開始"
             },
             difficultyOptions: {
                 select: "難易度を選択",
@@ -1034,7 +1093,7 @@ export const translations = {
                 insaneModeDesc: "なぞなぞだけで当てる (5点)。\n曲を再生する場合 (3点 + 7秒タイマー)。",
                 chaosMode: "カオスモード",
                 chaosModeDesc: "120秒で100曲。\n正解+10点 / 不正解-3点。",
-                musicRulesTitle: "🧠 音楽ルールのタイトル",
+                musicRulesTitle: "🧠 音楽ルール",
                 musicInsane1: "1. なぞなぞを読み、聴かずに当ててみてください。",
                 musicInsane2: "2. 直接正解の場合: ",
                 musicInsane3: "3. プレーヤーを使用する場合: ",
@@ -1044,7 +1103,7 @@ export const translations = {
                 musicChaos3: "3. 正解: ",
                 musicChaos4: "4. ペナルティなしでプレーヤーを使用できます。",
                 go: "レッツゴー！",
-                rulesTitle: "🧠 トリビアルールのタイトル",
+                rulesTitle: "🧠 トリビアルール",
                 rule1: "1. 時間が切れる前に正しい答えを選択してください（タイムモードが選択されている場合）。",
                 rule2: "2. すべての正解でポイントが加算されます。連続正解でボーナスがもらえます！",
                 rule3: "3. ShakeGangについてどれだけ知っているか楽しんで証明してください。",
@@ -1055,242 +1114,151 @@ export const translations = {
                 countdownGo: "ゴー！"
             }
         },
+        admin: {
+            loginTitle: "ダッシュボード",
+            loginSubtitle: "アクセス",
+            masterPassword: "マスターパスワード",
+            loginButton: "ログイン",
+            wrongPassword: "パスワードが正しくありません",
+            tabs: {
+                scores: "スコア",
+                messages: "メッセージ",
+                analytics: "分析",
+                moderation: "モデレーション"
+            },
+            status: {
+                live: "ライブシステム",
+                nodes: "ノード: 14稼働中",
+                uptime: "サーバー稼働時間",
+                activeSessions: "アクティブセッション",
+                totalRecords: "総記録数",
+                online: "オンライン"
+            },
+            dashboard: {
+                globalScores: "グローバルスコア",
+                wallOfFame: "殿堂入り",
+                dbRecords: "ライブデータベースレコード",
+                searchPlayer: "プレイヤーを検索...",
+                allGames: "すべてのゲーム",
+                refresh: "更新",
+                displaying: "{count}件のレコードを表示中"
+            },
+            table: {
+                identity: "アイデンティティ",
+                gameZone: "ゲームゾーン",
+                score: "スコア",
+                timestamp: "タイムスタンプ",
+                action: "アクション",
+                message: "メッセージ",
+                location: "場所",
+                loading: "データストリームを待機中...",
+                noRecords: "記録が見つかりませんでした。"
+            },
+            moderation: {
+                title: "モデレーションセンター",
+                subtitle: "ブラックリスト / AI制限",
+                empty: "保留中のメッセージはありません",
+                approve: "承認",
+                flagged: "フラグ付き"
+            },
+            activity: {
+                title: "最近のアクティビティ",
+                logged_in: "ログインしました",
+                logged_out: "ログアウトしました",
+                synced: "同期完了",
+                refreshed: "更新完了",
+                deleted: "削除完了",
+                updated: "更新完了",
+                message: "メッセージ",
+                score: "スコア"
+            },
+            hardware: {
+                title: "負荷状況",
+                cpu: "CPU",
+                memory: "メモリ",
+                ping: "Ping",
+                loss: "ロス"
+            }
+        },
         chat: {
             title: "おしゃべりしよう",
-            subtitle: "公式ボットと会話しよう。ゲームや写真について質問したり、挨拶だけでもOK。",
             welcome: "こんにちは！Pantcookieチャットへようこそ。🍪",
-            online: "オンライン",
             offline: "オフライン",
-            resting: "お休み中です。また後で来てください。😴",
-            security: "🔒 メッセージはエンドツーエンドで暗号化されています（冗談です、ただのボットです）。",
-            placeholder: "メッセージを入力",
-            finished: "チャットが終了しました",
-            typing: "入力中...",
-            exitMessage: "さようなら！お話しできて楽しかったです。👋"
+            placeholder: "メッセージを入力"
         },
         about: {
             title: "私たちについて",
-            subtitle: "スターと素晴らしいコミュニティを紹介",
-            communityTitle: "PantCookieコミュニティ",
-            joinDiscord: "Discordに参加する",
-            shuraTitle: "ShuraHiwa",
-            shuraDesc1: "ShuraHiwaは、カリスマ性、創造性、そして献身的な姿勢で何千人ものファンの心を掴んできた、才能豊かなVTuberです。彼女のユニークなコンテンツと本物の個性は、コミュニティで愛される存在となっています。",
-            shuraDesc2: "配信、動画、交流を通じて、楽しさと spontaneity（自発性）に満ちた世界を作り上げています。",
-            communityDesc1: "ファミリーへようこそ！PantCookiesは単なるフォロワーではありません。ShuraHiwaがもたらす笑いと楽しいカオスによって結ばれた、活気に満ちた多様なコミュニティです。",
-            communityDesc2: "ここでは創造性を祝い、お互いをサポートし、忘れられない瞬間を共有しています。伝説的なミームから素晴らしいファンアートまで、すべてのPantCookieがこのグループに独自の輝きをもたらしています。",
-            communityDesc3: "自分らしくいられる場所、そして情熱を共有できる場所を探しているなら、ここがあなたの家です！",
-            values: {
-                friendship: "友情",
-                inclusion: "包摂",
-                fun: "楽しさ",
-                friendshipDesc: "画面を超えた絆。",
-                inclusionDesc: "誰でも私たちのテーブルに大歓迎です。",
-                funDesc: "すべての配信で笑いを保証します。"
-            },
-            joinCommunity: "コミュニティに参加"
+            shuraTitle: "ShuraHiwa"
         },
         common: {
             enterName: "名前を入力してください",
-            namePlaceholder: "あなたの名前...",
-            startGame: "ゲーム開始",
-            backToSelection: "選択に戻る",
+            playerName: "プレイヤー名",
+            placeholderNickname: "ニックネームを入力...",
             score: "スコア",
-            question: "質問",
-            next: "次へ",
-            timeLeft: "残り時間",
-            progressLostWarning: "今難易度を変更すると、現在の進行状況が失われます。続行しますか？",
-            difficulty: "難易度",
-            overwriteTitle: "既存のユーザー！",
-            overwriteMessage: "この名前で既に高いスコアが存在します。新しいスコアで上書きしますか？",
-            continue: "上書き",
-            downloadVideo: "動画をダウンロード",
-            videoNotSupported: "お使いのブラウザはビデオタグをサポートしていません。",
             close: "閉じる"
-        },
-        musicPlayer: {
-            originalBy: "オリジナル:"
         },
         legal: {
             terms: {
                 acceptanceTitle: "利用の同意",
-                acceptanceDesc: "このサイトにアクセスし利用することで、これらの利用規約に同意したことになります。いずれかに同意できない場合は、Pantcookieファンページをご利用にならないようお願いいたします。",
                 usageTitle: "サイトの利用",
-                usageDesc1: "サイトの利用は、コミュニティおよびShuraHiwaに対して責任を持ち、敬意を払って行う必要があります。特に：",
-                usagePoint1: "1. スパムの送信、他のユーザーへの嫌がらせ、違法行為の実施は許可されていません。",
-                usagePoint2: "2. ゲーム、ランキング、およびインタラクティブなコンテンツは娯楽目的です。チート、操作、または機能に影響を与えるいかなる行為も許可されていません。",
-                intellectualTitle: "知的財産権",
-                intellectualDesc: "すべてのコンテンツはそれぞれの本来の作者に帰属します。このサイトはファンによって作られた非公式プロジェクトであり、言及されたブランド、画像、音楽、その他の素材の所有権を主張するものではありません。",
-                changesTitle: "変更および連絡先",
-                changesDesc: "当社は、いつでもこれらの利用規約を変更する権利を留保します。更新はすべてこの同じページに公開されます。質問や確認がある場合は、コミュニティの連絡チャネルを使用できます。",
-                userContentTitle: "ユーザーコンテンツ",
-                userContentDesc: "メッセージ、スコア、コメント、またはその他のコンテンツを送信することにより、あなたはそれを共有する権利があること、およびそのコンテンツが第三者の権利を侵害しないことを保証します。また、サイトの目的に応じてサイトに表示されることに同意するものとします。",
-                cookiesTitle: "Cookieおよび分析",
-                cookiesDesc: "当社は、ユーザーエクスペリエンスとサイトのパフォーマンスを向上させるために、機能的Cookieおよび基本的な分析指標を使用します。個人データを販売または取引することはありません。",
-                moderationTitle: "コンテンツのモデレーション",
-                moderationDesc: "当社は、これらの規則に従わない、またはコミュニティに悪影響を与えるユーザーから送信されたコンテンツを審査、モデレート、非表示、または削除する権利を留保します。",
-                recreationalTitle: "コンテンツの娯楽的利用",
-                recreationalDesc: "サイトのゲーム、ランキング、リーダーボード、およびその他のインタラクティブなコンテンツは、厳密に娯楽およびコミュニティ目的です。公式の商業的認定、経済的、または競争的価値はありません。"
+                intellectualTitle: "知的財産権"
             },
             privacy: {
                 dataTitle: "データ収集",
-                dataDesc: "サイトの適切な機能とユーザー体験のために必要な情報のみを収集します。これには以下が含まれます：",
-                dataPoint1: "1. ゲームに参加したりフォームに入力したりするときに入力する名前またはエイリアス。",
-                dataPoint2: "2. リーダーボードとランキングを表示するために使用されるスコア、統計、およびゲーム指標。",
-                dataPoint3: "3. サイトの機能を向上させるための最小限の技術的指標（パフォーマンスと安定性など）。",
-                purposeTitle: "目的",
-                purposeDesc: "収集されたデータは責任を持って、以下の目的にのみ使用されます：",
-                purposePoint1: "1. ランキングや結果の表示を含む、ユーザー体験の向上と最適化。",
-                purposePoint2: "2. サイトの適切な機能、およびそのセキュリティ、安定性、悪用からの保護を保証します。",
-                purposePoint3: "3. 常に商業的または広告的目的を持たずに、コミュニティ内のコミュニケーションを促進します。",
-                userContentTitle: "ユーザーが送信したコンテンツ",
-                userContentDesc1: "ユーザーは、サイトを通じてメッセージ、テキスト、画像を送信できます。そのようなコンテンツは、コミュニティの他のメンバーに見える場合があります。コンテンツを送信することにより、ユーザーはそれを共有するために必要な権利を持っていることを宣言し、サイト内でのその使用と表示を、常に商業的目的を持たずに承認するものとします。",
-                userContentDesc2: "すべての人にとって敬意のある快適な環境を維持するため、コミュニティにとって不快、暴力的、性的に露骨、差別的、または不適切なコンテンツを投稿しないでください。当社は、これらの声明に従わないコンテンツをモデレート、非表示、または削除する権利を留保します。",
-                linksTitle: "サードパーティサイトへのリンク",
-                linksDesc: "サイトには、サードパーティプラットフォームからのリンクまたは統合されたコンテンツが含まれる場合があります。当社は、そのような外部サイトのプライバシー慣行、コンテンツ、または機能について責任を負いません。",
-                storageTitle: "ストレージとセキュリティ",
-                storageDesc: "収集されたデータは、説明された目的を達成するために必要な期間のみ保持されます。当社は、不正アクセス、紛失、または悪用から情報を保護するために合理的なセキュリティ対策を適用します。いかなる状況においても、当社が個人情報を販売または取引することはありません。",
-                aiTitle: "AIチャットボットの使用",
-                aiDesc: "サイトには人工知能を使用して自動応答を生成するチャットボットが含まれています。やり取りは、その機能とユーザーエクスペリエンスを向上させるために使用される場合があります。チャットボットは専門的なアドバイスの代わりにはならず、その応答の完全な正確性を保証するものではありません。",
-                rightsTitle: "あなたの権利",
-                rightsDesc: "ユーザーとして、あなたには以下の権利があります：",
-                rightsPoint1: "1. 個人情報へのアクセス、修正、または削除の要求。",
-                rightsPoint2: "2. データ処理およびその使用目的に関する詳細の要求。",
-                rightsPoint3: "3. 適用される規制に従って、必要に応じて同意を取り消すこと。",
-                ageTitle: "最低年齢",
-                ageDesc: "このサイトは13歳以上のユーザーを対象としています。13歳未満の場合は、サイトとその機能を使用するために責任ある大人の同意を得ることをお勧めします。",
-                cookiesTitle: "Cookie",
-                cookiesDesc: "サイトの適切な機能を確保し、ユーザーエクスペリエンスを向上させるために、機能的および基本的な分析Cookieを使用します。ブラウザの設定からこれらを無効にすることができますが、一部のサイト機能に影響する場合があります。"
+                purposeTitle: "目的"
             },
-            faqList: [
-                {
-                    question: "ShuraHiwaとは誰ですか？",
-                    answer: "シェイクギャングのリーダーであり、VTuberです。このファンページは彼女のコンテンツとコミュニティを祝うものです。"
+            supportCenter: "サポートセンター",
+            faqSubtitle: "コミュニティについて知っておくべきすべてのこと。お探しのものが見つからない場合は、Discordのチームにお問い合わせください。",
+            searchPlaceholder: "質問を検索...",
+            faqCategories: {
+                general: {
+                    title: "一般的な質問",
+                    items: [
+                        {
+                            question: "このページは何ですか？",
+                            answer: "これは公式のPantcookieファンページです。写真やビデオ、インタラクティブなゲーム、メッセージウォールが集まるShuraHiwaコミュニティのための空間です。"
+                        },
+                        {
+                            question: "ShuraHiwaとは誰ですか？",
+                            answer: "ShuraHiwaは、VTuberでありパンサーのママであり、ShakeGangの司令官です。TwitchとYouTubeで配信を行い、愛するPantcookieたちを楽しませています。"
+                        }
+                    ]
                 },
-                {
-                    question: "Pantcookieとは何ですか？",
-                    answer: "コミュニティのメンバーです。ゲーム、イベント、クリエイティブな活動に参加します。"
+                games: {
+                    title: "ゲームとランキング",
+                    items: [
+                        {
+                            question: "スコアはどのように保存されますか？",
+                            answer: "スコアは入力したニックネームを使用して自動的に保存および同期されます。ブラウザを変更した場合は、再入力が求められます。"
+                        },
+                        {
+                            question: "Shura Runのルールは何ですか？",
+                            answer: "ゴールデンPantcakes（10 pts）とクラシックを集めながら、赤い箱を避けてください。スピードが上がるので注意してください！"
+                        }
+                    ]
                 },
-                {
-                    question: "ゲームやランキングはどのように機能しますか？",
-                    answer: "これらは娯楽目的です。やる気を高めるために、ローカルスコアや一部のランキングを保存します。"
-                },
-                {
-                    question: "どうやって参加しますか？",
-                    answer: "コミュニティチャンネルに参加し、チャットやイベントに参加してください。"
-                },
-                {
-                    question: "個人データは収集されますか？",
-                    answer: "エクスペリエンスに必要なものだけです。詳細はプライバシーポリシーを確認してください。"
-                },
-                {
-                    question: "どこで連絡できますか？",
-                    answer: "コミュニティの公式チャンネルをご利用ください。できる限り対応します。"
+                technical: {
+                    title: "テクニカルサポート",
+                    items: [
+                        {
+                            question: "画像や動画が読み込まれないのはなぜですか？",
+                            answer: "ギャラリーはクラウドや外部ドメインから提供されるため、強力な広告ブロッカーを無効にしてください。"
+                        },
+                        {
+                            question: "チャットでバグが発生しました",
+                            answer: "AIチャットボットはリアルタイムで接続されています。ボットが「休んでいる」と言う場合は、APIの制限に達していることを意味します。接続を確認して再試行してください。"
+                        }
+                    ]
                 }
-            ]
+            }
         },
         wall: {
             title: "Pantcookieの壁",
             write: "書く",
             read: "読む",
             usernameLabel: "ユーザー名",
-            usernamePlaceholder: "あなたのPantcookie名",
-            usernameError: "ユーザー名が必要です",
-            countryLabel: "国",
-            countryPlaceholder: "国を選択",
-            countryError: "国が必要です",
             messageLabel: "メッセージ",
-            messagePlaceholder: "何かクールなことを書いてね...",
-            messageError: "メッセージが必要です",
-            wordsLeft: "残り単語数",
-            imageLabel: "画像（任意、最大10MB）",
-            imageUpload: "ファイルをアップロード",
-            imageAnalyzing: "分析中...",
-            imageSizeError: "ファイルが大きすぎます（最大10MB）",
-            imageUploadError: "画像のアップロードエラー",
-            submitBase: "投稿",
-            submitLoading: "処理中...",
-            submitError: "メッセージの送信エラー。もう一度やり直してください。",
-            emptyWall: "壁は空です...",
-            emptySub: "最初にメッセージを書きましょう！",
-            emptyGoWrite: "書きに行く",
-            difficultyOptions: {
-                select: "難易度を選択",
-                easy: "簡単",
-                medium: "普通",
-                hard: "難しい"
-            },
-            leaderboard: {
-                title: "ランキング",
-                loading: "読み込み中...",
-                noScores: "まだスコアはありません。",
-                beFirst: "最初のプレイヤーになろう！"
-            },
-            puzzle: {
-                pause: "一時停止",
-                continue: "続ける",
-                restart: "リスタート",
-                exit: "終了",
-                rulesTitle: "🧩 パズルのルール",
-                rule1: "1. ピースをドラッグして元の画像を完成させます。",
-                rule2: "2. ランキングに入るために最短時間でパズルを完成させてください。",
-                rule3: "3. 難易度を変更できますが、現在の進行状況は失われます。",
-                ruleLuck: "幸運を祈るパンケーキ！🥞",
-                restartConfirm: "本当にリスタートしますか？",
-                exitConfirm: "本当に終了しますか？",
-                yes: "はい",
-                no: "いいえ",
-                playAgain: "もう一度プレイ",
-                completeIn: "クリアタイム",
-                congrats: "おめでとう、{name}！"
-            },
-            shuraRun: {
-                score: "スコア",
-                highScore: "ハイスコア",
-                tapToJump: "スペースキーを押すか、タップしてジャンプします。",
-                instructions: "赤い四角（ヘイター）を避けて、Pantcakes 🥞 を食べましょう。",
-                playNow: "今すぐプレイ！",
-                updatingScore: "スコアを更新中！新しい記録が検出されました。",
-                gameOver: "ゲームオーバー！",
-                retry: "リトライ",
-                best: "ベスト"
-            },
-            trivia: {
-                hardcore: "ハードコア",
-                insaneMode: "インセインモード",
-                insaneDesc1: "なぞなぞだけで推測する (5pt)。",
-                insaneDesc2: "曲を再生する場合 (3pt + 7秒タイマー)。",
-                speedrun: "スピードラン",
-                chaosMode: "カオスモード",
-                chaosDesc1: "120秒で100曲。",
-                chaosDesc2: "+10pt 正解 / -3pt 不正解。",
-                musicRulesTitle: "🧠 音楽のルール",
-                musicInsaneRule1: "1. なぞなぞを読み、聴かずに推測してみましょう。",
-                musicInsaneRule2: "2. そのまま正解した場合：",
-                musicInsaneRule3: "3. プレイヤーを使用する場合：",
-                musicInsaneRule3b: "そして持ち時間はたったの",
-                musicChaosRule1: "1. 時間との勝負：合計2400秒。",
-                musicChaosRule2: "2. できるだけ多く推測する（合計100）。",
-                musicChaosRule3: "3. 正解：",
-                musicChaosRule3b: "。不正解：",
-                musicChaosRule4: "4. ペナルティなしでプレイヤーを使用できます。",
-                recommendedAudio: "推奨：より良い体験のためにヘッドフォンを使用してください。",
-                playLetGo: "行くぞ！",
-                triviaRulesTitle: "🧠 トリビアのルール",
-                triviaRule1: "1. 時間切れになる前に正解を選んでください（時間制限モードの場合）。",
-                triviaRule2: "2. 正解するごとにポイントが加算されます。連続正解でボーナス！",
-                triviaRule3: "3. 楽しんで、ShakeGangについてどれだけ知っているかを見せつけましょう。",
-                triviaTimedWarn: "⚠️ 時間制限モード: 1問につき15秒です。",
-                prep: "準備して",
-                focus: "集中して",
-                ready: "セット",
-                play: "スタート！",
-                gameOver: "ゲーム終了",
-                pts5: "5 ポイント",
-                pts3: "3 ポイント",
-                sec11: "11 秒",
-                pts10: "+10 pt",
-                ptsMinus3: "-3 pt"
-            }
+            submitBase: "投稿"
         }
     },
     fr: {
@@ -1306,14 +1274,14 @@ export const translations = {
             multimediaVideos: "Vidéos",
             multimediaCovers: "Reprises",
             gamesPuzzle: "Puzzle",
-            gamesTrivia: "Quiz",
+            gamesTrivia: "Trivia",
             gamesShuraRun: "Shura Run",
             mensajesWrite: "Écrire un Message",
-            mensajesRead: "Lire les messages"
+            mensajesRead: "Lire les Messages"
         },
         footer: {
             thanks: "Merci de faire partie de la communauté Pantcookie !",
-            description: "Cet espace spécial est dédié à ShuraHiwa et à tous les Pantcookies qui font de cette communauté quelque chose d'unique.",
+            description: "Cet espace spécial est dédié à ShuraHiwa et à tous les Pantcookies qui rendent cette communauté unique.",
             copyright: "© 2025 Fan Page Pantcookie. Créé avec ❤️ pour la communauté.",
             terms: "Conditions Générales",
             privacy: "Confidentialité",
@@ -1335,7 +1303,7 @@ export const translations = {
             heroMultimedia: "Voir Multimédia",
             heroGames: "Jouer Maintenant",
             features: {
-                multimediaDesc: "Explorez notre galerie photos et vidéos de la communauté Pantcookie",
+                multimediaDesc: "Explorez notre galerie de photos et vidéos de la communauté Pantcookie",
                 gamesDesc: "Amusez-vous avec nos jeux interactifs et participez aux classements !",
                 aboutDesc: "En savoir plus sur ShuraHiwa et la communauté Pantcookie"
             }
@@ -1347,43 +1315,39 @@ export const translations = {
             tabs: {
                 photos: "Photos",
                 videos: "Vidéos",
-                covers: "Covers"
+                covers: "Reprises"
             },
             gallery: {
                 img1: "Robert étant Robert dans son habitat naturel",
-                img2: "Le célèbre Salmonsito faisant son truc",
-                img3: "Un regard sur le nouveau style de Chura",
+                img2: "Le fameux Salmonsito faisant son truc",
+                img3: "Un aperçu du nouveau style de Chura",
                 img4: "Souvenirs inoubliables de la communauté",
                 img5: "Fan art impressionnant dédié à Shura",
                 img6: "Moments épiques capturés à la caméra",
                 img7: "Le gang réuni pour s'amuser",
-                img8: "Coulisses de notre last événement",
+                img8: "Coulisses de notre dernier événement",
                 fanArt: "Fan Art"
             }
         },
         games: {
-            title: "Que veux-tu jouer ?",
-            subtitle: "Choisis un jeu pour commencer",
+            welcomeTitle: "BIENVENUE JOUEUR !",
+            welcomeSubtitle: "ENTREZ VOTRE PSEUDO POUR SAUVEGARDER VOS RECORDS",
+            title: "À quoi voulez-vous jouer ?",
+            subtitle: "Choisissez un jeu pour commencer",
             difficulty: "Difficulté",
             options: {
                 puzzleTitle: "Puzzle",
                 triviaTitle: "Trivia",
-                playPuzzle: "Jouer Puzzle",
-                playTrivia: "Jouer Trivia",
+                playPuzzle: "Jouer au Puzzle",
+                playTrivia: "Jouer au Trivia",
                 playShuraRun: "Jouer à Shura Run",
-                triviaDesc: "Êtes-vous capable de répondre à toutes les questions dans leurs trois modalités?",
+                triviaDesc: "Êtes-vous capable de répondre à toutes les questions dans leurs trois modalités ?",
                 shuraRunTitle: "Shura Run",
-                shuraRunDesc: "Courez avec Shura, évitez les haters et collectez des ingrédients ! Jusqu'où irez-vous ?",
-                timedMode: "Avec Temps",
-                untimedMode: "Sans Temps",
+                shuraRunDesc: "Courez avec Shura, évitez les haters et collectionnez les ingrédients ! Jusqu'où irez-vous ?",
+                timedMode: "Chronométré",
+                untimedMode: "Non Chronométré",
                 chooseMode: "Sélectionnez le Mode de Jeu",
-                selectCategory: "Sélectionnez la Catégorie",
-                scoringLegend: "Légende des Points",
-                legendCorrect: "Correct",
-                legendPartial: "Partielle",
-                legendIncorrect: "Incorrect",
-                legendTimedBonus: "Bonus de temps inclus",
-                selectMultiple: "Sélectionnez toutes les bonnes réponses"
+                selectCategory: "Sélectionnez la Catégorie"
             },
             puzzle: {
                 loading: "Chargement du puzzle...",
@@ -1391,253 +1355,272 @@ export const translations = {
                 completeIn: "Vous avez terminé le puzzle en",
                 playAgain: "Jouer à nouveau",
                 restart: "Réinitialiser",
-                alertName: "Veuillez entrer votre nom avant de commencer"
-            },
-            difficultyOptions: {
-                select: "Sélectionnez la difficulté",
-                easy: "Facile",
-                medium: "Moyen",
-                hard: "Difficile"
-            },
-            leaderboard: {
-                title: "Classement",
-                loading: "Chargement du classement...",
-                noScores: "Pas encore de scores.",
-                beFirst: "Soyez le premier !"
-            }
-        },
-        chat: {
-            title: "Parle avec moi",
-            subtitle: "Discute avec notre bot officiel. Pose des questions sur les jeux, les photos, ou dis juste bonjour.",
-            welcome: "Bonjour ! Bienvenue sur le chat Pantcookie. 🍪",
-            online: "En ligne",
-            offline: "Déconnecté",
-            resting: "Je me repose, reviens plus tard. 😴",
-            security: "🔒 Les messages sont cryptés de bout en bout (je plaisante, c'est juste un IA).",
-            placeholder: "Écris un message",
-            finished: "Le chat est terminé",
-            typing: "En train d'écrire...",
-            exitMessage: "Au revoir ! C'était un plaisir de discuter. 👋"
-        },
-        about: {
-            title: "À propos de nous",
-            subtitle: "Découvrez la star et sa incroyable communauté",
-            communityTitle: "Communauté PantCookie",
-            joinDiscord: "Rejoindre Discord",
-            shuraTitle: "ShuraHiwa",
-            shuraDesc1: "ShuraHiwa est une VTuber talentueuse qui ha capturado el cœur de milliers de fans grâce à son charisme, sa créativité et son dévouement. Son contenu unique et sa personnalité authentique ont fait d'elle une figure appréciée de la communauté.",
-            shuraDesc2: "À travers ses streams, ses vidéos et ses interactions, elle a créé un univers où le plaisir et la spontanéité ne manquent jamais.",
-            communityDesc1: "Bienvenue dans la famille ! Les PantCookies sont bien plus que des abonnés ; nous sommes une communauté dynamique et diverse, unie par les rires et le chaos amusant qu'inspire ShuraHiwa.",
-            communityDesc2: "Ici, nous célébrons la créativité, nous nous soutenons mutuellement et nous partageons des moments inoubliables. Des mèmes légendaires aux fanarts impressionnants, chaque PantCookie apporte son étincelle unique à ce groupe.",
-            communityDesc3: "Si vous cherchez un endroit où vous pouvez être vous-même et partager votre passion, vous êtes chez vous !",
-            values: {
-                friendship: "Amitié",
-                inclusion: "Inclusion",
-                fun: "Fun",
-                friendshipDesc: "Des liens qui vont au-delà de l'écran.",
-                inclusionDesc: "Tout le monde est le bienvenu à notre table.",
-                funDesc: "Rires garantis à chaque stream."
-            },
-            joinCommunity: "Rejoindre la Communauté"
-        },
-        common: {
-            enterName: "Entre ton nom",
-            namePlaceholder: "Ton nom...",
-            startGame: "Démarrer le jeu",
-            backToSelection: "Retour à la sélection",
-            score: "Score",
-            question: "Question",
-            next: "Suivant",
-            timeLeft: "Temps restant",
-            progressLostWarning: "Tu perdras ta progression si tu recharges la page.",
-            downloadVideo: "Télécharger Vidéo",
-            videoNotSupported: "Votre navigateur ne supporte pas la balise vidéo.",
-            close: "Fermer"
-        },
-        musicPlayer: {
-            originalBy: "Original par"
-        },
-        legal: {
-            terms: {
-                acceptanceTitle: "Acceptation d'Utilisation",
-                acceptanceDesc: "En accédant et en utilisant ce site, vous acceptez ces Conditions Générales d'Utilisation. Si vous n'êtes pas d'accord avec l'une d'entre elles, nous vous demandons de ne pas utiliser la Fan Page Pantcookie.",
-                usageTitle: "Utilisation du Site",
-                usageDesc1: "L'utilisation du site doit être effectuée de manière responsable et respectueuse, tant avec la communauté qu'avec ShuraHiwa. En particulier :",
-                usagePoint1: "1. L'envoi de spam, le harcèlement d'autres utilisateurs ou la réalisation d'activités illégales ne sont pas autorisés.",
-                usagePoint2: "2. Les jeux, les classements et le contenu interactif sont à des fins récréatives ; l'utilisation de triches, de manipulation ou de toute pratique altérant son fonctionnement n'est pas autorisée.",
-                intellectualTitle: "Propriété Intellectuelle",
-                intellectualDesc: "Tout le contenu appartient à leurs auteurs originaux respectifs. Ce site est un projet non officiel, créé par des fans, et ne revendique pas la propriété des marques, images, musiques ou autres documents référencés.",
-                changesTitle: "Modifications et Contact",
-                changesDesc: "Nous nous réservons le droit de modifier ces Conditions Générales à tout moment. Toute mise à jour sera publiée sur cette même page. Pour des questions ou des clarifications, vous pouvez utiliser les canaux de contact de la communauté.",
-                userContentTitle: "Contenu Utilisateur",
-                userContentDesc: "En soumettant des messages, des scores, des commentaires ou d'autres contenus, vous garantissez que vous avez le droit de les partager et que ce contenu ne porte pas atteinte aux droits de tiers. Vous acceptez également qu'il soit affiché sur le site conformément à sa finalité.",
-                cookiesTitle: "Cookies et Analytique",
-                cookiesDesc: "Nous utilisons des cookies fonctionnels et des mesures analytiques de base pour améliorer l'expérience utilisateur et les performances du site. Nous ne vendons ni n'échangeons de données personnelles.",
-                moderationTitle: "Modération de Contenu",
-                moderationDesc: "Nous nous réservons le droit d'examiner, de modérer, de masquer ou de supprimer tout contenu soumis par des utilisateurs qui ne respecte pas ces règles ou qui affecte négativement la communauté.",
-                recreationalTitle: "Utilisation Récréative du Contenu",
-                recreationalDesc: "Les jeux, les classements et autres contenus interactifs du site sont strictement à des fins récréatives et communautaires. Ils n'ont aucune valeur commerciale, économique ou compétitive officielle."
-            },
-            privacy: {
-                dataTitle: "Collecte de Données",
-                dataDesc: "Nous ne collectons que les informations nécessaires au bon fonctionnement du site et de l'expérience utilisateur, notamment :",
-                dataPoint1: "1. Le nom ou pseudo que vous entrez lors de la participation aux jeux ou du remplissage de formulaires.",
-                dataPoint2: "2. Les scores, statistiques et métriques de jeu utilisés pour afficher les classements.",
-                dataPoint3: "3. Les métriques techniques minimales (telles que les performances et la stabilité) pour améliorer le fonctionnement du site.",
-                purposeTitle: "Finalités",
-                purposeDesc: "Les données collectées seront utilisées de manière responsable et uniquement aux fins suivantes :",
-                purposePoint1: "1. Améliorer et optimiser l'expérience utilisateur, y compris l'affichage des classements et des résultats.",
-                purposePoint2: "2. Garantir le bon fonctionnement du site, ainsi que sa sécurité, sa stabilité et sa protection contre les abus.",
-                purposePoint3: "3. Faciliter la communication au sein de la communauté, toujours sans but commercial ni publicitaire.",
-                userContentTitle: "Contenu Soumis par les Utilisateurs",
-                userContentDesc1: "Les utilisateurs peuvent envoyer des messages, des textes et des images via le site. Ce contenu peut être visible par les autres membres de la communauté. En soumettant du contenu, l'utilisateur déclare avoir les droits nécessaires pour le partager et autorise son utilisation et son affichage sur le site, toujours sans but commercial.",
-                userContentDesc2: "Afin de maintenir un environnement respectueux et agréable pour tous, merci de ne pas publier de contenu offensant, violent, sexuellement explicite, discriminatoire ou inapproprié pour la communauté. Nous nous réservons le droit de modérer, masquer ou supprimer le contenu qui ne respecte pas ces règles.",
-                linksTitle: "Liens vers des Sites Tiers",
-                linksDesc: "Le site peut inclure des liens ou du contenu intégré provenant de plateformes tierces. Nous ne sommes pas responsables des pratiques de confidentialité, du contenu ou du fonctionnement de ces sites externes.",
-                storageTitle: "Stockage et Sécurité",
-                storageDesc: "Les données collectées ne sont conservées que le temps nécessaire pour atteindre les objectifs décrits. Nous appliquons des mesures de sécurité raisonnables pour protéger les informations contre l'accès non autorisé, la perte ou l'utilisation abusive. En aucun cas nous ne vendons ni n'échangeons d'informations personnelles.",
-                aiTitle: "Utilisation du Chatbot IA",
-                aiDesc: "Le site inclut un chatbot qui utilise l'intelligence artificielle pour générer des réponses automatiques. Les interactions peuvent être utilisées pour améliorer sa fonctionnalité et l'expérience utilisateur. Le chatbot ne remplace pas les conseils professionnels et ne garantit pas l'exactitude totale de ses réponses.",
-                rightsTitle: "Vos Droits",
-                rightsDesc: "En tant qu'utilisateur, vous avez le droit de :",
-                rightsPoint1: "1. Accéder, rectifier ou demander la suppression de vos informations personnelles.",
-                rightsPoint2: "2. Demander des détails sur le traitement des données et les finalités pour lesquelles elles sont utilisées.",
-                rightsPoint3: "3. Retirer votre consentement le cas échéant, conformément à la réglementation en vigueur.",
-                ageTitle: "Âge Minimum",
-                ageDesc: "Le site est destiné aux utilisateurs de plus de 13 ans. Si vous êtes plus jeune, il est recommandé d'avoir le consentement d'un adulte responsable pour utiliser le site et ses fonctionnalités.",
-                cookiesTitle: "Cookies",
-                cookiesDesc: "Nous utilisons des cookies fonctionnels et analytiques de base pour assurer le bon fonctionnement du site et améliorer l'expérience utilisateur. Vous pouvez les désactiver depuis les paramètres de votre navigateur, bien que cela puisse affecter certaines fonctionnalités du site."
-            },
-            faqList: [
-                {
-                    question: "Qui est ShuraHiwa ?",
-                    answer: "VTuber et leader de la ShakeGang. Cette page de fans célèbre son contenu et la communauté."
-                },
-                {
-                    question: "Qu'est-ce qu'un Pantcookie ?",
-                    answer: "Membres de la communauté. Ils participent aux jeux, événements et activités créatives."
-                },
-                {
-                    question: "Comment fonctionnent les jeux et les classements ?",
-                    answer: "Ils sont récréatifs. Nous enregistrons les scores locaux et, dans certains cas, des classements pour motiver la participation."
-                },
-                {
-                    question: "Comment puis-je rejoindre ?",
-                    answer: "Rejoignez les canaux de la communauté et participez au chat et aux événements."
-                },
-                {
-                    question: "Des données personnelles sont-elles collectées ?",
-                    answer: "Seulement ce qui est nécessaire pour l'expérience. Consultez la Politique de Confidentialité pour plus de détails."
-                },
-                {
-                    question: "Où puis-je vous contacter ?",
-                    answer: "Utilisez les canaux communautaires officiels. Nous répondrons dans la mesure du possible."
-                }
-            ]
-        },
-        wall: {
-            title: "Mur Pantcookie",
-            write: "Écrire",
-            read: "Lire",
-            usernameLabel: "Utilisateur",
-            usernamePlaceholder: "Ton nom de Pantcookie",
-            usernameError: "L'utilisateur est requis",
-            countryLabel: "Pays",
-            countryPlaceholder: "Sélectionnez votre pays",
-            countryError: "Le pays est requis",
-            messageLabel: "Message",
-            messagePlaceholder: "Écris quelque chose de cool...",
-            messageError: "Le message est requis",
-            wordsLeft: "mots restants",
-            imageLabel: "Image (Optionnelle, max 10MB)",
-            imageUpload: "Uploader un fichier",
-            imageAnalyzing: "Analyse en cours...",
-            imageSizeError: "Le fichier est trop volumineux (max. 10MB)",
-            imageUploadError: "Erreur lors du téléchargement de l'image",
-            submitBase: "Publier",
-            submitLoading: "Traitement en cours...",
-            submitError: "Erreur lors de l'envoi du message. Veuillez réessayer.",
-            emptyWall: "Le mur est vide...",
-            emptySub: "Sois le premier à écrire un message !",
-            emptyGoWrite: "Aller écrire",
-            difficultyOptions: {
-                select: "Sélectionnez la difficulté",
-                easy: "Facile",
-                medium: "Moyen",
-                hard: "Difficile"
-            },
-            leaderboard: {
-                title: "Classement",
-                loading: "Chargement du classement...",
-                noScores: "Pas encore de scores.",
-                beFirst: "Soyez le premier !"
-            },
-            puzzle: {
+                alertName: "Veuillez entrer votre nom avant de commencer",
                 pause: "Pause",
                 continue: "Continuer",
-                restart: "Recommencer",
                 exit: "Quitter",
                 rulesTitle: "🧩 Règles du Puzzle",
                 rule1: "1. Faites glisser les pièces pour compléter l'image originale.",
-                rule2: "2. Complétez le puzzle en un minimum de temps pour entrer dans le classement.",
+                rule2: "2. Terminez le puzzle en un temps minimum pour entrer dans le classement.",
                 rule3: "3. Vous pouvez changer la difficulté, mais vous perdrez votre progression actuelle.",
-                ruleLuck: "Bonne chance, crêpe ! 🥞",
+                ruleLuck: "Bonne chance, pancake ! 🥞",
                 restartConfirm: "Êtes-vous sûr de vouloir recommencer ?",
                 exitConfirm: "Êtes-vous sûr de vouloir quitter ?",
                 yes: "Oui",
                 no: "Non",
-                playAgain: "Rejouer",
-                completeIn: "Complété en",
-                congrats: "Félicitations {name} !"
+                gameOver: "Fin de Partie",
+                copied: "Résultat copié dans le presse-papiers !",
+                selectDifficulty: "Sélectionnez la Difficulté",
+                difficultyDesc: "Choisissez la taille du plateau pour commencer votre défi",
+                victoryTitle: "Victoire Magistrale !",
+                victoryDesc: "Votre agilité mentale est impressionnante...",
+                share: "Partager les Résultats",
+                needHelp: "Besoin d'aide ?",
+                useHint: "Utiliser un indice...",
+                useHintBtn: "Utiliser Indice (3 Libres)",
+                weeklyChallenge: "Défi Hebdomadaire",
+                weeklyGoal: "Complétez 3 puzzles en difficulté DIFFICILE pour gagner un badge exclusif.",
+                weeklyProgress: "2 / 3 TERMINÉS",
+                rulesMueve: "Déplacez les pièces",
+                rulesMueveDesc: "Faites glisser les pièces pour compléter l'image originale correctement.",
+                rulesVelocidad: "La vitesse est la clé",
+                rulesVelocidadDesc: "Terminez en un temps minimum pour monter dans le classement.",
+                rulesCuidado: "Attention au changement",
+                rulesCuidadoDesc: "Changer la difficulté réinitialisera votre progression actuelle immédiatement.",
+                startGame: "Commencer le Jeu"
             },
             shuraRun: {
                 score: "Score",
-                highScore: "High Score",
+                highScore: "Meilleur Score",
                 tapToJump: "Appuyez sur ESPACE ou TOUCHEZ pour sauter.",
                 instructions: "Évitez les carrés rouges (Haters) et mangez des Pantcakes 🥞.",
                 playNow: "JOUER MAINTENANT !",
                 updatingScore: "Mise à jour du score ! Nouveau record détecté.",
                 gameOver: "Game Over !",
                 retry: "RÉESSAYER",
-                best: "Meilleur"
+                best: "Meilleur",
+                menuPlay: "JOUER",
+                menuSettings: "RÉGLAGES",
+                menuControls: "COMMANDES",
+                pauseTitle: "PAUSE",
+                pauseSubtitle: "JEU EN ATTENTE",
+                pauseContinue: "CONTINUER",
+                pauseRestart: "RECOMMENCER",
+                pauseExit: "QUITTER",
+                pauseHintTitle: "BESOIN D'UNE PAUSE ?",
+                pauseHintDesc: "VOTRE PROGRESSION SERA CONSERVÉE JUSQU'À VOTRE DÉPART.",
+                settingsTitle: "RÉGLAGES",
+                settingsMusic: "MUSIQUE",
+                settingsSfx: "EFFETS SFX",
+                settingsFullscreen: "PLEIN ÉCRAN",
+                controlsTitle: "COMMANDES",
+                controlsJump: "SAUTER",
+                controlsTap: "TOUCHER",
+                controlsQuickFall: "CHUTE RAPIDE",
+                controlsPause: "PAUSE",
+                continue: "CONTINUER ?",
+                hallOfFame: "Mur de la Renommée",
+                progressLabel: "Progression vers le Record",
+                back: "RETOUR",
+                godMode: "🐟 MODE DIEU",
+                doubleJump: "🐚 DOUBLE SAUT",
+                godModeStatus: "MODE DIEU: {status}",
+                quickStart: "DÉPART RAPIDE",
+                jump: "SAUTER",
+                pause: "PAUSE",
+                pressStart: "APPUYEZ SUR ESPACE OU TOUCHEZ POUR JOUER"
+            },
+            difficultyOptions: {
+                select: "Sélectionnez la difficulté",
+                easy: "Facile",
+                medium: "Moyen",
+                hard: "Difficile"
+            },
+            leaderboard: {
+                title: "Classement",
+                loading: "Chargement du classement...",
+                noScores: "Pas encore de scores.",
+                beFirst: "Soyez le premier !"
             },
             trivia: {
-                hardcore: "Hardcore",
+                categoryPantcookie: "PantCookie",
+                categoryShura: "ShuraHiwa",
+                categoryMusicTitle: "Musique",
+                categoryMusic: "Devinez la chanson",
+                incorrectFeedback: "Incorrect !",
+                excellent: "Excellent !",
+                correctFeedback: "Correct !",
+                scoreUpdating: "Mise à jour du score...",
                 insaneMode: "Mode Insane",
-                insaneDesc1: "Devinez avec seulement l'énigme (5pts).",
-                insaneDesc2: "Si vous jouez la chanson (3pts + 7s chrono).",
-                speedrun: "Speedrun",
+                insaneModeDesc: "Devinez avec seulement l'énigme (5pts).\nSi vous jouez la chanson (3pts + 7s chrono).",
                 chaosMode: "Mode Chaos",
-                chaosDesc1: "100 chansons en 120s.",
-                chaosDesc2: "+10pts Correct / -3pts Incorrect.",
+                chaosModeDesc: "100 chansons en 120s.\n+10pts Correct / -3pts Incorrect.",
                 musicRulesTitle: "🧠 Règles Musicales",
-                musicInsaneRule1: "1. Lisez l'énigme et essayez de deviner sans écouter.",
-                musicInsaneRule2: "2. Si vous devinez directement : ",
-                musicInsaneRule3: "3. Si vous utilisez le lecteur : ",
-                musicInsaneRule3b: " et vous n'aurez que ",
-                musicChaosRule1: "1. Course contre la montre : 2400 secondes au total.",
-                musicChaosRule2: "2. Devinez-en autant que vous pouvez (Total 100).",
-                musicChaosRule3: "3. Correct : ",
-                musicChaosRule3b: ". Incorrect : ",
-                musicChaosRule4: "4. Vous pouvez utiliser le lecteur sans pénalité.",
-                recommendedAudio: "Recommandé : Utilisez des écouteurs pour une meilleure expérience.",
-                playLetGo: "C'est parti !",
-                triviaRulesTitle: "🧠 Règles du Trivia",
-                triviaRule1: "1. Sélectionnez la bonne réponse avant la fin du temps (si le mode chronométré est choisi).",
-                triviaRule2: "2. Chaque bonne réponse rapporte des points. Les séries donnent des bonus !",
-                triviaRule3: "3. Amusez-vous et montrez ce que vous savez de la ShakeGang.",
-                triviaTimedWarn: "⚠️ Mode Chronométré : Vous avez 15 secondes par question.",
-                prep: "Préparez-vous",
-                focus: "Concentrez-vous",
-                ready: "Prêts",
-                play: "Partez !",
-                gameOver: "FIN DE JEU",
-                pts5: "5 points",
-                pts3: "3 points",
-                sec11: "11 secondes",
-                pts10: "+10 pts",
-                ptsMinus3: "-3 pts"
+                musicInsane1: "1. Lisez l'énigme et essayez de deviner sans écouter.",
+                musicInsane2: "2. Si vous devinez directement : ",
+                musicInsane3: "3. Si vous utilisez le lecteur : ",
+                headphonesRecommended: "Recommandé : Utilisez des écouteurs pour une meilleure expérience.",
+                musicChaos1: "1. Course contre la montre : 2400 secondes au total.",
+                musicChaos2: "2. Devinez-en autant que possible (Total 100).",
+                musicChaos3: "3. Correct : ",
+                musicChaos4: "4. Vous pouvez utiliser le lecteur sans pénalité.",
+                go: "C'est parti !",
+                rulesTitle: "🧠 Règles de Trivia",
+                rule1: "1. Sélectionnez la bonne réponse avant la fin du temps (si le mode chronométré est sélectionné).",
+                rule2: "2. Chaque bonne réponse ajoute des points. Les séries donnent des bonus !",
+                rule3: "3. Amusez-vous et montrez ce que vous savez sur la ShakeGang.",
+                timedWarning: "⚠️ Mode Chronométré : 15 secondes par question.",
+                countdownReady: "Prêt",
+                countdownSet: "Concentrez-vous",
+                countdownSteady: "En place",
+                countdownGo: "Partez !"
             }
+        },
+        admin: {
+            loginTitle: "TABLEAU DE BORD",
+            loginSubtitle: "Accès",
+            masterPassword: "Mot de passe maître",
+            loginButton: "Se connecter",
+            wrongPassword: "Mot de passe incorrect",
+            tabs: {
+                scores: "SCORES",
+                messages: "MESSAGES",
+                analytics: "ANALYTIQUES",
+                moderation: "MODÉRATION"
+            },
+            status: {
+                live: "Système en direct",
+                nodes: "Nœuds: 14 actifs",
+                uptime: "Temps de fonctionnement du serveur",
+                activeSessions: "Sessions actives",
+                totalRecords: "Enregistrements totaux",
+                online: "En ligne"
+            },
+            dashboard: {
+                globalScores: "Scores Globaux",
+                wallOfFame: "Mur de la renommée",
+                dbRecords: "Enregistrements permanent",
+                searchPlayer: "Rechercher un joueur...",
+                allGames: "Tous les jeux",
+                refresh: "RAFRAÎCHIR",
+                displaying: "Affichage de {count} enregistrements"
+            },
+            table: {
+                identity: "Identité",
+                gameZone: "Zone de jeu",
+                score: "Score",
+                timestamp: "Horodatage",
+                action: "Action",
+                message: "Message",
+                location: "Emplacement",
+                loading: "En attente des flux de données...",
+                noRecords: "Aucun enregistrement trouvé."
+            },
+            moderation: {
+                title: "Centre de Modération",
+                subtitle: "Liste noire / IA restreinte",
+                empty: "Aucun message au purgatoire",
+                approve: "Approuver",
+                flagged: "SIGNALÉ"
+            },
+            activity: {
+                title: "Activité Récente",
+                logged_in: "s'est connecté",
+                logged_out: "s'est déconnecté",
+                synced: "Synchronisé",
+                refreshed: "Actualisé",
+                deleted: "Supprimé",
+                updated: "Mis à jour",
+                message: "Message",
+                score: "Score"
+            },
+            hardware: {
+                title: "Charge matérielle",
+                cpu: "CPU Usage",
+                memory: "Mémoire",
+                ping: "Ping",
+                loss: "Perte"
+            }
+        },
+        chat: {
+            title: "Parle avec moi",
+            welcome: "Bonjour ! Bienvenue sur le chat Pantcookie. 🍪",
+            offline: "Hors ligne",
+            placeholder: "Écrire un message"
+        },
+        about: {
+            title: "À propos de nous",
+            shuraTitle: "ShuraHiwa"
+        },
+        common: {
+            enterName: "Entrez votre nom",
+            playerName: "Nom du Joueur",
+            placeholderNickname: "Entrez votre pseudo...",
+            score: "Score",
+            close: "Fermer"
+        },
+        legal: {
+            terms: {
+                acceptanceTitle: "Acceptation d'Utilisation",
+                usageTitle: "Utilisation du Site",
+                intellectualTitle: "Propriété Intellectuelle"
+            },
+            privacy: {
+                dataTitle: "Collecte de Données",
+                purposeTitle: "Finalités"
+            },
+            supportCenter: "Centre de Support",
+            faqSubtitle: "Tout ce que vous devez savoir pour maîtriser l'écosystème de la communauté. Si vous ne trouvez pas votre réponse, contactez-nous sur Discord.",
+            searchPlaceholder: "Recherchez une réponse...",
+            faqCategories: {
+                general: {
+                    title: "Questions Générales",
+                    items: [
+                        {
+                            question: "Qu'est-ce que cette page ?",
+                            answer: "C'est la Fan Page officielle de Pantcookie, un espace interactif créé pour la communauté de ShuraHiwa où vous trouverez des photos, des jeux et un mur de messages."
+                        },
+                        {
+                            question: "Qui est ShuraHiwa ?",
+                            answer: "ShuraHiwa est une VTuber, maman panthère et commandant de la ShakeGang qui anime des streams sur Twitch et YouTube pour sa communauté."
+                        }
+                    ]
+                },
+                games: {
+                    title: "Jeux et Classements",
+                    items: [
+                        {
+                            question: "Comment mes scores sont-ils sauvegardés ?",
+                            answer: "Vos scores sont automatiquement enregistrés et synchronisés grâce au pseudo que vous avez fourni. Si vous changez de navigateur, vous devrez le saisir à nouveau."
+                        },
+                        {
+                            question: "Quelles sont les règles de Shura Run ?",
+                            answer: "Le but est de collecter les Pantcakes dorés (10 pts) et classiques tout en évitant les boîtes rouges. Attention, la vitesse augmente avec le temps !"
+                        }
+                    ]
+                },
+                technical: {
+                    title: "Support Technique",
+                    items: [
+                        {
+                            question: "Pourquoi certaines vidéos ou images ne se chargent pas ?",
+                            answer: "Assurez-vous de ne pas avoir de bloqueurs de publicités agressifs activés, car nos images proviennent de domaines cloud."
+                        },
+                        {
+                            question: "Je rencontre un bug avec le chat interactif",
+                            answer: "Notre bot IA nécessite une bonne connexion. Si le bot répond qu'il 'se repose', cela signifie que la limite de requêtes a été atteinte. Veuillez patienter et rafraîchir."
+                        }
+                    ]
+                }
+            }
+        },
+        wall: {
+            title: "Mur Pantcookie",
+            write: "Écrire",
+            read: "Lire",
+            usernameLabel: "Utilisateur",
+            messageLabel: "Message",
+            submitBase: "Publier"
         }
     }
 };

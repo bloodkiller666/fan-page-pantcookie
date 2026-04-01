@@ -93,12 +93,9 @@ const ChatInterface = () => {
         setPendingImage(null);
         setShowEmojiPicker(false);
 
-        // Add message to UI
         addMessage(userText || null, 'user', imageToSend?.url, imageToSend?.name);
+        resetTimers();
 
-        resetTimers(); // Reset timers on user action
-
-        // Bot Response simulation
         setIsTyping(true);
 
         try {
@@ -110,7 +107,7 @@ const ChatInterface = () => {
                 body: JSON.stringify({
                     message: userText,
                     imageUrl: imageToSend?.base64,
-                    intensity: botIntensity // Enviar intensidad actual
+                    intensity: botIntensity
                 }),
             });
             if (!response.ok) {
@@ -131,7 +128,6 @@ const ChatInterface = () => {
                 return;
             }
 
-            // Actualizar intensidad si el bot lo solicita
             if (data.newIntensity !== undefined) {
                 setBotIntensity(data.newIntensity);
                 console.log("Nueva intensidad del bot:", data.newIntensity);
@@ -167,7 +163,6 @@ const ChatInterface = () => {
         const utterance = new SpeechSynthesisUtterance(cleanText);
         const voices = window.speechSynthesis.getVoices();
 
-        // Priorizar voces de alta calidad (Microsoft, Google)
         const preferredVoices = [
             'Microsoft Elena',
             'Microsoft Laura',
@@ -178,23 +173,19 @@ const ChatInterface = () => {
 
         let selectedVoice: SpeechSynthesisVoice | undefined | null = null;
 
-        // Buscar coincidencia exacta o parcial con las preferidas
         for (const name of preferredVoices) {
             selectedVoice = voices.find(v => v.name.includes(name));
             if (selectedVoice) break;
         }
-
-        // Fallback: Cualquier voz en español
         if (!selectedVoice) {
             selectedVoice = voices.find(v => v.lang.toLowerCase().includes('es') || v.lang.toLowerCase().includes('spa'));
         }
 
         if (selectedVoice) {
             utterance.voice = selectedVoice;
-            // Ajustar tono y velocidad según la voz para que suene menos robot
             if (selectedVoice.name.includes('Microsoft')) {
-                utterance.rate = 1.05; // Ligeramente más rápido
-                utterance.pitch = 1.0; // Tono natural
+                utterance.rate = 1.05;
+                utterance.pitch = 1.0;
             } else {
                 utterance.rate = 1.1;
                 utterance.pitch = 1.1;
@@ -208,7 +199,6 @@ const ChatInterface = () => {
         const file = e.target.files?.[0];
         if (!file || status === 'offline') return;
 
-        // Validar tamaño (max 5MB para no saturar base64)
         if (file.size > 5 * 1024 * 1024) {
             addMessage("La imagen es muy pesada (máx 5MB). 🍪", 'bot');
             return;
@@ -217,7 +207,6 @@ const ChatInterface = () => {
         setIsUploading(true);
 
         try {
-            // Convertir a Base64 para enviar a la IA (Privacidad: No se sube a la nube)
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result as string;
@@ -231,7 +220,6 @@ const ChatInterface = () => {
 
                 setIsUploading(false);
 
-                // Limpiar input
                 if (fileInputRef.current) fileInputRef.current.value = '';
             };
             reader.readAsDataURL(file);
@@ -253,7 +241,7 @@ const ChatInterface = () => {
     return (
         <div className="flex flex-col h-full w-full bg-transparent dark:bg-transparent overflow-hidden font-sans relative">
             {/* Header - Moved info to Sidebar, keeping it minimal or hidden as requested by UI design */}
-            
+
             {/* Scrollable Messages Area */}
             <div
                 ref={scrollContainerRef}
@@ -276,17 +264,16 @@ const ChatInterface = () => {
                                 <MdBolt className="text-primary text-xl" />
                             </div>
                         )}
-                        
+
                         <div className={`flex flex-col gap-1.5 max-w-[80%] ${msg.sender === 'user' ? 'items-end' : ''}`}>
                             <span className="text-[10px] font-bold text-primary dark:text-primary uppercase tracking-widest px-1">
                                 {msg.sender === 'bot' ? 'Pantcookie IA' : 'Usuario'}
                             </span>
-                            
-                            <div className={`p-4 rounded-2xl shadow-lg leading-relaxed border ${
-                                msg.sender === 'user'
+
+                            <div className={`p-4 rounded-2xl shadow-lg leading-relaxed border ${msg.sender === 'user'
                                     ? 'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tr-none'
                                     : 'ai-bubble-gradient border-primary/10 text-slate-800 dark:text-slate-200 rounded-tl-none'
-                            }`}>
+                                }`}>
                                 {msg.text && <p className="break-words">{msg.text}</p>}
                                 {msg.fileUrl && (
                                     <div className="mt-3">
@@ -359,7 +346,7 @@ const ChatInterface = () => {
                         )}
 
                         <div className="flex items-end gap-2 px-2">
-                            <button 
+                            <button
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={isOffline || isUploading}
                                 className="size-10 flex items-center justify-center rounded-xl text-slate-500 hover:text-primary hover:bg-primary/5 transition-all"
@@ -372,7 +359,7 @@ const ChatInterface = () => {
                                 onChange={handleFileChange}
                                 className="hidden"
                             />
-                            
+
                             <textarea
                                 ref={textareaRef}
                                 value={inputValue}
@@ -384,13 +371,13 @@ const ChatInterface = () => {
                                         handleSendMessage(e);
                                     }
                                 }}
-                                className="flex-1 bg-transparent border-none focus:ring-0 text-slate-800 dark:text-slate-200 py-3 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none font-medium" 
+                                className="flex-1 bg-transparent border-none focus:ring-0 text-slate-800 dark:text-slate-200 py-3 text-sm placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none font-medium outline-none"
                                 placeholder={isOffline ? t('chat.finished') : "Initialize query..."}
                                 rows={1}
                             />
 
                             <div className="flex items-center gap-1 pb-1">
-                                <button 
+                                <button
                                     onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                                     disabled={isOffline}
                                     className={`size-9 flex items-center justify-center rounded-lg transition-all ${showEmojiPicker ? 'text-accent-magenta bg-accent-magenta/5' : 'text-slate-500 hover:text-accent-magenta hover:bg-accent-magenta/5'}`}
@@ -400,7 +387,7 @@ const ChatInterface = () => {
                                 <button className="size-9 flex items-center justify-center rounded-lg text-slate-500 hover:text-primary hover:bg-primary/5 transition-all">
                                     <MdMic />
                                 </button>
-                                <button 
+                                <button
                                     onClick={handleSendMessage}
                                     disabled={isOffline || (!inputValue.trim() && !pendingImage)}
                                     className="size-10 flex items-center justify-center rounded-xl bg-primary text-background-dark neon-glow-cyan hover:scale-105 transition-transform ml-2 disabled:opacity-50 disabled:hover:scale-100"

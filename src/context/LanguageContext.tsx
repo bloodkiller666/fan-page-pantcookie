@@ -5,7 +5,7 @@ import { translations } from '../utils/translations';
 interface LanguageContextType {
     language: string;
     setLanguage: (lang: string) => void;
-    t: (path: string) => any;
+    t: (path: string, params?: Record<string, string | number>) => any;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -27,26 +27,37 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
         localStorage.setItem('pantcookie_lang', lang);
     };
 
-    const t = (path: string) => {
+    const t = (path: string, params?: Record<string, string | number>) => {
         const keys = path.split('.');
-        let value: any = translations[language as keyof typeof translations];
+        const languageToUse = language as keyof typeof translations;
+        let value: any = translations[languageToUse];
 
         for (const key of keys) {
-            if (value && value[key]) {
+            if (value && value[key] !== undefined) {
                 value = value[key];
             } else {
                 // Fallback to Spanish if key missing
-                let fallback: any = translations['es'];
+                let fallback: any = (translations as any)['es'];
+                let foundFallback = true;
                 for (const k of keys) {
-                    if (fallback && fallback[k]) {
+                    if (fallback && fallback[k] !== undefined) {
                         fallback = fallback[k];
                     } else {
-                        return path; // Return key if not found
+                        foundFallback = false;
+                        break;
                     }
                 }
-                return fallback;
+                value = foundFallback ? fallback : path;
+                break;
             }
         }
+
+        if (typeof value === 'string' && params) {
+            Object.entries(params).forEach(([key, val]) => {
+                value = value.replace(new RegExp(`{${key}}`, 'g'), String(val));
+            });
+        }
+        
         return value;
     };
 

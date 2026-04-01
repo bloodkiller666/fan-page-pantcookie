@@ -16,7 +16,6 @@ const getLocalScores = (key = STORAGE_KEY) => {
 const saveLocalScores = (scores, key = STORAGE_KEY) => {
     try {
         localStorage.setItem(key, JSON.stringify(scores));
-        // Dispatch a custom event to notify listeners
         const eventName = key === TRIVIA_STORAGE_KEY ? 'local-trivia-update' : 'local-score-update';
         window.dispatchEvent(new CustomEvent(eventName));
     } catch (error) {
@@ -24,7 +23,6 @@ const saveLocalScores = (scores, key = STORAGE_KEY) => {
     }
 };
 
-// Submit a puzzle score
 export const submitScore = async (playerName, time, difficulty) => {
     // Simulate async delay
     await new Promise(resolve => setTimeout(resolve, 500));

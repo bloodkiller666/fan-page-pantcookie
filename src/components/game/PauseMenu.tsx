@@ -21,7 +21,7 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
                 {/* Glow Effect */}
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#0db9f2]/20 blur-3xl rounded-full"></div>
                 <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#0db9f2]/20 blur-3xl rounded-full"></div>
-                
+
                 <div className="relative p-8 flex flex-col items-center">
                     {/* Icon Header */}
                     <div className="mb-6 bg-[#0db9f2]/10 p-4 rounded-full border border-[#0db9f2]/30">
@@ -40,7 +40,7 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
                     {/* Action Buttons */}
                     <div className="w-full flex flex-col gap-4">
                         {/* CONTINUAR (Azul) */}
-                        <button 
+                        <button
                             onClick={onResume}
                             className="group flex items-center justify-between w-full h-16 px-6 bg-[#0db9f2] hover:bg-[#0db9f2]/90 text-[#101e22] rounded-xl transition-all duration-200 shadow-lg shadow-[#0db9f2]/25 active:scale-95"
                         >
@@ -50,9 +50,7 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
                             </span>
                             <MdChevronRight className="opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
-
-                        {/* REINICIAR (Amarillo/Naranja) */}
-                        <button 
+                        <button
                             onClick={onRestart}
                             className="group flex items-center justify-between w-full h-16 px-6 bg-[#fbbf24] hover:bg-[#f59e0b] text-[#101e22] rounded-xl transition-all duration-200 active:scale-95"
                         >
@@ -62,9 +60,7 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
                             </span>
                             <MdReplay className="opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
-
-                        {/* SALIR (Rojo) */}
-                        <button 
+                        <button
                             onClick={onExit}
                             className="group flex items-center justify-between w-full h-16 px-6 bg-[#e11d48] hover:bg-[#be123c] text-white rounded-xl transition-all duration-200 active:scale-95"
                         >

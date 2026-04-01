@@ -261,9 +261,9 @@ const GamesContent = () => {
                     <div className="max-w-md w-full">
                         <div className="mb-8 text-center animate-fade-in-up">
                             <h2 className="text-4xl font-black italic uppercase tracking-tighter text-white mb-2">
-                                ¡Bienvenido <span className="text-neon-pink">Jugador</span>!
+                                {t('games.welcomeTitle')}
                             </h2>
-                            <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs">Ingresa tu nickname para guardar tus récords</p>
+                            <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs">{t('games.welcomeSubtitle')}</p>
                         </div>
                         <PlayerInput
                             playerName={playerName}

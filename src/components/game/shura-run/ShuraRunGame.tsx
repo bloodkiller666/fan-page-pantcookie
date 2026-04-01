@@ -37,9 +37,20 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     const [isPaused, setIsPaused] = useState(false);
     const [showPauseMenu, setShowPauseMenu] = useState(false);
     const [showExitConfirm, setShowExitConfirm] = useState(false);
-    const [showOverwriteModal, setShowOverwriteModal] = useState(false);
     const [showRules, setShowRules] = useState(false);
-    const [pendingScoreData, setPendingScoreData] = useState<{ score: number, oldScore: number } | null>(null);
+    const [isBgmMuted, setIsBgmMuted] = useState(false);
+    const [isSfxMuted, setIsSfxMuted] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [aspectRatio, setAspectRatio] = useState<'16:9' | '21:9'>('16:9');
+    const [menuView, setMenuView] = useState<'main' | 'settings' | 'controls'>('main');
+    const menuViewRef = useRef<'main' | 'settings' | 'controls'>('main');
+    const setMenuViewSync = (v: 'main' | 'settings' | 'controls') => {
+        menuViewRef.current = v;
+        setMenuView(v);
+    };
+    
+    const gameContainerRef = useRef<HTMLDivElement>(null);
+    const isGameFocusedRef = useRef(false);
 
     const powerUpsRef = useRef({
         concha: { active: false, endTime: 0 },
@@ -161,6 +172,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         if (bgMusic.current) {
             bgMusic.current.loop = true;
             bgMusic.current.volume = 0.4;
+            bgMusic.current.muted = isBgmMuted;
         }
 
         return () => {
@@ -169,7 +181,26 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 bgMusic.current = null;
             }
         };
-    }, []);
+    }, []); 
+
+    const toggleBgm = () => {
+        setIsBgmMuted((prev) => {
+            const next = !prev;
+            if (bgMusic.current) bgMusic.current.muted = next;
+            return next;
+        });
+    };
+
+    const toggleSfx = () => {
+        setIsSfxMuted((prev) => {
+            const next = !prev;
+            if (jumpSound.current) jumpSound.current.muted = next;
+            if (collectSound.current) collectSound.current.muted = next;
+            if (deathSound.current) deathSound.current.muted = next;
+            if (gameOverSound.current) gameOverSound.current.muted = next;
+            return next;
+        });
+    };
 
     const gameOver = useCallback(async () => {
         isPlayingRef.current = false;
@@ -192,40 +223,27 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         // Submit to Supabase if we have a name
         const name = playerName || 'Anonymous';
 
-        // 1. Check if we should show overwrite modal
+        // 1. Check if we beat the existing score
         const check = await checkExistingScore('shura_run', name);
 
         if (check.exists && check.score !== null) {
-            // If new score is better, ask to overwrite
+            // Auto-overwrite if better
             if (scoreRef.current > check.score) {
-                setPendingScoreData({ score: scoreRef.current, oldScore: check.score });
-                setShowOverwriteModal(true);
-                return;
-            } else {
-                // If not better, don't submit
-                return;
+                const result = await submitGameScore('shura_run', name, scoreRef.current);
+                if (result.success && result.updated) {
+                    setUpdateMessage(t('games.shuraRun.updatingScore'));
+                    setTimeout(() => setUpdateMessage(null), 3000);
+                }
+            }
+        } else {
+            // New entry entirely
+            const result = await submitGameScore('shura_run', name, scoreRef.current);
+            if (result.success && result.updated) {
+                setUpdateMessage(t('games.shuraRun.updatingScore'));
+                setTimeout(() => setUpdateMessage(null), 3000);
             }
         }
-
-        const result = await submitGameScore('shura_run', name, scoreRef.current);
-
-        if (result.success && result.updated) {
-            setUpdateMessage(t('games.shuraRun.updatingScore'));
-            setTimeout(() => setUpdateMessage(null), 3000);
-        }
-    }, [t]);
-
-    const confirmOverwrite = async () => {
-        if (!pendingScoreData) return;
-        setShowOverwriteModal(false);
-        const name = playerName || 'Anonymous';
-        const result = await submitGameScore('shura_run', name, pendingScoreData.score);
-        if (result.success) {
-            setUpdateMessage(t('games.shuraRun.updatingScore'));
-            setTimeout(() => setUpdateMessage(null), 3000);
-        }
-        setPendingScoreData(null);
-    };
+    }, [t, playerName]);
 
     const gameLoop = useCallback((timestamp: number) => {
         if (gameState === 'start' || isPausedRef.current || !assetsLoaded) return;
@@ -488,6 +506,17 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 currentFrame = Math.floor(timestamp / 80) % TOTAL_FRAMES;
             }
 
+            // GOKU SUPER SAIYAN EFFECT (GOD MODE)
+            if (powerUpsRef.current.salmon.active && gameState === 'playing') {
+                ctx.save();
+                ctx.shadowColor = '#ffff00'; // Yellow glow
+                ctx.shadowBlur = 25;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+                // Add a slightly golden tint filter
+                ctx.globalCompositeOperation = 'source-over'; 
+            }
+
             ctx.imageSmoothingEnabled = false;
             ctx.drawImage(
                 activeAvatar,
@@ -496,6 +525,10 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 player.x, player.y,
                 player.width, player.height
             );
+
+            if (powerUpsRef.current.salmon.active && gameState === 'playing') {
+                ctx.restore();
+            }
         }
 
         // HUD Power-ups
@@ -523,11 +556,11 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
              if (hasSalmon) {
                  pProgress = Math.max(0, (powerUpsRef.current.salmon.endTime - pNow) / 20000);
                  barColor1 = '#ff9900'; barColor2 = '#cc0000';
-                 labelText = '🐟 GOD MODE';
+                 labelText = t('games.shuraRun.godMode') || '🐟 GOD MODE';
              } else if (hasConcha) {
                  pProgress = Math.max(0, (powerUpsRef.current.concha.endTime - pNow) / 30000);
                  barColor1 = '#00e5ff'; barColor2 = '#0055cc';
-                 labelText = '🐚 DOBLE SALTO';
+                 labelText = t('games.shuraRun.doubleJump') || '🐚 DOBLE SALTO';
              }
  
              ctx.save();
@@ -583,6 +616,16 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         }
     }, []);
 
+    const toggleFullscreen = useCallback(() => {
+        if (!document.fullscreenElement) {
+            gameContainerRef.current?.requestFullscreen?.();
+            setIsFullscreen(true);
+        } else {
+            document.exitFullscreen?.();
+            setIsFullscreen(false);
+        }
+    }, []);
+
     const startGame = () => {
 
         // Load high score
@@ -620,6 +663,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         isPausedRef.current = false;
         setShowPauseMenu(false);
         setShowExitConfirm(false);
+        setMenuViewSync('main');
 
         if (bgMusic.current) {
             bgMusic.current.currentTime = 0;
@@ -683,18 +727,21 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
+            if (!isGameFocusedRef.current) return;
             if (e.code === 'Space' || e.code === 'ArrowUp') {
                 e.preventDefault();
                 // Bloquear durante animación de muerte
-                if (gameState === 'gameover' && !showGameOverUI) return;
+                if (gameState === 'gameover' && (!showGameOverUI || menuView !== 'main')) return;
                 if (gameState === 'playing') jump();
-                else if (gameState !== 'gameover') startGame();
+                else if (gameState === 'start' && menuView === 'main') startGame();
             }
             if (e.code === 'ArrowDown') {
+                if (!isGameFocusedRef.current) return;
                 e.preventDefault();
                 if (gameState === 'playing' && !isPausedRef.current) fastFall();
             }
             if (e.code === 'KeyP' || e.code === 'Escape') {
+                if (!isGameFocusedRef.current) return;
                 e.preventDefault();
                 togglePause();
             }
@@ -707,11 +754,12 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         };
 
         const handleTouchStart = (e: TouchEvent) => {
+            if (!isGameFocusedRef.current) return;
             // Bloquear durante animación de muerte
-            if (gameState === 'gameover' && !showGameOverUI) return;
+            if (gameState === 'gameover' && (!showGameOverUI || menuView !== 'main')) return;
             if (gameState === 'playing') {
                 if (!isPausedRef.current) jump();
-            } else if (gameState !== 'gameover') {
+            } else if (gameState === 'start' && menuView === 'main') {
                 startGame();
             }
         };
@@ -721,16 +769,17 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         };
 
         const handleMouseDown = (e: MouseEvent) => {
+            if (!isGameFocusedRef.current) return;
             // Bloquear durante animación de muerte
-            if (gameState === 'gameover' && !showGameOverUI) return;
+            if (gameState === 'gameover' && (!showGameOverUI || menuViewRef.current !== 'main')) return;
+            // Block if in sub-menus (use ref to avoid stale closure)
+            if (menuViewRef.current !== 'main') return;
             if (gameState === 'playing' && !isPausedRef.current) {
                 jump();
                 lastClickTimeRef.current = performance.now();
-            } else if (gameState === 'start') {
+            } else if (gameState === 'start' && menuViewRef.current === 'main') {
                 startGame();
             }
-            // Si gameState === 'gameover' y showGameOverUI === true,
-            // el botón de reintentar maneja el reinicio.
         };
 
         const handleMouseUp = (e: MouseEvent) => {
@@ -813,7 +862,12 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                     {/* Game Viewport Container */}
                     <div className="relative p-1 bg-gray-100 dark:bg-zinc-950 border border-neon-cyan/20 rounded-xl overflow-hidden shadow-[0_0_50px_-12px_rgba(0,243,255,0.15)]">
                         <div 
-                            className="aspect-video md:aspect-[21/9] w-full bg-[#1a1a1a] relative overflow-hidden flex flex-col justify-end touch-none cursor-pointer"
+                            ref={gameContainerRef}
+                            className="aspect-video w-full bg-[#1a1a1a] relative overflow-hidden flex flex-col justify-end touch-none cursor-pointer select-none outline-none"
+                            tabIndex={0}
+                            onMouseEnter={() => { isGameFocusedRef.current = true; gameContainerRef.current?.focus(); }}
+                            onMouseLeave={() => { isGameFocusedRef.current = false; }}
+                            onTouchStart={() => { isGameFocusedRef.current = true; }}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 if (gameState === 'playing' && !isPausedRef.current) jump();
@@ -831,31 +885,40 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                             <div className="absolute inset-0 pointer-events-none opacity-10 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]"></div>
 
                             {/* Game State Overlays */}
-                            {gameState === 'start' && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px] transition-all z-20">
-                                    <div className="text-center p-6 bg-zinc-900/80 border border-neon-cyan/30 rounded-2xl">
-                                        <MdSpaceBar className="text-6xl text-neon-cyan mx-auto mb-4 animate-bounce" />
-                                        <p className="text-white font-bold text-xl tracking-widest uppercase mb-6">
-                                            {t('games.shuraRun.tapToJump')}
-                                        </p>
-                                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            {gameState === 'start' && menuView === 'main' && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-[2px] transition-all z-20"
+                                    style={{ fontFamily: '"Press Start 2P", cursive' }}>
+                                    <div className="flex flex-col items-center gap-6 p-8 md:p-12 border-4 border-neon-cyan bg-black/90 pixel-shadow">
+                                        <h2 className="text-neon-cyan/90 text-3xl md:text-5xl animate-pulse mb-4 tracking-widest text-center leading-relaxed drop-shadow-[0_0_15px_rgba(0,243,255,0.8)]">
+                                            SHURA<br/>RUN
+                                        </h2>
+                                        <div className="flex flex-col w-full gap-4">
                                             <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    startGame();
-                                                }}
-                                                className="bg-neon-cyan text-black font-black py-3 px-8 rounded-full shadow-[0_0_15px_rgba(0,243,255,0.5)] hover:scale-105 transition-transform uppercase italic"
+                                                onClick={(e) => { e.stopPropagation(); startGame(); }}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                                className="w-full bg-white text-black text-sm md:text-base py-4 px-8 border-4 border-white hover:bg-neon-cyan hover:border-neon-cyan hover:text-black transition-colors pixel-shadow group flex items-center justify-center"
                                             >
-                                                {t('games.shuraRun.playNow')}
+                                                <span className="opacity-0 group-hover:opacity-100 mr-3">▶</span>
+                                                {t('games.shuraRun.menuPlay')}
+                                                <span className="opacity-0 group-hover:opacity-100 ml-3">◀</span>
                                             </button>
                                             <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setShowRules(true);
-                                                }}
-                                                className="bg-white/10 text-white font-bold py-3 px-6 rounded-full border border-white/20 hover:bg-white/20 transition-all uppercase text-sm"
+                                                onClick={(e) => { e.stopPropagation(); setMenuViewSync('settings'); }}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                                className="w-full bg-black text-white text-sm md:text-base py-4 px-8 border-4 border-white hover:bg-zinc-800 transition-colors pixel-shadow group flex items-center justify-center"
                                             >
-                                                {t('games.puzzle.rulesTitle').split(' ')[1] || 'Reglas'}
+                                                <span className="opacity-0 group-hover:opacity-100 mr-3">▶</span>
+                                                {t('games.shuraRun.menuSettings')}
+                                                <span className="opacity-0 group-hover:opacity-100 ml-3">◀</span>
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setMenuViewSync('controls'); }}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                                className="w-full bg-black text-white text-sm md:text-base py-4 px-8 border-4 border-white hover:bg-zinc-800 transition-colors pixel-shadow group flex items-center justify-center"
+                                            >
+                                                <span className="opacity-0 group-hover:opacity-100 mr-3">▶</span>
+                                                {t('games.shuraRun.menuControls')}
+                                                <span className="opacity-0 group-hover:opacity-100 ml-3">◀</span>
                                             </button>
                                         </div>
                                     </div>
@@ -863,36 +926,153 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                             )}
 
                             {gameState === 'gameover' && showGameOverUI && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-30 overflow-hidden">
-                                    <div 
-                                        ref={gameOverContainerRef}
-                                        className="text-center will-change-transform"
-                                    >
-                                        {updateMessage ? (
-                                            <div className="mb-8 p-4 bg-pokemon-yellow text-black font-bold rounded-xl animate-bounce border-2 border-black">
-                                                {updateMessage}
+                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 z-20"
+                                     style={{ fontFamily: '"Press Start 2P" , cursive' }}>
+                                     <div className="bg-black/80 border-4 border-white p-8 md:p-12 pixel-shadow max-w-[90%] flex flex-col items-center animate-scale-in">
+                                         <h1 className="text-white text-3xl md:text-5xl lg:text-6xl mb-8 tracking-tighter text-center italic drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+                                             {t('games.shuraRun.gameOver')}
+                                         </h1>
+                                         <div className="flex gap-10 md:gap-20 mb-12 py-6 border-y-4 border-white/20 w-full justify-center">
+                                             <div className="flex flex-col items-center">
+                                                 <span className="text-gray-400 text-[10px] md:text-xs mb-2 uppercase">{t('games.shuraRun.score')}</span>
+                                                 <span className="text-neon-cyan text-2xl md:text-3xl font-pixel">{score.toString().padStart(5, '0')}</span>
+                                             </div>
+                                             <div className="flex flex-col items-center">
+                                                 <span className="text-gray-400 text-[10px] md:text-xs mb-2 uppercase">{t('games.shuraRun.highScore')}</span>
+                                                 <span className="text-white text-2xl md:text-3xl font-pixel">{highScore.toString().padStart(5, '0')}</span>
+                                             </div>
+                                         </div>
+                                         <button
+                                             onClick={(e) => { e.stopPropagation(); startGame(); }}
+                                             className="w-full bg-red-600 hover:bg-red-500 text-white font-pixel text-lg md:text-xl py-4 border-4 border-white transition-all transform active:scale-95 pixel-shadow uppercase tracking-widest flex items-center justify-center group"
+                                         >
+                                             <span className="opacity-0 group-hover:opacity-100 mr-4">▶</span>
+                                             {t('games.shuraRun.continue')}
+                                             <span className="opacity-0 group-hover:opacity-100 ml-4">◀</span>
+                                         </button>
+                                     </div>
+                                 </div>
+                            )}
+
+                            {gameState === 'playing' && isPausedRef.current && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-30"
+                                    style={{ fontFamily: '"Press Start 2P", cursive' }}>
+                                    <div className="flex flex-col items-center bg-[#111] border-2 border-white p-8 pixel-shadow text-center min-w-[280px] md:min-w-[340px]">
+                                        <h2 className="text-neon-cyan text-3xl md:text-4xl mb-2">{t('games.shuraRun.pauseTitle')}</h2>
+                                        <div className="border-t-4 border-neon-cyan w-1/4 mb-4 mt-2"></div>
+                                        <p className="text-gray-400 text-[10px] mb-8 uppercase">{t('games.shuraRun.pauseSubtitle')}</p>
+
+                                        <div className="flex flex-col w-full gap-4 mb-8">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); togglePause(); }}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                                className="w-full bg-[#00ffff] text-black text-xs md:text-sm py-4 border-2 border-black pixel-shadow hover:scale-105 transition-transform"
+                                            >
+                                                {t('games.shuraRun.pauseContinue')}
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); startGame(); }}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                                className="w-full bg-[#ffff00] text-black text-xs md:text-sm py-4 border-2 border-black pixel-shadow hover:scale-105 transition-transform"
+                                            >
+                                                {t('games.shuraRun.pauseRestart')}
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setGameState('start'); setIsPaused(false); isPausedRef.current = false; setMenuViewSync('main'); }}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                                className="w-full bg-[#ff003c] text-white text-xs md:text-sm py-4 border-2 border-black pixel-shadow hover:scale-105 transition-transform"
+                                            >
+                                                {t('games.shuraRun.pauseExit')}
+                                            </button>
+                                        </div>
+
+                                        <div className="border border-gray-600 p-4 text-left w-full">
+                                            <p className="text-neon-cyan text-[8px] mb-2 uppercase">{">"} {t('games.shuraRun.pauseHintTitle')}</p>
+                                            <p className="text-gray-400 text-[8px] leading-relaxed uppercase">{t('games.shuraRun.pauseHintDesc')}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {menuView === 'settings' && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/90 backdrop-blur-[2px] z-40 transition-all"
+                                    style={{ fontFamily: '"Press Start 2P", cursive' }}>
+                                    <div className="flex flex-col items-center gap-6 p-8 border-4 border-neon-cyan bg-black/90 pixel-shadow w-[80%] max-w-[500px]">
+                                        <h2 className="text-neon-cyan text-2xl md:text-3xl mb-4 text-center uppercase">{t('games.shuraRun.settingsTitle')}</h2>
+                                        <div className="flex flex-col w-full gap-4">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); toggleBgm(); }}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                                className="w-full bg-black text-white text-xs md:text-sm py-4 px-4 border-4 border-white hover:bg-zinc-800 transition-colors pixel-shadow flex items-center justify-between"
+                                            >
+                                                <span className="uppercase">{t('games.shuraRun.settingsMusic')}</span>
+                                                <span className={isBgmMuted ? "text-red-500" : "text-neon-cyan"}>{isBgmMuted ? 'OFF' : 'ON'}</span>
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); toggleSfx(); }}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                                className="w-full bg-black text-white text-xs md:text-sm py-4 px-4 border-4 border-white hover:bg-zinc-800 transition-colors pixel-shadow flex items-center justify-between"
+                                            >
+                                                <span className="uppercase">{t('games.shuraRun.settingsSfx')}</span>
+                                                <span className={isSfxMuted ? "text-red-500" : "text-neon-cyan"}>{isSfxMuted ? 'OFF' : 'ON'}</span>
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); toggleFullscreen(); }}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                                className="w-full bg-black text-white text-xs md:text-sm py-4 px-4 border-4 border-white hover:bg-zinc-800 transition-colors pixel-shadow flex items-center justify-between"
+                                            >
+                                                <span className="uppercase">{t('games.shuraRun.settingsFullscreen')}</span>
+                                                <span className="text-neon-cyan">{isFullscreen ? 'ON' : 'OFF'}</span>
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setMenuViewSync('main'); }}
+                                                onMouseDown={(e) => e.stopPropagation()}
+                                                className="w-full bg-white text-black text-xs md:text-sm py-4 border-4 border-black hover:bg-gray-200 transition-colors pixel-shadow mt-4"
+                                            >
+                                                ← {t('games.shuraRun.back')}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {menuView === 'controls' && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/95 backdrop-blur-[2px] z-40 transition-all"
+                                    style={{ fontFamily: '"Press Start 2P", cursive' }}>
+                                    <div className="flex flex-col items-center p-8 border-4 border-white bg-black pixel-shadow w-[80%] max-w-[500px]">
+                                        <h2 className="text-white text-xl md:text-2xl mb-8 border-b-4 border-white pb-4 w-full text-center uppercase">{t('games.shuraRun.controlsTitle')}</h2>
+                                        <div className="flex flex-col items-start gap-6 w-full mb-8">
+                                            <div className="flex items-center justify-between text-white w-full gap-4">
+                                                <div className="bg-zinc-800 border-4 border-gray-500 p-2 md:p-3 shadow-[0_4px_0_#555] flex-1 text-center">
+                                                    <span className="text-[10px] md:text-sm">SPACE / ↑</span>
+                                                </div>
+                                                <span className="text-[10px] md:text-sm text-gray-300 flex-1 text-right uppercase">{t('games.shuraRun.controlsJump')}</span>
                                             </div>
-                                        ) : (
-                                            <h2 className="text-5xl md:text-7xl font-black text-red-500 mb-4 tracking-tighter uppercase drop-shadow-[0_0_20px_rgba(239,68,68,0.5)]">
-                                                {t('games.shuraRun.gameOver')}
-                                            </h2>
-                                        )}
-                                        <div className="mb-8 space-y-1">
-                                            <p className="text-white text-xl md:text-2xl font-bold uppercase tracking-tight">
-                                                {t('common.score')}: <span className="text-neon-cyan">{score}</span>
-                                            </p>
-                                            <p className="text-gray-400 text-xs md:text-sm font-black uppercase tracking-widest">
-                                                {t('games.shuraRun.best')}: {highScore}
-                                            </p>
+                                            <div className="flex items-center justify-between text-white w-full gap-4">
+                                                <div className="bg-zinc-800 border-4 border-gray-500 p-2 md:p-3 shadow-[0_4px_0_#555] flex-1 text-center">
+                                                    <span className="text-[10px] md:text-sm">CLICK</span>
+                                                </div>
+                                                <span className="text-[10px] md:text-sm text-gray-300 flex-1 text-right uppercase">{t('games.shuraRun.controlsTap')}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between text-white w-full gap-4">
+                                                <div className="bg-zinc-800 border-4 border-gray-500 p-2 md:p-3 shadow-[0_4px_0_#555] flex-1 text-center">
+                                                    <span className="text-[10px] md:text-sm">↓ DOWN</span>
+                                                </div>
+                                                <span className="text-[10px] md:text-sm text-gray-300 flex-1 text-right uppercase">{t('games.shuraRun.controlsQuickFall')}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between text-white w-full gap-4">
+                                                <div className="bg-zinc-800 border-4 border-gray-500 p-2 md:p-3 shadow-[0_4px_0_#555] flex-1 text-center">
+                                                    <span className="text-[10px] md:text-sm">ESC / P</span>
+                                                </div>
+                                                <span className="text-[10px] md:text-sm text-gray-300 flex-1 text-right uppercase">{t('games.shuraRun.controlsPause')}</span>
+                                            </div>
                                         </div>
                                         <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                startGame();
-                                            }}
-                                            className="bg-neon-cyan hover:bg-neon-cyan/80 text-black font-black text-xl px-12 py-4 rounded-full border-4 border-white transition-all transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(0,243,255,0.6)] uppercase tracking-widest italic"
+                                            onClick={(e) => { e.stopPropagation(); setMenuViewSync('main'); }}
+                                            onMouseDown={(e) => e.stopPropagation()}
+                                            className="w-full bg-neon-cyan text-black text-xs md:text-sm py-4 border-4 border-white hover:bg-[#00e5e5] transition-colors pixel-shadow"
                                         >
-                                            {t('games.shuraRun.retry')}
+                                            ← {t('games.shuraRun.back')}
                                         </button>
                                     </div>
                                 </div>
@@ -907,7 +1087,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                     <div className="lg:col-span-2 space-y-6">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white uppercase tracking-tighter">
-                                Hall of Fame
+                                {t('games.shuraRun.hallOfFame')}
                             </h3>
                             <div className="flex gap-2">
                                 <span className="h-2 w-2 rounded-full bg-neon-cyan"></span>
@@ -937,7 +1117,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                             <div className="space-y-6">
                                 <div>
                                     <div className="flex justify-between text-[10px] font-bold text-gray-700 dark:text-white uppercase mb-2">
-                                        <span>Progress to High Score</span>
+                                        <span>{t('games.shuraRun.progressLabel')}</span>
                                         <span className="text-neon-cyan">
                                             {highScore > 0 ? Math.min(Math.round((score / highScore) * 100), 100) : 0}%
                                         </span>
@@ -958,15 +1138,15 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
 
                         {/* Controls Hint */}
                         <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 hidden md:block">
-                            <h4 className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">Controls</h4>
+                            <h4 className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">{t('games.shuraRun.menuControls')}</h4>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="flex items-center gap-2 text-xs text-white">
                                     <kbd className="px-2 py-1 bg-zinc-800 rounded border border-zinc-700 font-pixel text-[10px]">SPACE</kbd>
-                                    <span>Jump</span>
+                                    <span className="uppercase">{t('games.shuraRun.jump')}</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-xs text-white">
                                     <kbd className="px-2 py-1 bg-zinc-800 rounded border border-zinc-700 font-pixel text-[10px]">ESC</kbd>
-                                    <span>Pause</span>
+                                    <span className="uppercase">{t('games.shuraRun.pause')}</span>
                                 </div>
                             </div>
                         </div>
@@ -974,66 +1154,8 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 </div>
             </div>
 
-            {/* Existing Modals */}
-            <RulesModal
-                isOpen={showRules}
-                onContinue={() => setShowRules(false)}
-                title="Shura Run"
-                icon={<MdDirectionsRun />}
-                instructions={[
-                    { icon: <MdSpaceBar />, title: 'Salto', description: t('games.shuraRun.tapToJump') },
-                    { icon: <MdBreakfastDining />, title: 'Puntaje', description: t('games.shuraRun.instructions') },
-                    { icon: <MdSpeed />, title: 'Dificultad', description: 'La velocidad aumenta conforme avanzas. ¡No te detengas!' }
-                ]}
-            />
+            {/* Existing Modals were successfully removed to retain everything in-canvas. */}
 
-            <PauseMenu
-                isOpen={showPauseMenu}
-                onResume={togglePause}
-                onRestart={startGame}
-                onExit={() => setShowExitConfirm(true)}
-            />
-
-            <ScoreOverwriteModal
-                isOpen={showOverwriteModal}
-                onConfirm={confirmOverwrite}
-                onCancel={() => setShowOverwriteModal(false)}
-                playerName={playerName || (typeof window !== 'undefined' ? localStorage.getItem('playerName') : '') || 'Anonymous'}
-                gameType="shura_run"
-                oldScore={pendingScoreData?.oldScore || 0}
-                newScore={pendingScoreData?.score || 0}
-            />
-
-            {/* EXIT CONFIRMATION MODAL */}
-            {showExitConfirm && (
-                <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
-                    <div className="bg-white dark:bg-zinc-900 rounded-3xl p-8 border-4 border-black dark:border-zinc-800 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-w-xs w-full text-center">
-                        <h3 className="text-2xl font-black mb-6 dark:text-white uppercase italic">{t('games.puzzle.exitConfirm')}</h3>
-                        <div className="flex gap-4">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setGameState('start');
-                                    setShowExitConfirm(false);
-                                    setShowPauseMenu(false);
-                                }}
-                                className="flex-1 py-4 bg-green-500 text-white font-black uppercase rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                            >
-                                {t('games.puzzle.yes')}
-                            </button>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setShowExitConfirm(false);
-                                }}
-                                className="flex-1 py-4 bg-red-500 text-white font-black uppercase rounded-xl border-4 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all"
-                            >
-                                {t('games.puzzle.no')}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
             
             {/* Interactive FAB */}
             <button 
@@ -1042,7 +1164,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             >
                 <MdDirectionsRun className="text-3xl" />
                 <span className="absolute right-20 bg-zinc-900 px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all pointer-events-none border border-neon-pink/20 translate-x-4 group-hover:translate-x-0">
-                    QUICK START
+                    {t('games.shuraRun.quickStart')}
                 </span>
             </button>
         </main>

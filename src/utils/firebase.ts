@@ -127,13 +127,14 @@ export const subscribeToMessages = (sessionId: string, callback: (messages: any[
 };
 
 // Wall functionality
-export const addWallMessage = async (username: string, country: string, text: string, imageUrl: string | null = null) => {
+export const addWallMessage = async (username: string, country: string, text: string, imageUrl: string | null = null, status: 'approved' | 'banned' = 'approved') => {
     try {
         await addDoc(collection(db, 'wall_messages'), {
             username,
             country,
             text,
             imageUrl,
+            status,
             timestamp: serverTimestamp()
         });
     } catch (error) {
@@ -143,9 +144,10 @@ export const addWallMessage = async (username: string, country: string, text: st
 };
 
 export const subscribeToWallMessages = (callback: (messages: any[]) => void) => {
-    console.log("Setting up wall_messages listener...");
+    console.log("Setting up wall_messages listener (approved only)...");
     const q = query(
         collection(db, 'wall_messages'),
+        where('status', '==', 'approved'),
         orderBy('timestamp', 'desc')
     );
 

@@ -41,9 +41,7 @@ export const submitGameScore = async (
     }
 
     const { data: existingScores, error: fetchError } = await query;
-
     if (fetchError) throw fetchError;
-
     const existingScore = existingScores && existingScores.length > 0 ? existingScores[0] : null;
 
     let shouldUpdate = false;
@@ -121,9 +119,6 @@ export const getGameLeaderboard = async (
       query = query.eq('difficulty', difficulty);
     }
 
-    // Sort order depends on game type
-    // Puzzle: Lower time is better (ascending)
-    // Others: Higher score is better (descending)
     if (gameType === 'puzzle') {
       query = query.order('score', { ascending: true });
     } else {
@@ -167,8 +162,6 @@ export const checkExistingScore = async (
     if (error) throw error;
 
     if (data && data.length > 0) {
-      // Sort in memory to get the best one if multiple exist for some reason
-      // For puzzle, lower is better. For others, higher is better.
       const scores = data.map(d => d.score);
       const bestScore = gameType === 'puzzle' ? Math.min(...scores) : Math.max(...scores);
       return { exists: true, score: bestScore };

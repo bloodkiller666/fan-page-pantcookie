@@ -92,7 +92,7 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
 
     const handleShare = () => {
         const timeStr = `${Math.floor(elapsedTime / 60)}:${(elapsedTime % 60).toString().padStart(2, '0')}`;
-        const text = `¡Acabo de completar el Puzzle Challenge en dificultad ${difficulty.toUpperCase()} en solo ${timeStr}! ¿Puedes superarme?`;
+        const text = t('games.puzzle.shareText', { difficulty: difficulty.toUpperCase(), time: timeStr }) || `¡Acabo de completar el Puzzle Challenge en dificultad ${difficulty.toUpperCase()} en solo ${timeStr}! ¿Puedes superarme?`;
 
         if (navigator.share) {
             navigator.share({
@@ -102,7 +102,7 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
             }).catch(console.error);
         } else {
             navigator.clipboard.writeText(`${text} ${window.location.href}`);
-            alert('¡Resultado copiado al portapapeles!');
+            alert(t('games.puzzle.copied') || '¡Resultado copiado al portapapeles!');
         }
     };
 
@@ -128,18 +128,18 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
     const puzzleRules = [
         {
             icon: <MdPanTool />,
-            title: t('Mueve las piezas') || 'Mueve las piezas',
-            description: t('Arrastra las piezas para completar la imagen correctamente.') || 'Arrastra las piezas para completar la imagen correctamente.'
+            title: t('games.puzzle.rulesMueve') || 'Mueve las piezas',
+            description: t('games.puzzle.rulesMueveDesc') || 'Arrastra las piezas para completar la imagen correctamente.'
         },
         {
             icon: <MdTimer />,
-            title: t('Velocidad es clave') || 'Velocidad es clave',
-            description: t('Completa en el menor tiempo posible para subir en el ranking.') || 'Completa en el menor tiempo posible para subir en el ranking.'
+            title: t('games.puzzle.rulesVelocidad') || 'Velocidad es clave',
+            description: t('games.puzzle.rulesVelocidadDesc') || 'Completa en el menor tiempo posible para subir en el ranking.'
         },
         {
             icon: <MdWarning />,
-            title: t('Cuidado al cambiar') || 'Cuidado al cambiar',
-            description: t('Cambiar la dificultad reiniciará tu progreso actual de inmediato.') || 'Cambiar la dificultad reiniciará tu progreso actual de inmediato.'
+            title: t('games.puzzle.rulesCuidado') || 'Cuidado al cambiar',
+            description: t('games.puzzle.rulesCuidadoDesc') || 'Cambiar la dificultad reiniciará tu progreso actual de inmediato.'
         }
     ];
 
@@ -183,10 +183,10 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                         <div className="space-y-12 animate-fade-in">
                             <div className="space-y-4">
                                 <h2 className="text-6xl font-black text-slate-900 dark:text-slate-100 tracking-tighter italic">
-                                    Selecciona la <span className="text-primary">Dificultad</span>
+                                    {t('games.puzzle.selectDifficulty').split(' ')[0]} <span className="text-primary">{t('games.puzzle.selectDifficulty').split(' ').slice(1).join(' ')}</span>
                                 </h2>
                                 <p className="text-xl text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wide">
-                                    Elige el tamaño del tablero para comenzar tu desafío
+                                    {t('games.puzzle.difficultyDesc')}
                                 </p>
                             </div>
 
@@ -212,12 +212,12 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                             <div className="flex flex-wrap items-center justify-between gap-6 bg-slate-100 dark:bg-primary/5 border border-slate-200 dark:border-primary/20 p-6 rounded-3xl backdrop-blur-md shadow-xl">
                                 <div className="flex items-center gap-10">
                                     <div className="flex flex-col">
-                                        <span className="text-[10px] uppercase tracking-[0.3em] text-slate-500 dark:text-primary/60 font-black mb-1">Dificultad</span>
+                                        <span className="text-[10px] uppercase tracking-[0.3em] text-slate-500 dark:text-primary/60 font-black mb-1">{t('common.difficulty') || 'Dificultad'}</span>
                                         <span className="text-2xl font-black text-slate-900 dark:text-white italic uppercase">{difficulty}</span>
                                     </div>
                                     <div className="h-12 w-[1.5px] bg-slate-300 dark:bg-primary/20"></div>
                                     <div className="flex flex-col">
-                                        <span className="text-[10px] uppercase tracking-[0.3em] text-slate-500 dark:text-primary/60 font-black mb-1">Cronómetro</span>
+                                        <span className="text-[10px] uppercase tracking-[0.3em] text-slate-500 dark:text-primary/60 font-black mb-1">{t('common.timer') || 'Cronómetro'}</span>
                                         <div className="flex items-center gap-3">
                                             <span className="text-3xl font-black text-black font-mono tabular-nums drop-shadow-[0_0_10px_rgba(13,185,242,0.4)]">
                                                 {Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:{(elapsedTime % 60).toString().padStart(2, '0')}
@@ -254,7 +254,7 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                                             onClick={() => setShowVictoryScreen(true)}
                                             className="px-12 py-6 bg-primary text-background-dark font-black uppercase tracking-[0.3em] rounded-2xl shadow-[0_0_50px_rgba(13,185,242,0.6)] hover:scale-110 active:scale-95 transition-all animate-bounce"
                                         >
-                                            {t('Ver Resultados') || 'Ver Resultados'}
+                                            {t('games.puzzle.viewResults') || 'Ver Resultados'}
                                         </button>
                                     </div>
                                 )}
@@ -274,9 +274,9 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                         <div className="flex-1 flex flex-col gap-8 animate-fade-in-up">
                             <div className="text-center space-y-3">
                                 <h1 className="text-5xl lg:text-7xl font-black text-primary tracking-tighter italic uppercase drop-shadow-[0_0_20px_rgba(13,185,242,0.3)]">
-                                    ¡Felicidades <span className="text-slate-900 dark:text-white">{playerName}</span>!
+                                    {t('games.puzzle.victoryGreet', { name: playerName })}
                                 </h1>
-                                <p className="text-slate-500 dark:text-slate-400 text-xl font-bold uppercase tracking-[0.2em]">¡Has conquistado el desafío!</p>
+                                <p className="text-slate-500 dark:text-slate-400 text-xl font-bold uppercase tracking-[0.2em]">{t('games.puzzle.conquered') || '¡Has conquistado el desafío!'}</p>
                             </div>
                             <div className="relative flex flex-col items-center justify-center py-16 bg-white dark:bg-slate-900/40 rounded-[3rem] border border-slate-200 dark:border-primary/20 backdrop-blur-xl overflow-hidden shadow-2xl dark:shadow-none">
                                 <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -288,20 +288,20 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                                     <div className="mb-8 h-64 w-64 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary/20 shadow-[0_0_60px_rgba(13,185,242,0.2)]">
                                         <MdEmojiEvents className="text-primary drop-shadow-[0_0_20px_rgba(13,185,242,1)] transform scale-[5.5]" style={{ fontVariationSettings: "'FILL' 1" }} />
                                     </div>
-                                    <h3 className="text-4xl font-black uppercase italic tracking-tighter mb-3 text-slate-900 dark:text-white">¡Victoria Magistral!</h3>
-                                    <p className="text-slate-500 dark:text-slate-400 font-medium mb-10 max-w-md mx-auto px-6 leading-relaxed">Tu agilidad mental es impresionante. Has resuelto cada pieza con precisión quirúrgica.</p>
+                                    <h3 className="text-4xl font-black uppercase italic tracking-tighter mb-3 text-slate-900 dark:text-white">{t('games.puzzle.victoryTitle')}</h3>
+                                    <p className="text-slate-500 dark:text-slate-400 font-medium mb-10 max-w-md mx-auto px-6 leading-relaxed">{t('games.puzzle.victoryDesc')}</p>
                                     <div className="flex flex-wrap justify-center gap-6 w-full px-6">
                                         <div className="flex-1 min-w-[200px] bg-slate-50 dark:bg-slate-800/80 p-8 rounded-3xl border border-slate-200 dark:border-white/5 shadow-inner group hover:border-primary/30 transition-colors">
                                             <MdTimer className="text-primary mb-4 text-4xl transform group-hover:scale-110 transition-transform" />
-                                            <p className="text-xs uppercase tracking-[0.1em] text-slate-500 font-black mb-2 sm:whitespace-nowrap">Tiempo Final</p>
+                                            <p className="text-xs uppercase tracking-[0.1em] text-slate-500 font-black mb-2 sm:whitespace-nowrap">{t('common.finalTime') || 'Tiempo Final'}</p>
                                             <p className="text-4xl font-black italic tracking-tighter text-slate-900 dark:text-slate-100">
                                                 {Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}
                                             </p>
                                         </div>
                                         <div className="flex-1 min-w-[200px] bg-slate-50 dark:bg-slate-800/80 p-8 rounded-3xl border border-slate-200 dark:border-white/5 shadow-inner group hover:border-primary/30 transition-colors">
                                             <MdSignalCellularAlt className="text-primary mb-4 text-4xl transform group-hover:scale-110 transition-transform" />
-                                            <p className="text-xs uppercase tracking-[0.1em] text-slate-500 font-black mb-2 sm:whitespace-nowrap">Dificultad</p>
-                                            <p className="text-4xl font-black italic tracking-tighter text-slate-900 dark:text-black uppercase">{difficulty}</p>
+                                            <p className="text-xs uppercase tracking-[0.1em] text-slate-500 font-black mb-2 sm:whitespace-nowrap">{t('common.difficulty') || 'Dificultad'}</p>
+                                            <p className="text-4xl font-black italic tracking-tighter text-slate-900 dark:text-slate-100 uppercase">{difficulty}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                                     onClick={resetGame}
                                     className="w-full max-w-md py-6 bg-[#ff007a] hover:bg-[#ff1a8a] text-white rounded-2xl text-2xl font-black tracking-[0.2em] uppercase transition-all transform hover:scale-[1.03] active:scale-95 shadow-[0_0_30px_rgba(255,0,122,0.4)] hover:shadow-[0_0_50px_rgba(255,0,122,0.6)]"
                                 >
-                                    ¡JUGAR DE NUEVO!
+                                    {t('games.puzzle.playAgainBtn') || '¡JUGAR DE NUEVO!'}
                                 </button>
                                 <button
                                     onClick={handleShare}
@@ -333,10 +333,10 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                     {gameState === 'playing' && (
                         <div className="bg-primary/90 p-8 rounded-[2rem] relative overflow-hidden group shadow-2xl shadow-primary/20 transform hover:-translate-y-2 transition-all duration-500">
                             <div className="relative z-10">
-                                <h4 className="text-background-dark font-black text-2xl uppercase italic tracking-tighter mb-2">¿Necesitas ayuda?</h4>
-                                <p className="text-background-dark/80 text-sm font-bold mb-6 leading-tight">Usa una pista para revelar la posición de la siguiente pieza correcta.</p>
+                                <h4 className="text-background-dark font-black text-2xl uppercase italic tracking-tighter mb-2">{t('games.puzzle.needHelp')}</h4>
+                                <p className="text-background-dark/80 text-sm font-bold mb-6 leading-tight">{t('games.puzzle.useHint')}</p>
                                 <button className="bg-background-dark text-white px-6 py-4 rounded-xl font-black text-sm w-full shadow-2xl hover:brightness-110 transition-all active:scale-95 uppercase tracking-widest border border-white/10">
-                                    Usar Pista (3 Libres)
+                                    {t('games.puzzle.useHintBtn')}
                                 </button>
                             </div>
                             <MdLightbulb className="absolute -bottom-8 -right-8 text-background-dark/20 text-[10rem] rotate-12 group-hover:rotate-0 transition-all duration-700" />
@@ -347,13 +347,13 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                     <div className="bg-gradient-to-br from-primary/20 to-indigo-600/20 rounded-[2rem] p-8 border border-white/10 backdrop-blur-md shadow-xl">
                         <h4 className="font-black text-lg mb-2 flex items-center gap-3 italic tracking-tighter uppercase">
                             <MdWorkspacePremium className="text-[#ff007a] shadow-[0_0_10px_rgba(255,0,122,0.4)]" />
-                            Desafío Semanal
+                            {t('games.puzzle.weeklyChallenge')}
                         </h4>
-                        <p className="text-xs text-slate-500 font-bold mb-5 leading-relaxed">Completa 3 puzzles en dificultad DIFÍCIL para ganar una insignia exclusiva.</p>
+                        <p className="text-xs text-slate-500 font-bold mb-5 leading-relaxed">{t('games.puzzle.weeklyGoal')}</p>
                         <div className="w-full bg-slate-200 dark:bg-slate-800/50 h-3 rounded-full overflow-hidden border border-white/5">
                             <div className="bg-[#ff007a] h-full w-2/3 shadow-[0_0_15px_rgba(255,0,122,0.6)] rounded-full animate-pulse-slow"></div>
                         </div>
-                        <p className="text-[10px] uppercase font-black text-right mt-3 text-[#ff007a] tracking-[0.2em] italic">2 / 3 COMPLETADOS</p>
+                        <p className="text-[10px] uppercase font-black text-right mt-3 text-[#ff007a] tracking-[0.2em] italic">{t('games.puzzle.weeklyProgress')}</p>
                     </div>
                 </aside>
             </main>
@@ -361,7 +361,7 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
             <RulesModal
                 isOpen={showRules}
                 onContinue={confirmStartGame}
-                title="Reglas del Puzzle"
+                title={t('games.puzzle.rulesTitle') || "Reglas del Puzzle"}
                 icon={<MdExtension />}
                 instructions={puzzleRules}
             />
@@ -382,7 +382,7 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                         <div className="mb-6 w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto border border-red-500/30">
                             <MdRefresh className="text-red-500 text-3xl" />
                         </div>
-                        <p className="text-xl font-black mb-8 text-slate-100 uppercase italic leading-tight">¿Reiniciar el rompecabezas?</p>
+                        <p className="text-xl font-black mb-8 text-slate-100 uppercase italic leading-tight">{t('games.puzzle.confirmRestart') || '¿Reiniciar el rompecabezas?'}</p>
                         <div className="flex gap-4">
                             <button
                                 onClick={() => {
@@ -392,13 +392,13 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                                 }}
                                 className="flex-1 py-4 bg-red-600 text-white font-black uppercase rounded-2xl shadow-lg hover:brightness-110 transition-all shadow-red-600/20"
                             >
-                                Sí
+                                {t('common.yes') || 'Sí'}
                             </button>
                             <button
                                 onClick={() => setShowRestartConfirm(false)}
                                 className="flex-1 py-4 bg-slate-800 text-slate-400 font-black uppercase rounded-2xl hover:bg-slate-700 transition-all"
                             >
-                                No
+                                {t('common.no') || 'No'}
                             </button>
                         </div>
                     </div>
@@ -411,7 +411,7 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                         <div className="mb-6 w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto border border-red-500/30">
                             <MdLogout className="text-red-500 text-3xl" />
                         </div>
-                        <p className="text-xl font-black mb-8 text-slate-100 uppercase italic leading-tight">¿Deseas abandonar el juego?</p>
+                        <p className="text-xl font-black mb-8 text-slate-100 uppercase italic leading-tight">{t('games.puzzle.confirmExit') || '¿Deseas abandonar el juego?'}</p>
                         <div className="flex gap-4">
                             <button
                                 onClick={() => {
@@ -421,13 +421,13 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                                 }}
                                 className="flex-1 py-4 bg-red-600 text-white font-black uppercase rounded-2xl shadow-lg hover:brightness-110 transition-all shadow-red-600/20"
                             >
-                                Salir
+                                {t('games.puzzle.exitBtn') || 'Salir'}
                             </button>
                             <button
                                 onClick={() => setShowExitConfirm(false)}
                                 className="flex-1 py-4 bg-slate-800 text-slate-400 font-black uppercase rounded-2xl hover:bg-slate-700 transition-all"
                             >
-                                Cancelar
+                                {t('common.cancel') || 'Cancelar'}
                             </button>
                         </div>
                     </div>

@@ -7,10 +7,12 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { addWallMessage, subscribeToWallMessages } from '../utils/firebase';
 import { useLanguage } from '../context/LanguageContext';
 import { gsap } from 'gsap';
-import { Draggable } from 'gsap/Draggable';
+import { Draggable } from 'gsap/dist/Draggable';
 import { splitText } from '../utils/animations';
 
-gsap.registerPlugin(Draggable);
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(Draggable);
+}
 
 // Simple list of countries (can be fetched from API in future)
 const COUNTRIES = [
@@ -53,8 +55,13 @@ const MensajesContent = () => {
 
   // UI State
   const [isLoading, setIsLoading] = useState(false);
+  const [analysisPhase, setAnalysisPhase] = useState<'idle' | 'analyzing' | 'completed'>('idle');
+  const [analysisResults, setAnalysisResults] = useState({
+    text: 'loading' as 'loading' | 'pass' | 'fail',
+    media: 'pass' as 'loading' | 'pass' | 'fail'
+  });
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState({ show: false, status: 'approved' });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const emojiPickerRef = useRef<HTMLDivElement>(null);
@@ -133,8 +140,8 @@ const MensajesContent = () => {
 
       // Simulate file analysis
       setTimeout(() => {
-        if (file.size > 10 * 1024 * 1024) { // 10MB
-          setErrors((prev) => ({ ...prev, image: t('wall.imageSizeError') }));
+        if (file.size > 20 * 1024 * 1024) { // 20MB
+          setErrors((prev) => ({ ...prev, image: t('wall.imageSizeError') || 'Imagen demasiado grande (Máx 20MB)' }));
           setSelectedImage(null);
           setImagePreview(null);
         } else {
@@ -192,32 +199,65 @@ const MensajesContent = () => {
 
     if (!validateForm()) return;
     setIsLoading(true);
+    setAnalysisPhase('analyzing');
+    setAnalysisResults({ text: 'loading', media: selectedImage ? 'pass' : 'pass' });
 
     try {
       let imageUrl: string | null = null;
+      
+      // Step 0: Media Check (Immediate since it's local)
+      if (selectedImage && selectedImage.size > 20 * 1024 * 1024) {
+        setAnalysisResults(prev => ({ ...prev, media: 'fail' }));
+        // We'll let it proceed but it will likely fail or show error later
+      }
+
       if (selectedImage) {
         imageUrl = await uploadImage(selectedImage);
         if (!imageUrl) {
           setErrors({ ...errors, image: t('wall.imageUploadError') });
           setIsLoading(false);
+          setAnalysisPhase('idle');
           return;
         }
       }
 
-      await addWallMessage(username, country, messageText, imageUrl);
+      // 1. AI moderation check
+      const moderationResponse = await fetch('/api/admin/moderate-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: messageText }),
+      });
+      
+      const moderationResult = await moderationResponse.json();
+      const status = moderationResult.status === 'banned' ? 'banned' : 'approved';
+      
+      // Update Analysis Display
+      setAnalysisResults(prev => ({ 
+        ...prev, 
+        text: status === 'approved' ? 'pass' : 'fail' 
+      }));
+
+      // Small delay to let user see the checkmarks
+      await new Promise(r => setTimeout(r, 1500));
+
+      // 2. Save to Firebase with resulting status
+      await addWallMessage(username, country, messageText, imageUrl, status);
 
       setIsDirty(false);
-      setShowSuccessModal(true);
+      setAnalysisPhase('completed');
+      setShowSuccessModal({ show: true, status });
     } catch (error) {
       console.error("Error sending message:", error);
       setErrors({ ...errors, form: t('wall.submitError') });
+      setAnalysisPhase('idle');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleCloseSuccessModal = (viewMessages = false) => {
-    setShowSuccessModal(false);
+    setShowSuccessModal({ show: false, status: 'approved' });
+    setAnalysisPhase('idle');
     setUsername('');
     setCountry('');
     setMessageText('');
@@ -392,10 +432,73 @@ const MensajesContent = () => {
 
                 {/* GBA Screen */}
                 <div className="scanlines relative bg-black rounded-xl p-3 md:p-6 border-[8px] border-[#222] mt-6">
-                  <div className="crt-flicker bg-white rounded-sm flex flex-col p-4 md:p-6 overflow-hidden">
+                  <div className="crt-flicker bg-white rounded-sm flex flex-col p-4 md:p-6 overflow-hidden min-h-[400px]">
 
-                    {/* Screen Header */}
-                    <header className="flex justify-between items-center border-b-4 border-black pb-4 mb-6">
+                    {/* Analysis Screen Overlay */}
+                    {analysisPhase !== 'idle' ? (
+                      <div className="flex flex-col h-full animate-in fade-in zoom-in duration-300">
+                         <header className="flex justify-between items-center border-b-4 border-black pb-4 mb-8">
+                            <div className="flex items-center gap-3">
+                                <div className="w-6 h-6 bg-primary rounded-full animate-pulse border-2 border-black" />
+                                <h2 className="font-pixel text-[10px] text-black uppercase tracking-widest">Neural Analysis</h2>
+                            </div>
+                         </header>
+
+                         <div className="space-y-8 flex-grow">
+                            <h3 className="font-pixel text-[12px] text-black mb-4 uppercase leading-relaxed">
+                                Se está analizando lo siguiente:
+                            </h3>
+
+                            <div className="space-y-6">
+                                {/* Message Analysis Row */}
+                                <div className="flex items-center justify-between bg-gray-100 p-4 border-2 border-black pixel-shadow">
+                                   <span className="font-pixel text-[9px] text-black">Contenido del mensaje</span>
+                                   {analysisResults.text === 'loading' ? (
+                                     <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                                   ) : analysisResults.text === 'pass' ? (
+                                     <FaCheckCircle className="text-green-600 text-xl animate-bounce-in" />
+                                   ) : (
+                                     <div className="flex items-center gap-2">
+                                        <span className="font-pixel text-[8px] text-rose-500 uppercase">Review Required</span>
+                                        <div className="w-6 h-6 bg-yellow-400 border-2 border-black rounded-full flex items-center justify-center animate-bounce-in">
+                                            <span className="font-pixel text-black text-[12px]">!</span>
+                                        </div>
+                                     </div>
+                                   )}
+                                </div>
+
+                                {/* Media Analysis Row */}
+                                <div className="flex items-center justify-between bg-gray-100 p-4 border-2 border-black pixel-shadow">
+                                   <span className="font-pixel text-[9px] text-black">Contenido multimedia</span>
+                                   {selectedImage ? (
+                                       analysisResults.media === 'pass' ? (
+                                        <FaCheckCircle className="text-green-600 text-xl animate-bounce-in" />
+                                       ) : (
+                                        <FaTimesCircle className="text-rose-600 text-xl animate-bounce-in" />
+                                       )
+                                   ) : (
+                                     <span className="font-pixel text-[8px] text-gray-400">N/A</span>
+                                   )}
+                                </div>
+                            </div>
+
+                            <div className="mt-auto pt-6">
+                                <div className="w-full bg-gray-200 h-2 border-2 border-black">
+                                    <div 
+                                        className="bg-primary h-full transition-all duration-1000" 
+                                        style={{ width: analysisResults.text === 'loading' ? '40%' : '100%' }}
+                                    />
+                                </div>
+                                <p className="font-pixel text-[7px] text-gray-500 mt-2 animate-pulse uppercase">
+                                    {analysisResults.text === 'loading' ? 'Encrypting data stream...' : 'Transmission complete'}
+                                </p>
+                            </div>
+                         </div>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Original Form Content */}
+                        <header className="flex justify-between items-center border-b-4 border-black pb-4 mb-6">
                       <div className="flex items-center gap-3">
                         {/* Mini Pokéball */}
                         <div className="relative w-7 h-7 bg-[#cc0000] rounded-full border-4 border-black flex items-center justify-center">
@@ -554,10 +657,11 @@ const MensajesContent = () => {
                           Ensure all data is<br />correct before transmitting.
                         </p>
                       </div>
-
                     </form>
-                  </div>
-                </div>
+                  </>
+                )}
+              </div>
+            </div>
 
                 {/* GBA Select / Start */}
                 <div className="flex justify-center mt-6 gap-8">
@@ -670,14 +774,26 @@ const MensajesContent = () => {
       </div>
 
       {/* Success Modal */}
-      {showSuccessModal && (
+      {showSuccessModal.show && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-gray-900 rounded-3xl p-8 max-w-sm w-full border border-green-500/30 shadow-[0_0_50px_rgba(34,197,94,0.3)] text-center transform scale-100 animate-bounce-in">
             <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <FaCheckCircle className="text-green-500 text-5xl" />
+              {showSuccessModal.status === 'approved' ? (
+                <FaCheckCircle className="text-green-500 text-5xl" />
+              ) : (
+                <div className="w-16 h-16 bg-yellow-400 border-4 border-black rounded-full flex items-center justify-center">
+                    <span className="font-pixel text-black text-4xl">!</span>
+                </div>
+              )}
             </div>
-            <h3 className="text-2xl font-bold text-white mb-2">{t('Mensaje Enviado')}</h3>
-            <p className="text-gray-300 mb-8">{t('Gracias por tu mensaje, será publicado pronto')}</p>
+            <h3 className="text-2xl font-bold text-white mb-2">
+                {showSuccessModal.status === 'approved' ? t('wall.published') || '¡Publicado!' : 'En Revisión'}
+            </h3>
+            <p className="text-gray-300 mb-8">
+                {showSuccessModal.status === 'approved' 
+                    ? t('wall.publishedSub') || 'Gracias por tu mensaje, ya está en el muro.' 
+                    : 'Tu mensaje ha sido recibido y está siendo revisado por moderación.'}
+            </p>
 
             <div className="flex flex-col gap-3">
               <button

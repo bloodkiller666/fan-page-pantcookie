@@ -26,8 +26,10 @@
   --poke-text: #ffffff;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap');
+
 [data-theme='pokemon'] {
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Press Start 2P', 'DotGothic16', cursive;
 }
 
 @layer base {
