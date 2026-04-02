@@ -41,7 +41,7 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
         setSelectedTileIndex(null);
     };
 
-    const shuffleArray = (array) => {
+    const shuffleArray = (array: number[]) => {
         const arr = [...array];
         // Fisher-Yates shuffle
         for (let i = arr.length - 1; i > 0; i--) {
@@ -91,7 +91,7 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
         }
     };
 
-    const swapTiles = (index1, index2) => {
+    const swapTiles = (index1: number, index2: number) => {
         const newTiles = [...tiles];
         [newTiles[index1], newTiles[index2]] = [newTiles[index2], newTiles[index1]];
 
@@ -108,23 +108,17 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
         }
     };
 
-    const isPuzzleComplete = (tilesArray) => {
+    const isPuzzleComplete = (tilesArray: number[]) => {
         for (let i = 0; i < tilesArray.length; i++) {
             if (tilesArray[i] !== i) return false;
         }
         return true;
     };
 
-    const getTileStyle = (tileNumber) => {
+    const getTileStyle = (tileNumber: number) => {
         // Calculate original row/col of the tile part
         const row = Math.floor(tileNumber / gridSize);
         const col = tileNumber % gridSize;
-
-        // Calculate percentages for background position
-        // For a grid of N, we need to show content from 0 to 100%. 
-        // 0% is left edge, 100% is right edge.
-        // The center of the column C (0-indexed) depends on the scale.
-        // Standard formula for CSS sprites/grids: pos = (index / (total - 1)) * 100%
 
         const xPos = gridSize > 1 ? (col / (gridSize - 1)) * 100 : 0;
         const yPos = gridSize > 1 ? (row / (gridSize - 1)) * 100 : 0;
@@ -169,8 +163,8 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
                             onClick={() => handleTileClick(index)}
                             className={`
                                 relative transition-all duration-300 overflow-hidden rounded-md
-                                ${isCompleted 
-                                    ? 'z-0 opacity-100 cursor-default' 
+                                ${isCompleted
+                                    ? 'z-0 opacity-100 cursor-default'
                                     : isCorrectPosition
                                         ? 'z-0 cursor-default ring-2 ring-primary/20 hover:brightness-110'
                                         : 'cursor-pointer hover:scale-[1.03] hover:brightness-110 hover:z-10'
@@ -192,7 +186,7 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
                             {isSelected && !isCompleted && (
                                 <div className="absolute inset-0 bg-primary/20 backdrop-blur-[1px] pointer-events-none animate-pulse"></div>
                             )}
-                            
+
                             {/* Hover effect for movable tiles */}
                             {!isCorrectPosition && !isCompleted && (
                                 <div className="absolute inset-0 bg-white/5 opacity-0 hover:opacity-100 transition-opacity pointer-events-none"></div>
@@ -200,7 +194,7 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
                         </div>
                     );
                 })}
-                
+
                 {/* Border Glow for completed puzzle */}
                 {isCompleted && (
                     <div className="absolute inset-0 pointer-events-none border-[12px] border-primary/5 rounded-xl"></div>

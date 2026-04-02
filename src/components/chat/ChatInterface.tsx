@@ -230,7 +230,7 @@ const ChatInterface = () => {
         }
     };
 
-    const formatTime = (date) => {
+    const formatTime = (date: Date) => {
         const h = String(date.getHours()).padStart(2, '0');
         const m = String(date.getMinutes()).padStart(2, '0');
         return `${h}:${m}`;
@@ -271,8 +271,8 @@ const ChatInterface = () => {
                             </span>
 
                             <div className={`p-4 rounded-2xl shadow-lg leading-relaxed border ${msg.sender === 'user'
-                                    ? 'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tr-none'
-                                    : 'ai-bubble-gradient border-primary/10 text-slate-800 dark:text-slate-200 rounded-tl-none'
+                                ? 'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tr-none'
+                                : 'ai-bubble-gradient border-primary/10 text-slate-800 dark:text-slate-200 rounded-tl-none'
                                 }`}>
                                 {msg.text && <p className="break-words">{msg.text}</p>}
                                 {msg.fileUrl && (

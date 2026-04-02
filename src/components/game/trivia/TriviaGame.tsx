@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
+'use client';
+import { useEffect, useMemo, useState, useRef, useCallback, ReactNode, Dispatch, SetStateAction } from 'react';
 import { useRouter } from 'next/navigation';
 import { triviaQuestions } from '../../../utils/triviaQuestions';
 import { useLanguage } from '../../../context/LanguageContext';
@@ -11,7 +12,19 @@ import { submitGameScore, checkExistingScore } from '../../../utils/supabaseScor
 import ScoreOverwriteModal from '../ScoreOverwriteModal';
 import RulesModal from '../RulesModal';
 import PauseMenu from '../PauseMenu';
-import { Combo } from 'next/font/google';
+
+export type GameMode = 'timed' | 'untimed' | 'insane' | 'chaos';
+export type Category = 'music' | 'pantcookie' | 'shurahiwa' | string;
+
+export interface TriviaQuestion {
+  question: string;
+  options: string[];
+  correctIndex?: number;
+  correctIndexes?: number[];
+  image?: string;
+  hint?: string;
+  audioUrl?: string;
+}
 
 const TIMER_PER_QUESTION = 15;
 const TOTAL_QUESTIONS = 20;
@@ -22,7 +35,7 @@ const INSANE_MODE_TIMER = 10; // Segundos tras reproducir
 const CHAOS_MODE_QUESTIONS = 100;
 const CHAOS_MODE_TIMER = 2400; // Segundos totales
 
-const getPointsByRemainingTime = (remaining, isCorrect) => {
+const getPointsByRemainingTime = (remaining: number, isCorrect: boolean): number => {
   if (!isCorrect) return -2;
   if (remaining >= 10) return 5;
   if (remaining >= 5) return 3;
@@ -30,13 +43,18 @@ const getPointsByRemainingTime = (remaining, isCorrect) => {
   return 0;
 };
 
-const pickQuestions = (questions, count) => {
-  const shuffle = (arr) => arr.map(v => ({ v, r: Math.random() })).sort((a, b) => a.r - b.r).map(x => x.v);
+const pickQuestions = (questions: TriviaQuestion[], count: number): TriviaQuestion[] => {
+  const shuffle = (arr: TriviaQuestion[]): TriviaQuestion[] => arr.map(v => ({ v, r: Math.random() })).sort((a, b) => a.r - b.r).map(x => x.v);
   return shuffle(questions).slice(0, count);
 };
 
+interface ScoreIndicatorProps {
+  points: number;
+  onComplete: () => void;
+}
+
 // Animated score indicator component
-const ScoreIndicator = ({ points, onComplete }) => {
+const ScoreIndicator = ({ points, onComplete }: ScoreIndicatorProps) => {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -89,8 +107,8 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   const { t } = useLanguage();
   const router = useRouter();
   const { playSelect, playCorrect, playIncorrect, playVictory, playCountdown } = useGameSounds();
-  const [category, setCategory] = useState<string | null>(null); // null, 'music', 'pantcookie', 'shurahiwa'
-  const [gameMode, setGameMode] = useState<'timed' | 'untimed' | 'insane' | 'chaos' | null>(null); // Added 'insane' and 'chaos'
+  const [category, setCategory] = useState<Category | null>(null); // null, 'music', 'pantcookie', 'shurahiwa'
+  const [gameMode, setGameMode] = useState<GameMode | null>(null); // Added 'insane' and 'chaos'
   const [started, setStarted] = useState(false);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [updateMessage, setUpdateMessage] = useState<string | null>(null);
@@ -105,7 +123,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(false);
   const [scoreChange, setScoreChange] = useState<number | null>(null);
   const [showRules, setShowRules] = useState(false);
-  const [pendingMode, setPendingMode] = useState(null);
+  const [pendingMode, setPendingMode] = useState<GameMode | null>(null);
   const [showPauseMenu, setShowPauseMenu] = useState(false);
   const [showRestartConfirm, setShowRestartConfirm] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
@@ -130,19 +148,22 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
   // Memoize questions based on selected category
   const questions = useMemo(() => {
-    if (!category || !triviaQuestions[category]) return [];
+    // Aquí le decimos que category es una de las llaves del objeto triviaQuestions
+    const currentCategory = category as keyof typeof triviaQuestions;
+
+    if (!category || !triviaQuestions[currentCategory]) return [];
 
     // Logic for Music Modes
     if (category === 'music') {
       if (gameMode === 'insane') {
-        return pickQuestions(triviaQuestions[category], INSANE_MODE_QUESTIONS);
+        return pickQuestions(triviaQuestions[currentCategory], INSANE_MODE_QUESTIONS);
       } else if (gameMode === 'chaos') {
-        return pickQuestions(triviaQuestions[category], CHAOS_MODE_QUESTIONS); // Or all available if less than 100
+        return pickQuestions(triviaQuestions[currentCategory], CHAOS_MODE_QUESTIONS);
       }
     }
 
-    return pickQuestions(triviaQuestions[category], TOTAL_QUESTIONS);
-  }, [category, gameMode]); // Added gameMode dependency
+    return pickQuestions(triviaQuestions[currentCategory], TOTAL_QUESTIONS);
+  }, [category, gameMode]);
 
   const current = questions[index];
 
@@ -222,13 +243,13 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   // Check if current question has multiple answers
   const isMultipleAnswer = current && Array.isArray(current.correctIndexes);
   // FIX: Add safety check for current
-  const correctAnswerIndexes = current
-    ? (isMultipleAnswer ? current.correctIndexes : [current.correctIndex])
+  const correctAnswerIndexes: number[] = current
+    ? (isMultipleAnswer ? (current.correctIndexes || []) : [current.correctIndex ?? 0])
     : [];
 
   useEffect(() => {
     if (!started || gameOver) return;
-    const handler = (e) => {
+    const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = '';
     };
@@ -260,7 +281,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     return () => clearInterval(interval);
   }, [index, started, gameOver, answered, gameMode, hasPlayedAudio, showPauseMenu]);
 
-  const selectCategory = (cat) => {
+  const selectCategory = (cat: Category) => {
     playSelect();
     setCategory(cat);
   };
@@ -288,7 +309,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     setIsCountingDown(false);
   }, [pendingMode]);
 
-  const startGame = (mode) => {
+  const startGame = (mode: GameMode) => {
     setPendingMode(mode);
     setShowRules(true);
   };
@@ -372,7 +393,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   }, [countValue, isCountingDown, playCountdown]);
 
 
-  const handleOptionClick = (optIndex) => {
+  const handleOptionClick = (optIndex: number) => {
     if (answered && gameMode !== 'chaos') return; // In chaos mode, we might want rapid fire? No, usually one answer per question.
 
     if (isMultipleAnswer) {
@@ -393,16 +414,16 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   };
 
   const submitAnswer = (selectedIndexes = selectedAnswers) => {
-    if ((answered && gameMode !== 'chaos') || selectedIndexes.length === 0) return;
+    if (!current || (answered && gameMode !== 'chaos') || selectedIndexes.length === 0) return;
 
     let isCorrect = false;
     let isPartial = false;
 
     if (isMultipleAnswer) {
-      const correctSet = new Set(current.correctIndexes as number[]);
+      const correctSet = new Set(current.correctIndexes || []);
       const selectedSet = new Set(selectedIndexes);
       isCorrect = correctSet.size === selectedSet.size &&
-        [...correctSet].every(idx => selectedSet.has(idx));
+        [...correctSet].every(idx => selectedSet.has(idx as number));
 
       if (!isCorrect) {
         const correctSelected = [...selectedSet].filter(idx => correctSet.has(idx)).length;
@@ -808,7 +829,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   const renderChaosMode = () => {
     if (!current) return null;
 
-    const formatTime = (seconds) => {
+    const formatTime = (seconds: number) => {
       const m = Math.floor(seconds / 60);
       const s = seconds % 60;
       return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
@@ -1621,7 +1642,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
           {showCorrectAnswer && (
             <div className={`mb-2 w-full p-4 rounded-xl border-l-4 ${selectedAnswers.length === 0 ? 'bg-yellow-500/10 border-yellow-500' : 'bg-red-500/10 border-red-500'} animate-fade-in`}>
               <p className="font-bold mb-1">{selectedAnswers.length === 0 ? t('games.trivia.timeUp') : t('games.trivia.incorrect')}</p>
-              <p className="text-sm opacity-90">{t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current?.options[idx]).join(', ')}</span></p>
+              <p className="text-sm opacity-90">{t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current?.options?.[idx] || '').filter(Boolean).join(', ')}</span></p>
             </div>
           )}
 
@@ -1739,7 +1760,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
             <div className={`mt-2 w-full p-4 rounded-xl border-l-4 border-red-500 bg-red-500/10 animate-fade-in z-10`}>
               <p className="font-bold mb-1 text-red-600 dark:text-red-400">{t('games.trivia.incorrect')}</p>
               <p className="text-sm opacity-90 text-slate-700 dark:text-slate-300">
-                {t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current?.options[idx]).join(', ')}</span>
+                {t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current?.options?.[idx] || '').filter(Boolean).join(', ')}</span>
               </p>
             </div>
           )}
@@ -1904,7 +1925,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                       <div className="w-full p-5 rounded-2xl border-l-8 border-red-500 bg-red-500/10 animate-fade-in">
                         <p className="font-black text-red-600 uppercase text-[10px] tracking-widest mb-1">Respuesta incorrecta</p>
                         <p className="text-slate-700 dark:text-slate-300 font-bold">
-                          La correcta era: <span className="underline decoration-red-500/40 font-black">{correctAnswerIndexes.map(idx => current.options[idx]).join(', ')}</span>
+                          La correcta era: <span className="underline decoration-red-500/40 font-black">{correctAnswerIndexes.map(idx => current?.options?.[idx] || '').filter(Boolean).join(', ')}</span>
                         </p>
                       </div>
                     )}
@@ -2134,7 +2155,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                 {showCorrectAnswer && (
                   <div className={`mb-6 p-4 rounded-xl border-l-4 ${selectedAnswers.length === 0 && gameMode === 'timed' ? 'bg-yellow-500/10 border-yellow-500' : 'bg-red-500/10 border-red-500'} animate-fade-in`}>
                     <p className="font-bold mb-1">{selectedAnswers.length === 0 && gameMode === 'timed' ? t('games.trivia.timeUp') : t('games.trivia.incorrect')}</p>
-                    <p className="text-sm opacity-90">{t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current?.options[idx]).join(', ')}</span></p>
+                    <p className="text-sm opacity-90">{t('games.trivia.correctAnswerIs')}: <span className="font-bold">{correctAnswerIndexes.map(idx => current?.options?.[idx] || '').filter(Boolean).join(', ')}</span></p>
                   </div>
                 )}
 

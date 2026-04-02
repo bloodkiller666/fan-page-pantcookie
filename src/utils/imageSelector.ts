@@ -17,7 +17,7 @@ export const getAllPuzzleImages = () => {
 };
 
 // Preload an image
-export const preloadImage = (src) => {
+export const preloadImage = (src: string) => {
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => resolve(img);

@@ -17,7 +17,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Submit a score to the leaderboard
-export const submitScore = async (playerName, time, difficulty) => {
+export const submitScore = async (playerName: string, time: number, difficulty: string) => {
     try {
         const cleanName = typeof window !== 'undefined' ? DOMPurify.sanitize(playerName.trim()) : playerName.trim();
         const docRef = await addDoc(collection(db, 'scores'), {
@@ -31,12 +31,12 @@ export const submitScore = async (playerName, time, difficulty) => {
 
     } catch (error) {
         console.error('Error submitting score:', error);
-        return { success: false, error: error.message };
+        return { success: false, error: (error as Error).message };
     }
 };
 
 // Get leaderboard for a specific difficulty
-export const getLeaderboard = async (difficulty, limitCount = 10) => {
+export const getLeaderboard = async (difficulty: string, limitCount = 10) => {
     try {
         const q = query(
             collection(db, 'scores'),
@@ -65,7 +65,7 @@ export const getLeaderboard = async (difficulty, limitCount = 10) => {
 };
 
 // Real-time listener for leaderboard updates
-export const subscribeToLeaderboard = (difficulty, callback, limitCount = 10) => {
+export const subscribeToLeaderboard = (difficulty: string, callback: (scores: any[]) => void, limitCount = 10) => {
     const q = query(
         collection(db, 'scores'),
         orderBy('time', 'asc')

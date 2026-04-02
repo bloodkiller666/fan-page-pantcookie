@@ -10,11 +10,11 @@ interface PlayerInputProps {
     hideButton?: boolean;
 }
 
-const PlayerInput = ({ playerName, onNameChange, onStartGame, hideButton = false }) => {
+const PlayerInput = ({ playerName, onNameChange, onStartGame, hideButton = false }: PlayerInputProps) => {
     const { t } = useLanguage();
     const [honeypot, setHoneypot] = React.useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (honeypot) {
             // Silently reject bots

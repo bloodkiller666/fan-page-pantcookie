@@ -1,15 +1,33 @@
+'use client';
 // Import necessary modules
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { FiX, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { AdvancedImage } from '@cloudinary/react';
-
 import { createPortal } from 'react-dom';
 
-const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }) => {
+interface LightboxImage {
+    id: number;
+    src: string;
+    cldImg: any; // CloudinaryImage type
+    thumbnail: any;
+    alt: string;
+    description: string;
+    isLocal: boolean;
+}
+
+interface LightboxProps {
+    images: LightboxImage[];
+    currentIndex: number;
+    onClose: () => void;
+    onNext: () => void;
+    onPrev: () => void;
+}
+
+const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }: LightboxProps) => {
     const currentImage = images[currentIndex];
 
     useEffect(() => {
-        const handleKeyDown = (e) => {
+        const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
             if (e.key === 'ArrowLeft') onPrev();
             if (e.key === 'ArrowRight') onNext();
@@ -50,14 +68,14 @@ const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }) => {
 
             {/* Navigation Buttons */}
             <button
-                onClick={(e) => { e.stopPropagation(); onPrev(); }}
+                onClick={(e: React.MouseEvent) => { e.stopPropagation(); onPrev(); }}
                 className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 text-white hover:text-primary-pink transition p-3 rounded-full hover:bg-white/10 z-[110]"
             >
                 <FiChevronLeft className="w-8 h-8 md:w-12 md:h-12" />
             </button>
 
             <button
-                onClick={(e) => { e.stopPropagation(); onNext(); }}
+                onClick={(e: React.MouseEvent) => { e.stopPropagation(); onNext(); }}
                 className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 text-white hover:text-primary-pink transition p-3 rounded-full hover:bg-white/10 z-[110]"
             >
                 <FiChevronRight className="w-8 h-8 md:w-12 md:h-12" />
@@ -67,7 +85,7 @@ const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }) => {
             {/* Image Container - Flexible Height */}
             <div
                 className="flex-1 w-full h-[60%] md:h-full flex items-center justify-center p-4 md:p-10 relative"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
                 {currentImage.cldImg ? (
                     <AdvancedImage
@@ -87,7 +105,7 @@ const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }) => {
             {/* Info Sidebar / Bottom Sheet */}
             <div
                 className="w-full md:w-[400px] h-[40%] md:h-full bg-white dark:bg-gray-900 border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-800 flex flex-col z-[105] shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
                 <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
                     {/* Header */}

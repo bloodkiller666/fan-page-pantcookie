@@ -55,13 +55,13 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle', cla
         return () => clearInterval(interval);
     }, [activeFilter, gameType]);
 
-    const formatTime = (seconds) => {
+    const formatTime = (seconds: number) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const getMedalColor = (index) => {
+    const getMedalColor = (index: number) => {
         if (index === 0) return 'text-yellow-500';
         if (index === 1) return 'text-gray-400';
         if (index === 2) return 'text-orange-600';
@@ -70,10 +70,8 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle', cla
 
     return (
         <aside className={className || "w-full lg:w-80 shrink-0 animate-fade-in mt-6 lg:mt-0 lg:sticky lg:top-24 h-fit"}>
-            {/* Contenedor principal con altura dinámica */}
             <div className="bg-white dark:bg-zinc-900 border-[4px] border-black flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,0,127,0.3)] relative group/sidebar">
 
-                {/* Header - Se mantiene igual pero con padding ajustado */}
                 <div className="p-3 border-b-[4px] border-black flex items-center justify-between bg-[#FF007F]/5">
                     <h2 className="font-black text-base flex items-center gap-2 italic uppercase tracking-tighter text-black dark:text-white">
                         <MdEmojiEvents className="text-[#FF007F] text-xl" />
@@ -84,8 +82,6 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle', cla
                     </span>
                 </div>
 
-                {/* Cuerpo con Scroll mejorado y altura máxima calculada */}
-                {/* Usamos h-[calc(100vh-350px)] para que se adapte al tamaño de la pantalla del usuario */}
                 <div className="overflow-y-auto p-2 space-y-2 custom-scrollbar bg-white dark:bg-zinc-900 min-h-[300px] max-h-[calc(100vh-350px)]">
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-10 gap-2">

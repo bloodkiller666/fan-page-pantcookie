@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { FaUser, FaImage, FaPaperPlane, FaTrash, FaGlobeAmericas, FaSmile, FaCheckCircle, FaTimesCircle, FaAward } from 'react-icons/fa';
-import EmojiPicker, { Theme } from 'emoji-picker-react';
+import EmojiPicker, { Theme, EmojiClickData } from 'emoji-picker-react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { addWallMessage, subscribeToWallMessages } from '../utils/firebase';
 import { useLanguage } from '../context/LanguageContext';
@@ -100,7 +100,7 @@ const MensajesContent = () => {
 
   // Unsaved Changes Warning (Browser Refresh/Close)
   useEffect(() => {
-    const handleBeforeUnload = (e) => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isDirty) {
         e.preventDefault();
         e.returnValue = ''; // Standard for modern browsers
@@ -120,8 +120,8 @@ const MensajesContent = () => {
   }, [username, country, messageText, selectedImage]);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
         setShowEmojiPicker(false);
       }
     };
@@ -129,12 +129,12 @@ const MensajesContent = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleEmojiClick = (emojiData) => {
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
     setMessageText((prev) => prev + emojiData.emoji);
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       setIsLoading(true);
       setErrors({ ...errors, image: '' });
@@ -195,7 +195,7 @@ const MensajesContent = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -276,11 +276,11 @@ const MensajesContent = () => {
     }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     setMessages(messages.filter(msg => msg.id !== id));
   };
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = (tab: 'write' | 'read') => {
     setActiveTab(tab);
     router.push(`/mensajes?view=${tab}`);
   }

@@ -115,7 +115,7 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
         setShowVictoryScreen(false);
     };
 
-    const changeDifficulty = (newDifficulty) => {
+    const changeDifficulty = (newDifficulty: string) => {
         if (gameState === 'playing') {
             const confirm = window.confirm(t('common.progressLostWarning') || '¿Seguro? Se perderá el progreso actual.');
             if (!confirm) return;

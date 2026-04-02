@@ -11,7 +11,7 @@ export const cld = new Cloudinary({
 });
 
 // Helper to get image object
-export const getCloudinaryImage = (publicId) => {
+export const getCloudinaryImage = (publicId: string) => {
     // We use the publicId exactly as provided by the user to avoid guessing paths/extensions
     // User should provide the "Public ID" from Cloudinary dashboard (e.g., "pantcookie-assets/image1" or "image1_xyz")
     const myImage = cld.image(publicId);
@@ -25,7 +25,7 @@ export const getCloudinaryImage = (publicId) => {
 };
 
 // Helper for thumbnail generation
-export const getCloudinaryThumbnail = (publicId, width = 400, height = 300) => {
+export const getCloudinaryThumbnail = (publicId: string, width = 400, height = 300) => {
     const myImage = cld.image(publicId);
 
     myImage
@@ -37,7 +37,7 @@ export const getCloudinaryThumbnail = (publicId, width = 400, height = 300) => {
 };
 
 // Helper for video
-export const getCloudinaryVideo = (publicId) => {
+export const getCloudinaryVideo = (publicId: string) => {
     const myVideo = cld.video(publicId);
 
     myVideo
@@ -48,7 +48,7 @@ export const getCloudinaryVideo = (publicId) => {
 };
 
 // Helper to get raw URL string (for CSS backgrounds, canvas, etc.)
-export const getCloudinaryUrl = (publicId) => {
+export const getCloudinaryUrl = (publicId: string) => {
     const myImage = cld.image(publicId);
 
     myImage

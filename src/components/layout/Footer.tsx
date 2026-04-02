@@ -8,7 +8,7 @@ const Footer = () => {
     const { t } = useLanguage();
     const { transitionTo } = useTransition();
 
-    const handleNav = (e, path) => {
+    const handleNav = (e: any, path: string) => {
         e.preventDefault();
         transitionTo(path);
     };
@@ -36,8 +36,8 @@ const Footer = () => {
                         <h4 className="text-sm font-bold uppercase tracking-widest text-[#00ffff] mb-4 border-b border-[#00ffff]/30 pb-2 inline-block">Legal</h4>
                         <ul className="space-y-3">
                             <li>
-                                <Link 
-                                    href="/legal/terms" 
+                                <Link
+                                    href="/legal/terms"
                                     className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group"
                                     onClick={(e) => handleNav(e, '/legal/terms')}
                                 >
@@ -46,8 +46,8 @@ const Footer = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link 
-                                    href="/legal/privacy" 
+                                <Link
+                                    href="/legal/privacy"
                                     className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group"
                                     onClick={(e) => handleNav(e, '/legal/privacy')}
                                 >
@@ -63,8 +63,8 @@ const Footer = () => {
                         <h4 className="text-sm font-bold uppercase tracking-widest text-[#00ffff] mb-4 border-b border-[#00ffff]/30 pb-2 inline-block">Ayuda</h4>
                         <ul className="space-y-3">
                             <li>
-                                <Link 
-                                    href="/legal/faq" 
+                                <Link
+                                    href="/legal/faq"
                                     className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group"
                                     onClick={(e) => handleNav(e, '/legal/faq')}
                                 >

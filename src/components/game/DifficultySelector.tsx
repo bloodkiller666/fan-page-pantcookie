@@ -1,7 +1,14 @@
+import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { MdLocalFlorist, MdBolt, MdPsychology } from 'react-icons/md';
 
-const DifficultySelector = ({ difficulty, onSelectDifficulty, disabled }) => {
+interface DifficultySelectorProps {
+    difficulty: string;
+    onSelectDifficulty: (difficulty: string) => void;
+    disabled: boolean;
+}
+
+const DifficultySelector = ({ difficulty, onSelectDifficulty, disabled }: DifficultySelectorProps) => {
     const { t } = useLanguage();
     const difficulties = [
         { 

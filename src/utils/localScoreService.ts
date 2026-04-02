@@ -1,9 +1,26 @@
 const STORAGE_KEY = 'local_puzzle_scores';
 const TRIVIA_STORAGE_KEY = 'local_trivia_scores';
 
+interface PuzzleScore {
+    id: string;
+    playerName: string;
+    time: number;
+    difficulty: string;
+    timestamp: string;
+}
+
+interface TriviaScore {
+    id: string;
+    playerName: string;
+    score: number;
+    category: string;
+    timestamp: string;
+}
+
 // Helper to get scores
-const getLocalScores = (key = STORAGE_KEY) => {
+const getLocalScores = (key: string = STORAGE_KEY): any[] => {
     try {
+        if (typeof window === 'undefined') return [];
         const scores = localStorage.getItem(key);
         return scores ? JSON.parse(scores) : [];
     } catch (error) {
@@ -13,8 +30,9 @@ const getLocalScores = (key = STORAGE_KEY) => {
 };
 
 // Helper to save scores
-const saveLocalScores = (scores, key = STORAGE_KEY) => {
+const saveLocalScores = (scores: any[], key: string = STORAGE_KEY) => {
     try {
+        if (typeof window === 'undefined') return;
         localStorage.setItem(key, JSON.stringify(scores));
         const eventName = key === TRIVIA_STORAGE_KEY ? 'local-trivia-update' : 'local-score-update';
         window.dispatchEvent(new CustomEvent(eventName));
@@ -23,7 +41,7 @@ const saveLocalScores = (scores, key = STORAGE_KEY) => {
     }
 };
 
-export const submitScore = async (playerName, time, difficulty) => {
+export const submitScore = async (playerName: string, time: number, difficulty: string) => {
     // Simulate async delay
     await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -36,7 +54,7 @@ export const submitScore = async (playerName, time, difficulty) => {
             timestamp: new Date().toISOString()
         };
 
-        const currentScores = getLocalScores(STORAGE_KEY);
+        const currentScores = getLocalScores(STORAGE_KEY) as PuzzleScore[];
         currentScores.push(newScore);
         saveLocalScores(currentScores, STORAGE_KEY);
 
@@ -48,7 +66,7 @@ export const submitScore = async (playerName, time, difficulty) => {
 };
 
 // Submit a trivia score
-export const submitTriviaScore = async (playerName, score, category) => {
+export const submitTriviaScore = async (playerName: string, score: number, category: string) => {
     await new Promise(resolve => setTimeout(resolve, 500));
     try {
         const newScore = {
@@ -58,7 +76,7 @@ export const submitTriviaScore = async (playerName, score, category) => {
             category: category,
             timestamp: new Date().toISOString()
         };
-        const currentScores = getLocalScores(TRIVIA_STORAGE_KEY);
+        const currentScores = getLocalScores(TRIVIA_STORAGE_KEY) as TriviaScore[];
         currentScores.push(newScore);
         saveLocalScores(currentScores, TRIVIA_STORAGE_KEY);
         return { success: true, id: newScore.id };
@@ -68,11 +86,11 @@ export const submitTriviaScore = async (playerName, score, category) => {
 };
 
 // Get leaderboard for a specific difficulty
-export const getLeaderboard = async (difficulty, limitCount = 10) => {
+export const getLeaderboard = async (difficulty: string, limitCount = 10) => {
     // Simulate async delay
     await new Promise(resolve => setTimeout(resolve, 300));
 
-    const scores = getLocalScores();
+    const scores = getLocalScores() as PuzzleScore[];
 
     // Filter by difficulty and sort by time (ascending)
     const filteredScores = scores
@@ -84,10 +102,10 @@ export const getLeaderboard = async (difficulty, limitCount = 10) => {
 };
 
 // Subscribe to puzzle leaderboard
-export const subscribeToLeaderboard = (difficulty, callback, limitCount = 10) => {
+export const subscribeToLeaderboard = (difficulty: string, callback: (scores: PuzzleScore[]) => void, limitCount = 10) => {
 
     const updateCallback = () => {
-        const scores = getLocalScores(STORAGE_KEY);
+        const scores = getLocalScores(STORAGE_KEY) as PuzzleScore[];
         const filteredScores = scores
             .filter(s => s.difficulty === difficulty)
             .sort((a, b) => a.time - b.time) // Ascending time
@@ -115,9 +133,9 @@ export const subscribeToLeaderboard = (difficulty, callback, limitCount = 10) =>
 };
 
 // Subscribe to trivia leaderboard
-export const subscribeToTriviaLeaderboard = (category, callback, limitCount = 10) => {
+export const subscribeToTriviaLeaderboard = (category: string, callback: (scores: TriviaScore[]) => void, limitCount = 10) => {
     const updateCallback = () => {
-        const scores = getLocalScores(TRIVIA_STORAGE_KEY);
+        const scores = getLocalScores(TRIVIA_STORAGE_KEY) as TriviaScore[];
         const filteredScores = scores
             .filter(s => s.category === category)
             .sort((a, b) => b.score - a.score) // Descending score

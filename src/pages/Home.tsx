@@ -162,7 +162,7 @@ export default function Home() {
         return () => ctx.revert();
     }, [isLoading, language, t]);
 
-    const handleNav = (e, path) => {
+    const handleNav = (e: any, path: string) => {
         e.preventDefault();
         transitionTo(path);
     };

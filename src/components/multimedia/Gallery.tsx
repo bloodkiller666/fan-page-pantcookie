@@ -41,12 +41,12 @@ const Gallery = ({ query = '' }) => {
         };
     }), [imageList, t]);
 
-    const openLightbox = (index) => {
+    const openLightbox = (index: number) => {
         setCurrentImageIndex(index);
         setLightboxOpen(true);
     };
 
-    const onMouseEnterCard = (e) => {
+    const onMouseEnterCard = (e: any) => {
         if (window.matchMedia("(pointer: fine)").matches) {
             gsap.to(e.currentTarget, {
                 scale: 1.05,
@@ -56,7 +56,7 @@ const Gallery = ({ query = '' }) => {
         }
     };
 
-    const onMouseLeaveCard = (e) => {
+    const onMouseLeaveCard = (e: any) => {
         gsap.to(e.currentTarget, {
             scale: 1,
             duration: 0.4,
@@ -76,24 +76,24 @@ const Gallery = ({ query = '' }) => {
     useGSAP(() => {
         if (filtered.length > 0) {
             gsap.fromTo(".gallery-item",
-                { 
-                    opacity: 0, 
+                {
+                    opacity: 0,
                     y: 50,
                     scale: 0.9,
                     rotateX: -15
                 },
-                { 
-                    opacity: 1, 
-                    y: 0, 
+                {
+                    opacity: 1,
+                    y: 0,
                     scale: 1,
                     rotateX: 0,
-                    duration: 1, 
+                    duration: 1,
                     stagger: {
                         amount: 0.5,
                         grid: "auto",
                         from: "start"
-                    }, 
-                    ease: "elastic.out(1, 0.8)" 
+                    },
+                    ease: "elastic.out(1, 0.8)"
                 }
             );
         }

@@ -8,7 +8,7 @@ import { useLanguage } from '../../context/LanguageContext';
 
 const VideoPlayer = ({ query = '' }) => {
     const { t } = useLanguage();
-    const [playingIndex, setPlayingIndex] = useState(null);
+    const [playingIndex, setPlayingIndex] = useState<number | null>(null);
     const [progress, setProgress] = useState<Record<number, { current: number, duration: number, percent: number }>>({});
     const [volumes, setVolumes] = useState<Record<number, { level: number; muted: boolean }>>({}); // Volume per video { level: 1, muted: false }
     const videoRefs = useRef<HTMLVideoElement[]>([]);
@@ -41,14 +41,14 @@ const VideoPlayer = ({ query = '' }) => {
     }, [videos, query]);
 
     // Helper to format time
-    const formatTime = (time) => {
+    const formatTime = (time: number) => {
         if (isNaN(time)) return "0:00";
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60);
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds} `;
     };
 
-    const togglePlay = (index) => {
+    const togglePlay = (index: number) => {
         const video = videoRefs.current[index];
         if (!video) return;
 
@@ -65,7 +65,7 @@ const VideoPlayer = ({ query = '' }) => {
         }
     };
 
-    const handleTimeUpdate = (index) => {
+    const handleTimeUpdate = (index: number) => {
         const video = videoRefs.current[index];
         if (video) {
             const current = video.currentTime;
@@ -78,13 +78,13 @@ const VideoPlayer = ({ query = '' }) => {
         }
     };
 
-    const handleSeek = (index, e) => {
+    const handleSeek = (index: number, e: any) => {
         const video = videoRefs.current[index];
         const newTime = (e.target.value / 100) * (video.duration || 0);
         video.currentTime = newTime;
     };
 
-    const handleVolumeChange = (index, e) => {
+    const handleVolumeChange = (index: number, e: any) => {
         const newVolume = parseFloat(e.target.value);
         const video = videoRefs.current[index];
         video.volume = newVolume;
@@ -96,7 +96,7 @@ const VideoPlayer = ({ query = '' }) => {
         }));
     };
 
-    const toggleMute = (index) => {
+    const toggleMute = (index: number) => {
         const video = videoRefs.current[index];
         const currentVol = volumes[index] || { level: 1, muted: false };
 
@@ -116,7 +116,7 @@ const VideoPlayer = ({ query = '' }) => {
         }
     };
 
-    const handleFullscreen = async (index) => {
+    const handleFullscreen = async (index: number) => {
         const container = containerRefs.current[index];
         if (container) {
             if (!document.fullscreenElement) {
@@ -142,7 +142,7 @@ const VideoPlayer = ({ query = '' }) => {
         }
     };
 
-    const [modalVideoIndex, setModalVideoIndex] = useState(null);
+    const [modalVideoIndex, setModalVideoIndex] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const [currentQuality, setCurrentQuality] = useState('auto');
@@ -215,7 +215,7 @@ const VideoPlayer = ({ query = '' }) => {
     }, [playingIndex, modalVideoIndex]);
 
 
-    const handleQualityChange = (quality) => {
+    const handleQualityChange = (quality: string) => {
         if (modalVideoIndex === null) return;
 
         const video = videoRefs.current[modalVideoIndex];
@@ -239,7 +239,7 @@ const VideoPlayer = ({ query = '' }) => {
     const restoreTimeRef = useRef(0);
     const restorePlayRef = useRef(false);
 
-    const changeQuality = (q) => {
+    const changeQuality = (q: string) => {
         if (modalVideoIndex === null) return;
         const video = videoRefs.current[modalVideoIndex];
         if (video) {
@@ -249,7 +249,7 @@ const VideoPlayer = ({ query = '' }) => {
         handleQualityChange(q);
     }
 
-    const openVideoModal = (index) => {
+    const openVideoModal = (index: number) => {
         setModalVideoIndex(index);
         setIsLoading(true);
         document.body.style.overflow = 'hidden'; // Lock scroll
@@ -273,7 +273,7 @@ const VideoPlayer = ({ query = '' }) => {
 
     // Close on Escape
     useEffect(() => {
-        const handleKeyDown = (e) => {
+        const handleKeyDown = (e: any) => {
             if (e.key === 'Escape' && modalVideoIndex !== null) {
                 closeVideoModal();
             }
@@ -282,7 +282,7 @@ const VideoPlayer = ({ query = '' }) => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [modalVideoIndex]);
 
-    const handleDownload = async (videoUrl, filename) => {
+    const handleDownload = async (videoUrl: string, filename: string) => {
         try {
             const response = await fetch(videoUrl);
             const blob = await response.blob();
@@ -301,7 +301,7 @@ const VideoPlayer = ({ query = '' }) => {
                     await writable.write(blob);
                     await writable.close();
                     return; // Success
-                } catch (err) {
+                } catch (err: any) {
                     if (err.name !== 'AbortError') {
                         console.error('SaveFilePicker failed:', err);
                     }

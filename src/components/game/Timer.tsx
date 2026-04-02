@@ -1,14 +1,23 @@
+import React from 'react';
 import { FiClock } from 'react-icons/fi';
 
-const Timer = ({ isRunning, elapsedTime, onTimeUpdate }) => {
+interface TimerProps {
+    isRunning: boolean;
+    elapsedTime: number;
+    onTimeUpdate: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Timer = ({ isRunning, elapsedTime, onTimeUpdate }: TimerProps) => {
     React.useEffect(() => {
-        let interval;
+        let interval: NodeJS.Timeout;
         if (isRunning) {
             interval = setInterval(() => {
                 onTimeUpdate((prev) => prev + 1);
             }, 1000);
         }
-        return () => clearInterval(interval);
+        return () => {
+            if (interval) clearInterval(interval);
+        };
     }, [isRunning, onTimeUpdate]);
 
     const minutes = Math.floor(elapsedTime / 60);
@@ -23,8 +32,5 @@ const Timer = ({ isRunning, elapsedTime, onTimeUpdate }) => {
         </div>
     );
 };
-
-// Add React import at the top
-import React from 'react';
 
 export default Timer;
