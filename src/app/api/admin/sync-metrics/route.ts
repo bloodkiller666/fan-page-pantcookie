@@ -73,17 +73,29 @@ export async function POST(req: Request) {
         }).filter(m => m !== null);
 
         if (metrics.length > 0) {
-            const { error } = await supabase
+            const { error: supabaseError } = await supabase
                 .from('social_metrics')
                 .insert(metrics as any[]);
             
-            if (error) throw error;
+            if (supabaseError) {
+                console.error('Supabase insert error:', supabaseError);
+                return NextResponse.json({ 
+                    success: false, 
+                    error: `Database error: ${supabaseError.message}`,
+                    details: supabaseError.details,
+                    hint: supabaseError.hint
+                }, { status: 500 });
+            }
         }
 
         return NextResponse.json({ success: true, synced: metrics });
     } catch (error: any) {
-        console.error('Sync error:', error);
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        console.error('General Sync error:', error);
+        return NextResponse.json({ 
+            success: false, 
+            error: error instanceof Error ? error.message : 'Unknown sync error',
+            stack: process.env.NODE_ENVIRONMENT === 'development' ? error.stack : undefined
+        }, { status: 500 });
     }
 }
 
