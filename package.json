@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "next lint"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.975.0",
@@ -25,7 +25,7 @@
     "gsap": "^3.12.5",
     "jose": "^6.2.2",
     "jsmediatags": "^3.9.7",
-    "next": "16.2.2",
+    "next": "15.1.0",
     "react": "^19.2.4",
     "react-countup": "^6.5.3",
     "react-dom": "^19.2.4",

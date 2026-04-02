@@ -2,7 +2,6 @@
 const nextConfig = {
     reactStrictMode: true,
 
-    // 1. ESTO IGNORA LOS ERRORES DE LINT Y TYPESCRIPT EN EL BUILD DE VERCEL
     eslint: {
         ignoreDuringBuilds: true,
     },
@@ -10,7 +9,6 @@ const nextConfig = {
         ignoreBuildErrors: true,
     },
 
-    // Mantenemos tus Security Headers intactos
     async headers() {
         return [
             {
