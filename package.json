@@ -7,7 +7,7 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.975.0",
@@ -16,11 +16,14 @@
     "@cloudinary/url-gen": "^1.22.0",
     "@gsap/react": "^2.1.2",
     "@supabase/supabase-js": "^2.97.0",
+    "@types/dompurify": "^3.0.5",
     "date-fns": "^4.1.0",
+    "dompurify": "^3.3.3",
     "emoji-picker-react": "^4.16.1",
     "firebase": "^12.7.0",
     "groq-sdk": "^0.37.0",
     "gsap": "^3.12.5",
+    "jose": "^6.2.2",
     "jsmediatags": "^3.9.7",
     "next": "16.2.2",
     "react": "^19.2.4",
@@ -32,11 +35,17 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
     "@types/jsmediatags": "^3.9.6",
     "@types/node": "^25.0.10",
     "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.23",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.2",
+    "eslint-plugin-security": "^4.0.0",
+    "globals": "^17.4.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3"

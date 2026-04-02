@@ -1,5 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, onSnapshot, where, serverTimestamp, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import DOMPurify from 'dompurify';
+
 
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,14 +19,16 @@ const db = getFirestore(app);
 // Submit a score to the leaderboard
 export const submitScore = async (playerName, time, difficulty) => {
     try {
+        const cleanName = typeof window !== 'undefined' ? DOMPurify.sanitize(playerName.trim()) : playerName.trim();
         const docRef = await addDoc(collection(db, 'scores'), {
-            playerName: playerName.trim(),
+            playerName: cleanName,
             time: time,
             difficulty: difficulty,
             timestamp: new Date()
         });
         console.log('Score submitted with ID:', docRef.id);
         return { success: true, id: docRef.id };
+
     } catch (error) {
         console.error('Error submitting score:', error);
         return { success: false, error: error.message };
@@ -129,10 +133,16 @@ export const subscribeToMessages = (sessionId: string, callback: (messages: any[
 // Wall functionality
 export const addWallMessage = async (username: string, country: string, text: string, imageUrl: string | null = null, status: 'approved' | 'banned' = 'approved') => {
     try {
+        // Sanitize inputs
+        const isClient = typeof window !== 'undefined';
+        const cleanUsername = isClient ? DOMPurify.sanitize(username) : username;
+        const cleanCountry = isClient ? DOMPurify.sanitize(country) : country;
+        const cleanText = isClient ? DOMPurify.sanitize(text) : text;
+
         await addDoc(collection(db, 'wall_messages'), {
-            username,
-            country,
-            text,
+            username: cleanUsername,
+            country: cleanCountry,
+            text: cleanText,
             imageUrl,
             status,
             timestamp: serverTimestamp()
@@ -142,6 +152,7 @@ export const addWallMessage = async (username: string, country: string, text: st
         throw error;
     }
 };
+
 
 export const subscribeToWallMessages = (callback: (messages: any[]) => void) => {
     console.log("Setting up wall_messages listener (approved only)...");

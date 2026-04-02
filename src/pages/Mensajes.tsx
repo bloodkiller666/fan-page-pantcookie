@@ -49,6 +49,7 @@ const MensajesContent = () => {
   const [username, setUsername] = useState('');
   const [country, setCountry] = useState('');
   const [messageText, setMessageText] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false); // Track if form has unsaved changes
@@ -198,6 +199,11 @@ const MensajesContent = () => {
     e.preventDefault();
 
     if (!validateForm()) return;
+    if (honeypot) {
+       // Silent rejection for bots
+       setIsLoading(false);
+       return;
+    }
     setIsLoading(true);
     setAnalysisPhase('analyzing');
     setAnalysisResults({ text: 'loading', media: selectedImage ? 'pass' : 'pass' });
@@ -511,6 +517,17 @@ const MensajesContent = () => {
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+
+                      {/* Honeypot Field (Hidden from layout but visible to bots) */}
+                      <input 
+                         type="text" 
+                         name="websiteUrl" 
+                         value={honeypot}
+                         onChange={(e) => setHoneypot(e.target.value)}
+                         tabIndex={-1} 
+                         autoComplete="off" 
+                         style={{ position: 'absolute', left: '-9999px', opacity: 0 }} 
+                      />
 
                       {/* Trainer Name */}
                       <div>

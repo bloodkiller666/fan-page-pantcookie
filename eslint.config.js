@@ -1,33 +1,45 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import js from "@eslint/js";
+import pluginSecurity from "eslint-plugin-security";
+import nextPlugin from "@next/eslint-plugin-next";
+import globals from "globals";
 
-export default defineConfig([
-  globalIgnores(['dist']),
+export default [
   {
-    files: ['**/*.{js,jsx}'],
-    extends: [
-      js.configs.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
-    ],
-    languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
-      },
-    },
-    rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      'no-eval': 'error',
-      'no-implied-eval': 'error',
-      'no-new-func': 'error',
-      'no-script-url': 'error',
-    },
+    ignores: [
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/dist/**",
+      "**/out/**",
+      "**/public/**",
+      "**/*.config.js"
+    ]
   },
-])
+  js.configs.recommended,
+  pluginSecurity.configs.recommended,
+  {
+      plugins: {
+          "@next/next": nextPlugin,
+      },
+      languageOptions: {
+          globals: {
+              ...globals.browser,
+              ...globals.node,
+              ...globals.es2021
+          },
+          parserOptions: {
+              ecmaFeatures: { jsx: true },
+              ecmaVersion: 'latest',
+              sourceType: 'module',
+          },
+      },
+      rules: {
+         ...nextPlugin.configs.recommended.rules,
+         ...nextPlugin.configs["core-web-vitals"].rules,
+         "no-eval": "error",
+         "no-implied-eval": "error",
+         "no-new-func": "error",
+         "no-script-url": "error",
+         "security/detect-object-injection": "off" 
+      }
+  }
+];

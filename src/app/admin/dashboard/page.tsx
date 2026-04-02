@@ -32,7 +32,7 @@ export default function AdminDashboard() {
     const [showAnalytics, setShowAnalytics] = useState(false);
 
 
-    const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
+    // Removed client-side password exposure (NEXT_PUBLIC_ADMIN_PASSWORD) for security compliance.
 
     // Activity Logger
     const logActivity = (action: string, detail: string, type: 'auth' | 'sync' | 'refresh' | 'edit' | 'delete') => {
@@ -48,27 +48,47 @@ export default function AdminDashboard() {
         localStorage.setItem('admin_activity', JSON.stringify(updatedActivity));
     };
 
-    // Auth Check
-    const handleLogin = (e: React.FormEvent) => {
+    // Auth Check (Server-Side)
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (password === ADMIN_PASSWORD) {
-            setIsAuthenticated(true);
-            localStorage.setItem('admin_auth', 'true');
-            logActivity('Admin', 'logged_in', 'auth');
-            fetchScores();
-            fetchMessages();
-        } else {
-            alert(t('admin.wrongPassword') || 'Contraseña incorrecta');
+        setLoading(true);
+        try {
+            const res = await fetch('/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setIsAuthenticated(true);
+                logActivity('Admin', 'logged_in', 'auth');
+                fetchScores();
+                fetchMessages();
+            } else {
+                alert(t('admin.wrongPassword') || 'Contraseña incorrecta');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Error en el servidor al autenticar.');
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-        const auth = localStorage.getItem('admin_auth');
-        if (auth === 'true') {
-            setIsAuthenticated(true);
-            fetchScores();
-            fetchMessages();
-        }
+        const checkAuth = async () => {
+            try {
+                const res = await fetch('/api/admin/check');
+                if (res.ok) {
+                    setIsAuthenticated(true);
+                    fetchScores();
+                    fetchMessages();
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        };
+        checkAuth();
 
         // Load Activity
         const savedActivity = localStorage.getItem('admin_activity');
@@ -133,10 +153,14 @@ export default function AdminDashboard() {
         }
     };
 
-    const handleLogout = () => {
-        logActivity('Admin', 'logged_out', 'auth');
-        setIsAuthenticated(false);
-        localStorage.removeItem('admin_auth');
+    const handleLogout = async () => {
+        try {
+            await fetch('/api/admin/logout', { method: 'POST' });
+            logActivity('Admin', 'logged_out', 'auth');
+            setIsAuthenticated(false);
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     };
 
     // Data Fetching

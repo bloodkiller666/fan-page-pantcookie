@@ -12,14 +12,31 @@ interface PlayerInputProps {
 
 const PlayerInput = ({ playerName, onNameChange, onStartGame, hideButton = false }) => {
     const { t } = useLanguage();
+    const [honeypot, setHoneypot] = React.useState('');
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (honeypot) {
+            // Silently reject bots
+            return;
+        }
         onStartGame();
     };
 
     return (
         <div className="bg-white dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl p-8 border border-primary/20 shadow-2xl dark:shadow-none animate-fade-in-up">
             <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Honeypot field */}
+                <input 
+                    type="text" 
+                    name="contactPhone" 
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                    tabIndex={-1} 
+                    autoComplete="off" 
+                    style={{ position: 'absolute', left: '-9999px', opacity: 0 }} 
+                />
+
                 <div className="space-y-4">
                     <label className="block text-xs font-black uppercase tracking-[0.3em] text-primary/70 ml-1" htmlFor="username">
                         {t('common.playerName') || 'Ingresa tu nombre de jugador'}

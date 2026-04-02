@@ -1,0 +1,7 @@
+Contact: mailto:admin@pantcookie.com
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: es, en
+Canonical: https://pantcookie.com/.well-known/security.txt
+Policy: https://pantcookie.com/legal/security-policy
+# Si eres un investigador de seguridad, por favor reporta cualquier vulnerabilidad aquí.
+# Gracias por ayudar a mantener segura la Shake Gang.
