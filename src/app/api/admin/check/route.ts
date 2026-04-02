@@ -18,7 +18,10 @@ export async function GET() {
 
         return NextResponse.json({ authenticated: true });
     } catch (error) {
-        console.error('Check auth error:', error);
-        return NextResponse.json({ authenticated: false }, { status: 401 });
+        console.error('Check auth error (Vercel):', error);
+        return NextResponse.json({ 
+            authenticated: false, 
+            debug: error instanceof Error ? error.message : 'Unknown error' 
+        }, { status: 401 });
     }
 }

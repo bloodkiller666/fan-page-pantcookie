@@ -30,10 +30,17 @@ export async function POST(req: Request) {
         // 1. Fetch Twitch
         let twitchCount = 0;
         try {
-            const tr = await fetch(TWITCH_API_URL, { cache: 'no-store' });
-            const data = await tr.json();
-            twitchCount = Number(data.total) || 0;
-        } catch (e) { console.error("Twitch sync failed", e); }
+            const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+            const twitchRes = await fetch(`${baseUrl}/api/twitch/stats`, { cache: 'no-store' });
+            if (twitchRes.ok) {
+                const data = await twitchRes.json();
+                twitchCount = Number(data.total) || 0;
+            } else {
+                console.warn(`Twitch stats API returned status: ${twitchRes.status}`);
+            }
+        } catch (e) {
+            console.error("Twitch sync failed:", e);
+        }
 
         // 2. Fetch YouTube
         let youtubeCount = 0;
