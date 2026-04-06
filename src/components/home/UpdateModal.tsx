@@ -8,23 +8,25 @@ import { BiWorld } from "react-icons/bi";
 import { MdSecurity } from "react-icons/md";
 import { MdCatchingPokemon } from 'react-icons/md';
 
-export default function UpdateModal() {
+export default function UpdateModal({ parentLoading }: { parentLoading: boolean }) {
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
-        const hasSeenUpdate = localStorage.getItem('update_3_4_3_seen');
+        if (parentLoading) return;
+
+        const hasSeenUpdate = localStorage.getItem('update_3_7_6_seen');
         if (!hasSeenUpdate) {
-            // Small delay to appear after page load
-            const timer = setTimeout(() => setIsOpen(true), 1500);
+            // Se muestra un poco después de que termine la carga principal
+            const timer = setTimeout(() => setIsOpen(true), 1000);
             return () => clearTimeout(timer);
         }
-    }, []);
+    }, [parentLoading]);
 
     const handleClose = () => {
         setIsOpen(false);
-        localStorage.setItem('update_3_4_3_seen', 'true');
+        localStorage.setItem('update_3_7_6_seen', 'true');
     };
 
     if (!mounted) return null;
@@ -32,112 +34,77 @@ export default function UpdateModal() {
     return createPortal(
         <>
             {isOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+                <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in overflow-y-auto pt-32">
                     <div
-                        className="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border-4 border-black dark:border-white relative animate-fade-in-up"
+                        className="bg-white dark:bg-[#0f1115] w-full max-w-lg rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden border-4 border-black dark:border-white/10 relative animate-fade-in-up mb-20"
                     >
-                        {/* Header */}
-                        <div className="bg-gradient-to-r from-primary-pink to-purple-600 p-6 text-white text-center relative overflow-hidden border-b-4 border-black">
+                        {/* Header Premium */}
+                        <div className="bg-gradient-to-br from-[#ff007a] via-[#7000ff] to-[#00f3ff] p-8 text-white text-center relative overflow-hidden border-b-4 border-black">
+                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
                             <div className="relative z-10">
-                                <span className="inline-block px-3 py-1 bg-black/20 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest mb-2 border border-white/30 shadow-sm">
-                                    Novedades
+                                <span className="inline-block px-4 py-1.5 bg-black/30 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-3 border border-white/20 shadow-xl">
+                                    System v3.7.6
                                 </span>
-                                <h2 className="text-3xl font-black uppercase italic tracking-tighter drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
-                                    Actualización 3.4.4
-                                </h2>
+                                <h1 className="text-4xl font-black uppercase italic tracking-tighter drop-shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">
+                                    Novedades
+                                </h1>
                             </div>
                             <button
                                 onClick={handleClose}
-                                className="absolute top-4 right-4 p-2 bg-black/20 hover:bg-black/40 rounded-full transition-colors text-white"
+                                className="absolute top-6 right-6 p-2 bg-black/20 hover:bg-black/40 rounded-full transition-all hover:rotate-90 text-white border border-white/10 z-50 cursor-pointer"
+                                aria-label="Close"
                             >
-                                <FiX size={20} />
+                                <FiX size={24} />
                             </button>
                         </div>
 
-                        {/* Content */}
-                        <div className="p-6 max-h-[60vh] overflow-y-auto custom-scrollbar">
-                            <p className="text-gray-600 dark:text-gray-300 mb-6 text-center font-medium border-b border-dashed border-gray-300 dark:border-gray-700 pb-4">
-                                ¡La Fan Page ha evolucionado! Aquí tienes un resumen de lo nuevo:
+                        <div className="p-8 max-h-[55vh] overflow-y-auto custom-scrollbar bg-grid-light dark:bg-grid-white">
+                            <div className="space-y-6">
+                                <SectionItem
+                                    icon={<FiCpu className="text-neon-pink" />}
+                                    title="Inicio"
+                                    desc="Mejoras en la carga y bienvenida al sitio."
+                                />
+                                <SectionItem
+                                    icon={<FiMusic className="text-neon-cyan" />}
+                                    title="Multimedia"
+                                    desc="Buscador inteligente y letras automáticas."
+                                />
+                                <SectionItem
+                                    icon={<FaGamepad className="text-neon-volt" />}
+                                    title="Juegos"
+                                    desc="Registro obligatorio para mayor seguridad."
+                                />
+                                <SectionItem
+                                    icon={<FiMessageSquare className="text-purple-500" />}
+                                    title="Mensajes"
+                                    desc="Soporte total de emojis y muro optimizado."
+                                />
+                                <SectionItem
+                                    icon={<FiSmartphone className="text-blue-500" />}
+                                    title="General"
+                                    desc="Mejoras de rendimiento y diseño móvil."
+                                />
+                                <SectionItem
+                                    icon={<MdSecurity className="text-red-500" />}
+                                    title="Legal"
+                                    desc="Actualización de términos y privacidad."
+                                />
+                            </div>
+                        </div>
+
+                        {/* Footer Moderno */}
+                        <div className="p-8 bg-gray-50 dark:bg-black/40 border-t-4 border-black dark:border-white/5 flex flex-col gap-4">
+                            <button
+                                onClick={handleClose}
+                                className="w-full py-5 bg-[#7000ff] hover:bg-[#8215ff] text-white font-black uppercase tracking-[0.2em] rounded-2xl border-b-8 border-black shadow-2xl transition-all active:border-b-0 active:translate-y-2 group flex items-center justify-center gap-3"
+                            >
+                                <FiCheck size={28} className="group-hover:scale-125 transition-transform" />
+                                Acceder al Sistema
+                            </button>
+                            <p className="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest opacity-50">
+                                ShakeGang Community Network • 2026
                             </p>
-
-                            <div className="grid gap-3">
-                                <FeatureItem
-                                    icon={<MdCatchingPokemon className="text-red-500" size={24} />}
-                                    title="Estilo Pokémon"
-                                    desc="Nueva interfaz inspirada en la Pokédex y estética gamer retro."
-                                />
-                                <FeatureItem
-                                    icon={<FiCalendar className="text-blue-500" size={24} />}
-                                    title="Calendario Semanal"
-                                    desc="Consulta los horarios de stream de ShuraHiwa directamente."
-                                />
-                                <FeatureItem
-                                    icon={<FiYoutube className="text-red-600" size={24} />}
-                                    title="Integración YouTube"
-                                    desc="Los últimos 3 videos y shorts disponibles en la home."
-                                />
-                                <FeatureItem
-                                    icon={<FiImage className="text-purple-500" size={24} />}
-                                    title="Galería Mejorada"
-                                    desc="Fotos y fanarts en alta calidad con un visor moderno."
-                                />
-                                <FeatureItem
-                                    icon={<FiVideo className="text-orange-500" size={24} />}
-                                    title="Videos Mejorado"
-                                    desc="Videos con un reproductor moderno con ajuste de calidad y con pantalla completa."
-                                />
-                                <FeatureItem
-                                    icon={<FiMusic className="text-blue-500" size={24} />}
-                                    title="Música Mejorado"
-                                    desc="Reproductor estilo Spotify con video de fondo, lyrics incorporados y cinco estilos de barras sonoras."
-                                />
-                                <FeatureItem
-                                    icon={<FaGamepad className="text-purple-500" size={24} />}
-                                    title="Integración de Juegos"
-                                    desc="Tres juegos integrados: Puzzle, Preguntados y Shura Run"
-                                />
-                                <FeatureItem
-                                    icon={<FiCpu className="text-green-500" size={24} />}
-                                    title="Pantcookie IA"
-                                    desc="Interactúa con la nueva inteligencia artificial de la comunidad."
-                                />
-                                <FeatureItem
-                                    icon={<FiMessageSquare className="text-purple-500" size={24} />}
-                                    title="Mensajes Mejorado"
-                                    desc="Puedes escribir tu mensaje y subir tu arte, leerlo en una sección aparte con estilo Padlet."
-                                />
-                                <FeatureItem
-                                    icon={<FiInfo className="text-yellow-500" size={24} />}
-                                    title="Sobre De"
-                                    desc="Conoce más sobre ShuraHiwa y la historia de los Pantcookies."
-                                />
-                                <FeatureItem
-                                    icon={<BiWorld className="text-lightgreen -500" size={24} />}
-                                    title="Idiomas"
-                                    desc="Tiene cuatro idiomas: Español, Inglés, Francés y Japonés"
-                                />
-                                <FeatureItem
-                                    icon={<FiSmartphone className="text-lightskyblue-500" size={24} />}
-                                    title="Responsive"
-                                    desc="Se adapta a cualquier dispositivo (Celular, Tablet y Laptop)"
-                                />
-                                <FeatureItem
-                                    icon={<MdSecurity className="text-firebrick -500" size={24} />}
-                                    title="Seguridad y Privacidad"
-                                    desc="Términos y condiciones, política de privacidad y cookies"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="p-6 bg-gray-50 dark:bg-gray-900 border-t-4 border-black dark:border-gray-700 flex justify-center">
-                            <button
-                                onClick={handleClose}
-                                className="w-full py-4 bg-primary-blue text-white font-black uppercase tracking-widest rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_black] active:translate-y-[4px] active:shadow-none transition-all flex items-center justify-center gap-2"
-                            >
-                                <FiCheck size={24} />
-                                ¡Entendido!
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -147,15 +114,15 @@ export default function UpdateModal() {
     );
 }
 
-function FeatureItem({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
+function SectionItem({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
     return (
-        <div className="flex items-start gap-4 p-3 rounded-xl bg-gray-50 dark:bg-gray-700/30 border border-transparent hover:border-gray-200 dark:hover:border-gray-600 transition-all">
-            <div className="mt-1 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 shrink-0">
+        <div className="flex items-center gap-5 p-4 rounded-[1.5rem] bg-gray-50 dark:bg-white/5 border-2 border-transparent hover:border-black dark:hover:border-white/20 transition-all group">
+            <div className="p-3 bg-white dark:bg-black rounded-2xl shadow-lg border border-gray-100 dark:border-white/5 group-hover:scale-110 transition-transform text-2xl">
                 {icon}
             </div>
             <div>
-                <h4 className="font-bold text-gray-800 dark:text-white text-sm uppercase tracking-wide">{title}</h4>
-                <p className="text-xs text-gray-500 dark:text-gray-400 leading-snug mt-1">{desc}</p>
+                <h4 className="font-black text-gray-900 dark:text-white text-base uppercase italic tracking-tight">{title}</h4>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wide mt-0.5">{desc}</p>
             </div>
         </div>
     );

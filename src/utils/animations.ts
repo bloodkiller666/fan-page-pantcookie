@@ -1,14 +1,11 @@
 import { gsap } from 'gsap';
 
-/**
- * SplitText utility to wrap characters or words in spans
- */
 export const splitText = (element: HTMLElement | null, type: 'chars' | 'words' = 'chars') => {
     if (!element) return [];
-    
+
     const text = element.innerText;
     element.innerHTML = '';
-    
+
     if (type === 'chars') {
         const chars = text.split('').map(char => {
             const span = document.createElement('span');
@@ -31,12 +28,9 @@ export const splitText = (element: HTMLElement | null, type: 'chars' | 'words' =
     }
 };
 
-/**
- * Blur Reveal animation variant
- */
 export const blurReveal = (element: HTMLElement | null, delay: number = 0) => {
     if (!element) return;
-    
+
     const chars = splitText(element);
     gsap.from(chars, {
         filter: "blur(15px)",
@@ -53,20 +47,17 @@ export const blurReveal = (element: HTMLElement | null, delay: number = 0) => {
     });
 };
 
-/**
- * Scramble animation using GSAP onUpdate
- */
 export const scrambleText = (
-    element: HTMLElement | null, 
-    text: string, 
+    element: HTMLElement | null,
+    text: string,
     duration: number = 2,
     onComplete?: () => void
 ) => {
     if (!element) return;
-    
+
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+';
     const obj = { value: 0 };
-    
+
     gsap.to(obj, {
         value: 1,
         duration: duration,
@@ -74,7 +65,7 @@ export const scrambleText = (
         onUpdate: () => {
             const revealCount = Math.floor(obj.value * text.length);
             let result = text.substring(0, revealCount);
-            
+
             for (let i = revealCount; i < text.length; i++) {
                 if (text[i] === ' ') {
                     result += ' ';

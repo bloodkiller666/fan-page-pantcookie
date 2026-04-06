@@ -82,7 +82,7 @@ const Footer = () => {
                         {t('footer.copyright')}
                     </p>
                     <p className="text-gray-700 text-[10px] uppercase tracking-widest">
-                        Made with <span className="text-red-500 animate-pulse">❤️</span> by <span className="text-[#ff00ff]">Pantcookies</span>
+                        Made with <span className="text-red-500 animate-pulse">❤️</span> by <span className="text-[#ff00ff]">Pantcokies</span>
                     </p>
                 </div>
             </div>

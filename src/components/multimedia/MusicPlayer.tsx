@@ -34,7 +34,7 @@ const MusicPlayer = () => {
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(0.7);
     const [isMuted, setIsMuted] = useState(false);
-    const [showLyrics, setShowLyrics] = useState(false);
+    const [showLyrics, setShowLyrics] = useState(true);
     const [showPlaylist, setShowPlaylist] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
     const [isShuffle, setIsShuffle] = useState(false);
@@ -247,12 +247,24 @@ const MusicPlayer = () => {
             files.map(async (file) => {
                 const albumArt = await extractAlbumArt(file);
                 const songId = `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                
+                // Parse filename: "Artist - Title.mp3" or just "Title.mp3"
+                const fullFileName = file.name.replace(/\.[^/.]+$/, "");
+                let artist = "Archivo Local";
+                let title = fullFileName;
+
+                if (fullFileName.includes(" - ")) {
+                    const parts = fullFileName.split(" - ");
+                    artist = parts[0].trim();
+                    title = parts.slice(1).join(" - ").trim();
+                }
+
                 return {
                     file,
                     newSong: {
                         id: songId,
-                        title: file.name.replace(/\.[^/.]+$/, ""),
-                        coverArtist: "Local Upload",
+                        title: title,
+                        coverArtist: artist,
                         audioUrl: URL.createObjectURL(file),
                         coverUrl: albumArt || "https://img.freepik.com/vector-gratis/gato-lindo-escuchando-musica-telefono-auriculares-icono-vectorial-dibujos-animados-ilustracion-tecnologia-animal_138676-11290.jpg",
                         lyrics: [{ time: 0, text: "Archivo local - Sin letra disponible" }]
@@ -441,19 +453,68 @@ const MusicPlayer = () => {
                     </nav>
                     <div className="flex items-center gap-4">
                         {isSearchOpen && (
-                            <div className="relative animate-fade-in">
+                            <div className="relative animate-fade-in group">
                                 <input
                                     type="text"
                                     placeholder="Search song or artist..."
-                                    className="bg-white/10 border border-white/20 rounded-full px-4 py-1 text-sm focus:outline-none focus:border-white/40 w-48 md:w-64"
+                                    className="bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider focus:outline-none focus:border-white/40 w-48 md:w-80 group-hover:bg-white/15 transition-all"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    autoFocus
                                 />
                                 {searchQuery && (
-                                    <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white">
-                                        <MdClose className="text-sm" />
-                                    </button>
+                                    <div className="absolute top-full right-0 mt-3 w-64 md:w-96 bg-[#0a0a0a]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden z-[999] max-h-[60vh] overflow-y-auto animate-fade-in">
+                                        <div className="p-3 border-b border-white/5 bg-white/5 flex items-center justify-between">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Resultados de Búsqueda</span>
+                                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-slate-400">{(filteredPlaylist.length + filteredLocalLibrary.length)}</span>
+                                        </div>
+                                        {filteredPlaylist.length === 0 && filteredLocalLibrary.length === 0 ? (
+                                            <div className="p-8 text-center text-slate-500 text-xs italic font-medium uppercase tracking-widest">No se encontraron coincidencias</div>
+                                        ) : (
+                                            <div className="py-2">
+                                                {filteredPlaylist.map((song) => {
+                                                    const idx = playlist.findIndex(s => s.id === song.id);
+                                                    const isActive = idx === currentSongIndex;
+                                                    return (
+                                                        <button key={song.id} onClick={() => { setCurrentSongIndex(idx); setIsPlaying(true); setSearchQuery(''); }} className="w-full text-left p-4 hover:bg-white/10 transition-all border-b border-white/5 last:border-0 flex items-center gap-4 group/item">
+                                                            <div className="relative size-12 rounded-xl overflow-hidden shadow-2xl shrink-0">
+                                                                <img src={song.coverUrl} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
+                                                                {isActive && <div className="absolute inset-0 flex items-center justify-center bg-black/40"><MdEqualizer className="text-white animate-pulse" /></div>}
+                                                            </div>
+                                                            <div className="min-w-0 flex-1">
+                                                                <p className={`font-black text-[11px] truncate uppercase tracking-tight ${isActive ? 'text-white' : 'text-slate-200 group-hover/item:text-white'}`}>{song.title}</p>
+                                                                <p className="text-[10px] font-bold truncate uppercase mt-0.5" style={{ color: isActive ? playerColor : 'rgb(148, 163, 184)' }}>{song.coverArtist}</p>
+                                                            </div>
+                                                            <div className="size-8 rounded-full border border-white/10 flex items-center justify-center group-hover/item:bg-white/10 transition-all">
+                                                                <MdPlayArrow className="text-white text-lg" />
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })}
+                                                {filteredLocalLibrary.map((song) => {
+                                                    const idx = playlist.findIndex(s => s.id === song.id);
+                                                    const isActive = idx === currentSongIndex;
+                                                    return (
+                                                        <button key={song.id} onClick={() => { setCurrentSongIndex(idx); setIsPlaying(true); setSearchQuery(''); }} className="w-full text-left p-4 hover:bg-white/10 transition-all border-b border-white/5 last:border-0 flex items-center gap-4 group/item">
+                                                            <div className="relative size-12 rounded-xl overflow-hidden shadow-2xl shrink-0">
+                                                                <img src={song.coverUrl} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
+                                                                {isActive && <div className="absolute inset-0 flex items-center justify-center bg-black/40"><MdEqualizer className="text-white animate-pulse" /></div>}
+                                                            </div>
+                                                            <div className="min-w-0 flex-1">
+                                                                <p className={`font-black text-[11px] truncate uppercase tracking-tight ${isActive ? 'text-white' : 'text-slate-200 group-hover/item:text-white'}`}>{song.title}</p>
+                                                                <div className="flex items-center gap-2 mt-0.5">
+                                                                    <span className="text-[8px] font-black px-1.5 py-0.5 rounded bg-white/10 text-slate-400 uppercase tracking-tighter">LOCAL</span>
+                                                                    <p className="text-[10px] font-bold truncate uppercase" style={{ color: isActive ? playerColor : 'rgb(148, 163, 184)' }}>{song.coverArtist}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div className="size-8 rounded-full border border-white/10 flex items-center justify-center group-hover/item:bg-white/10 transition-all">
+                                                                <MdPlayArrow className="text-white text-lg" />
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
                                 )}
                             </div>
                         )}
@@ -566,7 +627,7 @@ const MusicPlayer = () => {
 
                     {/* Right Content */}
                     {(showLyrics || showPlaylist || showLocalLibrary) && (
-                        <div className="lg:col-span-5 glass border-l border-white/10 flex flex-col overflow-hidden transition-all duration-500 rounded-3xl my-8">
+                        <div className={`lg:col-span-5 glass border-l border-white/10 flex flex-col overflow-hidden transition-all duration-700 rounded-3xl my-8 ${searchQuery ? 'scale-90 opacity-40 blur-sm pointer-events-none translate-x-12' : 'scale-100 opacity-100 blur-0'}`}>
                             {showLyrics && !isLocalSong && !showLocalLibrary && (
                                 <div className="flex-1 flex flex-col overflow-hidden border-b border-white/5 transition-all duration-500">
                                     <div className="px-8 pt-6 pb-2 flex items-center justify-between">

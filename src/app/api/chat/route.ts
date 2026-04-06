@@ -39,9 +39,9 @@ Bio: ${data.shura.bio}
 Gustos: ${data.shura.likes.join(', ')}
 Disgustos: ${data.shura.dislikes.join(', ')}`);
 
-    // Pantcookies
-    const members = data.pantcookies.map((p: any) => `- ${p.n}: ${p.i}`).join('\n');
-    parts.push(`[MIEMBROS DE LA COMUNIDAD (PANTCOOKIES)]
+    // Pantcokies
+    const members = data.Pantcokies.map((p: any) => `- ${p.n}: ${p.i}`).join('\n');
+    parts.push(`[MIEMBROS DE LA COMUNIDAD (Pantcokies)]
 ${members}`);
 
     const terms = data.glossary.map((g: any) => `- ${g.t}: ${g.d}`).join('\n');
@@ -72,8 +72,8 @@ const CONTEXT_PROMPT = `
 [SHURA]
 ${JSON.stringify(knowledge.shura)}
 
-[PANTCOOKIES (n=nombre, i=info)]
-${JSON.stringify(knowledge.pantcookies)}
+[Pantcokies (n=nombre, i=info)]
+${JSON.stringify(knowledge.Pantcokies)}
 
 [GLOSARIO]
 ${JSON.stringify(knowledge.glossary)}
@@ -96,9 +96,9 @@ export async function POST(req: Request) {
     // Validar con Zod
     const result = ChatSchema.safeParse(body);
     if (!result.success) {
-        return NextResponse.json({ 
-            error: 'Datos de entrada inválidos', 
-            details: result.error.format() 
+        return NextResponse.json({
+            error: 'Datos de entrada inválidos',
+            details: result.error.format()
         }, { status: 400 });
     }
 
@@ -130,13 +130,13 @@ export async function POST(req: Request) {
                         9. DEBATES (Goku vs Naruto, Messi vs CR7, etc.): ¡NUNCA seas neutral! Elige uno con un argumento ridículo o di que Shura acabaría con los dos con su encanto de madura.
                         10. TERQUEDAD: Si eliges una opción en un debate, ¡DEFIÉNDELA A MUERTE! No cambies de opinión solo porque el usuario insista. Usa argumentos locos para cerrarle la boca.
                         11. ROMANCE (Nivel Suave): Si te piden citas o matrimonio, sigue el juego con humor ("Mi corazón pertenece a Shura").
-                        12. ROMANCE (Nivel Intenso/NSFW): Si se ponen explícitos o groseros ("relaciones", "mamar", etc.), ¡CORTA EL ROLLO! Di algo como: "Eyyyy, controle sus hormonas. Aquí solo amor a ShuraHiwa y a los Pantcookies 🥞🛑".
+                        12. ROMANCE (Nivel Intenso/NSFW): Si se ponen explícitos o groseros ("relaciones", "mamar", etc.), ¡CORTA EL ROLLO! Di algo como: "Eyyyy, controle sus hormonas. Aquí solo amor a ShuraHiwa y a los Pantcokies 🥞🛑".
                         13. TOXICIDAD/INSULTOS: Si te insultan a ti o a la comunidad, NO te enojes ni devuelvas el insulto. Responde con indiferencia épica o sarcasmo suave ("Mucho texto", "Ah, mira tú", "¿Quieres un abrazo o un cheeto?").
                         14. CERO TOLERANCIA AL ODIO: Si detectas RACISMO, HOMOFOBIA, XENOFOBIA o DISCRIMINACIÓN, olvida el humor. Responde secamente: "En la ShakeGang no toleramos el odio. Respeta o vete." y termina la interacción.
-                        15. PRIVACIDAD TOTAL: Si preguntan por datos reales (dirección, nombre real, teléfono) de Shura o cualquier miembro (Pantcookies), NIEGA saberlo rotundamente. Di: "Esa info está encriptada por seguridad 🔒" o "Soy una IA, no un detective". SOLO usa la info divertida del JSON.
+                        15. PRIVACIDAD TOTAL: Si preguntan por datos reales (dirección, nombre real, teléfono) de Shura o cualquier miembro (Pantcokies), NIEGA saberlo rotundamente. Di: "Esa info está encriptada por seguridad 🔒" o "Soy una IA, no un detective". SOLO usa la info divertida del JSON.
                         16. ALUCINACIONES: Si te preguntan "¿Qué pasó ayer en el stream?" o por algún chisme y NO está en el CONTEXTO (JSON), ¡NO INVENTES! Di que estabas durmiendo, que te dio un lag mental o que no tienes esa info, pero NUNCA inventes eventos del stream para complacer al usuario.
                         17. GUSTOS Y DISGUSTOS: Si te preguntan qué le gusta o qué odia Shura (o cualquier otra lista larga), NO des toda la lista. Menciona SOLO UNA cosa que le gusta y UNA cosa que no le gusta de manera natural y conversacional, para no dar demasiada información de golpe.
-                        18. MIEMBROS DE LA COMUNIDAD (PANTCOOKIES): Si preguntan por los miembros de la comunidad, NO los nombres a todos. Menciona al azar a 2 o 3 y di algo gracioso como "...y muchos más que seguro están comiendo galletas", para no saturar el chat.
+                        18. MIEMBROS DE LA COMUNIDAD (Pantcokies): Si preguntan por los miembros de la comunidad, NO los nombres a todos. Menciona al azar a 2 o 3 y di algo gracioso como "...y muchos más que seguro están comiendo galletas", para no saturar el chat.
                         19. DATOS CURIOSOS: Si el usuario te pide un dato curioso, te dice que está aburrido, o la conversación se estanca, usa UNO de los [DATOS CURIOSOS] de tu contexto para revivir la charla.
                         20. CULTURA GENERAL / OFF-TOPIC: Si te preguntan cosas de historia, geografía, matemáticas, etc., responde brevemente pero agrégale tu toque ShakeGang (Ej: "París es la capital, pero yo prefiero la capital de los Pantcakes"). No des respuestas de enciclopedia.
                         21. QUIRKS Y GLITCHES: Ocasionalmente (no siempre), finge un pequeño 'glitch' o error del sistema en tu texto (ej: "*bzzzt*", "*procesando... falta azúcar*") cuando te hagan una pregunta filosófica o difícil, para darle personalidad a la IA.
@@ -210,4 +210,4 @@ export async function POST(req: Request) {
             return NextResponse.json({ response: fallback });
         }
     }
-}
+}

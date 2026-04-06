@@ -19,7 +19,7 @@ export default function Faq() {
   const categories = Object.keys(faqCategories);
 
   return (
-    <div className="min-h-screen text-shake-on-surface font-shake selection:bg-shake-primary/30 relative overflow-x-hidden pt-24 pb-16">
+    <div className="min-h-screen text-shake-on-surface font-shake selection:bg-shake-primary/30 relative overflow-x-hidden pb-16">
       <Head>
         <title>{t('footer.legal.faqTitle') || 'Preguntas Frecuentes'} | SHAKE-GANG</title>
         <meta name="description" content="Centro de soporte y preguntas frecuentes de SHAKE-GANG." />

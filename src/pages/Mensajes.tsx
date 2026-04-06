@@ -803,13 +803,11 @@ const MensajesContent = () => {
                 </div>
               )}
             </div>
-            <h3 className="text-2xl font-bold text-white mb-2">
-                {showSuccessModal.status === 'approved' ? t('wall.published') || '¡Publicado!' : 'En Revisión'}
+            <h3 className="text-2xl font-black text-white mb-2 uppercase italic tracking-tighter">
+              {showSuccessModal.status === 'approved' ? t('wall.published') : t('wall.pending')}
             </h3>
-            <p className="text-gray-300 mb-8">
-                {showSuccessModal.status === 'approved' 
-                    ? t('wall.publishedSub') || 'Gracias por tu mensaje, ya está en el muro.' 
-                    : 'Tu mensaje ha sido recibido y está siendo revisado por moderación.'}
+            <p className="text-gray-400 text-sm mb-8">
+              {showSuccessModal.status === 'approved' ? t('wall.publishedSub') : t('wall.pendingSub')}
             </p>
 
             <div className="flex flex-col gap-3">

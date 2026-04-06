@@ -8,13 +8,11 @@ export default function LoadingScreen() {
     const [isMounted, setIsMounted] = useState(false);
     const [statusText, setStatusText] = useState('INICIANDO SISTEMA...');
     const containerRef = useRef<HTMLDivElement>(null);
-
-    // Mapeo de mensajes por porcentaje
     const loadingMessages = [
         { pct: 0, text: "DESCARGANDO ACTUALIZACIÓN..." },
-        { pct: 20, text: "INSTALANDO ACTUALIZACIÓN..." },
-        { pct: 45, text: "CARGANDO SISTEMA..." },
-        { pct: 70, text: "PREPARANDO SISTEMA..." },
+        { pct: 25, text: "INSTALANDO ACTUALIZACIÓN..." },
+        { pct: 50, text: "CARGANDO SISTEMA..." },
+        { pct: 75, text: "PREPARANDO SISTEMA..." },
         { pct: 90, text: "SISTEMA COMPLETADO." },
     ];
 
@@ -49,8 +47,6 @@ export default function LoadingScreen() {
                     }
 
                     const nextVal = prev + 1;
-
-                    // Actualizar el texto según el porcentaje
                     const currentMessage = [...loadingMessages].reverse().find(m => nextVal >= m.pct);
                     if (currentMessage) setStatusText(currentMessage.text);
 
@@ -71,13 +67,10 @@ export default function LoadingScreen() {
             ref={containerRef}
             className="fixed inset-0 z-[9999] bg-[#1a0f16] flex flex-col items-center justify-center overflow-hidden"
         >
-            {/* Logo de Fondo */}
             <div className="relative">
                 <div className="text-[15vw] font-black text-white/[0.03] uppercase tracking-tighter select-none leading-none">
                     SHAKEGANG
                 </div>
-
-                {/* Contador Central */}
                 <div className="absolute inset-0 flex items-center justify-center">
                     <span className="text-8xl md:text-[10vw] font-black text-primary-pink tracking-tighter italic drop-shadow-[0_0_20px_rgba(255,0,127,0.4)]">
                         {counter}%
@@ -94,19 +87,16 @@ export default function LoadingScreen() {
                 </div>
             </div>
 
-            {/* Footer Información */}
             <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end text-white/10 font-mono text-[9px] uppercase tracking-[0.2em]">
                 <div>
-                    <div>System.v2026</div>
-                    <div>Core: v3.0.4_alpha</div>
+                    <div>System.v2025</div>
+                    <div>Core: v3.7.6_beta</div>
                 </div>
                 <div className="text-right">
-                    <div>© 2026 Shura Hiwa</div>
+                    <div>© 2025 Fan Page Shake-Gang</div>
                     <div>Connection: Stable</div>
                 </div>
             </div>
-
-            {/* Barra de progreso inferior */}
             <div
                 className="absolute bottom-0 left-0 h-1 bg-primary-pink transition-all duration-100 ease-linear shadow-[0_0_20px_rgba(255,0,127,0.8)]"
                 style={{ width: `${counter}%` }}

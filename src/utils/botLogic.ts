@@ -39,7 +39,7 @@ const KNOWLEDGE_BASE = [
             "A ti por ser parte de la ShakeGang."
         ]
     },
-     {
+    {
         keywords: ['Shake', 'Shakeee', 'Shakeeeeee', 'Shakeeeeeeeeee'],
         responses: [
             "Gang",
@@ -55,9 +55,9 @@ const KNOWLEDGE_BASE = [
             `Soy una IA entrenada para la ShakeGang. ${knowledgeData.bot.role}`
         ]
     },
-     // --- DYNAMIC CONTENT FROM JSON ---
-     // SHURA
-     {
+    // --- DYNAMIC CONTENT FROM JSON ---
+    // SHURA
+    {
         keywords: ['shura', 'shurahiwa', 'vtuber'],
         responses: [
             `ShuraHiwa es una VTuber increíble. ${knowledgeData.shura.bio}`,
@@ -65,8 +65,8 @@ const KNOWLEDGE_BASE = [
             `Cuidado con lo que le das, odia: ${knowledgeData.shura.dislikes.slice(0, 3).join(', ')}.`
         ]
     },
-    // PANTCOOKIES (Dynamic generation)
-    ...knowledgeData.pantcookies.map(pc => ({
+    // Pantcokies (Dynamic generation)
+    ...knowledgeData.Pantcokies.map(pc => ({
         keywords: [pc.n, normalize(pc.n)],
         responses: [
             `${pc.n}: ${pc.i}`,
@@ -117,7 +117,7 @@ const KNOWLEDGE_BASE = [
             "Un Pantcookie entra a un bar... y pide leche. Fin."
         ]
     },
-     {
+    {
         keywords: ['hora', 'tiempo', 'que hora es'],
         responses: [
             () => `Son las ${new Date().toLocaleTimeString()}. Hora de ver si Shura está en vivo.`,
@@ -161,8 +161,8 @@ export const getBotResponse = (message: string) => {
             // Create a regex that searches for the keyword as a whole word
             // This detects the keyword anywhere in the sentence but avoids partial matches (like "yo" in "yo-yo")
             try {
-                 const regex = new RegExp(`\\b${normalizedK}\\b`, 'i');
-                 return regex.test(cleanMessage);
+                const regex = new RegExp(`\\b${normalizedK}\\b`, 'i');
+                return regex.test(cleanMessage);
             } catch (e) {
                 // Fallback for simple includes if regex fails (e.g. special chars)
                 return cleanMessage.includes(normalizedK);

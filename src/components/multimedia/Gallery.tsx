@@ -16,18 +16,11 @@ const Gallery = ({ query = '' }) => {
     const containerRef = useRef(null);
 
     const imageList = useMemo(() => [
-        { filename: 'RobertPregnat_nfxrah', description: t('multimedia.gallery.img1') },
-        { filename: 'Salmonsito_k7tyez', description: t('multimedia.gallery.img2') },
-        { filename: 'NewChura_hzkqjc', description: t('multimedia.gallery.img3') },
-        { filename: 'IMG20251003113257_tr13hw', description: t('multimedia.gallery.img4') },
-        { filename: 'ArteShura_uh393c', description: t('multimedia.gallery.img5') },
-        { filename: 'IMG_2292_dsquyx', description: t('multimedia.gallery.img6') },
-        { filename: 'IMG_2246_h53rsr', description: t('multimedia.gallery.img7') },
-        { filename: 'IMG_2254_zaqcgs', description: t('multimedia.gallery.img8') }
+        { filename: 'image_iyhqyo', description: t('multimedia.gallery.img1') },
+        { filename: 'image_tvh8vq', description: t('multimedia.gallery.img2') },
     ], [t]);
 
     const images = useMemo(() => imageList.map((item, index) => {
-        // Check if image should be local (e.g. GIFs that failed upload)
         const isLocal = item.filename.endsWith('.gif');
 
         return {

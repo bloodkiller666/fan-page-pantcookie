@@ -99,7 +99,7 @@ const GamesContent = () => {
         }
     }, [selected]);
 
-    if (selected) {
+    if (selected && playerName) {
         return (
             <div className="min-h-screen bg-[#fff5f9] dark:bg-background-dark bg-grid py-24 px-4 md:px-12 relative overflow-hidden transition-colors duration-300">
                 <div className="relative z-10 max-w-7xl mx-auto">
