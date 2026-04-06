@@ -36,9 +36,9 @@ const Hero = () => {
                 // OceanX Style Title Animation
                 if (titleRef.current) {
                     const chars = splitText(titleRef.current);
-                    gsap.fromTo(chars, 
-                        { 
-                            opacity: 0, 
+                    gsap.fromTo(chars,
+                        {
+                            opacity: 0,
                             filter: 'blur(20px)',
                             scale: 1.2,
                             y: 20
@@ -53,7 +53,7 @@ const Hero = () => {
                             ease: 'power4.out',
                         }
                     );
-                    
+
                     gsap.fromTo(titleRef.current,
                         { letterSpacing: '0.2em' },
                         { letterSpacing: '-0.02em', duration: 1.5, ease: 'power4.out' }
@@ -74,7 +74,7 @@ const Hero = () => {
             // Check if we should wait for loading screen
             const handleLoadingComplete = () => runAnimations();
             window.addEventListener('loading_complete', handleLoadingComplete);
-            
+
             // If loading was already done (verified by session storage), run immediately
             if (sessionStorage.getItem('loading_done_v2')) {
                 // Small timeout to ensure splitText finds the text after t() provides it
@@ -120,7 +120,7 @@ const Hero = () => {
 
             <div className="absolute inset-0 bg-pattern opacity-10 pointer-events-none" />
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-black/20 via-transparent to-black/20 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[var(--poke-bg)] to-transparent pointer-events-none opacity-80" />
+            <div className="absolute bottom-0 left-0 w-full h-1/2 to-transparent pointer-events-none opacity-80" />
 
             <div className="container mx-auto px-4 text-center relative z-10">
                 <div className="inline-block px-6 py-2 rounded-xl border-4 border-black bg-pokemon-yellow text-black text-xs uppercase tracking-[0.2em] font-black mb-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
@@ -129,7 +129,7 @@ const Hero = () => {
 
                 <h1
                     ref={titleRef}
-                    className="hero-title text-5xl md:text-8xl lg:text-9xl font-black mb-8 neon-text-pink tracking-tighter uppercase italic leading-[0.9]"
+                    className="hero-title text-4xl md:text-6xl lg:text-7xl font-black mb-8 neon-text-pink tracking-tighter uppercase italic leading-[0.9] max-w-[15ch] md:max-w-[20ch] mx-auto"
                     style={{ opacity: isMounted ? 1 : 0 }}
                 >
                     {t('home.heroTitle')}

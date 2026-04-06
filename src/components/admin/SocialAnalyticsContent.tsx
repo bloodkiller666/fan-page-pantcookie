@@ -227,6 +227,7 @@ export default function SocialAnalyticsContent() {
                                         borderRadius: '16px',
                                         fontSize: '12px',
                                         fontWeight: 'bold',
+                                        color: '#ffffff',
                                         boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)'
                                     }}
                                     itemStyle={{ padding: '2px 0' }}
@@ -276,7 +277,7 @@ export default function SocialAnalyticsContent() {
                                         ))}
                                     </Pie>
                                     <Tooltip
-                                        contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '12px' }}
+                                        contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '12px', color: '#ffffff' }}
                                         labelStyle={{ display: 'none' }}
                                     />
                                     <Legend verticalAlign="bottom" height={36} />
@@ -303,7 +304,7 @@ export default function SocialAnalyticsContent() {
                                 <YAxis dataKey="name" type="category" stroke="#666" fontSize={10} tickLine={false} axisLine={false} />
                                 <Tooltip
                                     cursor={{ fill: 'transparent' }}
-                                    contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '12px' }}
+                                    contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '12px', color: '#ffffff' }}
                                 />
                                 <Bar
                                     dataKey="total"

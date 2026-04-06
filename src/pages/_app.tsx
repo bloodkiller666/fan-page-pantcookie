@@ -3,7 +3,7 @@ import type { AppProps } from 'next/app';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { CursorProvider } from '../context/CursorContext';
+
 import { LanguageProvider } from '../context/LanguageContext';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
@@ -61,18 +61,16 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <LanguageProvider>
             <TransitionProvider>
-                <CursorProvider>
-                    <TransitionHandler>
-                        <Navbar />
-                        
-                        <main className="min-h-screen">
-                            <Component {...pageProps} />
-                        </main>
+                <TransitionHandler>
+                    <Navbar />
+                    
+                    <main className="min-h-screen">
+                        <Component {...pageProps} />
+                    </main>
 
-                        <Footer />
-                        <ScrollToTop />
-                    </TransitionHandler>
-                </CursorProvider>
+                    <Footer />
+                    <ScrollToTop />
+                </TransitionHandler>
             </TransitionProvider>
         </LanguageProvider>
     );

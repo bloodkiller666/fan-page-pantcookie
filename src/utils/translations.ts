@@ -43,6 +43,8 @@ export const translations = {
             features: {
                 multimediaDesc: "Explora nuestra galería de fotos y videos de la comunidad Pantcookie",
                 gamesDesc: "¡Diviértete con nuestros juegos interactivos y compite en los rankings!",
+                chatDesc: "Habla con nuestro IA oficial y diviértete con la Shake-Gang.",
+                messagesDesc: "Deja un mensaje especial en el muro para que lo vea ShuraHiwa.",
                 aboutDesc: "Conoce más sobre ShuraHiwa y la comunidad Pantcookie"
             }
         },
@@ -563,6 +565,8 @@ export const translations = {
             features: {
                 multimediaDesc: "Explore our photo and video gallery of the Pantcookie community",
                 gamesDesc: "Have fun with our interactive games and compete in the rankings!",
+                chatDesc: "Chat with our official bot and have fun with the Shake-Gang.",
+                messagesDesc: "Leave a special message on the wall for ShuraHiwa to see.",
                 aboutDesc: "Learn more about ShuraHiwa and the Pantcookie community"
             }
         },
@@ -1083,6 +1087,8 @@ export const translations = {
             features: {
                 multimediaDesc: "Pantcookieコミュニティの写真やビデオギャラリーを探索",
                 gamesDesc: "インタラクティブなゲームを楽しんで、ランキングで競い合いましょう！",
+                chatDesc: "公式ボットとチャットして、Shake-Gangで楽しみましょう。",
+                messagesDesc: "ShuraHiwaが見えるように、壁に特別なメッセージを残してください。",
                 aboutDesc: "ShuraHiwaとPantcookieコミュニティについてもっと知る"
             }
         },
@@ -1506,6 +1512,8 @@ export const translations = {
             features: {
                 multimediaDesc: "Explorez notre galerie de photos et vidéos de la communauté Pantcookie",
                 gamesDesc: "Amusez-vous avec nos jeux interactifs et participez aux classements !",
+                chatDesc: "Discutez avec notre bot officiel et amusez-vous avec la Shake-Gang.",
+                messagesDesc: "Laissez un message spécial sur le mur pour que ShuraHiwa puisse le voir.",
                 aboutDesc: "En savoir plus sur ShuraHiwa et la communauté Pantcookie"
             }
         },

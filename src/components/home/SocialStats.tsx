@@ -61,6 +61,17 @@ export default function SocialStats() {
         fetchYoutubeStats();
         fetchDiscordStats();
         fetchTwitchStats();
+
+        // 4. Auto-sync (Background)
+        const triggerAutoSync = async () => {
+            try {
+                // We just "poke" the endpoint, it will decide if a sync is needed.
+                await fetch('/api/social/auto-sync');
+            } catch (e) {
+                // Silently fail as this is a background task
+            }
+        };
+        triggerAutoSync();
     }, [API_KEY, CHANNEL_ID]);
 
     useEffect(() => {

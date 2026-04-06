@@ -365,7 +365,7 @@ export default function Home() {
                         {!isLoading && <YouTubeFeedComponent />}
                     </div>
                 </section>
-                <UpdateModal />
+                <UpdateModal parentLoading={isLoading} />
             </div>
         </>
     );

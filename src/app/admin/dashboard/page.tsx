@@ -376,43 +376,6 @@ export default function AdminDashboard() {
 
                 {/* Main Content Area */}
                 <div className="col-span-12 lg:col-span-8 flex flex-col gap-6">
-                    {/* Top Stats Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {/* CAMBIO: Cards con fondo blanco sólido, borde zinc-200 y sombra suave en light mode */}
-                        <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 p-8 rounded-3xl border border-primary/30 shadow-[0_10px_30px_-10px_rgba(255,31,142,0.1)] dark:shadow-[0_0_15px_rgba(255,31,142,0.1)] relative overflow-hidden group">
-                            <div className="flex items-center justify-between mb-6 relative z-10">
-                                <span className="text-[10px] font-bold tracking-widest text-primary uppercase">{t('admin.status.totalRecords')}</span>
-                                <MdGroups className="text-primary/60 dark:text-primary/40" />
-                            </div>
-                            <div className="flex items-end gap-2 relative z-10">
-                                {/* CAMBIO: Texto principal zinc-950 en light mode */}
-                                <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">{activeTab === 'scores' ? scores.length : messages.length}</h3>
-                                <span className="text-xs text-[#39ff14] mb-1 font-bold">+Live</span>
-                            </div>
-                        </div>
-                        <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 p-8 rounded-3xl border border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none relative overflow-hidden group">
-                            <div className="flex items-center justify-between mb-6">
-                                <span className="text-[10px] font-bold tracking-widest text-[#00c2cc] dark:text-[#00f2ff] uppercase">{t('admin.status.activeSessions')}</span>
-                                <MdSensors className="text-[#00c2cc]/60 dark:text-[#00f2ff]/40" />
-                            </div>
-                            <div className="flex items-end gap-2">
-                                <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">1,204</h3>
-                                <span className="text-xs text-[#00c2cc] dark:text-[#00f2ff] mb-1 font-bold">Online</span>
-                            </div>
-                        </div>
-                        <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 p-8 rounded-3xl border border-zinc-200 dark:border-white/5 shadow-sm dark:shadow-none relative overflow-hidden group">
-                            <div className="flex items-center justify-between mb-6">
-                                {/* CAMBIO: Texto de categoría zinc-600 en light mode */}
-                                <span className="text-[10px] font-bold tracking-widest text-zinc-600 dark:text-slate-400 uppercase">{t('admin.status.uptime')}</span>
-                                <MdDns className="text-zinc-500 dark:text-slate-400/40" />
-                            </div>
-                            <div className="flex items-end gap-2">
-                                <h3 className="text-4xl font-display font-black text-zinc-950 dark:text-white">99.9<span className="text-sm opacity-50">%</span></h3>
-                                {/* CAMBIO: Texto secundario zinc-600 en light mode */}
-                                <span className="text-xs text-zinc-600 dark:text-slate-400 mb-1 font-mono">24d 5h</span>
-                            </div>
-                        </div>
-                    </div>
 
                     {/* Data Table Section */}
                     {activeTab !== 'analytics' && activeTab !== 'moderation' ? (
