@@ -2,12 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
-import { FiX, FiCheck, FiCpu, FiCalendar, FiImage, FiYoutube, FiInfo, FiMusic, FiSmartphone, FiVideo, FiMessageSquare } from 'react-icons/fi';
-import { FaGamepad } from "react-icons/fa";
-import { BiWorld } from "react-icons/bi";
-import { MdSecurity } from "react-icons/md";
-import { MdCatchingPokemon } from 'react-icons/md';
-
 export default function UpdateModal({ parentLoading }: { parentLoading: boolean }) {
     const [isOpen, setIsOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -54,39 +48,39 @@ export default function UpdateModal({ parentLoading }: { parentLoading: boolean 
                                 className="absolute top-6 right-6 p-2 bg-black/20 hover:bg-black/40 rounded-full transition-all hover:rotate-90 text-white border border-white/10 z-50 cursor-pointer"
                                 aria-label="Close"
                             >
-                                <FiX size={24} />
+                                <i className="hn hn-times text-2xl" />
                             </button>
                         </div>
 
                         <div className="p-8 max-h-[55vh] overflow-y-auto custom-scrollbar bg-grid-light dark:bg-grid-white">
                             <div className="space-y-6">
                                 <SectionItem
-                                    icon={<FiCpu className="text-neon-pink" />}
+                                    icon={<i className="hn hn-retro-pc text-neon-pink" />}
                                     title="Inicio"
                                     desc="Mejoras en la carga y bienvenida al sitio."
                                 />
                                 <SectionItem
-                                    icon={<FiMusic className="text-neon-cyan" />}
+                                    icon={<i className="hn hn-music text-neon-cyan" />}
                                     title="Multimedia"
                                     desc="Buscador inteligente y letras automáticas."
                                 />
                                 <SectionItem
-                                    icon={<FaGamepad className="text-neon-volt" />}
+                                    icon={<i className="hn hn-gaming text-neon-volt" />}
                                     title="Juegos"
                                     desc="Registro obligatorio para mayor seguridad."
                                 />
                                 <SectionItem
-                                    icon={<FiMessageSquare className="text-purple-500" />}
+                                    icon={<i className="hn hn-message text-purple-500" />}
                                     title="Mensajes"
                                     desc="Soporte total de emojis y muro optimizado."
                                 />
                                 <SectionItem
-                                    icon={<FiSmartphone className="text-blue-500" />}
+                                    icon={<i className="hn hn-retro-pc text-blue-500" />}
                                     title="General"
                                     desc="Mejoras de rendimiento y diseño móvil."
                                 />
                                 <SectionItem
-                                    icon={<MdSecurity className="text-red-500" />}
+                                    icon={<i className="hn hn-lock text-red-500" />}
                                     title="Legal"
                                     desc="Actualización de términos y privacidad."
                                 />
@@ -99,7 +93,7 @@ export default function UpdateModal({ parentLoading }: { parentLoading: boolean 
                                 onClick={handleClose}
                                 className="w-full py-5 bg-[#7000ff] hover:bg-[#8215ff] text-white font-black uppercase tracking-[0.2em] rounded-2xl border-b-8 border-black shadow-2xl transition-all active:border-b-0 active:translate-y-2 group flex items-center justify-center gap-3"
                             >
-                                <FiCheck size={28} className="group-hover:scale-125 transition-transform" />
+                                <i className="hn hn-check text-3xl group-hover:scale-125 transition-transform" />
                                 Acceder al Sistema
                             </button>
                             <p className="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest opacity-50">

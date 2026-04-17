@@ -23,6 +23,7 @@ export default function Faq() {
       <Head>
         <title>{t('footer.legal.faqTitle') || 'Preguntas Frecuentes'} | SHAKE-GANG</title>
         <meta name="description" content="Centro de soporte y preguntas frecuentes de SHAKE-GANG." />
+        <link rel="icon" href="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png" />
       </Head>
 
       {/* Background Decoration */}

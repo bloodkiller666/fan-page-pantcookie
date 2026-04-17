@@ -86,7 +86,23 @@ export default {
             "on-surface-variant": "#bda3b8"
           },
         },
+        fontSize: {
+          'xs': ['0.525rem', { lineHeight: '0.8rem' }],
+          'sm': ['0.6125rem', { lineHeight: '1rem' }],
+          'base': ['0.7rem', { lineHeight: '1.2rem' }],
+          'lg': ['0.7875rem', { lineHeight: '1.3rem' }],
+          'xl': ['0.875rem', { lineHeight: '1.4rem' }],
+          '2xl': ['1.05rem', { lineHeight: '1.5rem' }],
+          '3xl': ['1.3125rem', { lineHeight: '1.7rem' }],
+          '4xl': ['1.575rem', { lineHeight: '2rem' }],
+          '5xl': ['2.1rem', { lineHeight: '1' }],
+          '6xl': ['2.625rem', { lineHeight: '1' }],
+          '7xl': ['3.15rem', { lineHeight: '1' }],
+          '8xl': ['4.2rem', { lineHeight: '1' }],
+          '9xl': ['5.6rem', { lineHeight: '1' }],
+        },
         fontFamily: {
+          '8-bit': ['"8-bit HUD"', 'sans-serif'],
           poppins: ['Poppins', 'sans-serif'],
           pixel: ['"Press Start 2P"', 'cursive'],
           shake: ["Plus Jakarta Sans", "sans-serif"],

@@ -1,12 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap');
+/* @import url('https://fonts.cdnfonts.com/css/8-bit-hud'); */
+@import '../node_modules/@hackernoon/pixel-icon-library/fonts/iconfont.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   body {
-    @apply font-poppins bg-[var(--poke-bg)] text-[var(--poke-text)] transition-colors duration-300;
+    @apply font-8-bit bg-[var(--poke-bg)] text-[var(--poke-text)] transition-colors duration-300;
+    image-rendering: pixelated;
+  }
+
+  /* Force ONLY the 8-bit font-family globally, preserving all other Tailwind typography */
+  *, *::before, *::after {
+    font-family: '8-bit HUD', 'Press Start 2P', 'DotGothic16', sans-serif !important;
   }
 }
 
@@ -26,22 +34,17 @@
   --poke-text: #ffffff;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap');
+
 
 [data-theme='pokemon'] {
-  font-family: 'Press Start 2P', 'DotGothic16', cursive;
+  font-family: '8-bit HUD', 'Press Start 2P', 'DotGothic16', cursive;
 }
 
-@layer base {
-  body {
-    @apply font-poppins bg-[var(--poke-bg)] text-[var(--poke-text)] transition-colors duration-300;
-  }
 
   /* Padding top controlado individualmente por cada página */
   main, .page-container {
     padding-top: 70px;
   }
-}
 
 @layer components {
 

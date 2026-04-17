@@ -43,6 +43,11 @@ export default function Terms() {
 
   return (
     <div className="bg-background-light dark:bg-[#0a0510] font-display text-zinc-900 dark:text-[#f8f7ff] min-h-screen relative overflow-x-hidden selection:bg-[#ff007f] selection:text-white transition-colors duration-300">
+      <Head>
+        <title>{t('footer.legal.termsTitle') || 'Términos y Condiciones'} | SHAKE-GANG</title>
+        <meta name="description" content="Términos y condiciones de uso de SHAKE-GANG." />
+        <link rel="icon" href="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png" />
+      </Head>
       {/* Ambient Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#ff007f]/10 blur-[150px] rounded-full animate-[pulse_3s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>

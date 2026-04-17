@@ -11,7 +11,6 @@ import WeeklyCalendar from '../components/home/WeeklyCalendar';
 import YouTubeFeedComponent from '../components/home/YouTubeFeedComponent';
 import UpdateModal from '../components/home/UpdateModal';
 import HeartsEffect from '../components/ui/HeartsEffect';
-import { FiYoutube, FiImage, FiTarget, FiInfo, FiMessageSquare, FiMail } from 'react-icons/fi';
 import { splitText, blurReveal } from '../utils/animations';
 import { useTransition } from '../context/TransitionContext';
 
@@ -171,7 +170,7 @@ export default function Home() {
         {
             title: t('nav.multimedia'),
             description: t('home.features.multimediaDesc'),
-            icon: FiImage,
+            icon: 'hn-image',
             link: '/multimedia',
             color: 'border-primary-pink text-primary-pink shadow-[0_0_20px_rgba(255,46,151,0.2)]',
             image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/ShuraHiwa%20RnC%20by%20Parkiranhonda.png'
@@ -179,7 +178,7 @@ export default function Home() {
         {
             title: t('nav.games'),
             description: t('home.features.gamesDesc'),
-            icon: FiTarget,
+            icon: 'hn-gaming',
             link: '/games',
             color: 'border-primary-blue text-primary-blue shadow-[0_0_20px_rgba(46,151,255,0.2)]',
             image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/by%20toba_ww%201.png'
@@ -187,7 +186,7 @@ export default function Home() {
         {
             title: t('nav.chat'),
             description: t('home.features.chatDesc'),
-            icon: FiMessageSquare,
+            icon: 'hn-message',
             link: '/chat',
             color: 'border-cyan-400 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.2)]',
             image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/ShuraHiwas_Summer_2025.jpg'
@@ -195,7 +194,7 @@ export default function Home() {
         {
             title: t('nav.mensajes'),
             description: t('home.features.messagesDesc'),
-            icon: FiMail,
+            icon: 'hn-envelope',
             link: '/mensajes',
             color: 'border-amber-400 text-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.2)]',
             image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Recording-2026-03-20-21-04-03.png'
@@ -203,7 +202,7 @@ export default function Home() {
         {
             title: t('nav.about'),
             description: t('home.features.aboutDesc'),
-            icon: FiInfo,
+            icon: 'hn-info-circle',
             link: '/about',
             color: 'border-purple-500 text-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.2)]',
             image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Tanabata1_by_higashibara_n.png'
@@ -294,7 +293,7 @@ export default function Home() {
 
                         <div className="space-y-32">
                             {features.map((feature, index) => {
-                                const Icon = feature.icon;
+                                const iconClass = feature.icon;
                                 const isEven = index % 2 === 0;
                                 return (
                                     <div
@@ -316,7 +315,7 @@ export default function Home() {
 
                                             <div className="absolute bottom-6 left-6 flex items-center gap-4">
                                                 <div className={`p-4 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10 ${feature.color}`}>
-                                                    <Icon className="w-8 h-8" />
+                                                    <i className={`hn ${iconClass} w-8 h-8 flex items-center justify-center text-2xl`} />
                                                 </div>
                                                 <h3 className="text-3xl font-black text-white italic uppercase">{feature.title}</h3>
                                             </div>
@@ -352,7 +351,7 @@ export default function Home() {
                     <div className="container mx-auto px-6 md:px-4 text-center">
                         <div className="mb-20">
                             <h2 className="text-3xl md:text-6xl font-black text-white uppercase tracking-tight italic flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 w-full max-w-7xl mx-auto">
-                                <FiYoutube className="fi-youtube-icon text-red-600 drop-shadow-[0_0_20px_rgba(255,0,0,0.5)] shrink-0 text-5xl md:text-7xl" />
+                                <i className="hn hn-youtube fi-youtube-icon text-red-600 drop-shadow-[0_0_20px_rgba(255,0,0,0.5)] shrink-0 text-5xl md:text-7xl" />
                                 <span className="text-center md:text-left leading-none">
                                     Últimas <span className="text-red-600">Novedades</span>
                                 </span>

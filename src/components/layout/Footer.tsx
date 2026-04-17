@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import { FiX, FiHelpCircle, FiFileText, FiShield, FiAlertCircle } from 'react-icons/fi';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTransition } from '../../context/TransitionContext';
 
@@ -41,7 +40,7 @@ const Footer = () => {
                                     className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group"
                                     onClick={(e) => handleNav(e, '/legal/terms')}
                                 >
-                                    <FiFileText className="group-hover:text-[#ff00ff] transition-colors" />
+                                    <i className="hn hn-newspaper group-hover:text-[#ff00ff] transition-colors" />
                                     {t('footer.terms') || "Términos y Condiciones"}
                                 </Link>
                             </li>
@@ -51,7 +50,7 @@ const Footer = () => {
                                     className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group"
                                     onClick={(e) => handleNav(e, '/legal/privacy')}
                                 >
-                                    <FiShield className="group-hover:text-[#ff00ff] transition-colors" />
+                                    <i className="hn hn-lock group-hover:text-[#ff00ff] transition-colors" />
                                     {t('footer.privacy') || "Privacidad"}
                                 </Link>
                             </li>
@@ -68,7 +67,7 @@ const Footer = () => {
                                     className="text-gray-400 hover:text-white hover:text-[#ff00ff] transition-colors text-sm flex items-center gap-2 group"
                                     onClick={(e) => handleNav(e, '/legal/faq')}
                                 >
-                                    <FiHelpCircle className="group-hover:text-[#ff00ff] transition-colors" />
+                                    <i className="hn hn-question-circle group-hover:text-[#ff00ff] transition-colors" />
                                     {t('footer.faq') || "FAQ"}
                                 </Link>
                             </li>

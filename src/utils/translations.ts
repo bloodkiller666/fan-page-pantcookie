@@ -60,7 +60,7 @@ export const translations = {
             gallery: {
                 img1: "Este arte me lo habian pedido colocar en la anterior versión, pero preferí guardarlo para una mejor ocasión. Quién quisiera tener una flor amarilla en este aniversario.",
                 img2: "Me encantó mucho este arte porque así la vemos cuando haces tus karaokes o practicas para algún cover.",
-                img3: "",
+                img3: "Un 12 de abril dejaste de ser una pantera y te convertiste en una conejita solo por ese día, nos encantó mucho tu outfit te luciste demasiado. Estuvo muy cute.",
                 fanArt: "Fan Art"
             }
         },
@@ -304,7 +304,14 @@ export const translations = {
             placeholder: "Escribe un mensaje",
             finished: "El chat ha finalizado",
             typing: "Escribiendo...",
-            exitMessage: "¡Hasta luego! Fue un gusto charlar. 👋"
+            exitMessage: "¡Hasta luego! Fue un gusto charlar. 👋",
+            welcomeName: "Pantcookie IA",
+            welcomeMessage: "¡Hola! Soy Pantcookie IA, la inteligencia artificial de la ShakeGang. 🤖🍪",
+            serverError: "El servidor tuvo un problema. Intenta más tarde. 🍪",
+            parseError: "No pude entender la respuesta del servidor. 🍪",
+            connectionError: "¡Ups! Parece que tengo un problema de conexión. 🔌🍪",
+            imageSizeError: "La imagen es muy pesada (máx 5MB). 🍪",
+            imageReadError: "No pude procesar la imagen. 🍪"
         },
         about: {
             title: "Sobre Nosotros",
@@ -826,7 +833,14 @@ export const translations = {
             placeholder: "Type a message",
             finished: "Chat finished",
             typing: "Typing...",
-            exitMessage: "Goodbye! It was a pleasure chatting. 👋"
+            exitMessage: "Goodbye! It was a pleasure chatting. 👋",
+            welcomeName: "Pantcookie AI",
+            welcomeMessage: "Hi! I'm Pantcookie AI, the official ShakeGang intelligence. 🤖🍪",
+            serverError: "The server encountered an issue. Try again later. 🍪",
+            parseError: "I couldn't understand the server's response. 🍪",
+            connectionError: "Oops! It seems I have a connection problem. 🔌🍪",
+            imageSizeError: "Image is too large (max 5MB). 🍪",
+            imageReadError: "Could not process the image. 🍪"
         },
         about: {
             title: "About Us",
@@ -1348,7 +1362,14 @@ export const translations = {
             placeholder: "メッセージを入力してください",
             finished: "チャットが終了しました",
             typing: "入力中...",
-            exitMessage: "さようなら！お話しできて楽しかったです。👋"
+            exitMessage: "さようなら！お話しできて楽しかったです。👋",
+            welcomeName: "パントクッキーAI",
+            welcomeMessage: "こんにちは！私はパントクッキーAI、ShakeGangの公式人工知能です。 🤖🍪",
+            serverError: "サーバーに問題が発生しました。後でもう一度お試しください。 🍪",
+            parseError: "サーバーの応答を理解できませんでした。 🍪",
+            connectionError: "おっと！接続に問題があるようです。 🔌🍪",
+            imageSizeError: "画像が大きすぎます（最大5MB）。 🍪",
+            imageReadError: "画像を処理できませんでした。 🍪"
         },
         about: {
             title: "私たちについて",
@@ -1757,7 +1778,14 @@ export const translations = {
             placeholder: "Écrire un message",
             finished: "Le chat est terminé",
             typing: "En train d'écrire...",
-            exitMessage: "Au revoir ! Ce fut un plaisir de discuter. 👋"
+            exitMessage: "Au revoir ! Ce fut un plaisir de discuter. 👋",
+            welcomeName: "Pantcookie IA",
+            welcomeMessage: "Bonjour ! Je suis Pantcookie IA, l'intelligence artificielle de la ShakeGang. 🤖🍪",
+            serverError: "Le serveur a rencontré un problema. Réessayez plus tard. 🍪",
+            parseError: "Je n'ai pas pu comprendre la réponse du serveur. 🍪",
+            connectionError: "Oups ! Il semble que j'aie un problème de connexion. 🔌🍪",
+            imageSizeError: "L'image est trop lourde (max 5Mo). 🍪",
+            imageReadError: "Je n'ai pas pu traiter l'image. 🍪"
         },
         about: {
             title: "À Propos de Nous",

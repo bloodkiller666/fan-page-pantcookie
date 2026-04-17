@@ -8,15 +8,6 @@ import ShuraRunGame from '../components/game/shura-run/ShuraRunGame';
 import PlayerInput from '../components/game/PlayerInput';
 import { useLanguage } from '../context/LanguageContext';
 import Image from 'next/image';
-import {
-    FaWifi,
-    FaThLarge,
-    FaPlusCircle,
-    FaGlobeAmericas,
-    FaNewspaper,
-    FaChevronRight
-} from 'react-icons/fa';
-import { FaBatteryEmpty, FaBatteryQuarter, FaBatteryHalf, FaBatteryThreeQuarters, FaBatteryFull } from 'react-icons/fa';
 
 const GamesContent = () => {
     const { t } = useLanguage();
@@ -28,11 +19,12 @@ const GamesContent = () => {
     const containerRef = useRef(null);
     const [batteryLevel, setBatteryLevel] = useState(() => Math.floor(Math.random() * (100 - 20 + 1)) + 20);
     const getBatteryIcon = (level: number) => {
-        if (level > 90) return <FaBatteryFull size={24} className="text-neon-volt" />;
-        if (level > 60) return <FaBatteryThreeQuarters size={24} className="text-neon-volt" />;
-        if (level > 30) return <FaBatteryHalf size={24} className="text-neon-volt" />;
-        if (level > 10) return <FaBatteryQuarter size={24} className="text-neon-pink animate-pulse" />;
-        return <FaBatteryEmpty size={24} className="text-neon-pink animate-bounce" />;
+        const iconBase = "hn hn-bolt text-2xl ";
+        if (level > 90) return <i className={iconBase + "text-neon-volt"} />;
+        if (level > 60) return <i className={iconBase + "text-neon-volt opacity-80"} />;
+        if (level > 30) return <i className={iconBase + "text-neon-volt opacity-60"} />;
+        if (level > 10) return <i className={iconBase + "text-neon-pink animate-pulse"} />;
+        return <i className={iconBase + "text-neon-pink animate-bounce"} />;
     };
 
     useEffect(() => {
@@ -138,7 +130,7 @@ const GamesContent = () => {
 
                 <div className="flex items-center gap-4 md:gap-8">
                     <div className="hidden sm:flex items-center gap-4 text-zinc-500 dark:text-white/70">
-                        <FaWifi size={22} className="text-neon-cyan animate-pulse" />
+                        <i className="hn hn-wifi text-2xl text-neon-cyan animate-pulse" />
                         <div className="flex items-center gap-2">
                             {getBatteryIcon(batteryLevel)}
                             <span className={`text-sm font-bold italic ${batteryLevel <= 30 ? 'text-neon-pink' : 'text-zinc-900 dark:text-white'}`}>
@@ -156,8 +148,8 @@ const GamesContent = () => {
                         Mis <span className="text-primary-pink neon-text-pink">Juegos</span>
                     </h1>
                     <div className="flex gap-2">
-                        <button className="bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 p-2 rounded-lg border border-zinc-200 dark:border-white/10 transition-colors text-zinc-600 dark:text-white">
-                            <FaThLarge size={20} />
+                        <button className="bg-zinc-100 dark:bg-white/5 hover:bg-zinc-200 dark:hover:bg-white/10 p-2 rounded-lg border border-zinc-200 dark:border-white/10 transition-colors text-zinc-600 dark:text-white flex items-center justify-center">
+                            <i className="hn hn-grid text-xl" />
                         </button>
                     </div>
                 </div>
@@ -209,7 +201,7 @@ const GamesContent = () => {
 
                     {/* Add New Game - Ahora es visible y no "fantasma" */}
                     <div className="game-card group relative aspect-square border-2 border-dashed border-zinc-300 dark:border-white/10 rounded-2xl flex flex-col items-center justify-center gap-4 hover:border-zinc-400 dark:hover:border-white/30 hover:bg-zinc-100 dark:hover:bg-white/5 transition-all cursor-help">
-                        <FaPlusCircle className="text-5xl text-zinc-300 dark:text-white/10 group-hover:text-zinc-400 dark:group-hover:text-white/30 transition-colors" />
+                        <i className="hn hn-plus text-5xl text-zinc-300 dark:text-white/10 group-hover:text-zinc-400 dark:group-hover:text-white/30 transition-colors" />
                         <span className="text-zinc-400 dark:text-white/20 font-bold uppercase tracking-[0.2em] italic text-[10px]">Library Locked</span>
                     </div>
                 </div>
@@ -219,15 +211,15 @@ const GamesContent = () => {
                 <div className="flex gap-4">
                     <div className="flex items-center gap-6 px-6 py-3 bg-zinc-100/50 dark:bg-white/5 rounded-full border border-zinc-200 dark:border-white/10 backdrop-blur-md shadow-[0_0_20px_rgba(0,0,0,0.05)] dark:shadow-[0_0_20px_rgba(0,0,0,0.3)]">
                         <div className="flex items-center gap-2 hover:text-neon-pink cursor-pointer transition-colors group">
-                            <FaGlobeAmericas className="text-neon-pink group-hover:scale-110 transition-transform" />
+                            <i className="hn hn-globe text-neon-pink group-hover:scale-110 transition-transform" />
                             <span className="text-zinc-600 dark:text-white/80 text-[10px] font-black uppercase italic tracking-widest">Online</span>
                         </div>
                         <div className="flex items-center gap-2 hover:text-neon-cyan cursor-pointer transition-colors group border-l border-zinc-300 dark:border-white/10 pl-6">
-                            <FaNewspaper className="text-neon-cyan group-hover:scale-110 transition-transform" />
+                            <i className="hn hn-newspaper text-neon-cyan group-hover:scale-110 transition-transform" />
                             <span className="text-zinc-600 dark:text-white/80 text-[10px] font-black uppercase italic tracking-widest">News</span>
                         </div>
                         <div className="flex items-center gap-2 hover:text-neon-volt cursor-pointer transition-colors group border-l border-zinc-300 dark:border-white/10 pl-6">
-                            <FaChevronRight className="rotate-90 text-neon-volt group-hover:translate-x-1 transition-transform" />
+                            <i className="hn hn-angle-right rotate-90 text-neon-volt group-hover:translate-x-1 transition-transform" />
                             <span className="text-zinc-600 dark:text-white/80 text-[10px] font-black uppercase italic tracking-widest">Shop</span>
                         </div>
                     </div>

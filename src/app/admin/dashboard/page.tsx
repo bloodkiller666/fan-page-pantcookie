@@ -30,11 +30,6 @@ export default function AdminDashboard() {
     });
     const [recentActivity, setRecentActivity] = useState<any[]>([]);
     const [showAnalytics, setShowAnalytics] = useState(false);
-
-
-    // Removed client-side password exposure (NEXT_PUBLIC_ADMIN_PASSWORD) for security compliance.
-
-    // Activity Logger
     const logActivity = (action: string, detail: string, type: 'auth' | 'sync' | 'refresh' | 'edit' | 'delete') => {
         const newActivity = {
             id: Date.now(),
@@ -48,7 +43,6 @@ export default function AdminDashboard() {
         localStorage.setItem('admin_activity', JSON.stringify(updatedActivity));
     };
 
-    // Auth Check (Server-Side)
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -80,9 +74,12 @@ export default function AdminDashboard() {
             try {
                 const res = await fetch('/api/admin/check');
                 if (res.ok) {
-                    setIsAuthenticated(true);
-                    fetchScores();
-                    fetchMessages();
+                    const data = await res.json();
+                    if (data.authenticated) {
+                        setIsAuthenticated(true);
+                        fetchScores();
+                        fetchMessages();
+                    }
                 }
             } catch (error) {
                 console.error('Auth check failed:', error);
@@ -90,12 +87,10 @@ export default function AdminDashboard() {
         };
         checkAuth();
 
-        // Load Activity
         const savedActivity = localStorage.getItem('admin_activity');
         if (savedActivity) {
             setRecentActivity(JSON.parse(savedActivity));
         } else {
-            // Default initial activities
             const initial = [
                 { id: 1, action: 'Admin', detail: 'logged in', type: 'auth', timestamp: new Date().toISOString() },
                 { id: 2, action: 'System DB', detail: 'Synced', type: 'sync', timestamp: new Date().toISOString() }
@@ -103,7 +98,6 @@ export default function AdminDashboard() {
             setRecentActivity(initial);
         }
 
-        // Random Hardware Stats
         setHardwareStats({
             cpu: Math.floor(Math.random() * (40 - 15 + 1)) + 15,
             memory: Math.floor(Math.random() * (75 - 45 + 1)) + 45,
@@ -112,14 +106,12 @@ export default function AdminDashboard() {
         });
     }, []);
 
-    // Messages Fetching
     const fetchMessages = async () => {
         const msgs = await getAllWallMessages();
         setMessages(msgs);
         logActivity('Messages', 'Refreshed', 'refresh');
     };
 
-    // Message CRUD
     const handleDeleteMessage = async (id: string) => {
         if (!confirm(t('admin.moderation.confirmDeleteMessage') || '¿Estás seguro de eliminar este mensaje?')) return;
 
@@ -231,19 +223,14 @@ export default function AdminDashboard() {
 
     if (!isAuthenticated) {
         return (
-            // CAMBIO: Fondo principal ligeramente más oscuro en light mode para contraste (bg-zinc-50)
             <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-background-dark p-6 transition-colors duration-300 relative overflow-hidden">
-                {/* Fondo de rejilla ciberpunk adaptado para light mode */}
                 <div className="absolute inset-0 cyber-grid-bg bg-[radial-gradient(circle,rgba(255,31,142,0.1)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,31,142,0.08)_1px,transparent_1px)] opacity-60 dark:opacity-30 pointer-events-none data-grid-bg"></div>
-
-                {/* CAMBIO: Panel de login con fondo blanco sólido en light mode (bg-white), bordes más oscuros y sombra pronunciada */}
                 <form onSubmit={handleLogin} className="relative z-10 glass-panel bg-white dark:bg-slate-900/40 p-10 rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] dark:shadow-2xl w-full max-w-md border border-zinc-200 dark:border-white/10 backdrop-blur-xl">
                     <div className="flex justify-center mb-8">
                         <div className="w-16 h-16 bg-gradient-to-br from-primary to-purple-600 rounded-2xl flex items-center justify-center rotate-3 shadow-[0_0_20px_rgba(255,31,142,0.4)]">
                             <FiMonitor className="text-white text-3xl" />
                         </div>
                     </div>
-                    {/* CAMBIO: Texto del logo forzado a zinc-950 en light mode */}
                     <h2 className="text-3xl font-display font-black text-center mb-2 tracking-tighter text-zinc-950 dark:text-white uppercase italic">
                         {t('admin.loginTitle').split('-')[0]}-<span className="text-primary glow-text">{t('admin.loginTitle').split('-')[1]}</span>
                     </h2>
@@ -334,7 +321,16 @@ export default function AdminDashboard() {
                             </div>
                             {/* CAMBIO: Contenedor de avatar zinc-200 en light mode */}
                             <div className="w-11 h-11 rounded-full bg-zinc-200 dark:bg-slate-800 flex items-center justify-center border-2 border-primary/50 cursor-pointer hover:scale-105 transition-transform overflow-hidden shadow-[0_0_10px_rgba(255,31,142,0.3)]">
-                                <img alt="User Avatar" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtEzxHfDrJFP0LIH-xX4pA39y9FC6BJGjQHFPBovaG6XKJsGx7IKaznHa-3Bw6W29TpvHglRMcOkNJZk5O29tDTPdo0il1XfU66gyhzltjwRzqe58bXy96Qy8tfg-gz41eHDGrXR0U8djypcDG-23eQswjpC59apEwbmP6ZgqD1Eipxd13u1nJPoUSwM6Pdn6wh3mHJ31IPaJ8uG4wuf5ocmZqzR5bsgpiZ7iWkZMJL4bEgkgSbmr1T4ZUKDOZn0vwcde6arOPuM0" />
+                                <img
+                                    alt="User Avatar"
+                                    className="w-full h-full object-cover"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtEzxHfDrJFP0LIH-xX4pA39y9FC6BJGjQHFPBovaG6XKJsGx7IKaznHa-3Bw6W29TpvHglRMcOkNJZk5O29tDTPdo0il1XfU66gyhzltjwRzqe58bXy96Qy8tfg-gz41eHDGrXR0U8djypcDG-23eQswjpC59apEwbmP6ZgqD1Eipxd13u1nJPoUSwM6Pdn6wh3mHJ31IPaJ8uG4wuf5ocmZqzR5bsgpiZ7iWkZMJL4bEgkgSbmr1T4ZUKDOZn0vwcde6arOPuM0"
+                                    onError={(e) => {
+                                        if (e.currentTarget.src !== 'https://ui-avatars.com/api/?name=Admin&background=random') {
+                                            e.currentTarget.src = 'https://ui-avatars.com/api/?name=Admin&background=random';
+                                        }
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>
@@ -353,7 +349,7 @@ export default function AdminDashboard() {
                         <button onClick={() => setActiveTab('messages')} className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${activeTab === 'messages' ? 'bg-primary/20 text-primary shadow-[0_0_15px_rgba(255,31,142,0.2)]' : 'hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white'}`}>
                             <MdForum />
                         </button>
-                        <button 
+                        <button
                             onClick={() => setActiveTab('analytics')}
                             className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${activeTab === 'analytics' ? 'bg-primary/20 text-primary shadow-[0_0_15px_rgba(255,31,142,0.2)]' : 'hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-all shadow-sm hover:shadow-md'}`}
                         >
@@ -361,7 +357,7 @@ export default function AdminDashboard() {
                         </button>
 
 
-                        <button 
+                        <button
                             onClick={() => setActiveTab('moderation')}
                             className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${activeTab === 'moderation' ? 'bg-primary/20 text-primary shadow-[0_0_15px_rgba(255,31,142,0.2)]' : 'hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white transition-all shadow-sm'}`}
                         >
@@ -588,7 +584,7 @@ export default function AdminDashboard() {
                     ) : activeTab === 'moderation' ? (
                         /* Moderation Center UI */
                         <section className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/60 rounded-3xl overflow-hidden border border-rose-500/20 shadow-2xl flex flex-col animate-in slide-in-from-bottom duration-500">
-                             <div className="p-6 border-b border-rose-500/10 flex items-center justify-between bg-rose-500/5">
+                            <div className="p-6 border-b border-rose-500/10 flex items-center justify-between bg-rose-500/5">
                                 <div className="flex items-center gap-4">
                                     <div className="w-2 h-8 bg-rose-500 rounded-full animate-pulse"></div>
                                     <div>
@@ -625,22 +621,22 @@ export default function AdminDashboard() {
                                                 </div>
                                                 <span className="text-[8px] font-mono opacity-40">{format(new Date(msg.timestamp), 'HH:mm:ss')}</span>
                                             </div>
-                                            
+
                                             <div className="bg-black/5 dark:bg-black/40 p-3 rounded-xl border border-white/5">
                                                 <p className="text-xs text-zinc-700 dark:text-zinc-300 italic italic-serif">&ldquo;{msg.text}&rdquo;</p>
                                             </div>
 
                                             <div className="flex gap-2">
-                                                <button 
+                                                <button
                                                     onClick={() => updateWallMessage(msg.id, { status: 'approved' }).then(() => {
-                                                        logActivity('Moderation', `approved (#${msg.id.substring(0,5)})`, 'edit');
+                                                        logActivity('Moderation', `approved (#${msg.id.substring(0, 5)})`, 'edit');
                                                         fetchMessages();
                                                     })}
                                                     className="flex-grow py-2 rounded-lg bg-emerald-500/10 text-emerald-500 text-[10px] font-black uppercase hover:bg-emerald-500 hover:text-white transition-all border border-emerald-500/20"
                                                 >
                                                     {t('admin.moderation.approveBtn')}
                                                 </button>
-                                                <button 
+                                                <button
                                                     onClick={() => handleDeleteMessage(msg.id)}
                                                     className="p-2 rounded-lg bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all border border-rose-500/20"
                                                 >

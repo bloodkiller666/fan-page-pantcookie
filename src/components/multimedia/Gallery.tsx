@@ -18,6 +18,7 @@ const Gallery = ({ query = '' }) => {
     const imageList = useMemo(() => [
         { filename: 'image_iyhqyo', description: t('multimedia.gallery.img1') },
         { filename: 'image_tvh8vq', description: t('multimedia.gallery.img2') },
+        { filename: 'image_iyhqyo', description: t('multimedia.gallery.img3') }, // Placeholder temporal para evitar error 404
     ], [t]);
 
     const images = useMemo(() => imageList.map((item, index) => {

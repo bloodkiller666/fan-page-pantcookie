@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { FaYoutube, FaTwitch, FaDiscord, FaTiktok, FaTwitter } from 'react-icons/fa';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { scrambleText } from '../../utils/animations';
@@ -163,7 +162,7 @@ export default function SocialStats() {
     const stats = [
         {
             platform: 'YouTube',
-            icon: <FaYoutube />,
+            icon: 'hn-youtube',
             count: subscribers || 18900,
             label: 'Suscriptores',
             color: 'text-red-600',
@@ -172,7 +171,7 @@ export default function SocialStats() {
         },
         {
             platform: 'Twitch',
-            icon: <FaTwitch />,
+            icon: 'hn-twitch',
             count: twitchFollowers,
             label: 'Seguidores',
             color: 'text-purple-600',
@@ -181,7 +180,7 @@ export default function SocialStats() {
         },
         {
             platform: 'Discord',
-            icon: <FaDiscord />,
+            icon: 'hn-discord',
             count: discordMembers,
             label: 'Miembros',
             color: 'text-indigo-600',
@@ -190,7 +189,7 @@ export default function SocialStats() {
         },
         {
             platform: 'TikTok',
-            icon: <FaTiktok />,
+            icon: 'hn-tiktok',
             count: tiktokFollowers,
             label: 'Seguidores',
             color: 'text-gray-100',
@@ -199,7 +198,7 @@ export default function SocialStats() {
         },
         {
             platform: 'Twitter',
-            icon: <FaTwitter />,
+            icon: 'hn-twitter',
             count: twitterFollowers,
             label: 'Seguidores',
             color: 'text-blue-400',
@@ -240,7 +239,7 @@ export default function SocialStats() {
                         className={`stat-card min-w-[80vw] md:min-w-[35vw] p-8 md:p-12 rounded-[2rem] bg-gradient-to-br from-white/10 to-transparent border border-white/10 backdrop-blur-xl flex flex-col items-center gap-8 text-center ${stat.glow} transition-all duration-500`}
                     >
                         <div className={`social-icon text-7xl ${stat.color} transition-all duration-300`}>
-                            {stat.icon}
+                            <i className={`hn ${stat.icon}`} />
                         </div>
                         
                         <div className="space-y-4">

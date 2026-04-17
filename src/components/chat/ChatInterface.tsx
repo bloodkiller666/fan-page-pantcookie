@@ -6,9 +6,9 @@ import { useLanguage } from '../../context/LanguageContext';
 import { MdAttachFile, MdBolt, MdMic, MdMood, MdPerson, MdSend } from 'react-icons/md';
 
 const ChatInterface = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [messages, setMessages] = useState<any[]>([
-        { id: 1, text: "¡Hola! Soy Pantcookie IA, la inteligencia artificial de la ShakeGang. 🍪🤖", sender: 'bot', time: new Date(), fileUrl: null, fileName: null }
+        { id: 1, text: t('chat.welcomeMessage'), sender: 'bot', time: new Date(), fileUrl: null, fileName: null }
     ]);
     const [inputValue, setInputValue] = useState('');
     const [status, setStatus] = useState('online');
@@ -107,12 +107,13 @@ const ChatInterface = () => {
                 body: JSON.stringify({
                     message: userText,
                     imageUrl: imageToSend?.base64,
-                    intensity: botIntensity
+                    intensity: botIntensity,
+                    lang: language
                 }),
             });
             if (!response.ok) {
                 setIsTyping(false);
-                addMessage("El servidor tuvo un problema. Intenta más tarde. 🍪", 'bot');
+                addMessage(t('chat.serverError'), 'bot');
                 return;
             }
             let data: any = null;
@@ -266,7 +267,7 @@ const ChatInterface = () => {
                         )}
 
                         <div className={`flex flex-col gap-1.5 max-w-[80%] ${msg.sender === 'user' ? 'items-end' : ''}`}>
-                            <span className="text-[10px] font-bold text-primary dark:text-primary uppercase tracking-widest px-1">
+                            <span className="text-[7px] font-bold text-primary dark:text-primary uppercase tracking-widest px-1">
                                 {msg.sender === 'bot' ? 'Pantcookie IA' : 'Usuario'}
                             </span>
 
@@ -274,7 +275,7 @@ const ChatInterface = () => {
                                 ? 'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tr-none'
                                 : 'ai-bubble-gradient border-primary/10 text-slate-800 dark:text-slate-200 rounded-tl-none'
                                 }`}>
-                                {msg.text && <p className="break-words">{msg.text}</p>}
+                                {msg.text && <p className="break-words text-[8px] leading-loose">{msg.text}</p>}
                                 {msg.fileUrl && (
                                     <div className="mt-3">
                                         {(msg.fileName?.match(/\.(jpg|jpeg|png|gif|webp)$/i) || msg.fileUrl.startsWith('blob:') || msg.fileUrl.startsWith('data:image')) ? (

@@ -10,7 +10,7 @@ export async function GET() {
         const token = cookieStore.get('admin_token')?.value;
 
         if (!token) {
-            return NextResponse.json({ authenticated: false }, { status: 401 });
+            return NextResponse.json({ authenticated: false }, { status: 200 });
         }
 
         const encoder = new TextEncoder();
@@ -22,6 +22,6 @@ export async function GET() {
         return NextResponse.json({ 
             authenticated: false, 
             debug: error instanceof Error ? error.message : 'Unknown error' 
-        }, { status: 401 });
+        }, { status: 200 });
     }
 }

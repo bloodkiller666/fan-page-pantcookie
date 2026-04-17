@@ -15,13 +15,14 @@ const VideoPlayer = ({ query = '' }) => {
     const containerRefs = useRef<HTMLDivElement[]>([]);
 
     const videoList = [
-        { id: 'La_creadora_de_la_grasa_yrci3z', title: 'Bautizada como que...' },
+        { id: 'La_creadora_de_la_grasa_yrci3z', title: 'Un video muy grisi' },
         { id: 'Shura_descuido_v2syi0', title: 'Shura Descuido' },
         { id: 'vod-2363747114-offset-2196_bnqebg', title: 'Vuela alto Vomori' },
         { id: 'video-1080_jlejtp', title: 'Vomori vs Rihsuri' },
         { id: 'ULTIMA_CHARLA_CON_MAMA_HIWA_0_t3pihy', title: 'Charlando con Mama Hiwa' },
-        { id: 'Atrapado_con_las_patas_en_la_masa_rubfeo', title: 'El mayor atraco' },
+        { id: 'Atrapado_con_las_patas_en_la_masa_rubfeo', title: 'Poder perruno' },
         { id: 'Shura_Fuera_de_Contexto_pt._1_koknsu', title: 'Fuera de Contexto PARTE 1' },
+        { id: 'ssstwitter.com_1776117025001_uo9ul6', title: '¿Chicos, ahora el Vtubing es así?' },
         { id: 'Shura_Fuera_de_Contexto_pt._2_ei6pfl', title: 'Fuera de Contexto PARTE 2' }
     ];
 

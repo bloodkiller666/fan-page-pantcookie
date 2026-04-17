@@ -3,8 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import ChatInterface from '../components/chat/ChatInterface';
 import { useLanguage } from '../context/LanguageContext';
-import { MdDarkMode, MdHub, MdMoreVert, MdSearch, MdSecurity, MdSettings, MdShowChart } from 'react-icons/md';
-
 const Chat = () => {
     const { t } = useLanguage();
     const containerRef = useRef(null);
@@ -65,14 +63,14 @@ const Chat = () => {
                         <div className="flex items-center gap-3 mb-6">
                             <div className="relative">
                                 <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
-                                    <MdHub className="text-primary text-xl" />
+                                    <i className="hn hn-chart-network text-primary text-xl" />
                                 </div>
                                 <div 
                                     className={`absolute bottom-0 right-0 size-3 rounded-full border-2 border-white dark:border-background-dark flex items-center justify-center transition-all duration-500 cursor-pointer ${isOnline ? 'bg-[#39ff14] shadow-[0_0_10px_#39ff14]' : 'bg-slate-500'}`}
                                     onClick={() => setIsOnline(!isOnline)}
                                     title={isOnline ? "Online" : "Offline"}
                                 >
-                                    {!isOnline && <MdDarkMode className="text-[8px] text-white" />}
+                                    {!isOnline && <i className="hn hn-moon text-[8px] text-white" />}
                                 </div>
                             </div>
                             <div>
@@ -115,7 +113,7 @@ const Chat = () => {
                         <div className="space-y-4">
                             <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
                                 <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center">
-                                    <MdShowChart className="text-primary text-sm" />
+                                    <i className="hn hn-chart-line text-primary text-sm" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Market_Bot_v3</p>
@@ -124,7 +122,7 @@ const Chat = () => {
                             </div>
                             <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
                                 <div className="w-8 h-8 rounded bg-accent-magenta/20 flex items-center justify-center">
-                                    <MdSecurity className="text-accent-magenta text-sm" />
+                                    <i className="hn hn-lock text-accent-magenta text-sm" />
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Shield_Core</p>
@@ -144,7 +142,7 @@ const Chat = () => {
                                     <p className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">Núcleo Navegante</p>
                                     <p className="text-[10px] text-slate-500">Tier: Elite</p>
                                 </div>
-                                <MdSettings className="text-slate-500 text-sm cursor-pointer hover:text-primary transition-colors" />
+                                <i className="hn hn-cog text-slate-500 text-sm cursor-pointer hover:text-primary transition-colors" />
                             </div>
                         </div>
 
@@ -161,7 +159,7 @@ const Chat = () => {
                 </aside>
 
                 {/* Main Chat Area */}
-                <main className="flex-1 flex flex-col relative neural-bg overflow-hidden">
+                <section className="flex-1 flex flex-col relative neural-bg overflow-hidden">
                     {/* Header */}
                     <header className="h-16 flex items-center justify-between px-6 neural-glass border-b border-slate-200 dark:border-slate-800 z-10 animate-fade-in">
                         <div className="flex items-center gap-6">
@@ -175,13 +173,13 @@ const Chat = () => {
                         </div>
                         <div className="flex items-center gap-4">
                             <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 text-slate-500">
-                                <MdSearch className="text-xl" />
+                                <i className="hn hn-search text-xl" />
                             </button>
                             <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-200 dark:hover:bg-white/5 text-slate-500">
-                                <MdMoreVert className="text-xl" />
+                                <i className="hn hn-ellipses-vertical text-xl" />
                             </button>
                             <div className="h-6 w-px bg-slate-300 dark:bg-slate-800 mx-2"></div>
-                            <button className="bg-primary dark:text-white text-background-dark px-4 py-1.5 rounded-lg text-xs font-bold neon-glow-cyan hover:scale-105 transition-transform">
+                            <button className="bg-primary dark:text-white text-background-dark px-4 py-1.5 rounded-lg text-[8px] font-bold neon-glow-cyan hover:scale-105 transition-transform">
                                 UPGRADE LINK
                             </button>
                         </div>
@@ -190,7 +188,7 @@ const Chat = () => {
                     {/* System Message */}
                     <div className="w-full flex justify-center py-4 animate-fade-in">
                         <div className="bg-primary/5 border border-primary/20 px-4 py-1 rounded-full">
-                            <p className="text-[10px] font-bold text-primary tracking-[0.2em] uppercase">
+                            <p className="text-[7px] font-bold text-primary tracking-[0.2em] uppercase">
                                 Encriptación Neuronal: Activado • Estado AI: Óptimo • Link Latency: 1ms
                             </p>
                         </div>
@@ -202,7 +200,7 @@ const Chat = () => {
                             <ChatInterface />
                         </div>
                     </div>
-                </main>
+                </section>
             </div>
         </div>
     );

@@ -9,6 +9,7 @@ const ChatSchema = z.object({
     message: z.string().max(2000).optional(),
     imageUrl: z.string().url().optional(),
     intensity: z.number().min(0.2).max(1.0).optional().default(0.8),
+    lang: z.string().optional().default('es'),
 }).refine(data => data.message || data.imageUrl, {
     message: "Debe proporcionar al menos un mensaje o una imagen."
 });
@@ -102,12 +103,16 @@ export async function POST(req: Request) {
         }, { status: 400 });
     }
 
-    const { message, imageUrl, intensity } = result.data;
+    const { message, imageUrl, intensity, lang } = result.data;
 
     if (process.env.GROQ_API_KEY) {
         try {
             const systemContent = `
                         ${IDENTITY_PROMPT}
+                        
+                        [IDIOMA DE RESPUESTA]
+                        Debes responder obligatoriamente en el idioma: ${lang === 'en' ? 'Inglés (English)' : lang === 'ja' ? 'Japonés (日本語)' : lang === 'fr' ? 'Francés (Français)' : 'Español (Spanish)'}.
+                        No importa en qué idioma te hable el usuario, tú SIEMPRE respondes en este idioma designado.
                         
                         CONTEXTO TEMPORAL:
                         - Fecha y hora actual del servidor: ${new Date().toLocaleString('es-ES', { timeZone: 'America/Lima' })}.

@@ -2,7 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, onSnapshot, where, serverTimestamp, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import DOMPurify from 'dompurify';
 
-
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -107,8 +106,8 @@ export const sendMessage = async (sessionId: string, text: string, sender: 'user
 };
 
 export const subscribeToMessages = (sessionId: string, callback: (messages: any[]) => void) => {
-    if (!sessionId) return () => {};
-    
+    if (!sessionId) return () => { };
+
     const q = query(
         collection(db, 'messages'),
         where('sessionId', '==', sessionId),

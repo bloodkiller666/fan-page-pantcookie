@@ -37,6 +37,11 @@ export default function Privacy() {
 
   return (
     <div ref={scifiRef} className="bg-zinc-50 dark:bg-[#0a0510] min-h-screen text-zinc-900 dark:text-[#f8f7ff] font-sans selection:bg-[#ff007f] selection:text-white transition-colors duration-300">
+      <Head>
+        <title>{t('footer.legal.privacyTitle') || 'Política de Privacidad'} | SHAKE-GANG</title>
+        <meta name="description" content="Política de privacidad de SHAKE-GANG." />
+        <link rel="icon" href="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png" />
+      </Head>
       {/* Background Grids & Scifi Accents */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.02]" style={{ backgroundImage: 'linear-gradient(#ff007f 1px, transparent 1px), linear-gradient(90deg, #ff007f 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>

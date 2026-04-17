@@ -2,11 +2,26 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiHome, FiImage, FiVideo, FiTarget, FiInfo, FiMenu, FiX, FiSun, FiMoon, FiMessageSquare, FiGlobe, FiSend, FiChevronDown, FiMusic } from 'react-icons/fi';
-import { MdCatchingPokemon } from 'react-icons/md';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTransition } from '../../context/TransitionContext';
 import gsap from 'gsap';
+import { ES, US, JP, FR } from 'country-flag-icons/react/3x2';
+
+const PokeballIcon = ({ isDark }: { isDark: boolean }) => (
+    <svg viewBox="0 0 100 100" className="w-6 h-6 transition-transform duration-700 group-hover:rotate-[360deg] drop-shadow-[0_0_8px_rgba(253,33,159,0.4)]">
+        {/* Base: Blanco en light, morado oscuro en dark */}
+        <circle cx="50" cy="50" r="48" fill={isDark ? "#120a1c" : "#ffffff"} stroke="#000000" strokeWidth="6" />
+        {/* Mitad superior: Rosa Pantcookie */}
+        <path d="M2 50 A48 48 0 0 1 98 50 Z" fill="#fd219f" stroke="#000000" strokeWidth="6" />
+        {/* Cinturón negro */}
+        <rect x="2" y="47" width="96" height="6" fill="#000000" />
+        {/* Botón central */}
+        <circle cx="50" cy="50" r="15" fill={isDark ? "#1a1a1a" : "#ffffff"} stroke="#000000" strokeWidth="6" />
+        <circle cx="50" cy="50" r="8" fill="#ffffff" stroke="#000000" strokeWidth="2" className={isDark ? "animate-pulse" : ""} />
+        {/* Reflejo de cristal */}
+        <path d="M25 25 A30 30 0 0 1 40 15" stroke="white" strokeWidth="4" strokeLinecap="round" opacity="0.4" />
+    </svg>
+);
 
 const Navbar = () => {
     const { t, setLanguage, language } = useLanguage();
@@ -43,6 +58,17 @@ const Navbar = () => {
         localStorage.setItem('theme-mode', newTheme);
     };
 
+    // Nav-link Bounce Animation (One-time per session)
+    useEffect(() => {
+        if (!sessionStorage.getItem('navBounced')) {
+            gsap.fromTo('.nav-char',
+                { y: -150, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1.5, ease: 'bounce.out', stagger: 0.04 }
+            );
+            sessionStorage.setItem('navBounced', 'true');
+        }
+    }, []);
+
     // Mobile Menu Animation with GSAP
     useEffect(() => {
         if (!mobileMenuRef.current || !overlayRef.current) return;
@@ -50,47 +76,54 @@ const Navbar = () => {
         if (isMenuOpen) {
             // Open animation
             gsap.to(overlayRef.current, { opacity: 1, display: 'block', duration: 0.3 });
-            gsap.to(mobileMenuRef.current, { x: 0, opacity: 1, duration: 0.5, ease: 'power3.out' });
+            gsap.to(mobileMenuRef.current, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' });
+            
+            // Stagger animation for text items
+            gsap.fromTo('.mobile-stagger-item', 
+                { x: 50, opacity: 0 }, 
+                { x: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.2, ease: 'back.out(1.7)' }
+            );
         } else {
             // Close animation
-            gsap.to(mobileMenuRef.current, { x: '100%', opacity: 0, duration: 0.4, ease: 'power3.in' });
+            gsap.to(mobileMenuRef.current, { x: '100%', opacity: 0, duration: 0.3, ease: 'power3.in' });
             gsap.to(overlayRef.current, { opacity: 0, display: 'none', duration: 0.3 });
+            gsap.set('.mobile-stagger-item', { opacity: 0, x: 50 }); // Reset for next open
         }
     }, [isMenuOpen]);
 
     const navLinks = [
-        { path: '/', label: t('nav.home'), icon: FiHome },
+        { path: '/', label: t('nav.home'), icon: 'hn-home' },
         {
             path: '/multimedia',
             label: t('nav.multimedia'),
-            icon: FiImage,
+            icon: 'hn-image',
             subItems: [
-                { label: t('nav.multimediaPhotos'), path: '/multimedia?tab=images', icon: FiImage },
-                { label: t('nav.multimediaVideos'), path: '/multimedia?tab=videos', icon: FiVideo },
-                { label: t('nav.multimediaCovers'), path: '/multimedia?tab=covers', icon: FiMusic },
+                { label: t('nav.multimediaPhotos'), path: '/multimedia?tab=images', icon: 'hn-image' },
+                { label: t('nav.multimediaVideos'), path: '/multimedia?tab=videos', icon: 'hn-video-camera' },
+                { label: t('nav.multimediaCovers'), path: '/multimedia?tab=covers', icon: 'hn-music' },
             ]
         },
         {
             path: '/games',
             label: t('nav.games'),
-            icon: FiTarget,
+            icon: 'hn-gaming',
             subItems: [
-                { label: t('nav.gamesPuzzle'), path: '/games?game=puzzle', icon: FiTarget },
-                { label: t('nav.gamesTrivia'), path: '/games?game=trivia', icon: FiTarget },
-                { label: t('nav.gamesShuraRun'), path: '/games?game=shuraRun', icon: MdCatchingPokemon },
+                { label: t('nav.gamesPuzzle'), path: '/games?game=puzzle', icon: 'hn-gaming' },
+                { label: t('nav.gamesTrivia'), path: '/games?game=trivia', icon: 'hn-gaming' },
+                { label: t('nav.gamesShuraRun'), path: '/games?game=shuraRun', icon: 'hn-gaming' },
             ]
         },
-        { path: '/chat', label: t('nav.chat'), icon: FiMessageSquare },
+        { path: '/chat', label: t('nav.chat'), icon: 'hn-message' },
         {
             path: '/mensajes',
             label: t('nav.mensajes'),
-            icon: FiSend,
+            icon: 'hn-envelope',
             subItems: [
-                { label: t('nav.mensajesWrite'), path: '/mensajes?view=write', icon: FiSend },
-                { label: t('nav.mensajesRead'), path: '/mensajes?view=read', icon: FiImage },
+                { label: t('nav.mensajesWrite'), path: '/mensajes?view=write', icon: 'hn-edit' },
+                { label: t('nav.mensajesRead'), path: '/mensajes?view=read', icon: 'hn-image' },
             ]
         },
-        { path: '/about', label: t('nav.about'), icon: FiInfo },
+        { path: '/about', label: t('nav.about'), icon: 'hn-info-circle' },
     ];
 
     const handleMouseEnter = (path: string) => {
@@ -120,21 +153,11 @@ const Navbar = () => {
                     className="flex items-center space-x-3 group"
                     onClick={(e) => handleNav(e, '/')}
                 >
-                    <div className="relative group/logo">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-[#00f2ff] to-[#ff00e5] rounded-full opacity-0 group-hover/logo:opacity-50 blur transition-opacity duration-300"></div>
-                        <div className="relative w-10 h-10 rounded-full overflow-hidden border border-[#00f2ff]/30 shadow-holo-glow">
-                            <img
-                                src="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png"
-                                alt="Shake-Gang Logo"
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                    </div>
-                    <div className="hidden md:block">
-                        <h1 className="text-gray-900 dark:text-white text-2xl font-black tracking-tighter italic drop-shadow-holo-glow leading-none">
+                    <div className="hidden md:block transition-all duration-500 transform group-hover:-translate-y-1">
+                        <h1 className="text-gray-900 dark:text-white text-2xl font-black tracking-tighter italic drop-shadow-holo-glow leading-none group-hover:opacity-90 transition-all duration-500 origin-left group-hover:scale-x-110">
                             SHAKE-<span className="text-[#ff00e5]">GANG</span>
                         </h1>
-                        <p className="text-[10px] text-[#009dad] dark:text-[#00f2ff] tracking-[0.3em] uppercase opacity-70">Community Network</p>
+                        <p className="text-[7px] text-[#009dad] dark:text-[#00f2ff] tracking-[0.3em] uppercase opacity-70 transition-all duration-500 group-hover:tracking-[0.6em] group-hover:opacity-100 origin-left group-hover:scale-x-110">Community Network</p>
                     </div>
                 </Link>
 
@@ -159,8 +182,12 @@ const Navbar = () => {
                                     className={`nav-link text-sm transition-all duration-300 hover:text-[#00f2ff] flex items-center gap-2 py-4 ${actualActive ? 'text-[#00a0b0] dark:text-[#00f2ff] border-b-2 border-[#00a0b0] dark:border-[#00f2ff]' : 'text-gray-900 dark:text-white border-b-2 border-transparent hover:border-[#00f2ff]/30'}`}
                                     onClick={(e) => handleNav(e, link.path)}
                                 >
-                                    {link.label.toUpperCase()}
-                                    {hasSubMenu && <FiChevronDown className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />}
+                                    <span className="flex">
+                                        {link.label.toUpperCase().split('').map((char: string, i: number) => (
+                                            <span key={i} className="nav-char inline-block">{char === ' ' ? '\u00A0' : char}</span>
+                                        ))}
+                                    </span>
+                                    {hasSubMenu && <i className={`hn hn-chevron-down transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />}
                                 </Link>
 
                                 {/* Dropdown Menu */}
@@ -178,7 +205,7 @@ const Navbar = () => {
                                                             setActiveDropdown(null);
                                                         }}
                                                     >
-                                                        {sub.icon && <sub.icon className="text-[#00f2ff] text-sm" />}
+                                                        {sub.icon && <i className={`hn ${sub.icon} text-[#00f2ff] text-sm`} />}
                                                         <span>{sub.label}</span>
                                                     </Link>
                                                 ))}
@@ -195,23 +222,23 @@ const Navbar = () => {
                 <div className="flex items-center gap-4">
                     <div className="relative group/lang">
                         <button className="flex items-center gap-2 text-gray-700 dark:text-white/80 hover:text-[#00f2ff] transition-colors p-2 rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
-                            <FiGlobe className="text-lg" />
+                            <i className="hn hn-globe text-lg" />
                             <span className="text-[10px] font-bold uppercase">{language}</span>
                         </button>
-                        <div className="absolute top-full right-0 mt-2 w-40 bg-black/95 border border-[#00f2ff]/30 rounded-xl overflow-hidden opacity-0 invisible group-hover/lang:opacity-100 group-hover/lang:visible transition-all duration-300 z-[100] shadow-[0_10px_30px_rgba(0,242,255,0.2)]">
+                        <div className="absolute top-full right-0 mt-2 w-48 bg-black/95 border border-[#00f2ff]/30 rounded-xl overflow-hidden opacity-0 invisible group-hover/lang:opacity-100 group-hover/lang:visible transition-all duration-300 z-[100] shadow-[0_10px_30px_rgba(0,242,255,0.2)]">
                             {[
-                                { code: 'es', label: 'Español', flag: '🌐' },
-                                { code: 'en', label: 'English', flag: '🇺🇸' },
-                                { code: 'ja', label: '日本語', flag: '🇯🇵' },
-                                { code: 'fr', label: 'Français', flag: '🇫🇷' }
+                                { code: 'es', label: 'Español', Flag: ES },
+                                { code: 'en', label: 'English', Flag: US },
+                                { code: 'ja', label: '日本語', Flag: JP },
+                                { code: 'fr', label: 'Français', Flag: FR }
                             ].map((lang) => (
                                 <button
                                     key={lang.code}
                                     onClick={() => setLanguage(lang.code)}
-                                    className={`w-full px-4 py-3 text-left text-[10px] font-bold uppercase transition-colors hover:bg-[#00f2ff]/20 flex items-center gap-3 ${language === lang.code ? 'text-[#00f2ff] bg-[#00f2ff]/10' : 'text-white'}`}
+                                    className={`w-full px-4 py-3 text-left text-[10px] font-bold uppercase transition-colors hover:bg-[#00f2ff]/20 flex items-center justify-between ${language === lang.code ? 'text-[#00f2ff] bg-[#00f2ff]/10' : 'text-white'}`}
                                 >
-                                    <span className="text-sm scale-125">{lang.flag}</span>
                                     <span>{lang.label}</span>
+                                    <span className="w-6 shadow-sm"><lang.Flag /></span>
                                 </button>
                             ))}
                         </div>
@@ -219,14 +246,15 @@ const Navbar = () => {
 
                     <button
                         onClick={toggleTheme}
-                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-indigo-900 border-[#00f2ff]' : 'bg-red-600 border-white'} border-2 shadow-holo-glow hover:scale-110 active:scale-95 group relative overflow-hidden`}
+                        className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${theme === 'dark' ? 'bg-zinc-800 border-[#00f2ff]' : 'bg-zinc-100 border-red-500'} border-2 shadow-holo-glow hover:scale-110 active:scale-95 group relative overflow-hidden`}
+                        title={theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
                     >
-                        <MdCatchingPokemon className={`text-xl transition-all duration-500 ${theme === 'dark' ? 'text-white rotate-0' : 'text-white rotate-180'}`} />
-                        <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <PokeballIcon isDark={theme === 'dark'} />
+                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </button>
 
                     <button className="lg:hidden text-[#00f2ff] p-2 hover:bg-[#00f2ff]/10 rounded-xl transition-colors" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                        <FiMenu className="h-8 w-8" />
+                        <i className="hn hn-bars h-8 w-8" />
                     </button>
                 </div>
             </div>
@@ -246,13 +274,13 @@ const Navbar = () => {
                     <div className="flex items-center justify-between mb-12">
                         <h2 className="text-[#00f2ff] text-2xl font-black italic tracking-tighter">MENU</h2>
                         <button onClick={() => setIsMenuOpen(false)} className="text-white p-2">
-                            <FiX className="h-8 w-8" />
+                            <i className="hn hn-times h-8 w-8" />
                         </button>
                     </div>
 
                     <ul className="space-y-4">
                         {navLinks.map((link) => (
-                            <li key={link.path} className="border-b border-white/5 pb-2">
+                            <li key={link.path} className="border-b border-white/5 pb-2 mobile-stagger-item opacity-0">
                                 <Link
                                     href={link.path}
                                     className="block py-3 text-xl font-bold text-white hover:text-[#00f2ff] transition-colors uppercase italic"
@@ -263,7 +291,7 @@ const Navbar = () => {
                                 {link.subItems && (
                                     <ul className="mt-2 space-y-2 pl-4">
                                         {link.subItems.map(sub => (
-                                            <li key={sub.path}>
+                                            <li key={sub.path} className="mobile-stagger-item opacity-0">
                                                 <Link
                                                     key={sub.path}
                                                     href={sub.path}
@@ -279,6 +307,31 @@ const Navbar = () => {
                             </li>
                         ))}
                     </ul>
+
+                    {/* Mobile Language Selector */}
+                    <div className="mt-12 pt-8 border-t border-white/10">
+                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-6">Seleccionar Idioma</p>
+                        <div className="grid grid-cols-2 gap-4">
+                            {[
+                                { code: 'es', label: 'ESP', Flag: ES },
+                                { code: 'en', label: 'ENG', Flag: US },
+                                { code: 'ja', label: 'JPN', Flag: JP },
+                                { code: 'fr', label: 'FRA', Flag: FR }
+                            ].map((lang) => (
+                                <button
+                                    key={lang.code}
+                                    onClick={() => {
+                                        setLanguage(lang.code);
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className={`flex items-center justify-between px-4 py-3 rounded-xl border transition-all ${language === lang.code ? 'bg-[#00f2ff]/20 border-[#00f2ff] text-[#00f2ff]' : 'bg-white/5 border-white/10 text-white'}`}
+                                >
+                                    <span className="text-[10px] font-black">{lang.label}</span>
+                                    <span className="w-5"><lang.Flag /></span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
 
