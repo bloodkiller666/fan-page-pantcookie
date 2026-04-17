@@ -129,7 +129,7 @@ const Hero = () => {
 
                 <h1
                     ref={titleRef}
-                    className="hero-title text-4xl md:text-6xl lg:text-7xl font-black mb-8 neon-text-pink tracking-tighter uppercase italic leading-[0.9] max-w-[15ch] md:max-w-[20ch] mx-auto"
+                    className="hero-title text-5xl md:text-7xl lg:text-8xl font-black mb-8 neon-text-pink tracking-tighter uppercase italic leading-[0.9] max-w-[15ch] md:max-w-[20ch] mx-auto"
                     style={{ opacity: isMounted ? 1 : 0 }}
                 >
                     {t('home.heroTitle')}
@@ -137,7 +137,7 @@ const Hero = () => {
 
                 <p
                     ref={subtitleRef}
-                    className="text-lg md:text-2xl mb-12 max-w-2xl mx-auto text-gray-300 font-medium uppercase tracking-widest leading-relaxed"
+                    className="text-xl md:text-3xl mb-12 max-w-4xl mx-auto text-gray-300 font-medium uppercase tracking-widest leading-relaxed"
                     style={{ opacity: isMounted ? 1 : 0 }}
                 >
                     {t('home.heroSubtitle')}

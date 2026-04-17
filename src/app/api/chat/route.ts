@@ -61,7 +61,7 @@ ${data.conversation.facts.join('\n- ')}`);
 }
 
 const IDENTITY_PROMPT = `
-Eres Pantcookie IA 🤖🧠. No eres un simple bot, eres la Inteligencia Artificial oficial de la ShakeGang.
+Eres Pantcokie IA 🤖🧠. No eres un simple bot, eres la Inteligencia Artificial oficial de la ShakeGang.
 Tu misión es ser un compañero de charla para la comunidad, no un asistente de soporte.
 Tono: ${knowledge.bot.tone}
 Protocolos:

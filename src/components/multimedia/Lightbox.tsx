@@ -12,6 +12,7 @@ interface LightboxImage {
     thumbnail: any;
     alt: string;
     description: string;
+    credit?: string; // Added field
     isLocal: boolean;
 }
 
@@ -124,7 +125,7 @@ const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }: LightboxPro
                     {/* Content */}
                     <div className="space-y-4">
                         <div className="flex flex-col gap-2">
-                            <span className="font-bold text-sm text-gray-900 dark:text-white">
+                            <span className="font-bold text-sm text-gray-900 dark:text-white text-xl">
                                 {currentImage.alt}
                             </span>
                             <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
@@ -134,7 +135,7 @@ const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }: LightboxPro
 
                         <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-800/50">
                             <span className="text-sm font-bold text-gray-500 dark:text-gray-400">
-                                Créditos: <span className="text-primary-pink">@(nombre del artista)</span>
+                                Créditos: <span className="text-[#ff00ff]">{currentImage.credit || "@Pantcookie"}</span>
                             </span>
                         </div>
                     </div>

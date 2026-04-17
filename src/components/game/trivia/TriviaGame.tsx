@@ -632,8 +632,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
           <p className="text-slate-500 dark:text-slate-400 text-lg max-w-xl mx-auto md:mx-0">Demuestra tu nivel y desbloquea recompensas exclusivas en los desafíos de esta temporada.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Categoría: PantCookie */}
-          <div onClick={() => selectCategory('pantcookie')} className="glass-card rounded-2xl p-1 flex flex-col group cursor-pointer overflow-hidden relative">
+          <div onClick={() => selectCategory('pantcokie')} className="glass-card rounded-2xl p-1 flex flex-col group cursor-pointer overflow-hidden relative">
             <div className="relative aspect-video rounded-xl overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
               <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADmNov2I1T3_GAPg4x6T2vc6Fio5cSU4M2wKPdKqzF65X9YvbsgPb8vo9mtABT1BQGEEY73P-rrGZpfIMxXC1kPZ_pRm1livhbXPkVRBqux0rfNqt6xN8A0XnigLhD0ZJRgz5yJPxN2GAA5qZhKcls00e0zztFlPxyTljSnRqe0e4tmfeiQYVvjhdJIYkp0PN7MX99T82pNvsr496dmg3NcyFid9eXnEmPgQcLqGCAHHEL0481iZEKwAVZYywTp7u6uW3UjkcvqRI" alt="PantCookie" />

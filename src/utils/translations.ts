@@ -61,7 +61,17 @@ export const translations = {
                 img1: "Este arte me lo habian pedido colocar en la anterior versión, pero preferí guardarlo para una mejor ocasión. Quién quisiera tener una flor amarilla en este aniversario.",
                 img2: "Me encantó mucho este arte porque así la vemos cuando haces tus karaokes o practicas para algún cover.",
                 img3: "Un 12 de abril dejaste de ser una pantera y te convertiste en una conejita solo por ese día, nos encantó mucho tu outfit te luciste demasiado. Estuvo muy cute.",
-                fanArt: "Fan Art"
+                fanArt: "Fan Art",
+                titles: {
+                    img1: "Flor Amarilla",
+                    img2: "Sesión de Karaoke",
+                    img3: "Coneja Pantera"
+                },
+                credits: {
+                    img1: "✨✫ AlkerVGN ✫🏍💥",
+                    img2: "✨✫ AlkerVGN ✫🏍💥",
+                    img3: "✨✫ AlkerVGN ✫🏍💥"
+                }
             }
         },
         games: {
@@ -589,8 +599,18 @@ export const translations = {
             gallery: {
                 img1: "This art was requested in the previous version, but I preferred to save it for a better occasion. Who would like to have a yellow flower on this anniversary?",
                 img2: "I really loved this art because it shows how we see her during your karaokes or when you practice for a cover.",
-                img3: "",
-                fanArt: "Fan Art"
+                img3: "On April 12th you stopped being a panther and became a bunny just for that day, we loved your outfit, you looked amazing. It was very cute.",
+                fanArt: "Fan Art",
+                titles: {
+                    img1: "Yellow Flower",
+                    img2: "Karaoke Session",
+                    img3: "Bunny Panther"
+                },
+                credits: {
+                    img1: "Anonymous Contribution",
+                    img2: "Pantcookie Community",
+                    img3: "ShakeGang Artist"
+                }
             }
         },
         games: {

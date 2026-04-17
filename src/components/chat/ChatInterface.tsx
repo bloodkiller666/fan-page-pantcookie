@@ -267,15 +267,15 @@ const ChatInterface = () => {
                         )}
 
                         <div className={`flex flex-col gap-1.5 max-w-[80%] ${msg.sender === 'user' ? 'items-end' : ''}`}>
-                            <span className="text-[7px] font-bold text-primary dark:text-primary uppercase tracking-widest px-1">
-                                {msg.sender === 'bot' ? 'Pantcookie IA' : 'Usuario'}
+                            <span className="text-[10px] font-bold text-primary dark:text-primary uppercase tracking-widest px-1">
+                                {msg.sender === 'bot' ? 'Pantcokie IA' : 'Usuario'}
                             </span>
 
                             <div className={`p-4 rounded-2xl shadow-lg leading-relaxed border ${msg.sender === 'user'
                                 ? 'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-tr-none'
                                 : 'ai-bubble-gradient border-primary/10 text-slate-800 dark:text-slate-200 rounded-tl-none'
                                 }`}>
-                                {msg.text && <p className="break-words text-[8px] leading-loose">{msg.text}</p>}
+                                {msg.text && <p className="break-words text-sm md:text-base leading-relaxed">{msg.text}</p>}
                                 {msg.fileUrl && (
                                     <div className="mt-3">
                                         {(msg.fileName?.match(/\.(jpg|jpeg|png|gif|webp)$/i) || msg.fileUrl.startsWith('blob:') || msg.fileUrl.startsWith('data:image')) ? (
@@ -399,7 +399,7 @@ const ChatInterface = () => {
                         </div>
                     </div>
                     <div className="flex justify-center mt-3">
-                        <p className="text-[9px] text-slate-500 dark:text-slate-600 font-bold uppercase tracking-[0.3em]">Hardware Accelerated Interface • Ver 2.4.0</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-600 font-bold uppercase tracking-[0.3em]">Hardware Accelerated Interface • Ver 2.4.0</p>
                     </div>
                 </div>
             </div>

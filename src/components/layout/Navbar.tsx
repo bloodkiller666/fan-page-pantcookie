@@ -10,7 +10,7 @@ import { ES, US, JP, FR } from 'country-flag-icons/react/3x2';
 const PokeballIcon = ({ isDark }: { isDark: boolean }) => (
     <svg viewBox="0 0 100 100" className="w-6 h-6 transition-transform duration-700 group-hover:rotate-[360deg] drop-shadow-[0_0_8px_rgba(253,33,159,0.4)]">
         {/* Base: Blanco en light, morado oscuro en dark */}
-        <circle cx="50" cy="50" r="48" fill={isDark ? "#120a1c" : "#ffffff"} stroke="#000000" strokeWidth="6" />
+        <circle cx="50" cy="50" r="48" fill={isDark ? "#ffffffff" : "#ffffff"} stroke="#000000" strokeWidth="6" />
         {/* Mitad superior: Rosa Pantcookie */}
         <path d="M2 50 A48 48 0 0 1 98 50 Z" fill="#fd219f" stroke="#000000" strokeWidth="6" />
         {/* Cinturón negro */}
@@ -77,10 +77,10 @@ const Navbar = () => {
             // Open animation
             gsap.to(overlayRef.current, { opacity: 1, display: 'block', duration: 0.3 });
             gsap.to(mobileMenuRef.current, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' });
-            
+
             // Stagger animation for text items
-            gsap.fromTo('.mobile-stagger-item', 
-                { x: 50, opacity: 0 }, 
+            gsap.fromTo('.mobile-stagger-item',
+                { x: 50, opacity: 0 },
                 { x: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.2, ease: 'back.out(1.7)' }
             );
         } else {

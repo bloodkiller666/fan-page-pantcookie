@@ -181,7 +181,7 @@ export default function Home() {
             icon: 'hn-gaming',
             link: '/games',
             color: 'border-primary-blue text-primary-blue shadow-[0_0_20px_rgba(46,151,255,0.2)]',
-            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/by%20toba_ww%201.png'
+            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/1115_sin_titulo_20240914183653_1.png'
         },
         {
             title: t('nav.chat'),
@@ -314,8 +314,8 @@ export default function Home() {
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
                                             <div className="absolute bottom-6 left-6 flex items-center gap-4">
-                                                <div className={`p-4 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10 ${feature.color}`}>
-                                                    <i className={`hn ${iconClass} w-8 h-8 flex items-center justify-center text-2xl`} />
+                                                <div className={`p-5 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10 ${feature.color}`}>
+                                                    <i className={`hn ${iconClass} w-10 h-10 flex items-center justify-center text-4xl`} />
                                                 </div>
                                                 <h3 className="text-3xl font-black text-white italic uppercase">{feature.title}</h3>
                                             </div>

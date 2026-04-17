@@ -16,20 +16,36 @@ const Gallery = ({ query = '' }) => {
     const containerRef = useRef(null);
 
     const imageList = useMemo(() => [
-        { filename: 'image_iyhqyo', description: t('multimedia.gallery.img1') },
-        { filename: 'image_tvh8vq', description: t('multimedia.gallery.img2') },
-        { filename: 'image_iyhqyo', description: t('multimedia.gallery.img3') }, // Placeholder temporal para evitar error 404
+        { 
+            filename: 'image_iyhqyo', 
+            description: t('multimedia.gallery.img1'),
+            title: t('multimedia.gallery.titles.img1'),
+            credit: t('multimedia.gallery.credits.img1')
+        },
+        { 
+            filename: 'image_tvh8vq', 
+            description: t('multimedia.gallery.img2'),
+            title: t('multimedia.gallery.titles.img2'),
+            credit: t('multimedia.gallery.credits.img2')
+        },
+        { 
+            filename: 'Untitled_design_9_ccg9g8', 
+            description: t('multimedia.gallery.img3'),
+            title: t('multimedia.gallery.titles.img3'),
+            credit: t('multimedia.gallery.credits.img3')
+        },
     ], [t]);
 
     const images = useMemo(() => imageList.map((item, index) => {
         const isLocal = item.filename.endsWith('.gif');
 
         return {
+            ...item,
             id: index,
             src: item.filename,
             cldImg: isLocal ? null : getCloudinaryImage(item.filename),
             thumbnail: isLocal ? null : getCloudinaryThumbnail(item.filename),
-            alt: `${t('multimedia.gallery.fanArt')} ${index + 1}`,
+            alt: item.title || `${t('multimedia.gallery.fanArt')} ${index + 1}`,
             description: item.description,
             isLocal
         };
@@ -63,7 +79,8 @@ const Gallery = ({ query = '' }) => {
         if (!q) return images;
         return images.filter(img =>
             (img.alt || '').toLowerCase().includes(q) ||
-            (img.description || '').toLowerCase().includes(q)
+            (img.description || '').toLowerCase().includes(q) ||
+            (img.credit || '').toLowerCase().includes(q)
         );
     }, [images, query]);
 
@@ -71,7 +88,7 @@ const Gallery = ({ query = '' }) => {
         if (filtered.length > 0) {
             // Kill any previous animations to avoid conflicts
             gsap.set(".gallery-item", { perspective: 1000 });
-            
+
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: containerRef.current,
@@ -80,7 +97,7 @@ const Gallery = ({ query = '' }) => {
             });
 
             // Initial Staggered Reveal
-            tl.fromTo(".gallery-item", 
+            tl.fromTo(".gallery-item",
                 { opacity: 0, y: 30 },
                 { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }
             );
@@ -104,21 +121,22 @@ const Gallery = ({ query = '' }) => {
                         duration: 0.8,
                         ease: "expo.inOut"
                     })
-                    .from(img, {
-                        scale: 1.4,
-                        duration: 1.2,
-                        ease: "expo.out"
-                    }, 0);
+                        .from(img, {
+                            scale: 1.4,
+                            duration: 1.2,
+                            ease: "expo.out"
+                        }, 0);
 
-                    // Running Border Animation
+                    // Refined Infinite Running Border Animation
                     if (border instanceof SVGGeometryElement) {
                         const length = border.getTotalLength();
-                        gsap.set(border, { strokeDasharray: length });
-                        gsap.fromTo(border, 
+                        // Use a visible segment that is 30% of the total length
+                        gsap.set(border, { strokeDasharray: `${length * 0.3} ${length * 0.7}` });
+                        gsap.fromTo(border,
                             { strokeDashoffset: length },
                             {
                                 strokeDashoffset: 0,
-                                duration: 3,
+                                duration: 4,
                                 repeat: -1,
                                 ease: "none"
                             }
@@ -147,8 +165,8 @@ const Gallery = ({ query = '' }) => {
                                 rx="12" ry="12"
                                 fill="none"
                                 stroke="currentColor"
-                                strokeWidth="2"
-                                className="running-border-path text-[#ff00ff] dark:text-[#00ffff] opacity-50"
+                                strokeWidth="3"
+                                className="running-border-path text-[#ff00ff] dark:text-[#00ffff] opacity-80"
                             />
                         </svg>
 
@@ -158,7 +176,7 @@ const Gallery = ({ query = '' }) => {
                             <div className="absolute inset-0 h-full w-full backface-hidden rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
                                 {/* Reveal Overlay */}
                                 <div className="reveal-overlay absolute inset-0 z-20 bg-gradient-to-r from-[#ff00ff] via-[#bc13fe] to-[#00ffff] will-change-transform" />
-                                
+
                                 <div className="w-full h-full transform-gpu transition-transform duration-500 group-hover:scale-110">
                                     {image.isLocal ? (
                                         <img src={image.src} alt={image.alt} className="w-full h-full object-cover" />
@@ -173,15 +191,18 @@ const Gallery = ({ query = '' }) => {
                                         )
                                     )}
                                 </div>
-                                
+
                                 {/* Overlay Gradient static */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                             </div>
 
                             {/* Cara Trasera */}
                             <div className="absolute inset-0 h-full w-full backface-hidden rotate-y-180 rounded-xl bg-white dark:bg-black/95 p-8 flex flex-col items-center justify-center text-center border-2 border-[#ff00ff]/30 shadow-[0_0_15px_rgba(255,0,255,0.2)]">
-                                <h3 className="text-2xl font-black neon-text-pink mb-3 tracking-tighter uppercase italic">{image.alt}</h3>
-                                <p className="text-gray-600 dark:text-gray-400 text-base font-medium leading-relaxed">{image.description}</p>
+                                <h3 className="text-2xl font-black neon-text-pink mb-2 tracking-tighter uppercase italic line-clamp-1">{image.alt}</h3>
+                                <div className="mb-4 text-xs font-bold tracking-widest text-[#00ffff] uppercase opacity-80">
+                                    {t('multimedia.tabs.photos')} | {image.credit}
+                                </div>
+                                <p className="text-gray-600 dark:text-gray-400 text-sm font-medium leading-relaxed line-clamp-3">{image.description}</p>
                                 <div className="mt-6 p-3 rounded-full bg-pink-500/10 text-[#00ffff] animate-pulse shadow-[0_0_10px_rgba(0,255,255,0.3)]">
                                     <FiZoomIn className="w-8 h-8" />
                                 </div>
