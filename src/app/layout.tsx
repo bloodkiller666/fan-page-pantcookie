@@ -5,6 +5,7 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ScrollToTop from '../components/layout/ScrollToTop';
 import ClientTransitionHandler from '../components/layout/ClientTransitionHandler';
+import ErrorBoundary from '../components/ui/ErrorBoundary';
 
 export const metadata = {
     metadataBase: new URL('https://pantcookie.com'),
@@ -43,16 +44,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className="bg-white text-gray-900 dark:bg-[#0a0a0a] dark:text-white transition-colors duration-300">
                 <LanguageProvider>
                     <TransitionProvider>
-                        <ClientTransitionHandler>
-                            <ScrollToTop />
-                            <div className="flex flex-col min-h-screen">
-                                <Navbar />
-                                <main className="flex-grow">
-                                    {children}
-                                </main>
-                                <Footer />
-                            </div>
-                        </ClientTransitionHandler>
+                        <ErrorBoundary>
+                            <ClientTransitionHandler>
+                                <ScrollToTop />
+                                <div className="flex flex-col min-h-screen">
+                                    <Navbar />
+                                    <main className="flex-grow">
+                                        {children}
+                                    </main>
+                                    <Footer />
+                                </div>
+                            </ClientTransitionHandler>
+                        </ErrorBoundary>
                     </TransitionProvider>
                 </LanguageProvider>
             </body>

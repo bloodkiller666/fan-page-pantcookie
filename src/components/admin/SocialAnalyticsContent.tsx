@@ -7,6 +7,7 @@ import { MdSync, MdMonitor } from 'react-icons/md';
 import { supabase } from '../../utils/supabaseClient';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { MetricSkeleton, ChartSkeleton } from '../ui/Skeletons';
 
 export default function SocialAnalyticsContent() {
     const [loading, setLoading] = useState(true);
@@ -64,12 +65,33 @@ export default function SocialAnalyticsContent() {
         }
     };
 
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
     useEffect(() => {
         fetchData();
         const handleRefresh = () => fetchData();
         window.addEventListener('refresh-analytics', handleRefresh);
-        return () => window.removeEventListener('refresh-analytics', handleRefresh);
+
+        // Theme detection
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class') {
+                    setIsDarkMode(document.body.classList.contains('dark') || document.documentElement.classList.contains('dark'));
+                }
+            });
+        });
+        observer.observe(document.body, { attributes: true });
+        observer.observe(document.documentElement, { attributes: true });
+        setIsDarkMode(document.body.classList.contains('dark') || document.documentElement.classList.contains('dark'));
+
+        return () => {
+            window.removeEventListener('refresh-analytics', handleRefresh);
+            observer.disconnect();
+        };
     }, []);
+
+    const chartTextColor = isDarkMode ? '#ffffff' : '#1a1a1a';
+    const chartGridColor = isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
 
     const handleManualSync = async () => {
         setLoading(true);
@@ -127,28 +149,36 @@ export default function SocialAnalyticsContent() {
         <div className="space-y-8 animate-in fade-in duration-500 pb-10">
             {/* Header / Summary Section */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[
-                    { id: 'twitch', icon: FaTwitch, color: 'text-purple-500', label: 'Followers', val: summary.twitch.current, growth: summary.twitch.growth, bg: 'bg-purple-500/10' },
-                    { id: 'youtube', icon: FaYoutube, color: 'text-red-500', label: 'Subscribers', val: summary.youtube.current, growth: summary.youtube.growth, bg: 'bg-red-500/10' },
-                    { id: 'discord', icon: FaDiscord, color: 'text-indigo-500', label: 'Members', val: summary.discord.current, growth: summary.discord.growth, bg: 'bg-indigo-500/10' }
-                ].map((p) => (
-                    <button
-                        key={p.id}
-                        onClick={() => setActivePlatform(p.id as any)}
-                        className={`glass-panel p-6 rounded-3xl border transition-all flex items-center justify-between group ${activePlatform === p.id ? `border-${p.id === 'twitch' ? 'purple' : p.id === 'youtube' ? 'red' : 'indigo'}-500/50 ${p.bg}` : 'border-white/5 bg-white/5 hover:bg-white/10'}`}
-                    >
-                        <div className="flex items-center gap-4 text-left">
-                            <div className={`w-10 h-10 rounded-xl ${p.bg} flex items-center justify-center transition-transform group-hover:scale-110`}>
-                                <p.icon className={`${p.color} text-xl`} />
+                {loading && data.length === 0 ? (
+                    <>
+                        <MetricSkeleton />
+                        <MetricSkeleton />
+                        <MetricSkeleton />
+                    </>
+                ) : (
+                    [
+                        { id: 'twitch', icon: FaTwitch, color: 'text-purple-500', label: 'Followers', val: summary.twitch.current, growth: summary.twitch.growth, bg: 'bg-purple-500/10' },
+                        { id: 'youtube', icon: FaYoutube, color: 'text-red-500', label: 'Subscribers', val: summary.youtube.current, growth: summary.youtube.growth, bg: 'bg-red-500/10' },
+                        { id: 'discord', icon: FaDiscord, color: 'text-indigo-500', label: 'Members', val: summary.discord.current, growth: summary.discord.growth, bg: 'bg-indigo-500/10' }
+                    ].map((p) => (
+                        <button
+                            key={p.id}
+                            onClick={() => setActivePlatform(p.id as any)}
+                            className={`glass-panel p-6 rounded-3xl border transition-all flex items-center justify-between group ${activePlatform === p.id ? `border-${p.id === 'twitch' ? 'purple' : p.id === 'youtube' ? 'red' : 'indigo'}-500/50 ${p.bg}` : 'border-white/5 bg-white/5 hover:bg-white/10'}`}
+                        >
+                            <div className="flex items-center gap-4 text-left">
+                                <div className={`w-10 h-10 rounded-xl ${p.bg} flex items-center justify-center transition-transform group-hover:scale-110`}>
+                                    <p.icon className={`${p.color} text-xl`} />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{p.label}</p>
+                                    <h3 className="text-xl font-display font-black text-zinc-950 dark:text-white">{p.val.toLocaleString()}</h3>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{p.label}</p>
-                                <h3 className="text-xl font-display font-black dark:text-white">{p.val.toLocaleString()}</h3>
-                            </div>
-                        </div>
-                        <GrowthIndicator val={p.growth} />
-                    </button>
-                ))}
+                            <GrowthIndicator val={p.growth} />
+                        </button>
+                    ))
+                )}
             </div>
 
             {/* Main Trend Chart Section */}
@@ -157,7 +187,7 @@ export default function SocialAnalyticsContent() {
                     <div className="flex items-center gap-4">
                         <div className="w-2 h-8 bg-primary rounded-full"></div>
                         <div>
-                            <h2 className="font-display font-extrabold text-xl tracking-tight uppercase text-white flex items-center gap-2">
+                            <h2 className="font-display font-extrabold text-xl tracking-tight uppercase text-zinc-950 dark:text-white flex items-center gap-2">
                                 Tendencia de Crecimiento
                                 {loading && <span className="w-2 h-2 rounded-full bg-primary animate-ping ml-1"></span>}
                             </h2>
@@ -175,7 +205,7 @@ export default function SocialAnalyticsContent() {
                         </button>
                         <button
                             onClick={() => setActivePlatform('all')}
-                            className={`text-[10px] font-bold px-4 py-2 rounded-xl border transition-all ${activePlatform === 'all' ? 'bg-primary border-primary text-white shadow-[0_0_20px_rgba(255,31,142,0.3)]' : 'border-white/10 text-zinc-500 hover:text-white hover:bg-white/5'}`}
+                            className={`text-[10px] font-bold px-4 py-2 rounded-xl border transition-all ${activePlatform === 'all' ? 'bg-primary border-primary text-white shadow-[0_0_20px_rgba(255,31,142,0.3)]' : 'border-black/10 dark:border-white/10 text-zinc-500 hover:text-zinc-950 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'}`}
                         >
                             VER TODO
                         </button>
@@ -183,12 +213,7 @@ export default function SocialAnalyticsContent() {
                 </div>
 
                 {loading && data.length === 0 ? (
-                    <div className="h-[300px] flex items-center justify-center">
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest animate-pulse">Initializing Streams...</p>
-                        </div>
-                    </div>
+                    <ChartSkeleton />
                 ) : (
                     <div className="h-[320px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
@@ -207,10 +232,10 @@ export default function SocialAnalyticsContent() {
                                         <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
+                                <CartesianGrid strokeDasharray="3 3" stroke={chartGridColor} vertical={false} />
                                 <XAxis
                                     dataKey="name"
-                                    stroke="#666"
+                                    stroke={chartTextColor}
                                     fontSize={10}
                                     tickLine={false}
                                     axisLine={false}
@@ -222,12 +247,12 @@ export default function SocialAnalyticsContent() {
                                 />
                                 <Tooltip
                                     contentStyle={{
-                                        backgroundColor: '#09090b',
-                                        border: '1px solid #ffffff10',
+                                        backgroundColor: isDarkMode ? '#09090b' : '#ffffff',
+                                        border: `1px solid ${isDarkMode ? '#ffffff10' : '#00000010'}`,
                                         borderRadius: '16px',
                                         fontSize: '12px',
                                         fontWeight: 'bold',
-                                        color: '#ffffff',
+                                        color: isDarkMode ? '#ffffff' : '#1a1a1a',
                                         boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)'
                                     }}
                                     itemStyle={{ padding: '2px 0' }}
@@ -254,7 +279,7 @@ export default function SocialAnalyticsContent() {
                     <div className="flex items-center justify-between mb-8">
                         <div className="flex items-center gap-3">
                             <FiPieChart className="text-primary text-xl" />
-                            <h3 className="font-display font-bold text-sm uppercase tracking-widest dark:text-white">Share de Audiencia</h3>
+                            <h3 className="font-display font-bold text-sm uppercase tracking-widest text-zinc-950 dark:text-white">Share de Audiencia</h3>
                         </div>
                     </div>
                     <div className="h-[250px] w-full flex items-center justify-center">
@@ -277,10 +302,15 @@ export default function SocialAnalyticsContent() {
                                         ))}
                                     </Pie>
                                     <Tooltip
-                                        contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '12px', color: '#ffffff' }}
+                                        contentStyle={{ backgroundColor: isDarkMode ? '#09090b' : '#ffffff', border: `1px solid ${isDarkMode ? '#ffffff20' : '#00000020'}`, borderRadius: '12px', color: isDarkMode ? '#ffffff' : '#1a1a1a' }}
                                         labelStyle={{ display: 'none' }}
                                     />
-                                    <Legend verticalAlign="bottom" height={36} />
+                                    <Legend 
+                                        verticalAlign="bottom" 
+                                        height={36} 
+                                        wrapperStyle={{ paddingTop: '20px' }}
+                                        formatter={(value) => <span className="text-zinc-700 dark:text-white font-bold text-[10px] uppercase ml-2">{value}</span>}
+                                    />
                                 </PieChart>
                             </ResponsiveContainer>
                         ) : (
@@ -294,17 +324,32 @@ export default function SocialAnalyticsContent() {
                     <div className="flex items-center justify-between mb-8">
                         <div className="flex items-center gap-3">
                             <FiBarChart2 className="text-[#00f2ff] text-xl" />
-                            <h3 className="font-display font-bold text-sm uppercase tracking-widest dark:text-white">Comparativa de Totales</h3>
+                            <h3 className="font-display font-bold text-sm uppercase tracking-widest text-zinc-950 dark:text-white">Comparativa de Totales</h3>
                         </div>
                     </div>
                     <div className="h-[250px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={barData} layout="vertical" margin={{ left: 20 }}>
+                            <BarChart data={barData} layout="vertical" margin={{ left: 35, right: 20 }}>
                                 <XAxis type="number" hide />
-                                <YAxis dataKey="name" type="category" stroke="#666" fontSize={10} tickLine={false} axisLine={false} />
+                                <YAxis 
+                                    dataKey="name" 
+                                    type="category" 
+                                    stroke={chartTextColor} 
+                                    fontSize={10} 
+                                    fontWeight="bold"
+                                    tickLine={false} 
+                                    axisLine={false} 
+                                    width={70}
+                                />
                                 <Tooltip
-                                    cursor={{ fill: 'transparent' }}
-                                    contentStyle={{ backgroundColor: '#09090b', border: '1px solid #ffffff10', borderRadius: '12px', color: '#ffffff' }}
+                                    cursor={{ fill: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}
+                                    contentStyle={{ 
+                                        backgroundColor: isDarkMode ? '#09090b' : '#ffffff', 
+                                        border: `1px solid ${isDarkMode ? '#ffffff20' : '#00000020'}`, 
+                                        borderRadius: '12px', 
+                                        color: isDarkMode ? '#ffffff' : '#1a1a1a' 
+                                    }}
+                                    itemStyle={{ color: '#FF1F8E' }}
                                 />
                                 <Bar
                                     dataKey="total"

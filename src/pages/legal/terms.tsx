@@ -19,18 +19,18 @@ export default function Terms() {
 
       cards.forEach((card, index) => {
         gsap.from(card, {
-          duration: 1.3,
+          duration: 1.0,
           clipPath: "inset(100% 0% 0% 0%)",
-          rotationX: -15,
+          rotationX: -10,
           transformOrigin: "50% 100%",
           opacity: 0,
-          y: 60,
-          ease: "power4.out",
-          delay: index * 0.4,
+          y: 40,
+          ease: "expo.out",
+          delay: Math.min(index * 0.1, 0.4),
           scrollTrigger: {
             trigger: card,
             scroller: "#legal-scroll-container",
-            start: "top 95%",
+            start: "top 85%",
             toggleActions: "play none none none",
             once: true,
           }

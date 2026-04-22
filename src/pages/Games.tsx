@@ -40,13 +40,29 @@ const GamesContent = () => {
         if (playerName.trim()) {
             localStorage.setItem('playerName', playerName.trim());
             setShowNamePrompt(false);
+            // Requirement: Stay on main menu selecting the game manually after registration
+            setSelected(null);
+            if (window.location.search.includes('game=')) {
+                window.history.replaceState(null, '', '/games');
+            }
         }
     };
 
     useEffect(() => {
         const game = searchParams?.get('game');
+        const savedName = localStorage.getItem('playerName');
+
         if (game === 'puzzle' || game === 'trivia' || game === 'shuraRun') {
-            setSelected(game as 'puzzle' | 'trivia' | 'shuraRun');
+            if (savedName) {
+                setSelected(game as 'puzzle' | 'trivia' | 'shuraRun');
+            } else {
+                // Requirement: Redirect to main menu if accessing via link without registration
+                setSelected(null);
+                setShowNamePrompt(true);
+                if (window.location.search.includes('game=')) {
+                    window.history.replaceState(null, '', '/games');
+                }
+            }
         }
 
         const timer = setInterval(() => {

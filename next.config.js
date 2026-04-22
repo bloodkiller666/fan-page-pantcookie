@@ -16,7 +16,7 @@ const nextConfig = {
                 headers: [
                     {
                         key: 'Content-Security-Policy',
-                        value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.cdnfonts.com; img-src 'self' blob: data: https://res.cloudinary.com https://ik.imagekit.io https://*.r2.dev https://lh3.googleusercontent.com https://www.google.com https://*.firebaseapp.com https://*.firebasestorage.app https://www.transparenttextures.com https://*.ytimg.com https://*.ggpht.com https://images.unsplash.com https://*.unsplash.com https://placehold.co https://*.placehold.co https://cdn.jsdelivr.net https://img.freepik.com https://ui-avatars.com; media-src 'self' blob: data: https://res.cloudinary.com https://*.r2.dev https://*.firebasestorage.app https://www.youtube.com; font-src 'self' https://fonts.gstatic.com https://fonts.cdnfonts.com; connect-src 'self' ws: wss: https://api.groq.com https://*.cloudinary.com https://*.supabase.co https://*.firebaseio.com https://firestore.googleapis.com https://*.firebaseapp.com https://*.firebasestorage.app https://*.googleapis.com https://discord.com https://*.twitch.tv; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://player.twitch.tv https://www.facebook.com https://*.google.com https://*.supabase.co;",
+                        value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.cdnfonts.com; img-src 'self' blob: data: https://res.cloudinary.com https://ik.imagekit.io https://*.r2.dev https://lh3.googleusercontent.com https://www.google.com https://*.firebaseapp.com https://*.firebasestorage.app https://www.transparenttextures.com https://*.ytimg.com https://*.ggpht.com https://images.unsplash.com https://*.unsplash.com https://placehold.co https://*.placehold.co https://cdn.jsdelivr.net https://img.freepik.com https://www.freepik.es https://*.freepik.es https://*.freepik.com https://ui-avatars.com; media-src 'self' blob: data: https://res.cloudinary.com https://*.r2.dev https://*.firebasestorage.app https://www.youtube.com; font-src 'self' https://fonts.gstatic.com https://fonts.cdnfonts.com; connect-src 'self' ws: wss: https://api.groq.com https://*.cloudinary.com https://*.supabase.co https://*.firebaseio.com https://firestore.googleapis.com https://*.firebaseapp.com https://*.firebasestorage.app https://*.googleapis.com https://discord.com https://*.twitch.tv; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://player.twitch.tv https://www.facebook.com https://*.google.com https://*.supabase.co;",
                     },
                     {
                         key: 'X-Frame-Options',
@@ -29,6 +29,10 @@ const nextConfig = {
                     {
                         key: 'Referrer-Policy',
                         value: 'strict-origin-when-cross-origin',
+                    },
+                    {
+                        key: 'X-XSS-Protection',
+                        value: '1; mode=block',
                     },
                     {
                         key: 'Permissions-Policy',
@@ -53,6 +57,10 @@ const nextConfig = {
             { protocol: 'https', hostname: '**.unsplash.com' },
             { protocol: 'https', hostname: 'placehold.co' },
             { protocol: 'https', hostname: '**.placehold.co' },
+            { protocol: 'https', hostname: 'img.freepik.com' },
+            { protocol: 'https', hostname: 'www.freepik.es' },
+            { protocol: 'https', hostname: '**.freepik.es' },
+            { protocol: 'https', hostname: '**.freepik.com' },
             { protocol: 'https', hostname: 'ui-avatars.com' },
         ],
     },

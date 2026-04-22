@@ -23,6 +23,62 @@ const PokeballIcon = ({ isDark }: { isDark: boolean }) => (
     </svg>
 );
 
+const HexagonLogo = ({ isDark, innerRef }: { isDark: boolean, innerRef: React.RefObject<SVGSVGElement | null> }) => (
+    <svg 
+        ref={innerRef}
+        viewBox="0 0 100 100" 
+        className="w-12 h-12 md:hidden drop-shadow-[0_0_12px_rgba(253,33,159,0.6)]"
+    >
+        <defs>
+            <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#00f2ff" />
+                <stop offset="100%" stopColor="#fd219f" />
+            </linearGradient>
+        </defs>
+        {/* Outer Hexagon Border */}
+        <path 
+            d="M50 5 L95 27.5 V72.5 L50 95 L5 72.5 V27.5 Z" 
+            fill="none" 
+            stroke="url(#neonGradient)" 
+            strokeWidth="4" 
+            className="hexagon-border transition-all duration-500"
+        />
+        {/* Inner Hexagon Glow */}
+        <path 
+            d="M50 12 L88 31 V69 L50 88 L12 69 V31 Z" 
+            fill={isDark ? "rgba(253,33,159,0.05)" : "rgba(253,33,159,0.1)"} 
+            stroke={isDark ? "#fd219f" : "#000000"} 
+            strokeWidth="1" 
+            opacity="0.6"
+        />
+        {/* S-G Initials */}
+        <text 
+            x="50" 
+            y="56" 
+            textAnchor="middle" 
+            dominantBaseline="middle"
+            className="font-black italic" 
+            style={{ 
+                fontSize: '22px', 
+                fill: isDark ? '#ffffff' : '#111111',
+                fontWeight: 900,
+                letterSpacing: '2px',
+                filter: 'drop-shadow(0 0 4px #fd219f)'
+            }}
+        >
+            S-G
+        </text>
+        {/* Tech scan line effect (animated via GSAP) */}
+        <line 
+            x1="10" y1="30" x2="90" y2="30" 
+            stroke="#ffffff" 
+            strokeWidth="1" 
+            opacity="0" 
+            className="mobile-logo-scan" 
+        />
+    </svg>
+);
+
 const Navbar = () => {
     const { t, setLanguage, language } = useLanguage();
     const { transitionTo } = useTransition();
@@ -31,6 +87,7 @@ const Navbar = () => {
     const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
+    const mobileLogoRef = useRef<SVGSVGElement | null>(null);
 
     const [theme, setTheme] = useState('dark');
     const pathname = usePathname();
@@ -90,6 +147,45 @@ const Navbar = () => {
             gsap.set('.mobile-stagger-item', { opacity: 0, x: 50 }); // Reset for next open
         }
     }, [isMenuOpen]);
+
+    // Mobile Logo Animation
+    useEffect(() => {
+        if (!mobileLogoRef.current) return;
+
+        const tl = gsap.timeline({ repeat: -1 });
+        
+        // Breath Effect
+        tl.to(mobileLogoRef.current, {
+            scale: 1.05,
+            duration: 2,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1
+        });
+
+        // Scan Line Effect
+        gsap.fromTo('.mobile-logo-scan', 
+            { y: -20, opacity: 0 },
+            { 
+                y: 60, 
+                opacity: 0.8, 
+                duration: 2.5, 
+                repeat: -1, 
+                ease: "power1.inOut",
+                repeatDelay: 2
+            }
+        );
+
+        // Glow Pulse
+        gsap.to('.hexagon-border', {
+            strokeWidth: 6,
+            opacity: 0.8,
+            duration: 1.5,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+        });
+    }, []);
 
     const navLinks = [
         { path: '/', label: t('nav.home'), icon: 'hn-home' },
@@ -153,11 +249,17 @@ const Navbar = () => {
                     className="flex items-center space-x-3 group"
                     onClick={(e) => handleNav(e, '/')}
                 >
+                    {/* Desktop Logo */}
                     <div className="hidden md:block transition-all duration-500 transform group-hover:-translate-y-1">
                         <h1 className="text-gray-900 dark:text-white text-2xl font-black tracking-tighter italic drop-shadow-holo-glow leading-none group-hover:opacity-90 transition-all duration-500 origin-left group-hover:scale-x-110">
                             SHAKE-<span className="text-[#ff00e5]">GANG</span>
                         </h1>
                         <p className="text-[7px] text-[#009dad] dark:text-[#00f2ff] tracking-[0.3em] uppercase opacity-70 transition-all duration-500 group-hover:tracking-[0.6em] group-hover:opacity-100 origin-left group-hover:scale-x-110">Community Network</p>
+                    </div>
+
+                    {/* Mobile Logo (Option 2: Hexagonal Monogram) */}
+                    <div className="block md:hidden transform-gpu active:scale-90 transition-transform">
+                        <HexagonLogo isDark={theme === 'dark'} innerRef={mobileLogoRef} />
                     </div>
                 </Link>
 

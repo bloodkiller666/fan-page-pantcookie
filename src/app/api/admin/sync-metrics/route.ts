@@ -1,11 +1,22 @@
 import { NextResponse } from 'next/server';
 import { performSync } from '../../../../utils/social';
+import { rateLimit, getIP } from '../../../../utils/rateLimit';
 
 export async function POST(req: Request) {
-    const authHeader = req.headers.get('Authorization');
-    const adminApiKey = process.env.ADMIN_API_KEY || process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
+    // 1. Rate Limiting (5 requests per minute per IP for this sensitive route)
+    const ip = getIP(req);
+    const { success } = rateLimit(ip, 5, 60000);
     
-    if (!authHeader || authHeader !== `Bearer ${adminApiKey}`) {
+    if (!success) {
+        return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
+    // 2. Strict Authorization
+    const authHeader = req.headers.get('Authorization');
+    // NEVER use NEXT_PUBLIC_ variables for critical server-side authorization if they are also exposed to client
+    const adminApiKey = process.env.ADMIN_API_KEY;
+    
+    if (!adminApiKey || !authHeader || authHeader !== `Bearer ${adminApiKey}`) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

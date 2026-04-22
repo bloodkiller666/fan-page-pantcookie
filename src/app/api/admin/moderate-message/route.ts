@@ -37,12 +37,27 @@ export async function POST(req: NextRequest) {
       messages: [
         {
           role: 'system',
-          content: `Eres un moderador de mensajes para una comunidad de fans. 
-          Analiza el contexto y sentimiento del mensaje. 
-          Si el mensaje es positivo, neutro, de apoyo o gracioso (sin ser ofensivo), márcalo como "approved".
-          Si el mensaje contiene insultos, odio, acoso, spam, contenido sexual explícito o es extremadamente negativo/tóxico, márcalo como "banned".
-          
-          Responde ÚNICAMENTE en formato JSON plano:
+          content: `Eres un moderador estricto de mensajes para una comunidad de fans de Pantcookie (streamer).
+          Tu función es proteger la comunidad de mensajes dañinos o que no aporten valor positivo.
+
+          Debes marcar un mensaje como "banned" si cumple CUALQUIERA de estas condiciones:
+          - Insultos, burlas o lenguaje despectivo hacia personas o la comunidad.
+          - Críticas destructivas o comentarios que dañen el ánimo de la comunidad (ej: "esta página es una basura", "deben tirarla", "no sirve para nada").
+          - Acoso, amenazas o contenido violento.
+          - Spam, publicidad no solicitada o contenido sin sentido repetitivo.
+          - Contenido sexual explícito.
+          - Mensajes que desalienten la participación o el uso de la plataforma.
+          - Negativismo extremo, trolling o comentarios desmoralizantes.
+
+          Debes marcar un mensaje como "approved" SOLO si:
+          - Es positivo, de apoyo, entusiasta o motivador hacia la comunidad.
+          - Es neutro e informativo sin implicaciones negativas.
+          - Es gracioso o bromista sin ofender a nadie.
+          - Es una sugerencia constructiva y respetuosa.
+
+          En caso de DUDA, siempre marca como "banned" por seguridad.
+
+          Responde ÚNICAMENTE en formato JSON plano, sin texto extra:
           {
             "status": "approved" | "banned",
             "reason": "Breve explicación en español del porqué"
@@ -54,19 +69,31 @@ export async function POST(req: NextRequest) {
         }
       ],
       model: 'llama-3.1-8b-instant',
-      response_format: { type: 'json_object' }
+      response_format: { type: 'json_object' },
+      temperature: 0.1,
     });
 
-    const moderationResult = JSON.parse(completion.choices[0].message.content || '{}');
+    const rawContent = completion.choices[0].message.content || '{}';
+    const moderationResult = JSON.parse(rawContent);
+
+    // Validate that the response has the expected shape
+    if (!moderationResult.status || !['approved', 'banned'].includes(moderationResult.status)) {
+      console.warn('Unexpected moderation response shape:', moderationResult);
+      return NextResponse.json({ 
+        status: 'banned', 
+        reason: 'Respuesta inesperada del moderador, se requiere revisión manual.' 
+      });
+    }
     
     return NextResponse.json(moderationResult);
 
   } catch (error) {
+    // SAFETY-FIRST: On any error, default to BANNED, not approved.
+    // This prevents content from slipping through during outages.
     console.error('Moderation error:', error);
     return NextResponse.json({ 
-      status: 'approved', 
-      reason: 'Error en el servicio de moderación, se aprueba por defecto.' 
+      status: 'banned', 
+      reason: 'Error en el servicio de moderación. Mensaje enviado a revisión manual por seguridad.' 
     }, { status: 200 });
   }
 }
-

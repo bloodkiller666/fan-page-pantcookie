@@ -1,16 +1,59 @@
-# React + Vite
+# 🍪 Fan Page Pantcookie | ShuraHiwa Community
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Pantcookie Banner](https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png)
 
-Currently, two official plugins are available:
+Una plataforma interactiva de alto rendimiento dedicada a la comunidad de **ShuraHiwa**, diseñada con una estética gamer/cyberpunk y animaciones premium.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Características Principales
 
-## React Compiler
+- **🎮 Centro de Juegos**: Colección de minijuegos interactivos (Shura Run, Puzzle, Trivia) desarrollados con React y lógica de estado avanzada.
+- **🖼️ Galería Multimedia**: Sistema de gestión de imágenes y videos optimizado con Cloudinary y filtrado dinámico.
+- **💬 Chat en Tiempo Real**: Comunicación directa para la comunidad integrada con Firebase/Supabase.
+- **📊 Admin Dashboard**: Panel de control con analíticas de redes sociales en tiempo real usando Recharts.
+- **🌐 Multi-lenguaje**: Soporte completo para Español, Inglés, Japonés y Francés.
+- **✨ Animaciones Premium**: Experiencia de usuario fluida impulsada por GSAP (GreenSock Animation Platform).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Stack Tecnológico
 
-## Expanding the ESLint configuration
+- **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
+- **Lenguaje**: [TypeScript](https://www.typescriptlang.org/)
+- **Estilos**: [Tailwind CSS](https://tailwindcss.com/)
+- **Animaciones**: [GSAP](https://greensock.com/gsap/) + [ScrollTrigger](https://greensock.com/scrolltrigger/)
+- **Backend/DB**: [Supabase](https://supabase.com/) & [Firebase](https://firebase.google.com/)
+- **Storage**: [AWS S3](https://aws.amazon.com/s3/) & [Cloudinary](https://cloudinary.com/)
+- **Gráficos**: [Recharts](https://recharts.org/)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Instalación y Desarrollo
+
+1. **Clonar el repositorio**:
+   ```bash
+   git clone https://github.com/bloodkiller666/fan-page-pantcookie.git
+   ```
+
+2. **Instalar dependencias**:
+   ```bash
+   npm install
+   ```
+
+3. **Configurar variables de entorno**:
+   Crea un archivo `.env.local` basado en los servicios utilizados (Supabase, Firebase, Cloudinary, AWS).
+
+4. **Ejecutar en desarrollo**:
+   ```bash
+   npm run dev
+   ```
+
+## 🔒 Seguridad
+
+El proyecto implementa estándares de seguridad avanzados:
+- Protección de rutas API con Rate Limiting.
+- Sanitización de entradas con DOMPurify.
+- Validación de esquemas con Zod.
+- Cabeceras de seguridad configuradas.
+
+## 📄 Licencia
+
+Este proyecto es privado y está destinado exclusivamente para la comunidad de ShuraHiwa.
+
+---
+Desarrollado con ❤️ por la comunidad de ShuraHiwa.

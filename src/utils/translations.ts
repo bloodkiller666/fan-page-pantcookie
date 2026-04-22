@@ -264,7 +264,8 @@ export const translations = {
                 searchPlayer: "Buscar jugador...",
                 allGames: "Todos los juegos",
                 refresh: "REFRESH",
-                displaying: "Mostrando {count} registros"
+                displaying: "Mostrando {count} registros",
+                recentActivity: "Actividad Reciente"
             },
             table: {
                 identity: "Identidad",
@@ -278,11 +279,12 @@ export const translations = {
                 noRecords: "No se encontraron registros."
             },
             moderation: {
-                title: "Centro de Moderación",
-                subtitle: "Lista Negra / Mensajes Restringidos por IA",
-                empty: "No hay mensajes en el purgatorio",
                 approve: "Aprobar Mensaje",
-                flagged: "MARCADO"
+                flagged: "MARCADO",
+                centerTitle: "Centro de Moderación",
+                purgatoryDesc: "Lista Negra / Mensajes Restringidos por IA",
+                approveBtn: "Aprobar",
+                noMessages: "No hay mensajes en el purgatorio"
             },
             activity: {
                 title: "Actividad Reciente",
@@ -803,7 +805,8 @@ export const translations = {
                 searchPlayer: "Search player...",
                 allGames: "All Games",
                 refresh: "REFRESH",
-                displaying: "Displaying {count} records"
+                displaying: "Displaying {count} records",
+                recentActivity: "Recent Activity"
             },
             table: {
                 identity: "Identity",
@@ -817,11 +820,12 @@ export const translations = {
                 noRecords: "No records found."
             },
             moderation: {
-                title: "Moderation Center",
-                subtitle: "Blacklist / AI Restricted Messages",
-                empty: "No messages in purgatory",
                 approve: "Approve Message",
-                flagged: "FLAGGED"
+                flagged: "FLAGGED",
+                centerTitle: "Moderation Center",
+                purgatoryDesc: "Blacklist / AI Restricted Messages",
+                approveBtn: "Approve",
+                noMessages: "No messages in purgatory"
             },
             activity: {
                 title: "Recent Activity",
