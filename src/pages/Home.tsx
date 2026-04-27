@@ -173,7 +173,7 @@ export default function Home() {
             icon: 'hn-image',
             link: '/multimedia',
             color: 'border-primary-pink text-primary-pink shadow-[0_0_20px_rgba(255,46,151,0.2)]',
-            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/ShuraHiwa%20RnC%20by%20Parkiranhonda.png'
+            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/ShuraHiwa-RnC-by-Parkiranhonda.webp'
         },
         {
             title: t('nav.games'),
@@ -181,7 +181,7 @@ export default function Home() {
             icon: 'hn-gaming',
             link: '/games',
             color: 'border-primary-blue text-primary-blue shadow-[0_0_20px_rgba(46,151,255,0.2)]',
-            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/1115_sin_titulo_20240914183653_1.png'
+            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/1115_sin_titulo_20240914183653_1.webp'
         },
         {
             title: t('nav.chat'),
@@ -205,7 +205,7 @@ export default function Home() {
             icon: 'hn-info-circle',
             link: '/about',
             color: 'border-purple-500 text-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.2)]',
-            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Tanabata1_by_higashibara_n.png'
+            image: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Tanabata1_by_higashibara_n.webp'
         }
     ];
 

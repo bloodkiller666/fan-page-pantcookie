@@ -37,7 +37,7 @@ export default function UpdateModal({ parentLoading }: { parentLoading: boolean 
                             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
                             <div className="relative z-10">
                                 <span className="inline-block px-4 py-1.5 bg-black/30 backdrop-blur-xl rounded-full text-[10px] font-black uppercase tracking-[0.3em] mb-3 border border-white/20 shadow-xl">
-                                    System v3.7.6
+                                    System v3.7.7
                                 </span>
                                 <h1 className="text-4xl font-black uppercase italic tracking-tighter drop-shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">
                                     Novedades

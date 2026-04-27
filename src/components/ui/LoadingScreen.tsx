@@ -90,7 +90,7 @@ export default function LoadingScreen() {
             <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end text-white/10 font-mono text-[9px] uppercase tracking-[0.2em]">
                 <div>
                     <div>System.v2025</div>
-                    <div>Core: v3.7.6_beta</div>
+                    <div>Core: v3.7.7_beta</div>
                 </div>
                 <div className="text-right">
                     <div>© 2025 Fan Page Shake-Gang</div>
