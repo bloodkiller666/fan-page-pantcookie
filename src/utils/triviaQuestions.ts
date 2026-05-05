@@ -475,7 +475,7 @@ export const triviaQuestions = {
     {
       id: 360,
       difficulty: 'medium',
-      question: 'Mi estructura es un diálogo con el oyente, lanzando una pregunta retórica sobre a quién llamar cuando algo extraño sucede en el vecindario, convirtiendo el miedo a lo paranormal en una fiesta de neón y mochilas de protones.',
+      question: '¿Algo extraño en el vecindario? Llama al equipo, olvida el calvario. Mochilas de protones y fiesta de neón; no le temo a nada, ¡soy el campeón!',
       options: ['Power of Love - Huey Lewis & The News', 'Thriller - Michael Jackson', 'Ghostbusters - Ray Parker Jr.', 'Men in Black - Will Smith'],
       correctIndex: 2,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Ghostbusters.mp3'
@@ -483,32 +483,32 @@ export const triviaQuestions = {
     {
       id: 361,
       difficulty: 'hard',
-      question: 'Sin necesidad de palabras, mi melodía evoca instantáneamente calles peligrosas, puestas de sol sobre palmeras y el regreso de un antihéroe a su barrio, convirtiéndome en el código sonoro de la libertad y el caos en un mundo abierto.',
-      options: ['Need For Speed', 'GTA San Andreas', 'Gangsta\'s Paradise', 'Still D.R.E'],
+      question: 'Calles de fuego y sombras de palmera, el código de vida de la acera entera. Regreso al barrio, libertad y caos; el sonido del mando que marca los pasos',
+      options: ['Need For Speed', 'GTA San Andreas', 'Gangsta\'s Paradise - Coolio', 'Still D.R.E - Dr. Dre ft. Snoop Dogg'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Grand%20Theft%20Auto_%20San%20Andreas%20(Official%20Theme%20Song).mp3'
     },
     {
       id: 362,
       difficulty: 'medium',
-      question: 'Soy una mezcla de nostalgia y ternura salvaje, donde una voz rasgada canta sobre un amor que le recuerda a su infancia, mientras el llanto de una guitarra nos guía hacia un final épico que pregunta insistentemente a dónde vamos ahora.',
-      options: ['Livin on a Prayer', 'Paradise City', 'Welcome to the Jungle', 'Sweet Child O\' Mine'],
+      question: 'Ternura salvaje y ojos de cielo, recuerdos de infancia que son mi consuelo. El llanto de cuerdas nos hace soñar; ¿a dónde vamos ahora?, solo queda preguntar',
+      options: ['Livin on a Prayer - Bon Jovi', 'Paradise City - Guns N\' Roses', 'Welcome to the Jungle - Guns N\' Roses', 'Sweet Child O\' Mine - Guns N\' Roses'],
       correctIndex: 3,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Guns%20N\'%20Roses%20-%20Sweet%20Child%20O\'%20Mine%20(Official%20Music%20Video).mp3'
     },
     {
       id: 363,
       difficulty: 'easy',
-      question: 'Mi narración se transforma a través del sufrimiento, convirtiendo las cenizas en una fe inquebrantable mientras un ritmo hipnótico y seco construye un himno de victoria personal que te obliga a creer en ti mismo.',
-      options: ['Believer', 'Thunder', 'Radiactive', 'Bones'],
+      question: 'Cenizas que arden, fe inquebrantable; el dolor me ha hecho alguien imbatible. Himno de victoria en un ritmo seco; cree en ti mismo, que el mundo sea tu eco.',
+      options: ['Believer - Imagine Dragons', 'Thunder - Imagine Dragons', 'Radiactive - Imagine Dragons', 'Bones - Imagine Dragons'],
       correctIndex: 0,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Imagine%20Dragons%20-%20Believer%20(Lyrics).mp3'
     },
     {
       id: 364,
       difficulty: 'easy',
-      question: 'Mi energía es contagiosa y frenética, impulsada por un bajo profundo y un estribillo explosivo donde confieso que siento el movimiento de mi propio esqueleto, convirtiendo la introspección en un baile eléctrico y desafiante.',
-      options: ['Natural', 'Enemy', 'Bones', 'Demons'],
+      question: 'Bajo profundo y baile esquelético, mi propio pulso se siente magnético. Energía frenética que rompe el cristal; soy el instinto en un cuerpo mortal.',
+      options: ['Natural - Imagine Dragons', 'Enemy - Imagine Dragons', 'Bones - Imagine Dragons', 'Demons - Imagine Dragons'],
       correctIndex: 2,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Imagine%20Dragons%20-%20Bones%20(Official%20Music%20Video).mp3'
     },
@@ -523,120 +523,120 @@ export const triviaQuestions = {
     {
       id: 366,
       difficulty: 'medium',
-      question: 'Soy elegante, robótico y seductor, impulsado por una línea de bajo que no descansa mientras confieso una obsesión que no puedo sacar de mi mente, convirtiéndome en el himno definitivo de la discoteca del nuevo milenio.',
-      options: ['Toxic', 'Can\'t Get You Out Of My Head', 'Hung Up', 'Love at First Sight'],
+      question: 'Bajo incansable, obsesión que no frena, mi mente robótica de ti está llena. Elegancia pura bajo el neón; no puedo sacarte de mi corazón.',
+      options: ['Toxic - Britney Spears', 'Can\'t Get You Out Of My Head - Kylie Minogue', 'Hung Up - Madonna', 'Love at First Sight - Kylie Minogue'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Kylie%20Minogue%20-%20Can\'t%20Get%20You%20Out%20Of%20My%20Head%20(Official%20Video).mp3'
     },
     {
       id: 367,
       difficulty: 'easy',
-      question: 'Estoy diseñado específicamente para que todo el mundo arrastre los pies al estilo shuffle, mientras mi letra proclama que la fiesta está en la casa y que lo único importante es pasarla bien y perder la cabeza.',
-      options: ['Sexy and I Know It', 'Party Rock', 'Yeah 3x', 'Hangover'],
+      question: 'Pasos de shuffle y mente perdida, la casa celebra la mejor movida. Olvida las penas, empieza a saltar; ¡que todo el mundo se ponga a bailar!',
+      options: ['Sexy and I Know It - LMFAO', 'Party Rock - LMFAO ft. Lauren Bennett, GoonRock', 'Yeah 3x - Chris Brown', 'Hangover - PSY ft. Snoop Dogg'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/LMFAO%20-%20Party%20Rock%20Anthem%20ft.%20Lauren%20Bennett%2C%20GoonRock.mp3'
     },
     {
       id: 368,
       difficulty: 'medium',
-      question: 'Mi historia habla de un reencuentro imaginario en un jueves de cualquier mes, donde el aroma de una flor se convierte en la prueba de un amor que se resiste a marchitarse, aunque solo sea en el recuerdo de una despedida que nunca termina.',
-      options: ['Deseo de Cosas Imposibles', 'La Playa', 'Jueves', 'Rosas'],
+      question: 'Jueves de olvido y amor que no muere, el alma recuerda a quien todavía quiere. Aroma de pétalos en una estación; eres el eco de mi corazón.',
+      options: ['Deseo de Cosas Imposibles - La Oreja de Van Gogh', 'La Playa - La Oreja de Van Gogh', 'Jueves - La Oreja de Van Gogh', 'Rosas - La Oreja de Van Gogh'],
       correctIndex: 3,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/La%20Oreja%20de%20Van%20Gogh%20-%20Rosas%20(V%C3%ADdeo%20Oficial).mp3'
     },
     {
       id: 369,
       difficulty: 'medium',
-      question: 'Mis prosas y metáforas son de un casino para hablar de un juego de seducción y secretos, donde mi expresión se mantiene fría e ilegible para ocultar lo que realmente siento, mientras domino la pista de baile con un estilo vanguardista que cambió el pop para siempre.',
-      options: ['Bad Romance', 'Poker Face', 'Toxic', 'Just Dance'],
+      question: 'Cartas en mesa, mirada de hielo; en este casino yo dicto el duelo. Seducción oculta tras un antifaz; mi rostro no miente, nunca verás mi paz.',
+      options: ['Bad Romance - Lady Gaga', 'Poker Face - Lady Gaga', 'Toxic - Britney Spears', 'Just Dance - Lady Gaga'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Lady%20Gaga%20-%20Poker%20Face%20(Official%20Music%20Video).mp3'
     },
     {
       id: 370,
       difficulty: 'hard',
-      question: 'Un viaje emocional que describo el vacío de quedarse sin ese apoyo fundamental cuando el mundo se desmorona, confesando con dolor que ahora que ya no estás, no hay nadie que me salve de la soledad ni de los días que se sienten eternos.',
-      options: ['Someone You Loved', 'Stay With Me', 'All Of Me', 'Before You Go'],
+      question: 'Días eternos, el mundo se apaga; tu ausencia es la herida que nunca se paga. Sin tu mano fuerte no sé caminar; falta el refugio que me enseñó a amar.',
+      options: ['Someone You Loved - Lewis Capaldi', 'Stay With Me - Sam Smith', 'All Of Me - John Legend', 'Before You Go - Lewis Capaldi'],
       correctIndex: 0,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Lewis%20Capaldi%20-%20Someone%20You%20Loved%20(Lyrics).mp3'
     },
     {
       id: 371,
       difficulty: 'easy',
-      question: 'Mi nombre es sinónimo de una coreografía que todo el mundo se sabe, desde bodas hasta estadios, y mi letra cuenta la historia de una mujer que busca alegría y nuevos amores mientras su novio está fuera de la ciudad, coronada por esa risa icónica y un salto final que cierra el círculo de la fiesta.',
-      options: ['Mambo No. 5', 'Bamboleo', 'Aserejé', 'La Macarena'],
+      question: 'Cuerpo de alegría y baile mundial, buscando un amor que sea ideal. Risa icónica y un salto al final; ¡dale a tu cuerpo un ritmo especial!',
+      options: ['Mambo No. 5 - Lou Bega', 'Bamboleo - Gipsy Kings', 'Aserejé - Las Ketchup', 'La Macarena - Los Del Rio'],
       correctIndex: 3,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Los%20Del%20Rio%20-%20Macarena%20(Lyrics).mp3'
     },
     {
       id: 372,
       difficulty: 'medium',
-      question: 'Soy una descarga de saxofón y ritmo norteño que se convirtió en el alma de los memes y las fiestas familiares. Mi letra es una advertencia cómica sobre los peligros de la buena vida y la comida sabrosa, narrando la preocupación de un hombre que, entre baile y zapateado, confiesa que el médico le ha prohibido los excesos porque "le sube" esa grasita en la sangre que da nombre a mi título.',
-      options: ['El Serrucho', 'El Colesterol', 'La Chona', 'El Ausente'],
+      question: 'Sabor de banquete y buen saxofón, pero el doctor me dio un madrugón. Zapateado alegre, adiós al exceso; ¡que esa grasita no me quite el pescuezo!',
+      options: ['El Serrucho - Los Kumbia Kings', 'El Colesterol - Los Vendavales De Adán Meléndez', 'La Chona - Los Tucanes de Tijuana', 'El Ausente - Los Tigres del Norte'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Los%20Vendavales%20De%20Ad%C3%A1n%20Mel%C3%A9ndez%20-%20El%20Colesterol%20(Video%20Oficial).mp3'
     },
     {
       id: 373,
       difficulty: 'easy',
-      question: 'Comienzo con el rasgueo romántico de una guitarra acústica para luego estallar en un dembow que paralizó al mundo entero. Mi letra es una oda a la seducción paciente, donde las voces se entrelazan para describir un deseo que se saborea paso a paso, convirtiéndome en el himno que rompió récords y borró las fronteras entre el español y el éxito global.',
-      options: ['Con Calma', 'Bailando', 'Despacito', 'Échame la culpa'],
+      question: 'Guitarra que invita y dembow que acelera, borrando por siempre cualquier frontera. Seducción paciente, paso a pasito; el mundo entero se rinde a este rito.',
+      options: ['Con Calma - Daddy Yankee ft. Snow', 'Bailando - Enrique Iglesias ft. Descemer Bueno, Gente De Zona', 'Despacito - Luis Fonsi ft. Daddy Yankee', 'Échame la culpa - Luis Fonsi ft. Demi Lovato'],
       correctIndex: 2,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Luis%20Fonsi%20-%20Despacito%20ft.%20Daddy%20Yankee.mp3'
     },
     {
       id: 374,
       difficulty: 'medium',
-      question: 'Hago homenaje a la brisa de San Pedro, narrando el deseo de volver a un lugar donde el tiempo se detiene, la naturaleza es salvaje y la música te transporta a una danza eterna bajo el sol mediterráneo.',
-      options: ['La Isla Bonita', 'Who\'s That Girl', 'Livin\' la Vida Loca', 'Alejandro'],
+      question: 'Brisa de San Pedro, sueño de cristal, donde el tiempo baila en un matorral. Danza eterna bajo el sol mediterráneo; el refugio amado de mi ser espontáneo.',
+      options: ['La Isla Bonita - Madonna', 'Who\'s That Girl - Madonna', 'Livin\' la Vida Loca - Ricky Martin', 'Alejandro - Lady Gaga'],
       correctIndex: 0,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Madonna%20-%20La%20Isla%20Bonita%20(Official%20Video).mp3'
     },
     {
       id: 375,
       difficulty: 'easy',
-      question: 'Comienzo con un órgano solemne y una voz contenida, pero pronto exploto en una celebración de fe y deseo, mezclando lo sagrado con lo profano mientras describo una conexión tan profunda que me hace sentir que estoy cayendo del cielo o escuchando una voz que me llama por mi nombre.',
-      options: ['Man In The Mirror', 'Like a Virgin', 'Like A Prayer', 'Ray of Light'],
+      question: 'Órgano solemne, fe y tentación, el cielo desciende en cada oración. Voz que me llama, misterio y deseo; entre lo sagrado y lo que poseo.',
+      options: ['Man In The Mirror - Michael Jackson', 'Like a Virgin - Madonna', 'Like A Prayer - Madonna', 'Ray of Light - Madonna'],
       correctIndex: 2,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Madonna%20-%20Like%20A%20Prayer%20(Official%20Video).mp3'
     },
     {
       id: 376,
       difficulty: 'easy',
-      question: 'Soy un eco de moombahton y pop electrónico que definió el sonido del verano con un "hook" de voz distorsionada que parece un silbido futurista. Mi ritmo es relajado pero bailable, con una percusión seca que marca el paso mientras una voz nórdica nos recuerda que todos necesitamos a alguien en quien apoyarnos cuando el mundo se vuelve demasiado pesado.',
-      options: ['Turn Down for What', 'Lean On', 'Cold Water', 'Let Me Love You'],
+      question: 'Ritmo de moombahton y voz de cristal, un silbido eterno que es marca mundial. El mundo pesa, la calma se ha ido; busca el apoyo del ser más querido.',
+      options: ['Turn Down for What', 'Lean On - Major Lazer & DJ Snake ft. MØ', 'Cold Water - Major Lazer ft. Justin Bieber & MØ', 'Let Me Love You - Major Lazer ft. Justin Bieber'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Major%20Lazer%20%26%20DJ%20Snake%20-%20Lean%20On%20(feat.%20M%C3%98)%20%5BOfficial%204K%20Music%20Video%5D.mp3'
     },
     {
       id: 377,
       difficulty: 'medium',
-      question: 'Soy un incendio de oro blanco que camina con zapatillas Chucks y elegancia de Saint Laurent. Mi arrogancia es tan letal que obligaría a un dragón a jubilarse y haría que los bomberos tengan que aparecer en escena.',
-      options: ['24K Magic', 'Get Lucky', 'Treasure', 'Uptown Funk'],
+      question: 'Oro blanco y Chucks, elegancia letal, un fuego que quema de forma triunfal. Arrogancia de seda que al mundo domina; ¡traigan bomberos, que el ritmo calcina!',
+      options: ['24K Magic - Bruno Mars', 'Get Lucky - Daft Punk ft. Pharrell Williams', 'Treasure - Bruno Mars', 'Uptown Funk - Mark Ronson ft. Bruno Mars'],
       correctIndex: 3,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Mark%20Ronson%20-%20Uptown%20Funk%20(Official%20Video)%20ft.%20Bruno%20Mars.mp3'
     },
     {
       id: 378,
       difficulty: 'easy',
-      question: 'Soy un invitado inesperado que llega de blanco a una fiesta ajena. Aunque nadie me llamó, todos terminan celebrando mi dulzura frente a un pastel.',
-      options: ['Animals', 'Sugar', 'Girls Like You', 'Payphone'],
+      question: 'Invitado sorpresa vestido de gala, mi ritmo de seda por toda la sala. Dulzura que llega sin ser invitada; el pastel se sirve con tu mirada.',
+      options: ['Animals - Maroon 5', 'Sugar - Maroon 5', 'Girls Like You - Maroon 5', 'Payphone - Maroon 5'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Maroon%205%20-%20Sugar%20(Lyrics).mp3'
     },
     {
       id: 379,
       difficulty: 'medium',
-      question: 'En la oscuridad del club, una cuenta regresiva marca el acecho. No hay palabras, solo una madera que golpea rítmicamente antes de que la manada entera empiece a saltar.',
-      options: ['Tsunami', 'Animals', 'Tremor', 'Virus'],
+      question: 'Madera que cruje y acecho en el club, la manada despierta bajo el altavoz. Cuenta regresiva, instinto animal; un salto gigante en la pista mundial.',
+      options: ['Tsunami - DVBBS & Borgeous', 'Animals - Martin Garrix', 'Tremor - Martin Garrix & Dimitri Vegas & Like Mike', 'Virus - Martin Garrix & Matisse & Sadko'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Martin%20Garrix%20-%20Animals%20(Original%20Mix).mp3'
     },
     {
       id: 380,
       difficulty: 'easy',
-      question: 'Dos condimentos distintos se baten en el centro de la pista. Uno te pide que te batas con fuerza, y el otro te hace mover el cuerpo mientras te "derrites" de calor en pleno baile.',
-      options: ['La Guitarra', 'Aserejé', 'Sopa de Caracol', 'Mayonesa'],
+      question: 'Duelo de sabores en medio del baile, batiendo la mezcla que flota en el aire. Ritmo que quema y te hace vibrar; ¡con una mano el cuerpo a batir y a gozar!',
+      options: ['La Guitarra - Los Auténticos Decadentes', 'Aserejé - Las Ketchup', 'Sopa de Caracol - Banda Blanca', 'Mayonesa - Chocolate'],
       correctIndex: 3,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Mayonesa.mp3'
     },
@@ -651,160 +651,160 @@ export const triviaQuestions = {
     {
       id: 382,
       difficulty: 'medium',
-      question: 'Un secreto a voces que se confiesa frente al espejo. Todo el mundo espera el momento exacto en que un solo instrumento tome el protagonismo, pero antes, el orgullo debe caer para que el ritmo pueda subir.',
-      options: ['Perfecta', 'Don', '743', 'Uno los dos'],
+      question: 'Secreto al espejo y orgullo en el suelo, la confesión sube buscando el consuelo. El ritmo estalla en un solo de gloria; ¡es la guitarra de Lolo marcando la historia!',
+      options: ['Perfecta - Miranda!', 'Don - Miranda!', '743 - Miranda!', 'Uno los dos - Miranda!'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Miranda!%20Don%20(Letra).mp3'
     },
     {
       id: 383,
       difficulty: 'medium',
-      question: 'Un eco que se agota bajo el peso de las expectativas ajenas. Camino por un sendero trazado por alguien más, pero mis pasos ya no sienten el suelo. Solo busco el silencio en medio de un ruido que me obliga a desaparecer para poder ser yo mismo.',
-      options: ['In The End', 'Numb', 'Boulevard of Broken Dreams', 'No More Sorrow'],
+      question: 'Pasos cansados en huellas extrañas, el peso del mundo me rompe las alas. Busco el silencio, dejar de sentir; perderme de todos para al fin existir.',
+      options: ['In The End - Linkin Park', 'Numb - Linkin Park', 'Boulevard of Broken Dreams - Green Day', 'No More Sorrow - Linkin Park'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Numb%20(Official%20Music%20Video)%20%5B4K%20UPGRADE%5D%20%20Linkin%20Park.mp3'
     },
     {
       id: 384,
       difficulty: 'hard',
-      question: 'Un grito ancestral cruza el cielo antes de que el silbato marque el destino. Es la fuerza de un elemento que no se ve, pero que empuja a un grupo de amigos a correr sobre un horizonte que parece no tener fin, buscando un sueño que vuela más alto que las nubes.',
-      options: ['Ready Steady Go', 'Butterfly', 'Dragon Screamer', 'Pegasus Fantasy'],
+      question: 'Grito del viento y silbato de gloria, amigos que corren buscando su historia. Un sueño que vuela, un reto constante; ¡el horizonte nos guía adelante!',
+      options: ['Ready Steady Go - SMAP', 'Butterfly - Smile.dk', 'Dragon Screamer - Da Pump', 'Pegasus Fantasy - Los Caballeros del Zodiaco'],
       correctIndex: 2,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Opening%20Captain%20Tsubasa%20Road%20to%202002%20Dragon%20Screamer%20((Subtitulada)).mp3'
     },
     {
       id: 385,
       difficulty: 'hard',
-      question: 'Una advertencia para los que se rinden temprano: el equilibrio es la clave. Primero se entrega el sudor y el cansancio a la jornada, para que cuando el sol caiga, la recompensa sea una energía que te obligue a no detenerte hasta que el cuerpo aguante.',
-      options: ['Play Hard', 'Titanium', 'Bad', 'Memories'],
+      question: 'Sudor en el alma y fuerza constante, el equilibrio es lo más importante. La jornada termina y el ritmo te atrapa; ¡dale con todo que el tiempo se escapa!',
+      options: ['Play Hard - David Guetta ft. Ne-Yo & Akon', 'Titanium - David Guetta ft. Sia', 'Bad - David Guetta ft. Showtek', 'Memories - David Guetta ft. Kid Cudi'],
       correctIndex: 0,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Play%20Hard%20(feat.%20Ne-Yo%20%26%20Akon)%20(New%20Edit).mp3'
     },
     {
       id: 386,
       difficulty: 'hard',
-      question: 'Una invitación abierta que no espera respuesta, solo acción. No importa lo que te falte o lo que te sobre; si el ritmo te encuentra, solo tienes que dar un paso al frente y reclamar lo que ya te pertenece por derecho propio.',
-      options: ['Stayin Alive', 'Give It Away', 'Hooked on a Feeling', 'Come and Get Your Love'],
+      question: 'Ritmo que llama y no admite un no, reclama el derecho que el alma te dio. Un paso al frente, sin miedo al error; ¡ven a buscar tu pedazo de amor!',
+      options: ['Stayin Alive - Bee Gees', 'Give It Away - Red Hot Chili Peppers', 'Hooked on a Feeling - Blue Swede', 'Come and Get Your Love - Redbone'],
       correctIndex: 3,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Redbone%20-%20Come%20and%20Get%20Your%20Love%20(Single%20Edit%20-%20Audio).mp3'
     },
     {
       id: 387,
       difficulty: 'hard',
-      question: 'Una promesa blindada que desafía el paso del tiempo. Es un pacto de fidelidad absoluta donde el abandono no es una opción y la decepción no tiene lugar. Un compromiso que se repite como un mantra para asegurar que, pase lo que pase, el suelo bajo tus pies nunca desaparecerá.',
-      options: ['Every Breath You Take', 'Together Forever', 'I Will Always Love You', 'Never Gonna Give You Up'],
+      question: 'Pacto blindado y promesa sincera, un lazo que aguanta la vida entera. Ni engaño ni olvido en este compás; ¡el suelo es seguro, conmigo estarás!',
+      options: ['Every Breath You Take - The Police', 'Together Forever - Rick Astley', 'I Will Always Love You - Whitney Houston', 'Never Gonna Give You Up - Rick Astley'],
       correctIndex: 3,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Rick%20Astley%20-%20Never%20Gonna%20Give%20You%20Up%20(Official%20Video)%20(4K%20Remaster).mp3'
     },
     {
       id: 388,
       difficulty: 'medium',
-      question: 'Aunque el cielo se desplome y los cimientos de la realidad se agrieten, mi mano será tu anclaje. Somos un refugio invisible que se mantiene intacto mientras el mundo exterior se deshace, probando que incluso en el caos más absoluto, el equilibrio es posible si no dejas de mirarme.',
-      options: ['Safe And Sound', 'Titanium', 'Radioactive', 'Pompeii'],
+      question: 'Cielos que caen y un mundo en ruina, pero tu mano es mi luz y mi guía. Refugio eterno que el caos ignora; si estás conmigo, nada me empeora.',
+      options: ['Safe And Sound - Capital Cities', 'Titanium - David Guetta ft. Sia', 'Radioactive - Imagine Dragons', 'Pompeii - Bastille'],
       correctIndex: 0,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Safe%20And%20Sound%20(lyric%20video).mp3'
     },
     {
       id: 389,
       difficulty: 'easy',
-      question: 'Una parte de la anatomía toma la palabra para confesar la verdad absoluta. No necesitan cuerdas vocales para hablar; su vaivén rítmico es el único testigo honesto que confirma que la atracción es real y que el control se ha perdido por completo.',
-      options: ['Loba', 'Hips Don\'t Lie', 'Whenever, Wherever', 'Beautiful Liar'],
+      question: 'Cuerpos que vibran y pierden el juicio, el movimiento es un dulce suplicio. Sin decir nada se cuenta la historia; ¡mis caderas no mienten, graban tu gloria!',
+      options: ['Loba - Shakira', 'Hips Don\'t Lie - Shakira ft. Wyclef Jean', 'Whenever, Wherever - Shakira', 'Beautiful Liar - Shakira & Beyoncé'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Shakira%20-%20Hips%20Don\'t%20Lie%20(featuring%20Wyclef%20Jean)%20(Official%204K%20Video)%20ft.%20Wyclef%20Jean.mp3'
     },
     {
       id: 390,
       difficulty: 'hard',
-      question: 'No necesito oro ni lujos para elevarme por encima del suelo. Me basta con una frecuencia constante que golpee mis pies para sentir que soy dueña del mundo, demostrando que la verdadera riqueza no se guarda en el bolsillo, sino en la vibración de la piel cuando se apagan las luces.',
-      options: ['Titanium', 'Diamonds', 'Price Tag', 'Cheap Thrills'],
+      question: 'Ni oro ni lujos para ser la reina, solo una nota que el alma despeina. Riqueza que vibra cuando el sol se apaga; ¡con este ritmo la deuda se paga!',
+      options: ['Titanium - David Guetta ft. Sia', 'Diamonds - Rihanna', 'Price Tag - Jessie J ft. B.o.B', 'Cheap Thrills - Sia ft. Sean Paul'],
       correctIndex: 3,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Sia%20-%20Cheap%20Thrills%20(Lyrics)%20ft.%20Sean%20Paul.mp3'
     },
     {
       id: 391,
       difficulty: 'medium',
-      question: 'Una entrada sigilosa deja huellas sobre la alfombra, pero el rastro desaparece antes de que la justicia llegue. Hay una pregunta angustiante que se repite una y otra vez, buscando señales de vida en una habitación donde solo queda el eco de un asaltante que se mueve con la elegancia de una sombra.',
-      options: ['Smooth Criminal', 'Billie Jean', 'Thriller', 'Beat It'],
+      question: 'Huellas de sombra sobre el tapiz, un rastro que borra cualquier cicatriz. El golpe es perfecto, la duda es fatal; ¡dinos si estás bien, Annie, en este umbral!',
+      options: ['Smooth Criminal - Michael Jackson', 'Billie Jean - Michael Jackson', 'Thriller - Michael Jackson', 'Beat It - Michael Jackson'],
       correctIndex: 0,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Smooth%20Criminal%20(Radio%20Edit).mp3'
     },
     {
       id: 392,
       difficulty: 'medium',
-      question: 'Soy el filtro de madera y sombra que divide el deseo de la realidad. A través de mis rendijas, un testigo oculto observa un espectáculo prohibido, esperando que el roce de la luz revele lo que la discreción intenta ocultar en la intimidad de una habitación.',
-      options: ['Lamento Boliviano', 'En la ciudad de la furia', 'Persiana Americana', 'Tratame Suavemente'],
+      question: 'Madera y sombra en un juego prohibido, soy el testigo de lo no permitido. Tras las rendijas el mundo se frena; ¡esperando el roce que el alma encadena!',
+      options: ['Lamento Boliviano - Enanitos Verdes', 'En la ciudad de la furia - Soda Stereo', 'Persiana Americana - Soda Stereo', 'Tratame Suavemente - Soda Stereo'],
       correctIndex: 2,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Soda%20Stereo%20-%20Persiana%20Americana%20(Official%20Audio).mp3'
     },
     {
       id: 393,
       difficulty: 'hard',
-      question: 'Un grito ensordecedor convoca a los mejores de cada reino a una prueba definitiva. No es solo música, es un pulso electrónico que acelera el corazón, anunciando que el tiempo de las palabras ha terminado y solo la destreza física decidirá quién sobrevive al destino final.',
-      options: ['Techno Syndrome', 'Fire', 'The Eye Of The Tiger', 'Sandstorm'],
+      question: 'Grito de guerra que invoca al destino, fuerza y destreza en un mismo camino. El pulso acelera, la lucha es vital; ¡que empiece el combate!',
+      options: ['Techno Syndrome - Mortal Kombat', 'Fire - The Prodigy', 'The Eye Of The Tiger - Survivor', 'Sandstorm - Darude'],
       correctIndex: 0,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Techno%20Syndrome%20(Mortal%20Kombat).mp3'
     },
     {
       id: 394,
       difficulty: 'medium',
-      question: 'Es una súplica frenética que corre a la velocidad de la luz. Un pulso eléctrico que admite un error constante y pide detener el reloj, porque el vacío que deja la ausencia es un abismo que el protagonista no tiene la fuerza para cruzar en solitario.',
-      options: ['Sorry', 'Stay', 'Blinding Lights', 'As It Was'],
+      question: 'Error constante y pulso eléctrico, pidiendo tiempo en un mundo frenético. No te vayas ahora, detén el vacío; ¡quédate conmigo en este desafío!',
+      options: ['Sorry - Justin Bieber', 'Stay - The Kid LAROI & Justin Bieber', 'Blinding Lights - The Weeknd', 'As It Was - Harry Styles'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/The%20Kid%20LAROI%2C%20Justin%20Bieber%20-%20STAY%20(Official%20Video).mp3'
     },
     {
       id: 395,
       difficulty: 'medium',
-      question: 'No soy una canción de amor, aunque muchos me confundan con una. Soy la sombra que te sigue sin que te des cuenta, un registro meticuloso de cada movimiento que haces y cada aire que inhalas. Soy la mirada que nunca parpadea, prometiendo que, sin importar a dónde vayas, siempre habrá alguien observando desde la distancia.',
-      options: ['Every Breath You Take', 'Together Forever', 'I Will Always Love You', 'Never Gonna Give You Up'],
+      question: 'Sombra que acecha y mirada constante, un lazo invisible pero asfixiante. Cada respiro y paso que des; ¡te estoy observando, no te escaparás esta vez!',
+      options: ['Every Breath You Take - The Police', 'Together Forever - Rick Astley', 'I Will Always Love You - Whitney Houston', 'Never Gonna Give You Up - Rick Astley'],
       correctIndex: 0,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/The%20Police%20-%20Every%20Breath%20You%20Take%20(Official%20Music%20Video).mp3'
     },
     {
       id: 396,
       difficulty: 'medium',
-      question: 'Una ciudad desierta me observa mientras busco un rastro de calor en medio de un frío artificial. Mis sentidos fallan y la realidad se desdibuja, dejándome a merced de una frecuencia eléctrica que corre por mis venas, recordándome que solo tu presencia puede devolverme la capacidad de ver el mundo tal como es.',
-      options: ['Midnight City', 'Blinding Lights', 'Stay', 'Take On Me'],
+      question: 'Ciudad vacía y frío que quema, busco tu rastro en este dilema. Luces que ciegan y un pulso eléctrico; ¡solo tu abrazo me saca de este trance hipnótico!',
+      options: ['Midnight City - M83', 'Blinding Lights - The Weeknd', 'Stay - The Kid LAROI & Justin Bieber', 'Take On Me - a-ha'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/The%20Weeknd%20-%20Blinding%20Lights%20(Official%20Audio).mp3'
     },
     {
       id: 397,
       difficulty: 'medium',
-      question: 'Soy un sonido que parece venir de una cuerda pequeña y alegre, una señal que viaja por el aire buscando sintonizar con alguien que se mueve en una onda distinta a la de los demás. No eres una extraña, eres la pieza que faltaba en mi radio personal para que la melodía por fin tenga sentido.',
-      options: ['Hey Soul Sister', 'Riptide', 'I\'m Yours', 'Drops of Jupiter'],
+      question: 'Cuerdas de ukelele y alma que brilla, tu sintonía es una maravilla. Pieza perfecta de mi radio personal; ¡conecta tu onda a mi ritmo vital!',
+      options: ['Hey Soul Sister - Train', 'Riptide - Vance Joy', 'I\'m Yours - Jason Mraz', 'Drops of Jupiter - Train'],
       correctIndex: 0,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Train%20-%20Hey%2C%20Soul%20Sister%20(Official%20Video).mp3'
     },
     {
       id: 398,
       difficulty: 'medium',
-      question: 'Una pregunta que se repite cada vez que algo extraño sucede en las sombras. Seguimos el rastro de un enigma que nadie más se atreve a resolver, esperando que un grupo de amigos y un acompañante un tanto miedoso desenmascaren la verdad antes de que termine el episodio.',
-      options: ['Teen Titans', 'I\'m Just a Kid', 'Ghostbusters', 'What\'s New Scooby-Doo'],
+      question: 'Enigma en las sombras y rastro de miedo, amigos que avanzan cumpliendo un deseo. La máscara cae, la verdad ya se ve; ¡Scooby-Doo, dinos dónde estás, que te quiero ver!',
+      options: ['Teen Titans - P.O.D', 'I\'m Just a Kid - Simple Plan', 'Ghostbusters - Ray Parker Jr.', 'What\'s New Scooby-Doo - Simple Plan'],
       correctIndex: 3,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/What\'s%20New%20Scooby-Doo%20(Intro%20Completo)%20(By_%20Simple%20Plan)%20(Subtitulado%20al%20Espa%C3%B1ol%20%20Lyrics).mp3'
     },
     {
       id: 399,
       difficulty: 'medium',
-      question: 'Un camino largo que se divide por un momento, pero cuyos rastros volverán a cruzarse en otro horizonte. Es el recuento de cada kilómetro recorrido hombro a hombro, una promesa escrita en el asfalto que asegura que la distancia es solo una pausa antes de volver a contar las historias que quedaron pendientes.',
-      options: ['I\'ll Be Missing You', 'See You Again', 'When I See You Smile', 'One Sweet Day'],
+      question: 'Asfalto y memoria en un largo camino, hilos que cruzan nuestro destino. Kilómetros juntos, historias de ayer; ¡la pausa termina al volverte a ver!',
+      options: ['I\'ll Be Missing You - Puff Daddy', 'See You Again - Wiz Khalifa ft. Charlie Puth', 'When I See You Smile - Bad English', 'One Sweet Day - Mariah Carey & Boyz II Men'],
       correctIndex: 1,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Wiz%20Khalifa%20-%20See%20You%20Again%20ft.%20Charlie%20Puth%20%5BOfficial%20Video%5D%20Furious%207%20Soundtrack.mp3'
     },
     {
       id: 400,
       difficulty: 'hard',
-      question: 'Un lugar donde el joven cansado puede encontrar un techo y una nueva dirección. Es una mano extendida que promete que no hay necesidad de sentirse solo cuando el mundo exterior parece darte la espalda; solo tienes que cruzar la puerta, dejar el orgullo fuera y unirte a un grupo donde todos son bienvenidos por igual.',
-      options: ['YMCA', 'Rasputin', 'Moscou', 'Macho Man'],
+      question: 'Puerta que invita y techo seguro, deja tu orgullo y sal del apuro. Joven cansado, no hay soledad; ¡aquí todos somos una hermandad!',
+      options: ['YMCA - Village People', 'Rasputin - Boney M', 'Moscu - Dschinghis Khan', 'Macho Man - Village People'],
       correctIndex: 0,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/YMCA.mp3'
     },
     {
       id: 401,
       difficulty: 'medium',
-      question: 'Una mano de grafito se extiende desde el vacío para arrastrarte a un mundo donde las leyes de la física no existen. Es una carrera contra el tiempo y contra figuras que no perdonan, donde la única forma de sobrevivir es aceptar el desafío de entregarse por completo a alguien que solo vive en trazos y sombras.',
-      options: ['Sledgehammer', 'The Sun Always Shines on T.V.', 'Take On Me', 'Back On Track'],
+      question: 'Mundo de trazos y leyes perdidas, manos de sombra que cambian las vidas. Una carrera que el tiempo no frena; ¡en este dibujo tu amor me encadena!',
+      options: ['Sledgehammer - Peter Gabriel', 'The Sun Always Shines on T.V. - a-ha', 'Take On Me - a-ha', 'Back On Track - AC/DC'],
       correctIndex: 2,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/a-ha%20-%20Take%20On%20Me%20(Lyrics).mp3'
     },
