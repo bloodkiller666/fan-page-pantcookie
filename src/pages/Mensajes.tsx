@@ -284,9 +284,6 @@ const MensajesContent = () => {
     }
   };
 
-  const handleDelete = (id: number) => {
-    setMessages(messages.filter(msg => msg.id !== id));
-  };
 
   const handleTabChange = (tab: 'write' | 'read') => {
     setActiveTab(tab);
@@ -724,9 +721,6 @@ const MensajesContent = () => {
                               </div>
                             </div>
                           </div>
-                          <button onClick={() => handleDelete(msg.id)} aria-label={t('wall.deleteMessage')} className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-50 dark:bg-white/5 text-gray-300 dark:text-white/20 hover:text-red-500 hover:bg-red-500/10 transition-all">
-                            <FaTrash size={12} />
-                          </button>
                         </div>
 
                         <div className="bg-gray-50 dark:bg-black/30 p-5 rounded-3xl border border-gray-100 dark:border-white/5 flex flex-col justify-start flex-grow overflow-hidden mb-6 relative">

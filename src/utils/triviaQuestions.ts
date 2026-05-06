@@ -267,10 +267,10 @@ export const triviaQuestions = {
     {
       id: 334,
       difficulty: 'medium',
-      question: '',
-      options: [],
-      correctIndex: 1,
-      audioUrl: ''
+      question: '¡Recarga el hechizo y apunta al corazón, una dosis de azúcar y mucha pasión! Entre píxeles y brillos el mal se detiene; ¡mi disparo de amor todo lo cura y mantiene!',
+      options: ['Senbonzakura - Hatsune Miku', 'Levan Polkka - Hatsune Miku', 'Rolling Girl - Hatsune Miku', 'MVM@GICALCURE! LOVE  SHOT!  SAWTOWNE feat. Hatsune Miku'],
+      correctIndex: 3,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/MVM%40GICALCURE!%20LOVE%20%20SHOT!%20%20SAWTOWNE%20feat.%20Hatsune%20Miku.mp3'
     },
     {
       id: 335,
@@ -299,10 +299,10 @@ export const triviaQuestions = {
     {
       id: 338,
       difficulty: 'medium',
-      question: '',
-      options: [''],
+      question: '¿Es esto real o solo un sueño? Entre sombras y luces me siento pequeño. Un rayo, un juicio, ¡magnífico estruendo! ¡Grita el destino mientras voy renaciendo!',
+      options: ['Bohemian Rhapsody - Queen', 'We Will Rock You - Queen', 'We Are The Champions - Queen', 'Another One Bites the Dust - Queen'],
       correctIndex: 0,
-      audioUrl: ''
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Queen%20%20Bohemian%20Rhapsody%20(Official%20Video%20Remastered).mp3'
     },
     {
       id: 339,
@@ -379,10 +379,10 @@ export const triviaQuestions = {
     {
       id: 348,
       difficulty: 'hard',
-      question: '',
-      options: ['', '', '', ''],
+      question: 'El sol se retira y la luna nos guía, buscando en la noche una dulce alegría. Leyendas de plata que el tiempo no frena; ¡si el ritmo nos une, la suerte se estrena!',
+      options: ['Around the World - Daft Punk', 'Get Lucky - Daft Punk ft. Pharrell Williams', 'One More Time - Daft Punk', 'Harder, Better, Faster, Stronger - Daft Punk'],
       correctIndex: 1,
-      audioUrl: ''
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Daft%20Punk%20-%20Get%20Lucky%20(Official%20Audio)%20ft.%20Pharrell%20Williams%2C%20Nile%20Rodgers.mp3'
     },
     {
       id: 349,
@@ -395,10 +395,10 @@ export const triviaQuestions = {
     {
       id: 350,
       difficulty: 'medium',
-      question: '',
-      options: [''],
+      question: 'Vuelo en el viento, un grito al azar, palabras que bailan sobre el radar. Un eco de mayo, un ritmo que atrapa; ¡bajo el cielo de tilos la magia se escapa!',
+      options: ['Mr. Saxobeat - Alexandra Stan', 'Stereo Love - Edward Maya & Vika Jigulina', 'Infinity - Guru Josh', 'O-Zone - Dragostea Din Tei'],
       correctIndex: 3,
-      audioUrl: ''
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/O-Zone%20-%20Dragostea%20Din%20Tei%20%5BOfficial%20Video%5D.mp3'
     },
     {
       id: 351,
