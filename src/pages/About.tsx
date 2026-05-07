@@ -99,11 +99,11 @@ const PokemonCard = ({ data, activeTab }: { data: PokemonData, activeTab: string
                 <div className="absolute inset-0 card-texture z-10"></div>
                 <div className="absolute inset-0 shiny-sparkle opacity-20 mix-blend-screen z-20"></div>
 
-                {/* Silver Inner Bevel for Shura, or simple border for Pantcookie */}
+                {/* Silver Inner Bevel for Shura, or simple border for pantcake */}
                 <div className={`w-full h-full p-1.5 relative z-30 ${isShura ? 'bg-metallic-silver rounded-[1.8rem]' : ''}`}>
                     <div className={`w-full h-full rounded-[1.5rem] p-4 flex flex-col relative overflow-hidden ${isShura ? 'bg-gradient-to-br from-indigo-950 via-purple-900 to-black' : 'bg-[#FFD700] border-4 border-gold-dark'}`}>
 
-                        {/* Shura specific Holo Chromatic for background if it was Pantcookie style, but user wants it for the cards differently */}
+                        {/* Shura specific Holo Chromatic for background if it was pantcake style, but user wants it for the cards differently */}
                         {!isShura && <div className="absolute inset-0 bg-gold-gradient opacity-40 mix-blend-overlay"></div>}
 
                         {/* Shimmer overlay for extra height room */}
@@ -264,8 +264,8 @@ const About = () => {
         totalCards: '10'
     };
 
-    const pantcookieData = {
-        name: 'Pantcookie',
+    const pantcakeData = {
+        name: 'pantcake',
         hp: '200',
         type: 'electric',
         image: 'https://ik.imagekit.io/7zy1frxsr/Fotos/pantcake.png?updatedAt=1769060919997',
@@ -296,7 +296,7 @@ const About = () => {
         totalCards: '10'
     };
 
-    const activeData = activeTab === 'shurahiwa' ? shuraData : pantcookieData;
+    const activeData = activeTab === 'shurahiwa' ? shuraData : pantcakeData;
 
     return (
         <div ref={containerRef} className="min-h-screen pt-24 pb-12 relative overflow-hidden font-orbitron transition-colors duration-500">
@@ -332,10 +332,10 @@ const About = () => {
                             <span className="inline-block skew-x-[12deg]">SHURAHIWA</span>
                         </button>
                         <button
-                            onClick={() => setActiveTab('pantcookie')}
-                            className={`px-10 py-3 rounded-sm font-bold skew-x-[-12deg] transition-all transform hover:scale-105 ${activeTab === 'pantcookie' ? 'bg-[#ff00e5] text-white shadow-holo-glow-pink' : 'bg-white/10 text-gray-400 border border-white/20'}`}
+                            onClick={() => setActiveTab('pantcake')}
+                            className={`px-10 py-3 rounded-sm font-bold skew-x-[-12deg] transition-all transform hover:scale-105 ${activeTab === 'pantcake' ? 'bg-[#ff00e5] text-white shadow-holo-glow-pink' : 'bg-white/10 text-gray-400 border border-white/20'}`}
                         >
-                            <span className="inline-block skew-x-[12deg]">PANTCOOKIE</span>
+                            <span className="inline-block skew-x-[12deg]">pantcake</span>
                         </button>
                     </div>
                 </div>

@@ -113,11 +113,11 @@ const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }: LightboxPro
                     <div className="flex items-center gap-4 mb-6 border-b border-gray-100 dark:border-gray-800 pb-4">
                         <div className="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-500">
                             <div className="w-full h-full rounded-full bg-white dark:bg-gray-900 overflow-hidden">
-                                <img src="https://ui-avatars.com/api/?name=Pantcookie+Community&background=fd219f&color=fff" alt="Pantcookie Logo" className="w-full h-full object-cover" />
+                                <img src="https://ui-avatars.com/api/?name=pantcake+Community&background=fd219f&color=fff" alt="pantcake Logo" className="w-full h-full object-cover" />
                             </div>
                         </div>
                         <div>
-                            <h3 className="font-bold text-gray-900 dark:text-white">Pantcookie Community</h3>
+                            <h3 className="font-bold text-gray-900 dark:text-white">pantcake Community</h3>
                             <p className="text-xs text-gray-500 dark:text-gray-400">Fan Page Oficial</p>
                         </div>
                     </div>
@@ -135,7 +135,7 @@ const Lightbox = ({ images, currentIndex, onClose, onNext, onPrev }: LightboxPro
 
                         <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-800/50">
                             <span className="text-sm font-bold text-gray-500 dark:text-gray-400">
-                                Créditos: <span className="text-[#ff00ff]">{currentImage.credit || "@Pantcookie"}</span>
+                                Créditos: <span className="text-[#ff00ff]">{currentImage.credit || "@pantcake"}</span>
                             </span>
                         </div>
                     </div>

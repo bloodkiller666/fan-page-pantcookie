@@ -51,7 +51,7 @@ const nextConfig = {
             { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
             { protocol: 'https', hostname: 'pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev' },
             { protocol: 'https', hostname: 'www.google.com' },
-            { protocol: 'https', hostname: 'pantcookie-fanpage.firebasestorage.app' },
+            { protocol: 'https', hostname: 'pantcake-fanpage.firebasestorage.app' },
             { protocol: 'https', hostname: 'www.transparenttextures.com' },
             { protocol: 'https', hostname: 'images.unsplash.com' },
             { protocol: 'https', hostname: '**.unsplash.com' },

@@ -13,7 +13,7 @@ export const cld = new Cloudinary({
 // Helper to get image object
 export const getCloudinaryImage = (publicId: string) => {
     // We use the publicId exactly as provided by the user to avoid guessing paths/extensions
-    // User should provide the "Public ID" from Cloudinary dashboard (e.g., "pantcookie-assets/image1" or "image1_xyz")
+    // User should provide the "Public ID" from Cloudinary dashboard (e.g., "pantcake-assets/image1" or "image1_xyz")
     const myImage = cld.image(publicId);
 
     // Apply default optimizations

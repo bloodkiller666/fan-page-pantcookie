@@ -50,8 +50,8 @@ const KNOWLEDGE_BASE = [
     {
         keywords: ['quien eres', 'tu nombre', 'como te llamas', 'que eres'],
         responses: [
-            `Soy Pantcookie IA, la inteligencia artificial de la ShakeGang.`,
-            "Me llaman Pantcookie IA. Mi misión es ser tu compañero de chat y comer cookies virtuales (procesar datos).",
+            `Soy pantcake IA, la inteligencia artificial de la ShakeGang.`,
+            "Me llaman pantcake IA. Mi misión es ser tu compañero de chat y comer cookies virtuales (procesar datos).",
             `Soy una IA entrenada para la ShakeGang. ${knowledgeData.bot.role}`
         ]
     },
@@ -114,7 +114,7 @@ const KNOWLEDGE_BASE = [
             "¿Cuál es el colmo de Shura? Que se le vaya el internet en el clímax del juego.",
             "Iba a contarte un chiste sobre el lag, pero... ... ... ... ya pasó.",
             "¿Por qué el libro de matemáticas estaba triste? Porque tenía demasiados problemas. (Ba-dum-tss).",
-            "Un Pantcookie entra a un bar... y pide leche. Fin."
+            "Un pantcake entra a un bar... y pide leche. Fin."
         ]
     },
     {

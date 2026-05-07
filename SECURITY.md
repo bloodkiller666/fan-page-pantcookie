@@ -1,4 +1,4 @@
-# Security Policy - fan-page-pantcookie
+# Security Policy - fan-page-pantcake
 
 This document outlines the security measures implemented in this project to protect against common web vulnerabilities, specifically focusing on the 2026 threat landscape.
 

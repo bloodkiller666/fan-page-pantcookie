@@ -46,7 +46,7 @@ def process_file(file_path):
         print(f"Updated {file_path} with imports: {icons_to_import}")
         
 def main():
-    src_dir = r"c:\Users\LENOVO\Documents\fan-page-pantcookie\src"
+    src_dir = r"c:\Users\LENOVO\Documents\fan-page-pantcake\src"
     for root, dirs, files in os.walk(src_dir):
         for file in files:
             if file.endswith('.tsx') or file.endswith('.ts'):

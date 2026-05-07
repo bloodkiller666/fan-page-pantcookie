@@ -65,7 +65,7 @@ const Chat = () => {
                                 <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
                                     <i className="hn hn-chart-network text-primary text-xl" />
                                 </div>
-                                <div 
+                                <div
                                     className={`absolute bottom-0 right-0 size-3 rounded-full border-2 border-white dark:border-background-dark flex items-center justify-center transition-all duration-500 cursor-pointer ${isOnline ? 'bg-[#39ff14] shadow-[0_0_10px_#39ff14]' : 'bg-slate-500'}`}
                                     onClick={() => setIsOnline(!isOnline)}
                                     title={isOnline ? "Online" : "Offline"}
@@ -74,7 +74,7 @@ const Chat = () => {
                                 </div>
                             </div>
                             <div>
-                                <h2 className="text-base font-bold tracking-tight text-slate-900 dark:text-slate-100">Pantcookie IA</h2>
+                                <h2 className="text-base font-bold tracking-tight text-slate-900 dark:text-slate-100">pantcake IA</h2>
                                 <span className="text-[9px] uppercase tracking-widest text-primary font-bold">Neural Link: Active</span>
                             </div>
                         </div>
@@ -87,8 +87,8 @@ const Chat = () => {
                                     <span className="text-accent-magenta">{analytics.cpu}%</span>
                                 </div>
                                 <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div 
-                                        className="h-full bg-accent-magenta transition-all duration-[1500ms] ease-out neon-glow-magenta" 
+                                    <div
+                                        className="h-full bg-accent-magenta transition-all duration-[1500ms] ease-out neon-glow-magenta"
                                         style={{ width: `${analytics.cpu}%` }}
                                     ></div>
                                 </div>
@@ -99,8 +99,8 @@ const Chat = () => {
                                     <span className="text-accent-magenta">{analytics.throughputValue} GB/S</span>
                                 </div>
                                 <div className="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-                                    <div 
-                                        className="h-full bg-accent-magenta transition-all duration-[1500ms] ease-out neon-glow-magenta" 
+                                    <div
+                                        className="h-full bg-accent-magenta transition-all duration-[1500ms] ease-out neon-glow-magenta"
                                         style={{ width: `${analytics.throughput}%` }}
                                     ></div>
                                 </div>

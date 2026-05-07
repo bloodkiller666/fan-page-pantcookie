@@ -14,20 +14,20 @@ export async function POST(req: NextRequest) {
   // 1. Basic Auth Shield
   const authHeader = req.headers.get('Authorization');
   const adminApiKey = process.env.ADMIN_API_KEY || process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
-  
+
   if (!authHeader || authHeader !== `Bearer ${adminApiKey}`) {
     return NextResponse.json({ error: 'Unauthorized - Shield Active' }, { status: 401 });
   }
 
   try {
     const body = await req.json();
-    
+
     // 2. Input Validation Shield (Zod)
     const result = ModerationSchema.safeParse(body);
     if (!result.success) {
-      return NextResponse.json({ 
-        error: 'Invalid input', 
-        details: result.error.format() 
+      return NextResponse.json({
+        error: 'Invalid input',
+        details: result.error.format()
       }, { status: 400 });
     }
 
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       messages: [
         {
           role: 'system',
-          content: `Eres un moderador estricto de mensajes para una comunidad de fans de Pantcookie (streamer).
+          content: `Eres un moderador estricto de mensajes para una comunidad de fans de pantcake (streamer).
           Tu función es proteger la comunidad de mensajes dañinos o que no aporten valor positivo.
 
           Debes marcar un mensaje como "banned" si cumple CUALQUIERA de estas condiciones:
@@ -79,21 +79,21 @@ export async function POST(req: NextRequest) {
     // Validate that the response has the expected shape
     if (!moderationResult.status || !['approved', 'banned'].includes(moderationResult.status)) {
       console.warn('Unexpected moderation response shape:', moderationResult);
-      return NextResponse.json({ 
-        status: 'banned', 
-        reason: 'Respuesta inesperada del moderador, se requiere revisión manual.' 
+      return NextResponse.json({
+        status: 'banned',
+        reason: 'Respuesta inesperada del moderador, se requiere revisión manual.'
       });
     }
-    
+
     return NextResponse.json(moderationResult);
 
   } catch (error) {
     // SAFETY-FIRST: On any error, default to BANNED, not approved.
     // This prevents content from slipping through during outages.
     console.error('Moderation error:', error);
-    return NextResponse.json({ 
-      status: 'banned', 
-      reason: 'Error en el servicio de moderación. Mensaje enviado a revisión manual por seguridad.' 
+    return NextResponse.json({
+      status: 'banned',
+      reason: 'Error en el servicio de moderación. Mensaje enviado a revisión manual por seguridad.'
     }, { status: 200 });
   }
 }

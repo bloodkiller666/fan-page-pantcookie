@@ -1,6 +1,6 @@
-# 🍪 Fan Page Pantcookie | ShuraHiwa Community
+# 🍪 Fan Page pantcake | ShuraHiwa Community
 
-![Pantcookie Banner](https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png)
+![pantcake Banner](https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png)
 
 Una plataforma interactiva de alto rendimiento dedicada a la comunidad de **ShuraHiwa**, diseñada con una estética gamer/cyberpunk y animaciones premium.
 
@@ -27,7 +27,7 @@ Una plataforma interactiva de alto rendimiento dedicada a la comunidad de **Shur
 
 1. **Clonar el repositorio**:
    ```bash
-   git clone https://github.com/bloodkiller666/fan-page-pantcookie.git
+   git clone https://github.com/bloodkiller666/fan-page-pantcake.git
    ```
 
 2. **Instalar dependencias**:

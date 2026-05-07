@@ -11,7 +11,7 @@ const PokeballIcon = ({ isDark }: { isDark: boolean }) => (
     <svg viewBox="0 0 100 100" className="w-6 h-6 transition-transform duration-700 group-hover:rotate-[360deg] drop-shadow-[0_0_8px_rgba(253,33,159,0.4)]">
         {/* Base: Blanco en light, morado oscuro en dark */}
         <circle cx="50" cy="50" r="48" fill={isDark ? "#ffffffff" : "#ffffff"} stroke="#000000" strokeWidth="6" />
-        {/* Mitad superior: Rosa Pantcookie */}
+        {/* Mitad superior: Rosa pantcake */}
         <path d="M2 50 A48 48 0 0 1 98 50 Z" fill="#fd219f" stroke="#000000" strokeWidth="6" />
         {/* Cinturón negro */}
         <rect x="2" y="47" width="96" height="6" fill="#000000" />
@@ -24,9 +24,9 @@ const PokeballIcon = ({ isDark }: { isDark: boolean }) => (
 );
 
 const HexagonLogo = ({ isDark, innerRef }: { isDark: boolean, innerRef: React.RefObject<SVGSVGElement | null> }) => (
-    <svg 
+    <svg
         ref={innerRef}
-        viewBox="0 0 100 100" 
+        viewBox="0 0 100 100"
         className="w-12 h-12 md:hidden drop-shadow-[0_0_12px_rgba(253,33,159,0.6)]"
     >
         <defs>
@@ -36,30 +36,30 @@ const HexagonLogo = ({ isDark, innerRef }: { isDark: boolean, innerRef: React.Re
             </linearGradient>
         </defs>
         {/* Outer Hexagon Border */}
-        <path 
-            d="M50 5 L95 27.5 V72.5 L50 95 L5 72.5 V27.5 Z" 
-            fill="none" 
-            stroke="url(#neonGradient)" 
-            strokeWidth="4" 
+        <path
+            d="M50 5 L95 27.5 V72.5 L50 95 L5 72.5 V27.5 Z"
+            fill="none"
+            stroke="url(#neonGradient)"
+            strokeWidth="4"
             className="hexagon-border transition-all duration-500"
         />
         {/* Inner Hexagon Glow */}
-        <path 
-            d="M50 12 L88 31 V69 L50 88 L12 69 V31 Z" 
-            fill={isDark ? "rgba(253,33,159,0.05)" : "rgba(253,33,159,0.1)"} 
-            stroke={isDark ? "#fd219f" : "#000000"} 
-            strokeWidth="1" 
+        <path
+            d="M50 12 L88 31 V69 L50 88 L12 69 V31 Z"
+            fill={isDark ? "rgba(253,33,159,0.05)" : "rgba(253,33,159,0.1)"}
+            stroke={isDark ? "#fd219f" : "#000000"}
+            strokeWidth="1"
             opacity="0.6"
         />
         {/* S-G Initials */}
-        <text 
-            x="50" 
-            y="56" 
-            textAnchor="middle" 
+        <text
+            x="50"
+            y="56"
+            textAnchor="middle"
             dominantBaseline="middle"
-            className="font-black italic" 
-            style={{ 
-                fontSize: '22px', 
+            className="font-black italic"
+            style={{
+                fontSize: '22px',
                 fill: isDark ? '#ffffff' : '#111111',
                 fontWeight: 900,
                 letterSpacing: '2px',
@@ -69,12 +69,12 @@ const HexagonLogo = ({ isDark, innerRef }: { isDark: boolean, innerRef: React.Re
             S-G
         </text>
         {/* Tech scan line effect (animated via GSAP) */}
-        <line 
-            x1="10" y1="30" x2="90" y2="30" 
-            stroke="#ffffff" 
-            strokeWidth="1" 
-            opacity="0" 
-            className="mobile-logo-scan" 
+        <line
+            x1="10" y1="30" x2="90" y2="30"
+            stroke="#ffffff"
+            strokeWidth="1"
+            opacity="0"
+            className="mobile-logo-scan"
         />
     </svg>
 );
@@ -153,7 +153,7 @@ const Navbar = () => {
         if (!mobileLogoRef.current) return;
 
         const tl = gsap.timeline({ repeat: -1 });
-        
+
         // Breath Effect
         tl.to(mobileLogoRef.current, {
             scale: 1.05,
@@ -164,13 +164,13 @@ const Navbar = () => {
         });
 
         // Scan Line Effect
-        gsap.fromTo('.mobile-logo-scan', 
+        gsap.fromTo('.mobile-logo-scan',
             { y: -20, opacity: 0 },
-            { 
-                y: 60, 
-                opacity: 0.8, 
-                duration: 2.5, 
-                repeat: -1, 
+            {
+                y: 60,
+                opacity: 0.8,
+                duration: 2.5,
+                repeat: -1,
                 ease: "power1.inOut",
                 repeatDelay: 2
             }

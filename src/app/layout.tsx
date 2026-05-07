@@ -8,17 +8,17 @@ import ClientTransitionHandler from '../components/layout/ClientTransitionHandle
 import ErrorBoundary from '../components/ui/ErrorBoundary';
 
 export const metadata = {
-    metadataBase: new URL('https://pantcookie.com'),
-    title: 'Fan Page Pantcookie | ShuraHiwa',
-    description: 'Fan Page Pantcookie - Comunidad dedicada a ShuraHiwa con multimedia, juegos interactivos y más',
+    metadataBase: new URL('https://pantcake.com'),
+    title: 'Fan Page pantcake | ShuraHiwa',
+    description: 'Fan Page pantcake - Comunidad dedicada a ShuraHiwa con multimedia, juegos interactivos y más',
     icons: {
         icon: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png',
     },
     openGraph: {
-        title: 'Fan Page Pantcookie | ShuraHiwa',
+        title: 'Fan Page pantcake | ShuraHiwa',
         description: 'Comunidad dedicada a ShuraHiwa con multimedia, juegos interactivos y más.',
-        url: 'https://pantcookie.com',
-        siteName: 'Fan Page Pantcookie',
+        url: 'https://pantcake.com',
+        siteName: 'Fan Page pantcake',
         images: [
             {
                 url: 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png',
@@ -31,7 +31,7 @@ export const metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Fan Page Pantcookie | ShuraHiwa',
+        title: 'Fan Page pantcake | ShuraHiwa',
         description: 'Comunidad dedicada a ShuraHiwa con multimedia, juegos interactivos y más.',
         images: ['https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png'],
     },

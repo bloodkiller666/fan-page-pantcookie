@@ -32,7 +32,7 @@ export const translations = {
         },
         home: {
             specialMoments: "Momentos Especiales",
-            specialMomentsDesc: "Revive los mejores momentos de la comunidad Pantcookie",
+            specialMomentsDesc: "Revive los mejores momentos de la comunidad pantcake",
             exploreContent: "Explorar Contenido",
             exploreContentDesc: "Descubre todo lo que hemos preparado para ti",
             weeklyCalendar: "Calendario Semanal",
@@ -41,16 +41,16 @@ export const translations = {
             heroMultimedia: "Ver Multimedia",
             heroGames: "Jugar Ahora",
             features: {
-                multimediaDesc: "Explora nuestra galería de fotos y videos de la comunidad Pantcookie",
+                multimediaDesc: "Explora nuestra galería de fotos y videos de la comunidad pantcake",
                 gamesDesc: "¡Diviértete con nuestros juegos interactivos y compite en los rankings!",
                 chatDesc: "Habla con nuestro IA oficial y diviértete con la Shake-Gang.",
                 messagesDesc: "Deja un mensaje especial en el muro para que lo vea ShuraHiwa.",
-                aboutDesc: "Conoce más sobre ShuraHiwa y la comunidad Pantcookie"
+                aboutDesc: "Conoce más sobre ShuraHiwa y la comunidad pantcake"
             }
         },
         multimedia: {
             title: "Multimedia",
-            subtitle: "Descubre nuestra colección de fotos y videos de la comunidad Pantcookie",
+            subtitle: "Descubre nuestra colección de fotos y videos de la comunidad pantcake",
             searchPlaceholder: "Buscar contenido...",
             tabs: {
                 photos: "Fotos",
@@ -188,7 +188,7 @@ export const translations = {
                 beFirst: "¡Sé el primero!"
             },
             trivia: {
-                categoryPantcookie: "PantCookie",
+                categorypantcake: "pantcake",
                 categoryShura: "ShuraHiwa",
                 categoryMusicTitle: "Música",
                 categoryMusic: "Adivina la Canción",
@@ -308,7 +308,7 @@ export const translations = {
         chat: {
             title: "Habla Conmigo",
             subtitle: "Charla con nuestro bot oficial. Pregunta sobre juegos, fotos o simplemente saluda.",
-            welcome: "¡Hola! Bienvenido al chat de Pantcookie. 🍪",
+            welcome: "¡Hola! Bienvenido al chat de pantcake. 🍪",
             online: "En línea",
             offline: "Desconectado",
             resting: "Estoy descansando, vuelve más tarde. 😴",
@@ -317,8 +317,8 @@ export const translations = {
             finished: "El chat ha finalizado",
             typing: "Escribiendo...",
             exitMessage: "¡Hasta luego! Fue un gusto charlar. 👋",
-            welcomeName: "Pantcookie IA",
-            welcomeMessage: "¡Hola! Soy Pantcookie IA, la inteligencia artificial de la ShakeGang. 🤖🍪",
+            welcomeName: "pantcake IA",
+            welcomeMessage: "¡Hola! Soy pantcake IA, la inteligencia artificial de la ShakeGang. 🤖🍪",
             serverError: "El servidor tuvo un problema. Intenta más tarde. 🍪",
             parseError: "No pude entender la respuesta del servidor. 🍪",
             connectionError: "¡Ups! Parece que tengo un problema de conexión. 🔌🍪",
@@ -328,7 +328,7 @@ export const translations = {
         about: {
             title: "Sobre Nosotros",
             subtitle: "Conoce a la estrella y a su increíble comunidad",
-            communityTitle: "La Comunidad PantCookie",
+            communityTitle: "La Comunidad pantcake",
             joinDiscord: "Únete al Discord",
             shuraTitle: "ShuraHiwa",
             shuraDesc1: "ShuraHiwa es una VTuber mexicana que debutó el 11 de junio de 2023. Hace streams en Twitch y YouTube, donde crea contenido variado como Just Chatting, videojuegos, karaokes, handcams y collabs. Su nombre significa «Defensora de la Esperanza» le gustá del salmón ahumado, las siestas y la diversión. Destaca por su personalidad dulce y maternal, con la meta de reclutar miembros para su «pandilla», a quienes recibe de forma cálida para crear un espacio seguro y reconfortante. Visualmente es una pantera motociclista: cabello azul con rosa, orejas de pantera, ojos rosa intenso que hipnotizan a los Pantcokies, chaqueta azul y un bate con la palabra Oyazumi para usar si alguien se porta mal. Tiene cinco lunares visibles y varios accesorios llamativos como guantes de motociclista, shorts azul oscuro, botas, un tamagotchi en el cinturón y gafas sobre la cabeza. Y, sobre todo (y no, no hablo de su frente), destacan sus orejas y cola, cuyo origen sigue en debate: ¿pantera o gato? (aunque las panteras también son gatos).",
@@ -360,7 +360,7 @@ export const translations = {
         legal: {
             terms: {
                 acceptanceTitle: "Aceptación de Uso",
-                acceptanceDesc: "Al acceder y utilizar este sitio, aceptas estos Términos y Condiciones de Uso. Si no estás de acuerdo con alguno de ellos, te pedimos que no utilices la Fan Page Pantcookie.",
+                acceptanceDesc: "Al acceder y utilizar este sitio, aceptas estos Términos y Condiciones de Uso. Si no estás de acuerdo con alguno de ellos, te pedimos que no utilices la Fan Page pantcake.",
                 usageTitle: "Uso del Sitio",
                 usageDesc1: "El uso del sitio debe realizarse de manera responsable y respetuosa, tanto con la comunidad como con ShuraHiwa. En particular:",
                 usagePoint1: "1. No se permite el envío de spam, el acoso a otros usuarios ni la realización de actividades ilícitas.",
@@ -518,7 +518,7 @@ export const translations = {
             write: "Escribir",
             read: "Leer",
             usernameLabel: "Usuario",
-            usernamePlaceholder: "Tu nombre de Pantcookie",
+            usernamePlaceholder: "Tu nombre de pantcake",
             usernameError: "Falta el usuario",
             countryLabel: "País",
             countryPlaceholder: "Selecciona tu país",
@@ -573,7 +573,7 @@ export const translations = {
         },
         home: {
             specialMoments: "Special Moments",
-            specialMomentsDesc: "Relive the best moments of the Pantcookie community",
+            specialMomentsDesc: "Relive the best moments of the pantcake community",
             exploreContent: "Explore Content",
             exploreContentDesc: "Discover everything we have prepared for you",
             weeklyCalendar: "Weekly Calendar",
@@ -582,16 +582,16 @@ export const translations = {
             heroMultimedia: "See Multimedia",
             heroGames: "Play Now",
             features: {
-                multimediaDesc: "Explore our photo and video gallery of the Pantcookie community",
+                multimediaDesc: "Explore our photo and video gallery of the pantcake community",
                 gamesDesc: "Have fun with our interactive games and compete in the rankings!",
                 chatDesc: "Chat with our official bot and have fun with the Shake-Gang.",
                 messagesDesc: "Leave a special message on the wall for ShuraHiwa to see.",
-                aboutDesc: "Learn more about ShuraHiwa and the Pantcookie community"
+                aboutDesc: "Learn more about ShuraHiwa and the pantcake community"
             }
         },
         multimedia: {
             title: "Multimedia",
-            subtitle: "Discover our collection of photos and videos of the Pantcookie community",
+            subtitle: "Discover our collection of photos and videos of the pantcake community",
             searchPlaceholder: "Search content...",
             tabs: {
                 photos: "Photos",
@@ -610,7 +610,7 @@ export const translations = {
                 },
                 credits: {
                     img1: "Anonymous Contribution",
-                    img2: "Pantcookie Community",
+                    img2: "pantcake Community",
                     img3: "ShakeGang Artist"
                 }
             }
@@ -729,7 +729,7 @@ export const translations = {
                 beFirst: "Be the first one!"
             },
             trivia: {
-                categoryPantcookie: "PantCookie",
+                categorypantcake: "pantcake",
                 categoryShura: "ShuraHiwa",
                 categoryMusicTitle: "Music",
                 categoryMusic: "Guess the Song",
@@ -849,7 +849,7 @@ export const translations = {
         chat: {
             title: "Talk to Me",
             subtitle: "Chat with our official bot. Ask about games, photos, or just say hi.",
-            welcome: "Hi! Welcome to the Pantcookie chat. 🍪",
+            welcome: "Hi! Welcome to the pantcake chat. 🍪",
             online: "Online",
             offline: "Disconnected",
             resting: "I'm resting, come back later. 😴",
@@ -858,8 +858,8 @@ export const translations = {
             finished: "Chat finished",
             typing: "Typing...",
             exitMessage: "Goodbye! It was a pleasure chatting. 👋",
-            welcomeName: "Pantcookie AI",
-            welcomeMessage: "Hi! I'm Pantcookie AI, the official ShakeGang intelligence. 🤖🍪",
+            welcomeName: "pantcake AI",
+            welcomeMessage: "Hi! I'm pantcake AI, the official ShakeGang intelligence. 🤖🍪",
             serverError: "The server encountered an issue. Try again later. 🍪",
             parseError: "I couldn't understand the server's response. 🍪",
             connectionError: "Oops! It seems I have a connection problem. 🔌🍪",
@@ -869,7 +869,7 @@ export const translations = {
         about: {
             title: "About Us",
             subtitle: "Meet the star and her amazing community",
-            communityTitle: "The PantCookie Community",
+            communityTitle: "The pantcake Community",
             joinDiscord: "Join Discord",
             shuraTitle: "ShuraHiwa",
             shuraDesc1: "ShuraHiwa is a Mexican VTuber who debuted on June 11, 2023. She streams on Twitch and YouTube, creating varied content like Just Chatting, video games, karaokes, handcams, and collabs. Her name means 'Defender of Hope'; she likes smoked salmon, napping, and having fun. She stands out for her sweet and motherly personality, with the goal of recruiting members for her 'gang,' whom she welcomes warmly to create a safe and comforting space. Visually, she is a biker panther: blue hair with pink, panther ears, intense pink eyes that hypnotize Pantcokies, a blue jacket, and a bat with the word 'Oyazumi' to use if someone misbehaves. She has five visible moles and several striking accessories like biker gloves, dark blue shorts, boots, a Tamagotchi on her belt, and goggles on her head. And, above all (no, I'm not talking about her forehead), her ears and tail stand out, whose origin remains under debate: panther or cat? (although panthers are also cats).",
@@ -901,7 +901,7 @@ export const translations = {
         legal: {
             terms: {
                 acceptanceTitle: "Acceptance of Use",
-                acceptanceDesc: "By accessing and using this site, you accept these Terms and Conditions of Use. If you do not agree with any of them, we ask that you do not use the Pantcookie Fan Page.",
+                acceptanceDesc: "By accessing and using this site, you accept these Terms and Conditions of Use. If you do not agree with any of them, we ask that you do not use the pantcake Fan Page.",
                 usageTitle: "Site Usage",
                 usageDesc1: "The use of the site must be carried out responsibly and respectfully, both with the community and with ShuraHiwa. In particular:",
                 usagePoint1: "1. Spamming, harassing other users, or engaging in illegal activities are not allowed.",
@@ -1051,7 +1051,7 @@ export const translations = {
             }
         },
         wall: {
-            title: "Pantcookies Wall",
+            title: "pantcakes Wall",
             published: "Message Published!",
             publishedSub: "Your message is now on the wall for everyone to see.",
             pending: "Message Under Review",
@@ -1059,7 +1059,7 @@ export const translations = {
             write: "Write",
             read: "Read",
             usernameLabel: "User",
-            usernamePlaceholder: "Your Pantcookie name",
+            usernamePlaceholder: "Your pantcake name",
             usernameError: "Missing user",
             countryLabel: "Country",
             countryPlaceholder: "Select your country",
@@ -1101,7 +1101,7 @@ export const translations = {
         },
         footer: {
             thanks: "コミュニティの一員でいてくれてありがとう！",
-            description: "この特別な空間は、ShuraHiwaと、このコミュニティをユニークなものにしているすべてのPantcookieに捧げられています。",
+            description: "この特別な空間は、ShuraHiwaと、このコミュニティをユニークなものにしているすべてのpantcakeに捧げられています。",
             copyright: "© 2025 Shake-Gang Fan Page. コミュニティのために❤️を込めて作成されました。",
             terms: "利用規約",
             privacy: "プライバシー",
@@ -1114,7 +1114,7 @@ export const translations = {
         },
         home: {
             specialMoments: "特別な瞬間",
-            specialMomentsDesc: "Pantcookieコミュニティの最高の瞬間を追体験",
+            specialMomentsDesc: "pantcakeコミュニティの最高の瞬間を追体験",
             exploreContent: "コンテンツを探索",
             exploreContentDesc: "あなたのために用意されたすべてを発見してください",
             weeklyCalendar: "週間カレンダー",
@@ -1123,16 +1123,16 @@ export const translations = {
             heroMultimedia: "マルチメディアを見る",
             heroGames: "今すぐプレイ",
             features: {
-                multimediaDesc: "Pantcookieコミュニティの写真やビデオギャラリーを探索",
+                multimediaDesc: "pantcakeコミュニティの写真やビデオギャラリーを探索",
                 gamesDesc: "インタラクティブなゲームを楽しんで、ランキングで競い合いましょう！",
                 chatDesc: "公式ボットとチャットして、Shake-Gangで楽しみましょう。",
                 messagesDesc: "ShuraHiwaが見えるように、壁に特別なメッセージを残してください。",
-                aboutDesc: "ShuraHiwaとPantcookieコミュニティについてもっと知る"
+                aboutDesc: "ShuraHiwaとpantcakeコミュニティについてもっと知る"
             }
         },
         multimedia: {
             title: "マルチメディア",
-            subtitle: "Pantcookieコミュニティの写真と動画のコレクションを探索しましょう",
+            subtitle: "pantcakeコミュニティの写真と動画のコレクションを探索しましょう",
             searchPlaceholder: "コンテンツを検索...",
             tabs: {
                 photos: "写真",
@@ -1260,7 +1260,7 @@ export const translations = {
                 beFirst: "最初のプレイヤーになろう！"
             },
             trivia: {
-                categoryPantcookie: "PantCookie",
+                categorypantcake: "pantcake",
                 categoryShura: "ShuraHiwa",
                 categoryMusicTitle: "音楽",
                 categoryMusic: "曲を当てる",
@@ -1378,7 +1378,7 @@ export const translations = {
         chat: {
             title: "お話ししましょう",
             subtitle: "公式ボットとチャットしましょう。ゲームや写真について聞いたり、ただ挨拶したりできます。",
-            welcome: "こんにちは！Pantcookieチャットへようこそ。🍪",
+            welcome: "こんにちは！pantcakeチャットへようこそ。🍪",
             online: "オンライン",
             offline: "オフライン",
             resting: "今はお休み中。後でまた来てください。😴",
@@ -1398,12 +1398,12 @@ export const translations = {
         about: {
             title: "私たちについて",
             subtitle: "スターとその素晴らしいコミュニティを紹介します",
-            communityTitle: "PantCookieコミュニティ",
+            communityTitle: "pantcakeコミュニティ",
             joinDiscord: "Discordに参加する",
             shuraTitle: "ShuraHiwa (シュラヒワ)",
-            shuraDesc1: "ShuraHiwaは、2023年6月11日にデビューしたメキシコのVTuberです。TwitchとYouTubeで配信を行っており、雑談、ゲーム、カラオケ、ハンドカメラ、コラボなど、多彩なコンテンツを作成しています。彼女の名前は「希望の守護者」を意味し、スモークサーモン、お昼寝、そして楽しむことが大好きです。甘くて母親のような性格が特徴で、自分の「ギャング」のメンバーを募集することを目指しており、安全で居心地の良い空間を作るために温かく迎え入れてくれます。外見はバイカーのパンサーで、青とピンクの髪、パンサーの耳、Pantcookieを魅了する強烈なピンクの瞳、青いジャケット、そして誰かが悪いことをした時に使う「Oyazumi」という言葉が書かれたバットを持っています。5つの目立つほくろがあり、バイカーグローブ、濃い青のショーツ、ブーツ、ベルトのたまごっち、頭の上のゴーグルなど、いくつか印象的なアクセサリーを身に着けています。そして何よりも（おでこのことではありません）、彼女の耳と尻尾が目立っており、その起源については今も議論が続いています：パンサーか猫か？（パンサーも猫科ではありますが）。",
+            shuraDesc1: "ShuraHiwaは、2023年6月11日にデビューしたメキシコのVTuberです。TwitchとYouTubeで配信を行っており、雑談、ゲーム、カラオケ、ハンドカメラ、コラボなど、多彩なコンテンツを作成しています。彼女の名前は「希望の守護者」を意味し、スモークサーモン、お昼寝、そして楽しむことが大好きです。甘くて母親のような性格が特徴で、自分の「ギャング」のメンバーを募集することを目指しており、安全で居心地の良い空間を作るために温かく迎え入れてくれます。外見はバイカーのパンサーで、青とピンクの髪、パンサーの耳、pantcakeを魅了する強烈なピンクの瞳、青いジャケット、そして誰かが悪いことをした時に使う「Oyazumi」という言葉が書かれたバットを持っています。5つの目立つほくろがあり、バイカーグローブ、濃い青のショーツ、ブーツ、ベルトのたまごっち、頭の上のゴーグルなど、いくつか印象的なアクセサリーを身に着けています。そして何よりも（おでこのことではありません）、彼女の耳と尻尾が目立っており、その起源については今も議論が続いています：パンサーか猫か？（パンサーも猫科ではありますが）。",
             shuraDesc2: "配信を通じて...",
-            communityDesc1: "ファミリーへようこそ！私たちPantcookie（またはPantcake）はShuraHiwaの公式ファンコミュニティです。ヘルメットを被り、バターを乗せたどら焼きのような存在です。私たちの役割は？ただ忠実であり、配信中も配信外もShuraHiwaをサポートすることです。私たちが単なるファンではなく、新しい人々を温かく迎え入れ、コミュニティに溶け込ませることを目指す、家族やグループであることを示しています。楽しむことと社交することが私たちの機能ですが、主な使命は「お互いに仲良くすること」です。配信以外の交流場所は常にDiscordであり、そこでゲームをしたり、チャットをしたり、お酒を飲んだり（時々）、映画やシリーズを観たり（合法的に）しています。もし不服従だったり、これらの行動に従わなかったりした場合、私たちはShuraHiwaの朝食になってしまいます。",
+            communityDesc1: "ファミリーへようこそ！私たちpantcake（またはPantcake）はShuraHiwaの公式ファンコミュニティです。ヘルメットを被り、バターを乗せたどら焼きのような存在です。私たちの役割は？ただ忠実であり、配信中も配信外もShuraHiwaをサポートすることです。私たちが単なるファンではなく、新しい人々を温かく迎え入れ、コミュニティに溶け込ませることを目指す、家族やグループであることを示しています。楽しむことと社交することが私たちの機能ですが、主な使命は「お互いに仲良くすること」です。配信以外の交流場所は常にDiscordであり、そこでゲームをしたり、チャットをしたり、お酒を飲んだり（時々）、映画やシリーズを観たり（合法的に）しています。もし不服従だったり、これらの行動に従わなかったりした場合、私たちはShuraHiwaの朝食になってしまいます。",
             values: {
                 friendship: "友情",
                 inclusion: "包摂",
@@ -1446,11 +1446,11 @@ export const translations = {
                     items: [
                         {
                             question: "このページは何ですか？",
-                            answer: "これは公式のPantcookieファンページです。写真やビデオ、インタラクティブなゲーム、メッセージウォールが集まるShuraHiwaコミュニティのための空間です。"
+                            answer: "これは公式のpantcakeファンページです。写真やビデオ、インタラクティブなゲーム、メッセージウォールが集まるShuraHiwaコミュニティのための空間です。"
                         },
                         {
                             question: "ShuraHiwaとは誰ですか？",
-                            answer: "ShuraHiwaは、VTuberでありパンサーのママであり、ShakeGangの司令官です。TwitchとYouTubeで配信を行い、愛するPantcookieたちを楽しませています。"
+                            answer: "ShuraHiwaは、VTuberでありパンサーのママであり、ShakeGangの司令官です。TwitchとYouTubeで配信を行い、愛するpantcakeたちを楽しませています。"
                         }
                     ]
                 },
@@ -1483,7 +1483,7 @@ export const translations = {
             }
         },
         wall: {
-            title: "Pantcookiesの壁",
+            title: "pantcakesの壁",
             published: "メッセージが公開されました！",
             publishedSub: "あなたのメッセージは今、壁に表示され、誰でも見ることができます。",
             pending: "メッセージ確認中",
@@ -1491,7 +1491,7 @@ export const translations = {
             write: "書く",
             read: "読む",
             usernameLabel: "ユーザー",
-            usernamePlaceholder: "あなたのPantcookieネーム",
+            usernamePlaceholder: "あなたのpantcakeネーム",
             usernameError: "ユーザー名が必要です",
             countryLabel: "国",
             countryPlaceholder: "国を選択してください",
@@ -1546,7 +1546,7 @@ export const translations = {
         },
         home: {
             specialMoments: "Moments Spéciaux",
-            specialMomentsDesc: "Revivez les meilleurs moments de la communauté Pantcookie",
+            specialMomentsDesc: "Revivez les meilleurs moments de la communauté pantcake",
             exploreContent: "Explorer le Contenu",
             exploreContentDesc: "Découvrez tout ce que nous avons préparé pour vous",
             weeklyCalendar: "Calendrier Hebdomadaire",
@@ -1555,16 +1555,16 @@ export const translations = {
             heroMultimedia: "Voir Multimédia",
             heroGames: "Jouer Maintenant",
             features: {
-                multimediaDesc: "Explorez notre galerie de photos et vidéos de la communauté Pantcookie",
+                multimediaDesc: "Explorez notre galerie de photos et vidéos de la communauté pantcake",
                 gamesDesc: "Amusez-vous avec nos jeux interactifs et participez aux classements !",
                 chatDesc: "Discutez avec notre bot officiel et amusez-vous avec la Shake-Gang.",
                 messagesDesc: "Laissez un message spécial sur le mur pour que ShuraHiwa puisse le voir.",
-                aboutDesc: "En savoir plus sur ShuraHiwa et la communauté Pantcookie"
+                aboutDesc: "En savoir plus sur ShuraHiwa et la communauté pantcake"
             }
         },
         multimedia: {
             title: "Multimédia",
-            subtitle: "Découvrez notre collection de photos et vidéos de la communauté Pantcookie",
+            subtitle: "Découvrez notre collection de photos et vidéos de la communauté pantcake",
             searchPlaceholder: "Rechercher du contenu...",
             tabs: {
                 photos: "Photos",
@@ -1692,7 +1692,7 @@ export const translations = {
                 beFirst: "Soyez le premier !"
             },
             trivia: {
-                categoryPantcookie: "PantCookie",
+                categorypantcake: "pantcake",
                 categoryShura: "ShuraHiwa",
                 categoryMusicTitle: "Musique",
                 categoryMusic: "Devinez la chanson",
@@ -1794,7 +1794,7 @@ export const translations = {
         chat: {
             title: "Parle avec Moi",
             subtitle: "Discute avec notre bot officiel. Pose des questions sur les jeux, les photos ou dis simplement bonjour.",
-            welcome: "Bonjour ! Bienvenue sur le chat Pantcookie. 🍪",
+            welcome: "Bonjour ! Bienvenue sur le chat pantcake. 🍪",
             online: "En ligne",
             offline: "Déconnecté",
             resting: "Je me repose, reviens plus tard. 😴",
@@ -1803,8 +1803,8 @@ export const translations = {
             finished: "Le chat est terminé",
             typing: "En train d'écrire...",
             exitMessage: "Au revoir ! Ce fut un plaisir de discuter. 👋",
-            welcomeName: "Pantcookie IA",
-            welcomeMessage: "Bonjour ! Je suis Pantcookie IA, l'intelligence artificielle de la ShakeGang. 🤖🍪",
+            welcomeName: "pantcake IA",
+            welcomeMessage: "Bonjour ! Je suis pantcake IA, l'intelligence artificielle de la ShakeGang. 🤖🍪",
             serverError: "Le serveur a rencontré un problema. Réessayez plus tard. 🍪",
             parseError: "Je n'ai pas pu comprendre la réponse du serveur. 🍪",
             connectionError: "Oups ! Il semble que j'aie un problème de connexion. 🔌🍪",
@@ -1814,7 +1814,7 @@ export const translations = {
         about: {
             title: "À Propos de Nous",
             subtitle: "Découvrez la star et son incroyable communauté",
-            communityTitle: "La Communauté PantCookie",
+            communityTitle: "La Communauté pantcake",
             joinDiscord: "Rejoindre le Discord",
             shuraTitle: "ShuraHiwa",
             shuraDesc1: "ShuraHiwa est une VTuber mexicaine qui a fait ses débuts le 11 juin 2023. Elle streame sur Twitch et YouTube, où elle crée du contenu varié tel que Just Chatting, des jeux vidéo, des karaokés, des handcams et des collabs. Son nom signifie « Défenseuse de l'Espoir » ; elle aime le saumon fumé, les siestes et s'amuser. Elle se distingue par sa personnalité douce et maternelle, avec pour objectif de recruter des membres pour son « gang », qu'elle accueille chaleureusement pour créer un espace sûr et réconfortant. Visuellement, c'est une panthère motarde : cheveux bleus et roses, oreilles de panthère, yeux rose intense qui hypnotisent les Pantcokies, veste bleue et une batte avec le mot « Oyazumi » à utiliser si quelqu'un se comporte mal. Elle a cinq grains de beauté visibles et plusieurs accessoires frappants comme des gants de motard, un short bleu foncé, des bottes, un Tamagotchi à la ceinture et des lunettes sur la tête. Et surtout (et non, je ne parle pas de son front), ses oreilles et sa queue se distinguent, dont l'origine fait toujours débat : panthère ou chat ? (bien que les panthères soient aussi des félins).",
@@ -1846,7 +1846,7 @@ export const translations = {
         legal: {
             terms: {
                 acceptanceTitle: "Acceptation d'Utilisation",
-                acceptanceDesc: "En accédant et en utilisant ce site, vous acceptez ces Conditions Générales d'Utilisation. Si vous n'êtes pas d'accord avec l'une d'entre elles, nous vous demandons de ne pas utiliser la Fan Page Pantcookie.",
+                acceptanceDesc: "En accédant et en utilisant ce site, vous acceptez ces Conditions Générales d'Utilisation. Si vous n'êtes pas d'accord avec l'une d'entre elles, nous vous demandons de ne pas utiliser la Fan Page pantcake.",
                 usageTitle: "Utilisation du Site",
                 usageDesc1: "L'utilisation du site doit se faire de manière responsable et respectueuse, tant envers la communauté qu'envers ShuraHiwa. En particulier :",
                 usagePoint1: "1. L'envoi de spam, le harcèlement d'autres utilisateurs ou la réalisation d'activités illicites ne sont pas autorisés.",
@@ -1918,8 +1918,8 @@ export const translations = {
                             answer: "Vous pouvez soutenir ShuraHiwa en vous abonnant à sa chaîne Twitch et/ou YouTube, en aimant ses vidéos, en les partageant, en les commentant et en rejoignant son serveur Discord."
                         },
                         {
-                            question: "Comment puis-je être un Pantcookie ?",
-                            answer: "Pour être un Pantcookie, suivez ces trois étapes : abonnez-vous à sa chaîne Twitch ou YouTube de ShuraHiwa, rejoignez le serveur Discord et participez à ses événements et activités qu'elle organise dans ses streams."
+                            question: "Comment puis-je être un pantcake ?",
+                            answer: "Pour être un pantcake, suivez ces trois étapes : abonnez-vous à sa chaîne Twitch ou YouTube de ShuraHiwa, rejoignez le serveur Discord et participez à ses événements et activités qu'elle organise dans ses streams."
                         },
                         {
                             question: "Y a-t-il une modération sur cette page ?",
@@ -1996,7 +1996,7 @@ export const translations = {
             }
         },
         wall: {
-            title: "Le Mur des Pantcookies",
+            title: "Le Mur des pantcakes",
             published: "Message publié !",
             publishedSub: "Votre message est maintenant affiché sur le mur et tout le monde peut le voir.",
             pending: "Message en cours de vérification",
@@ -2004,7 +2004,7 @@ export const translations = {
             write: "Écrire",
             read: "Lire",
             usernameLabel: "Utilisateur",
-            usernamePlaceholder: "Votre nom de Pantcookie",
+            usernamePlaceholder: "Votre nom de pantcake",
             usernameError: "Le nom d'utilisateur est requis",
             countryLabel: "Pays",
             countryPlaceholder: "Sélectionnez votre pays",

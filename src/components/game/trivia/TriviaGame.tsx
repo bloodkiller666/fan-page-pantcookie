@@ -14,7 +14,7 @@ import RulesModal from '../RulesModal';
 import PauseMenu from '../PauseMenu';
 
 export type GameMode = 'timed' | 'untimed' | 'insane' | 'chaos';
-export type Category = 'music' | 'pantcookie' | 'shurahiwa' | string;
+export type Category = 'music' | 'pantcake' | 'shurahiwa' | string;
 
 export interface TriviaQuestion {
   question: string;
@@ -107,7 +107,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   const { t } = useLanguage();
   const router = useRouter();
   const { playSelect, playCorrect, playIncorrect, playVictory, playCountdown } = useGameSounds();
-  const [category, setCategory] = useState<Category | null>(null); // null, 'music', 'pantcookie', 'shurahiwa'
+  const [category, setCategory] = useState<Category | null>(null); // null, 'music', 'pantcake', 'shurahiwa'
   const [gameMode, setGameMode] = useState<GameMode | null>(null); // Added 'insane' and 'chaos'
   const [started, setStarted] = useState(false);
   const [isCountingDown, setIsCountingDown] = useState(false);
@@ -635,13 +635,13 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
           <div onClick={() => selectCategory('pantcokie')} className="glass-card rounded-2xl p-1 flex flex-col group cursor-pointer overflow-hidden relative">
             <div className="relative aspect-video rounded-xl overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-              <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADmNov2I1T3_GAPg4x6T2vc6Fio5cSU4M2wKPdKqzF65X9YvbsgPb8vo9mtABT1BQGEEY73P-rrGZpfIMxXC1kPZ_pRm1livhbXPkVRBqux0rfNqt6xN8A0XnigLhD0ZJRgz5yJPxN2GAA5qZhKcls00e0zztFlPxyTljSnRqe0e4tmfeiQYVvjhdJIYkp0PN7MX99T82pNvsr496dmg3NcyFid9eXnEmPgQcLqGCAHHEL0481iZEKwAVZYywTp7u6uW3UjkcvqRI" alt="PantCookie" />
+              <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADmNov2I1T3_GAPg4x6T2vc6Fio5cSU4M2wKPdKqzF65X9YvbsgPb8vo9mtABT1BQGEEY73P-rrGZpfIMxXC1kPZ_pRm1livhbXPkVRBqux0rfNqt6xN8A0XnigLhD0ZJRgz5yJPxN2GAA5qZhKcls00e0zztFlPxyTljSnRqe0e4tmfeiQYVvjhdJIYkp0PN7MX99T82pNvsr496dmg3NcyFid9eXnEmPgQcLqGCAHHEL0481iZEKwAVZYywTp7u6uW3UjkcvqRI" alt="pantcake" />
               <div className="absolute top-4 right-4 z-20 bg-primary-blue/20 backdrop-blur-md px-3 py-1 rounded-full border border-primary-blue/30"><span className="text-[10px] font-bold text-primary-blue uppercase tracking-widest">Hot 🔥</span></div>
             </div>
             <div className="p-6 flex flex-col gap-4">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-primary-blue/10 flex items-center justify-center border border-primary-blue/20 neon-glow"><MdCake className="text-2xl text-primary-blue" /></div>
-                <div><h3 className="text-xl font-bold text-gray-800 dark:text-white group-hover:text-primary-blue transition-colors">PantCookie</h3><p className="text-slate-500 dark:text-slate-400 text-xs">{t('games.trivia.categoryPantcookie')}</p></div>
+                <div><h3 className="text-xl font-bold text-gray-800 dark:text-white group-hover:text-primary-blue transition-colors">pantcake</h3><p className="text-slate-500 dark:text-slate-400 text-xs">{t('games.trivia.categorypantcake')}</p></div>
               </div>
             </div>
           </div>
@@ -1791,9 +1791,9 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   };
 
   const renderStandardUI = () => {
-    const isPantcookie = category === null || category === 'pantcookie';
+    const ispantcake = category === null || category === 'pantcake';
 
-    if (isPantcookie && (gameMode === 'untimed' || gameMode === 'timed')) {
+    if (ispantcake && (gameMode === 'untimed' || gameMode === 'timed')) {
       const current = questions[index];
       return (
         <div className="flex flex-col gap-8 mt-10 md:mt-16 animate-fade-in text-slate-900 dark:text-slate-100">
@@ -1817,7 +1817,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
                         <MdArrowBack className="text-xl text-slate-600 dark:text-primary-blue group-hover:-translate-x-1 transition-transform" />
                       </button>
                       <div>
-                        <h1 className="text-primary-blue font-black uppercase tracking-tighter text-xs leading-none mb-1">Categoría: {category || 'Pantcookie'}</h1>
+                        <h1 className="text-primary-blue font-black uppercase tracking-tighter text-xs leading-none mb-1">Categoría: {category || 'pantcake'}</h1>
                         <h2 className={`text-2xl font-black italic tracking-tighter ${gameMode === 'timed' ? 'text-[#ff007f]' : 'dark:text-white'}`}>
                           {gameMode === 'timed' ? 'MODO CON TIEMPO' : 'MODO SIN TIEMPO'}
                         </h2>
@@ -1960,7 +1960,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
               <aside className="w-full lg:w-80 shrink-0 flex flex-col gap-6">
                 <Leaderboard
                   game="trivia"
-                  category={category || "pantcookie"}
+                  category={category || "pantcake"}
                   mode={gameMode || "untimed"}
                   currentPlayer={playerName}
                 />

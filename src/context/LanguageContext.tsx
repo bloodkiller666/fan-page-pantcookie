@@ -15,7 +15,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        const savedLang = localStorage.getItem('pantcookie_lang');
+        const savedLang = localStorage.getItem('pantcake_lang');
         if (savedLang) {
             setLanguage(savedLang);
         }
@@ -24,7 +24,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
 
     const handleSetLanguage = (lang: string) => {
         setLanguage(lang);
-        localStorage.setItem('pantcookie_lang', lang);
+        localStorage.setItem('pantcake_lang', lang);
     };
 
     const t = (path: string, params?: Record<string, string | number>) => {
@@ -57,7 +57,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
                 value = value.replace(new RegExp(`{${key}}`, 'g'), String(val));
             });
         }
-        
+
         return value;
     };
 
