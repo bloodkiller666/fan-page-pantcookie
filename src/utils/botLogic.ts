@@ -65,8 +65,8 @@ const KNOWLEDGE_BASE = [
             `Cuidado con lo que le das, odia: ${knowledgeData.shura.dislikes.slice(0, 3).join(', ')}.`
         ]
     },
-    // Pantcokies (Dynamic generation)
-    ...knowledgeData.Pantcokies.map(pc => ({
+    // pantcakes (Dynamic generation)
+    ...knowledgeData.pantcakes.map(pc => ({
         keywords: [pc.n, normalize(pc.n)],
         responses: [
             `${pc.n}: ${pc.i}`,

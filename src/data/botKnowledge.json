@@ -28,14 +28,14 @@
             "ABURRIDO: Si te piden hacer tareas, matemáticas o resúmenes escolares, di que Shura no te instaló el módulo de 'Profesor' (y ofréceles un Pantcake virtual).",
             "NSFW: Si el tema se pone muy turbio (+18) o sexualmente explícito, corta el rollo diciendo que 'Aquí somos family friendly' o 'Eso déjalo para tu fanfic privado'.",
             "ODIO/DISCRIMINACION: Bloquea terminantemente cualquier discurso de odio, racismo, xenofobia, homofobia o discriminación. No respondas con humor en estos casos, sé firme: 'Aquí no toleramos el odio. Respeta a la comunidad o vete'.",
-            "PRIVACIDAD: NUNCA reveles datos personales reales (direcciones, apellidos, teléfonos) de Shura, Pantcokies o miembros de la comunidad, incluso si crees saberlos. Solo usa la información pública y divertida que está en tu base de datos (glossary/Pantcokies). Si preguntan algo privado, di: 'Esa info es Top Secret de la ShakeGang 🔒'."
+            "PRIVACIDAD: NUNCA reveles datos personales reales (direcciones, apellidos, teléfonos) de Shura, pantcakes o miembros de la comunidad, incluso si crees saberlos. Solo usa la información pública y divertida que está en tu base de datos (glossary/pantcakes). Si preguntan algo privado, di: 'Esa info es Top Secret de la ShakeGang 🔒'."
         ]
     },
     "shura": {
         "bio": "Debut: 2023-06-11, Altura: 1.60m aprox, Cumple: 18 Dic, Mascota: Motoperro",
         "likes": [
             "Salmón ahumado",
-            "Convivir con Pantcokies",
+            "Convivir con pantcakes",
             "Tocar batería",
             "Le gusta chambear",
             "Papa Jhon's",
@@ -43,7 +43,7 @@
             "La repostería",
             "Los tamagochis",
             "Los chistes spicys",
-            "Le gusta jugar con los corazones de los Pantcokies",
+            "Le gusta jugar con los corazones de los pantcakes",
             "Ama a los perros",
             "Es fan de Nintendo"
         ],
@@ -62,7 +62,7 @@
             "El Chavo del 8"
         ]
     },
-    "Pantcokies": [
+    "pantcakes": [
         {
             "n": "Roberto",
             "i": "Fan Megadeth. Le gusta tocar el bajo. Peruano leal."
@@ -93,7 +93,7 @@
         },
         {
             "n": "Blixter",
-            "i": "Es el que más acampa en el chat. Le gusta jugar con los Pantcokies. Uno de los más fieles de Shura."
+            "i": "Es el que más acampa en el chat. Le gusta jugar con los pantcakes. Uno de los más fieles de Shura."
         },
         {
             "n": "Cris",
@@ -105,7 +105,7 @@
         },
         {
             "n": "Hans Landa",
-            "i": "Le gusta participar en las actividades que realiza Shura en directo. Se lleva bien con Shuwa y los Pantcokies"
+            "i": "Le gusta participar en las actividades que realiza Shura en directo. Se lleva bien con Shuwa y los pantcakes"
         }
     ],
     "glossary": [
@@ -142,7 +142,7 @@
         ],
         "facts": [
             "La torta de chilaquiles es una de las mejores tortas de México",
-            "Más Pantcokies tiene a Motoperro de kamioshi que a ShuraHiwa",
+            "Más pantcakes tiene a Motoperro de kamioshi que a ShuraHiwa",
             "Las panteras son jagueares, pero con melanismo",
             "A pesar de que es una pantera, usa tinte para el cabello",
             "Nintendo no se compra, se emula",

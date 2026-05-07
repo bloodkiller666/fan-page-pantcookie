@@ -19,7 +19,7 @@ export const translations = {
         },
         footer: {
             thanks: "¡Gracias por ser parte de la comunidad!",
-            description: "Este espacio especial está dedicado a ShuraHiwa y a todos los Pantcokies que hacen de esta comunidad algo único.",
+            description: "Este espacio especial está dedicado a ShuraHiwa y a todos los pantcakes que hacen de esta comunidad algo único.",
             copyright: "© 2025 Fan Page Shake-Gang. Creado con ❤️ para la comunidad.",
             terms: "Términos y Condiciones",
             privacy: "Privacidad",
@@ -331,9 +331,9 @@ export const translations = {
             communityTitle: "La Comunidad pantcake",
             joinDiscord: "Únete al Discord",
             shuraTitle: "ShuraHiwa",
-            shuraDesc1: "ShuraHiwa es una VTuber mexicana que debutó el 11 de junio de 2023. Hace streams en Twitch y YouTube, donde crea contenido variado como Just Chatting, videojuegos, karaokes, handcams y collabs. Su nombre significa «Defensora de la Esperanza» le gustá del salmón ahumado, las siestas y la diversión. Destaca por su personalidad dulce y maternal, con la meta de reclutar miembros para su «pandilla», a quienes recibe de forma cálida para crear un espacio seguro y reconfortante. Visualmente es una pantera motociclista: cabello azul con rosa, orejas de pantera, ojos rosa intenso que hipnotizan a los Pantcokies, chaqueta azul y un bate con la palabra Oyazumi para usar si alguien se porta mal. Tiene cinco lunares visibles y varios accesorios llamativos como guantes de motociclista, shorts azul oscuro, botas, un tamagotchi en el cinturón y gafas sobre la cabeza. Y, sobre todo (y no, no hablo de su frente), destacan sus orejas y cola, cuyo origen sigue en debate: ¿pantera o gato? (aunque las panteras también son gatos).",
+            shuraDesc1: "ShuraHiwa es una VTuber mexicana que debutó el 11 de junio de 2023. Hace streams en Twitch y YouTube, donde crea contenido variado como Just Chatting, videojuegos, karaokes, handcams y collabs. Su nombre significa «Defensora de la Esperanza» le gustá del salmón ahumado, las siestas y la diversión. Destaca por su personalidad dulce y maternal, con la meta de reclutar miembros para su «pandilla», a quienes recibe de forma cálida para crear un espacio seguro y reconfortante. Visualmente es una pantera motociclista: cabello azul con rosa, orejas de pantera, ojos rosa intenso que hipnotizan a los pantcakes, chaqueta azul y un bate con la palabra Oyazumi para usar si alguien se porta mal. Tiene cinco lunares visibles y varios accesorios llamativos como guantes de motociclista, shorts azul oscuro, botas, un tamagotchi en el cinturón y gafas sobre la cabeza. Y, sobre todo (y no, no hablo de su frente), destacan sus orejas y cola, cuyo origen sigue en debate: ¿pantera o gato? (aunque las panteras también son gatos).",
             shuraDesc2: "A través de sus streams...",
-            communityDesc1: "¡Bienvenidos a la familia! Los Pantcokies o Pantcakes somos la comunidad fan oficial de ShuraHiwa, somos como un dorayakis con casco y un cubito de mantequilla. ¿Cuál es nuestro rol? Pues, solo ser fiel y apoyar a ShuraHiwa en sus streams o fuera de stream. Demostrar que no solo somos más que fans, sino una familia o un grupo que solo busca acoger amablemente nueva gente e integrarlo a la comunidad divertirnos y socializarnos son nuestras funciones pero como misión principal es <<Llevarnos bien con unos a los otros>> nuestro lugar de reuniones aparte de los streams siempre será Discord en donde jugamos, charlmos, hacemos chupi (a veces) y vemos películas y/o series (legalmente). Si desobedecemos o no cumplimos con alguno de estas acciones seremos el desayuno de ShuraHiwa.",
+            communityDesc1: "¡Bienvenidos a la familia! Los pantcakes o Pantcakes somos la comunidad fan oficial de ShuraHiwa, somos como un dorayakis con casco y un cubito de mantequilla. ¿Cuál es nuestro rol? Pues, solo ser fiel y apoyar a ShuraHiwa en sus streams o fuera de stream. Demostrar que no solo somos más que fans, sino una familia o un grupo que solo busca acoger amablemente nueva gente e integrarlo a la comunidad divertirnos y socializarnos son nuestras funciones pero como misión principal es <<Llevarnos bien con unos a los otros>> nuestro lugar de reuniones aparte de los streams siempre será Discord en donde jugamos, charlmos, hacemos chupi (a veces) y vemos películas y/o series (legalmente). Si desobedecemos o no cumplimos con alguno de estas acciones seremos el desayuno de ShuraHiwa.",
             values: {
                 friendship: "Amistad",
                 inclusion: "Inclusión",
@@ -421,7 +421,7 @@ export const translations = {
                         },
                         {
                             question: "¿Quién es ShuraHiwa?",
-                            answer: "ShuraHiwa es una VTuber mexicana, pantera y creadora de la ShakeGang que hace streams en Twitch y Youtube para divertir a sus adorados Pantcokies."
+                            answer: "ShuraHiwa es una VTuber mexicana, pantera y creadora de la ShakeGang que hace streams en Twitch y Youtube para divertir a sus adorados pantcakes."
                         },
                         {
                             question: "¿Tiene redes sociales?",
@@ -432,8 +432,8 @@ export const translations = {
                             answer: "Puedes apoyar a ShuraHiwa suscribiéndote a su canal de Twitch y/o Youtube, dándole like a sus videos, compartiéndolos, comentándolos y uniéndote a su servidor de Discord."
                         },
                         {
-                            question: "¿Como puedo ser un Pantcokie?",
-                            answer: "Para ser un Pantcokie sigue estos tres pasos: suscribete en su canal de Twitch o Youtube de ShuraHiwa, unete al servidor de Discord y participa en sus eventos y actividades que organiza en sus streams."
+                            question: "¿Como puedo ser un pantcake?",
+                            answer: "Para ser un pantcake sigue estos tres pasos: suscribete en su canal de Twitch o Youtube de ShuraHiwa, unete al servidor de Discord y participa en sus eventos y actividades que organiza en sus streams."
                         },
                         {
                             question: "¿Hay moderación en esta página?",
@@ -462,7 +462,7 @@ export const translations = {
                         },
                         {
                             question: "¿Como está divido el juego de preguntas?",
-                            answer: "El juego de preguntas está dividido en tres secciones: 'Conoce a ShuraHiwa' (preguntas sobre ShuraHiwa), 'Conoce a los Pantcokies' (preguntas sobre los Pantcokies) y 'Adivina las canciones' (adivina las canciones que fueron recomendados por la comunidad)."
+                            answer: "El juego de preguntas está dividido en tres secciones: 'Conoce a ShuraHiwa' (preguntas sobre ShuraHiwa), 'Conoce a los pantcakes' (preguntas sobre los pantcakes) y 'Adivina las canciones' (adivina las canciones que fueron recomendados por la comunidad)."
                         },
                         {
                             question: "¿Cómo puedo jugar a los juegos?",
@@ -510,7 +510,7 @@ export const translations = {
             }
         },
         wall: {
-            title: "Muro de Pantcokies",
+            title: "Muro de pantcakes",
             published: "¡Mensaje Publicado!",
             publishedSub: "Tu mensaje ya está en el muro para que todos lo vean.",
             pending: "Mensaje en Revisión",
@@ -560,7 +560,7 @@ export const translations = {
         },
         footer: {
             thanks: "Thanks for being part of the community!",
-            description: "This special space is dedicated to ShuraHiwa and all the Pantcokies who make this community something unique.",
+            description: "This special space is dedicated to ShuraHiwa and all the pantcakes who make this community something unique.",
             copyright: "© 2025 Fan Page Shake-Gang. Created with ❤️ for the community.",
             terms: "Terms and Conditions",
             privacy: "Privacy",
@@ -872,9 +872,9 @@ export const translations = {
             communityTitle: "The pantcake Community",
             joinDiscord: "Join Discord",
             shuraTitle: "ShuraHiwa",
-            shuraDesc1: "ShuraHiwa is a Mexican VTuber who debuted on June 11, 2023. She streams on Twitch and YouTube, creating varied content like Just Chatting, video games, karaokes, handcams, and collabs. Her name means 'Defender of Hope'; she likes smoked salmon, napping, and having fun. She stands out for her sweet and motherly personality, with the goal of recruiting members for her 'gang,' whom she welcomes warmly to create a safe and comforting space. Visually, she is a biker panther: blue hair with pink, panther ears, intense pink eyes that hypnotize Pantcokies, a blue jacket, and a bat with the word 'Oyazumi' to use if someone misbehaves. She has five visible moles and several striking accessories like biker gloves, dark blue shorts, boots, a Tamagotchi on her belt, and goggles on her head. And, above all (no, I'm not talking about her forehead), her ears and tail stand out, whose origin remains under debate: panther or cat? (although panthers are also cats).",
+            shuraDesc1: "ShuraHiwa is a Mexican VTuber who debuted on June 11, 2023. She streams on Twitch and YouTube, creating varied content like Just Chatting, video games, karaokes, handcams, and collabs. Her name means 'Defender of Hope'; she likes smoked salmon, napping, and having fun. She stands out for her sweet and motherly personality, with the goal of recruiting members for her 'gang,' whom she welcomes warmly to create a safe and comforting space. Visually, she is a biker panther: blue hair with pink, panther ears, intense pink eyes that hypnotize pantcakes, a blue jacket, and a bat with the word 'Oyazumi' to use if someone misbehaves. She has five visible moles and several striking accessories like biker gloves, dark blue shorts, boots, a Tamagotchi on her belt, and goggles on her head. And, above all (no, I'm not talking about her forehead), her ears and tail stand out, whose origin remains under debate: panther or cat? (although panthers are also cats).",
             shuraDesc2: "Through her streams...",
-            communityDesc1: "Welcome to the family! We Pantcokies or Pantcakes are the official fan community of ShuraHiwa; we are like dorayakis with a helmet and a butter cube. What is our role? Well, just being faithful and supporting ShuraHiwa in or out of her streams. Showing that we are more than just fans, but a family or group that only seeks to warmly welcome new people and integrate them into the community. Having fun and socializing are our functions, but our main mission is <<To get along with each other>>. Our meeting place besides the streams will always be Discord, where we play, chat, do chupi (sometimes), and watch movies and/or series (legally). If we disobey or fail to comply with any of these actions, we will be ShuraHiwa's breakfast.",
+            communityDesc1: "Welcome to the family! We pantcakes or Pantcakes are the official fan community of ShuraHiwa; we are like dorayakis with a helmet and a butter cube. What is our role? Well, just being faithful and supporting ShuraHiwa in or out of her streams. Showing that we are more than just fans, but a family or group that only seeks to warmly welcome new people and integrate them into the community. Having fun and socializing are our functions, but our main mission is <<To get along with each other>>. Our meeting place besides the streams will always be Discord, where we play, chat, do chupi (sometimes), and watch movies and/or series (legally). If we disobey or fail to comply with any of these actions, we will be ShuraHiwa's breakfast.",
             values: {
                 friendship: "Friendship",
                 inclusion: "Inclusion",
@@ -962,7 +962,7 @@ export const translations = {
                         },
                         {
                             question: "Who is ShuraHiwa?",
-                            answer: "ShuraHiwa is a Mexican VTuber, panther, and creator of the ShakeGang who streams on Twitch and YouTube to entertain her beloved Pantcokies."
+                            answer: "ShuraHiwa is a Mexican VTuber, panther, and creator of the ShakeGang who streams on Twitch and YouTube to entertain her beloved pantcakes."
                         },
                         {
                             question: "Does she have social media?",
@@ -973,8 +973,8 @@ export const translations = {
                             answer: "You can support ShuraHiwa by subscribing to her Twitch and/or YouTube channel, liking her videos, sharing them, commenting on them, and joining her Discord server."
                         },
                         {
-                            question: "How can I be a Pantcokie?",
-                            answer: "To be a Pantcokie, follow these three steps: subscribe to ShuraHiwa's Twitch or YouTube channel, join the Discord server, and participate in her events and activities organized in her streams."
+                            question: "How can I be a pantcake?",
+                            answer: "To be a pantcake, follow these three steps: subscribe to ShuraHiwa's Twitch or YouTube channel, join the Discord server, and participate in her events and activities organized in her streams."
                         },
                         {
                             question: "Is there moderation on this page?",
@@ -1003,7 +1003,7 @@ export const translations = {
                         },
                         {
                             question: "How is the trivia game divided?",
-                            answer: "The trivia game is divided into three sections: 'Meet ShuraHiwa' (questions about ShuraHiwa), 'Meet the Pantcokies' (questions about Pantcokies), and 'Guess the songs' (guess the songs recommended by the community)."
+                            answer: "The trivia game is divided into three sections: 'Meet ShuraHiwa' (questions about ShuraHiwa), 'Meet the pantcakes' (questions about pantcakes), and 'Guess the songs' (guess the songs recommended by the community)."
                         },
                         {
                             question: "How can I play the games?",
@@ -1533,7 +1533,7 @@ export const translations = {
         },
         footer: {
             thanks: "Merci de faire partie de la communauté !",
-            description: "Cet espace spécial est dédié à ShuraHiwa et à tous les Pantcokies qui rendent cette communauté unique.",
+            description: "Cet espace spécial est dédié à ShuraHiwa et à tous les pantcakes qui rendent cette communauté unique.",
             copyright: "© 2025 Shake-Gang Fan Page. Créé avec ❤️ pour la communauté.",
             terms: "Conditions Générales",
             privacy: "Confidentialité",
@@ -1817,9 +1817,9 @@ export const translations = {
             communityTitle: "La Communauté pantcake",
             joinDiscord: "Rejoindre le Discord",
             shuraTitle: "ShuraHiwa",
-            shuraDesc1: "ShuraHiwa est une VTuber mexicaine qui a fait ses débuts le 11 juin 2023. Elle streame sur Twitch et YouTube, où elle crée du contenu varié tel que Just Chatting, des jeux vidéo, des karaokés, des handcams et des collabs. Son nom signifie « Défenseuse de l'Espoir » ; elle aime le saumon fumé, les siestes et s'amuser. Elle se distingue par sa personnalité douce et maternelle, avec pour objectif de recruter des membres pour son « gang », qu'elle accueille chaleureusement pour créer un espace sûr et réconfortant. Visuellement, c'est une panthère motarde : cheveux bleus et roses, oreilles de panthère, yeux rose intense qui hypnotisent les Pantcokies, veste bleue et une batte avec le mot « Oyazumi » à utiliser si quelqu'un se comporte mal. Elle a cinq grains de beauté visibles et plusieurs accessoires frappants comme des gants de motard, un short bleu foncé, des bottes, un Tamagotchi à la ceinture et des lunettes sur la tête. Et surtout (et non, je ne parle pas de son front), ses oreilles et sa queue se distinguent, dont l'origine fait toujours débat : panthère ou chat ? (bien que les panthères soient aussi des félins).",
+            shuraDesc1: "ShuraHiwa est une VTuber mexicaine qui a fait ses débuts le 11 juin 2023. Elle streame sur Twitch et YouTube, où elle crée du contenu varié tel que Just Chatting, des jeux vidéo, des karaokés, des handcams et des collabs. Son nom signifie « Défenseuse de l'Espoir » ; elle aime le saumon fumé, les siestes et s'amuser. Elle se distingue par sa personnalité douce et maternelle, avec pour objectif de recruter des membres pour son « gang », qu'elle accueille chaleureusement pour créer un espace sûr et réconfortant. Visuellement, c'est une panthère motarde : cheveux bleus et roses, oreilles de panthère, yeux rose intense qui hypnotisent les pantcakes, veste bleue et une batte avec le mot « Oyazumi » à utiliser si quelqu'un se comporte mal. Elle a cinq grains de beauté visibles et plusieurs accessoires frappants comme des gants de motard, un short bleu foncé, des bottes, un Tamagotchi à la ceinture et des lunettes sur la tête. Et surtout (et non, je ne parle pas de son front), ses oreilles et sa queue se distinguent, dont l'origine fait toujours débat : panthère ou chat ? (bien que les panthères soient aussi des félins).",
             shuraDesc2: "À travers ses streams...",
-            communityDesc1: "Bienvenue dans la famille ! Les Pantcokies ou Pantcakes sont la communauté de fans officielle de ShuraHiwa ; nous sommes comme des dorayakis avec un casque et un cube de beurre. Quel est notre rôle ? Eh bien, juste être fidèles et soutenir ShuraHiwa dans ou hors de ses streams. Montrer que nous sommes plus que de simples fans, mais une famille ou un groupe qui cherche simplement à accueillir gentiment les nouvelles personnes et à les intégrer à la communauté. S'amuser et socialiser sont nos fonctions, mais notre mission principale est << de bien s'entendre les uns avec les autres >>. Notre lieu de rencontre, en dehors des streams, sera toujours Discord où nous jouons, discutons, faisons chupi (parfois) et regardons des films et/ou des séries (légalement). Si nous désobéissons ou ne respectons pas l'une de ces actions, nous serons le petit-déjeuner de ShuraHiwa.",
+            communityDesc1: "Bienvenue dans la famille ! Les pantcakes ou Pantcakes sont la communauté de fans officielle de ShuraHiwa ; nous sommes comme des dorayakis avec un casque et un cube de beurre. Quel est notre rôle ? Eh bien, juste être fidèles et soutenir ShuraHiwa dans ou hors de ses streams. Montrer que nous sommes plus que de simples fans, mais une famille ou un groupe qui cherche simplement à accueillir gentiment les nouvelles personnes et à les intégrer à la communauté. S'amuser et socialiser sont nos fonctions, mais notre mission principale est << de bien s'entendre les uns avec les autres >>. Notre lieu de rencontre, en dehors des streams, sera toujours Discord où nous jouons, discutons, faisons chupi (parfois) et regardons des films et/ou des séries (légalement). Si nous désobéissons ou ne respectons pas l'une de ces actions, nous serons le petit-déjeuner de ShuraHiwa.",
             values: {
                 friendship: "Amitié",
                 inclusion: "Inclusion",
@@ -1907,7 +1907,7 @@ export const translations = {
                         },
                         {
                             question: "Qui est ShuraHiwa ?",
-                            answer: "ShuraHiwa est une VTuber mexicaine, panthère et créatrice de la Shake-Gang qui streame sur Twitch et YouTube pour divertir ses adorés Pantcokies."
+                            answer: "ShuraHiwa est une VTuber mexicaine, panthère et créatrice de la Shake-Gang qui streame sur Twitch et YouTube pour divertir ses adorés pantcakes."
                         },
                         {
                             question: "A-t-elle des réseaux sociaux ?",
@@ -1948,7 +1948,7 @@ export const translations = {
                         },
                         {
                             question: "Comment est divisé le jeu de questions ?",
-                            answer: "Le jeu de questions est divisé en trois sections : 'Connaître ShuraHiwa' (questions sur ShuraHiwa), 'Connaître les Pantcokies' (questions sur les Pantcokies) et 'Devinez les chansons' (devinez les chansons qui ont été recommandées par la communauté)."
+                            answer: "Le jeu de questions est divisé en trois sections : 'Connaître ShuraHiwa' (questions sur ShuraHiwa), 'Connaître les pantcakes' (questions sur les pantcakes) et 'Devinez les chansons' (devinez les chansons qui ont été recommandées par la communauté)."
                         },
                         {
                             question: "Comment puis-je jouer aux jeux ?",
