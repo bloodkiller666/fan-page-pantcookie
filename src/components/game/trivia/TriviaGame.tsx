@@ -663,7 +663,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
           <div onClick={() => selectCategory('music')} className="glass-card rounded-2xl p-1 flex flex-col group cursor-pointer overflow-hidden relative">
             <div className="relative aspect-video rounded-xl overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-              <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60" src="https://www.freepik.es/foto-gratis/audiencia-emocionada-viendo-fuegos-artificiales-confeti-divirtiendose-festival-musica-noche-copiar-espacio_25566947.htm#fromView=keyword&page=1&position=1&uuid=59055ed4-19e3-46c4-853e-f6f7ef07e82a&query=Concert+background" alt="Music" />
+              <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-60" src="/music_category.png" alt="Music" />
               <div className="absolute top-4 right-4 z-20 bg-purple-500/20 backdrop-blur-md px-3 py-1 rounded-full border border-purple-500/30"><span className="text-[10px] font-bold text-purple-400 uppercase tracking-widest">Viral 🎵</span></div>
             </div>
             <div className="p-6 flex flex-col gap-4">

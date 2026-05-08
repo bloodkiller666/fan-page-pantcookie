@@ -219,10 +219,10 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                                     <div className="flex flex-col">
                                         <span className="text-[10px] uppercase tracking-[0.3em] text-slate-500 dark:text-primary/60 font-black mb-1">{t('common.timer') || 'Cronómetro'}</span>
                                         <div className="flex items-center gap-3">
-                                            <span className="text-3xl font-black text-black font-mono tabular-nums drop-shadow-[0_0_10px_rgba(13,185,242,0.4)]">
+                                            <span className="text-3xl font-black text-slate-900 dark:text-white font-mono tabular-nums drop-shadow-[0_0_10px_rgba(13,185,242,0.4)]">
                                                 {Math.floor(elapsedTime / 60).toString().padStart(2, '0')}:{(elapsedTime % 60).toString().padStart(2, '0')}
                                             </span>
-                                            <MdTimer className="text-black text-2xl animate-spin-slow" />
+                                            <MdTimer className="text-slate-400 dark:text-primary/60 text-2xl animate-spin-slow" />
                                         </div>
                                     </div>
                                 </div>
@@ -319,7 +319,7 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
                                     className="flex items-center gap-3 text-slate-500 hover:text-primary font-black uppercase tracking-widest text-sm transition-all group"
                                 >
                                     <MdShare className="group-hover:scale-125 transition-transform" />
-                                    {t('common.shareResults') || 'Compartir Resultados'}
+                                    {t('common.shareResults')}
                                 </button>
                             </div>
                         </div>
@@ -447,15 +447,15 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
             <nav className="flex lg:hidden fixed bottom-0 left-0 right-0 bg-background-light dark:bg-background-dark border-t border-primary/10 px-6 py-4 justify-around z-50 backdrop-blur-xl">
                 <button className="flex flex-col items-center gap-1 text-primary">
                     <MdHome />
-                    <span className="text-[10px] font-black uppercase italic">Inicio</span>
+                    <span className="text-[10px] font-black uppercase italic">{t('nav.home')}</span>
                 </button>
                 <button className="flex flex-col items-center gap-1 text-slate-500">
                     <MdEmojiEvents />
-                    <span className="text-[10px] font-black uppercase italic">Ranking</span>
+                    <span className="text-[10px] font-black uppercase italic">{t('nav.ranking')}</span>
                 </button>
                 <button className="flex flex-col items-center gap-1 text-slate-500">
                     <MdPerson />
-                    <span className="text-[10px] font-black uppercase italic">Perfil</span>
+                    <span className="text-[10px] font-black uppercase italic">{t('nav.profile')}</span>
                 </button>
             </nav>
         </div>

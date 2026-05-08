@@ -15,7 +15,9 @@ export const translations = {
             gamesTrivia: "Trivias",
             gamesShuraRun: "Shura Run",
             mensajesWrite: "Escribir Mensaje",
-            mensajesRead: "Leer Mensajes"
+            mensajesRead: "Leer Mensajes",
+            ranking: "Ranking",
+            profile: "Perfil"
         },
         footer: {
             thanks: "¡Gracias por ser parte de la comunidad!",
@@ -132,7 +134,17 @@ export const translations = {
                 rulesVelocidadDesc: "Completa en el menor tiempo posible para subir en el ranking.",
                 rulesCuidado: "Cuidado al cambiar",
                 rulesCuidadoDesc: "Cambiar la dificultad reiniciará tu progreso actual de inmediato.",
-                startGame: "Comenzar Juego"
+                startGame: "Comenzar Juego",
+                viewResults: "Ver Resultados",
+                victoryGreet: "¡Felicidades, {name}!",
+                conquered: "¡Has conquistado el desafío!",
+                playAgainBtn: "¡JUGAR DE NUEVO!",
+                confirmRestart: "¿Reiniciar el rompecabezas?",
+                confirmExit: "¿Deseas abandonar el juego?",
+                exitBtn: "Salir",
+                pauseSubtitle: "Juego en espera",
+                pauseHintTitle: "¿Necesitas un respiro?",
+                pauseHintDesc: "Tu progreso actual se mantendrá hasta que salgas."
             },
             shuraRun: {
                 score: "Puntaje",
@@ -352,7 +364,14 @@ export const translations = {
             startGame: "Comenzar Juego",
             backToSelection: "Volver a Selección",
             score: "Puntuación",
-            close: "Cerrar"
+            close: "Cerrar",
+            difficulty: "Dificultad",
+            timer: "Cronómetro",
+            yes: "Sí",
+            no: "No",
+            cancel: "Cancelar",
+            finalTime: "Tiempo Final",
+            shareResults: "Compartir Resultados"
         },
         musicPlayer: {
             originalBy: "Original por"
@@ -556,7 +575,9 @@ export const translations = {
             gamesTrivia: "Trivia",
             gamesShuraRun: "Shura Run",
             mensajesWrite: "Write a Message",
-            mensajesRead: "Read Messages"
+            mensajesRead: "Read Messages",
+            ranking: "Ranking",
+            profile: "Profile"
         },
         footer: {
             thanks: "Thanks for being part of the community!",
@@ -673,7 +694,17 @@ export const translations = {
                 rulesVelocidadDesc: "Complete in the shortest time possible to climb the ranking.",
                 rulesCuidado: "Careful when changing",
                 rulesCuidadoDesc: "Changing the difficulty will reset your current progress immediately.",
-                startGame: "Start Game"
+                startGame: "Start Game",
+                viewResults: "View Results",
+                victoryGreet: "Congratulations, {name}!",
+                conquered: "You have conquered the challenge!",
+                playAgainBtn: "PLAY AGAIN!",
+                confirmRestart: "Restart the puzzle?",
+                confirmExit: "Do you want to leave the game?",
+                exitBtn: "Exit",
+                pauseSubtitle: "Game standby",
+                pauseHintTitle: "Need a breather?",
+                pauseHintDesc: "Your progress will be kept until you quit."
             },
             shuraRun: {
                 score: "Score",
@@ -893,7 +924,14 @@ export const translations = {
             startGame: "Start Game",
             backToSelection: "Back to Selection",
             score: "Score",
-            close: "Close"
+            close: "Close",
+            difficulty: "Difficulty",
+            timer: "Timer",
+            yes: "Yes",
+            no: "No",
+            cancel: "Cancel",
+            finalTime: "Final Time",
+            shareResults: "Share Results"
         },
         musicPlayer: {
             originalBy: "Original by"
@@ -1097,7 +1135,9 @@ export const translations = {
             gamesTrivia: "トリビア",
             gamesShuraRun: "シュラ・ラン",
             mensajesWrite: "メッセージを書く",
-            mensajesRead: "メッセージを読む"
+            mensajesRead: "メッセージを読む",
+            ranking: "ランキング",
+            profile: "プロフィール"
         },
         footer: {
             thanks: "コミュニティの一員でいてくれてありがとう！",
@@ -1204,7 +1244,17 @@ export const translations = {
                 rulesVelocidadDesc: "最短時間で完成させてランキングを上げましょう。",
                 rulesCuidado: "変更に注意",
                 rulesCuidadoDesc: "難易度を変更すると、現在の進行状況がすぐにリセットされます。",
-                startGame: "ゲーム開始"
+                startGame: "ゲーム開始",
+                viewResults: "結果を見る",
+                victoryGreet: "おめでとう、{name}さん！",
+                conquered: "チャレンジをクリアしました！",
+                playAgainBtn: "もう一度プレイ！",
+                confirmRestart: "パズルをリセットしますか？",
+                confirmExit: "ゲームを終了しますか？",
+                exitBtn: "終了",
+                pauseSubtitle: "一時停止中",
+                pauseHintTitle: "休憩が必要ですか？",
+                pauseHintDesc: "進行状況は終了するまで保持されます。"
             },
             shuraRun: {
                 score: "スコア",
@@ -1422,7 +1472,14 @@ export const translations = {
             startGame: "ゲーム開始",
             backToSelection: "選択に戻る",
             score: "スコア",
-            close: "閉じる"
+            close: "閉じる",
+            difficulty: "難易度",
+            timer: "タイマー",
+            yes: "はい",
+            no: "いいえ",
+            cancel: "キャンセル",
+            finalTime: "最終時間",
+            shareResults: "結果を共有"
         },
         musicPlayer: {
             originalBy: "オリジナル："
@@ -1529,7 +1586,9 @@ export const translations = {
             gamesTrivia: "Trivia",
             gamesShuraRun: "Shura Run",
             mensajesWrite: "Écrire un Message",
-            mensajesRead: "Lire les Messages"
+            mensajesRead: "Lire les Messages",
+            ranking: "Classement",
+            profile: "Profil"
         },
         footer: {
             thanks: "Merci de faire partie de la communauté !",
@@ -1636,7 +1695,17 @@ export const translations = {
                 rulesVelocidadDesc: "Terminez en un temps minimum pour monter dans le classement.",
                 rulesCuidado: "Attention au changement",
                 rulesCuidadoDesc: "Changer la difficulté réinitialisera votre progression actuelle immédiatement.",
-                startGame: "Commencer le Jeu"
+                startGame: "Commencer le Jeu",
+                viewResults: "Voir les Résultats",
+                victoryGreet: "Félicitations, {name} !",
+                conquered: "Vous avez conquis le défi !",
+                playAgainBtn: "JOUER À NOUVEAU !",
+                confirmRestart: "Recommencer le puzzle ?",
+                confirmExit: "Voulez-vous quitter le jeu ?",
+                exitBtn: "Quitter",
+                pauseSubtitle: "Jeu en attente",
+                pauseHintTitle: "Besoin d'une pause ?",
+                pauseHintDesc: "Votre progression sera conservée jusqu'à votre départ."
             },
             shuraRun: {
                 score: "Score",
@@ -1838,7 +1907,14 @@ export const translations = {
             startGame: "Commencer le Jeu",
             backToSelection: "Retour à la Sélection",
             score: "Score",
-            close: "Fermer"
+            close: "Fermer",
+            difficulty: "Difficulté",
+            timer: "Chronomètre",
+            yes: "Oui",
+            no: "Non",
+            cancel: "Annuler",
+            finalTime: "Temps Final",
+            shareResults: "Partager les Résultats"
         },
         musicPlayer: {
             originalBy: "Original par"

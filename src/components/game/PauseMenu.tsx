@@ -34,7 +34,7 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
                             {t('games.puzzle.pause') || 'PAUSA'}
                         </h1>
                         <div className="h-1 w-24 bg-[#0db9f2] mx-auto rounded-full mt-2"></div>
-                        <p className="text-slate-400 mt-4 text-lg font-medium">Juego en espera</p>
+                        <p className="text-slate-400 mt-4 text-lg font-medium">{t('games.puzzle.pauseSubtitle')}</p>
                     </div>
 
                     {/* Action Buttons */}
@@ -78,8 +78,8 @@ const PauseMenu: React.FC<PauseMenuProps> = ({ isOpen, onResume, onRestart, onEx
                             <MdInfo className="text-[#0db9f2]" />
                         </div>
                         <div>
-                            <p className="text-slate-100 text-sm font-bold">¿Necesitas un respiro?</p>
-                            <p className="text-slate-400 text-xs">Tu progreso actual se mantendrá hasta que salgas.</p>
+                            <p className="text-slate-100 text-sm font-bold">{t('games.puzzle.pauseHintTitle')}</p>
+                            <p className="text-slate-400 text-xs">{t('games.puzzle.pauseHintDesc')}</p>
                         </div>
                     </div>
                 </div>

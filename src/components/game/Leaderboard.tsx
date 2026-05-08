@@ -75,7 +75,7 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle', cla
                 <div className="p-3 border-b-[4px] border-black flex items-center justify-between bg-[#FF007F]/5">
                     <h2 className="font-black text-base flex items-center gap-2 italic uppercase tracking-tighter text-black dark:text-white">
                         <MdEmojiEvents className="text-[#FF007F] text-xl" />
-                        {t('Ranking') || 'Ranking'}
+                        {t('games.leaderboard.title')}
                     </h2>
                     <span className="text-[8px] bg-black text-white font-black px-1.5 py-0.5 uppercase italic border-2 border-black">
                         Global
@@ -116,12 +116,13 @@ const Leaderboard = ({ difficulty, category, currentPlayer, game = 'puzzle', cla
                                         </p>
                                     </div>
 
-                                    {/* Puntos */}
-                                    <div className="text-right">
-                                        <p className={`text-[10px] font-black italic tracking-tighter ${isCurrent ? 'text-white' : 'text-black dark:text-white'}`}>
-                                            {score.score} <span className="text-[8px]">PTS</span>
-                                        </p>
-                                    </div>
+                                    {/* Puntos / Tiempo */}
+                                     <div className="text-right">
+                                         <p className={`text-[10px] font-black italic tracking-tighter ${isCurrent ? 'text-white' : 'text-black dark:text-white'}`}>
+                                             {game === 'puzzle' ? formatTime(score.time || 0) : score.score}
+                                             {game !== 'puzzle' && <span className="text-[8px] ml-1">PTS</span>}
+                                         </p>
+                                     </div>
                                 </div>
                             );
                         })

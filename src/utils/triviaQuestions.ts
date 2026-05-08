@@ -871,9 +871,9 @@ export const triviaQuestions = {
     { id: 217, difficulty: 'easy', question: '¿Se apoyan entre sí los pantcakes?', options: ['No', 'Sí, incondicionalmente', 'Solo si pagan', 'A veces'], correctIndex: 1 },
     { id: 218, difficulty: 'hard', question: '¿Cuál es el objetivo de la comunidad?', options: ['Dominar el mundo', 'Pasarla bien entre todos', 'Crear polémicas', 'Ninguna de las anteriores'], correctIndex: 1 },
     { id: 219, difficulty: 'medium', question: '¿El juego que les gusta jugar a los pantcakes?', options: ['Golf With Your Friends', 'Left 4 Dead', 'Killing Floor', 'Peak'], correctIndex: 1 },
-    { id: 220, difficulty: 'easy', question: '¿Te gusta ser un pantcake?', options: ['¡Sí!', 'Obvio', '¡Me encanta!', 'Todas las anteriores'], correctIndexes: 3 },
-    { id: 221, difficulty: 'hard', question: '¿Que es lo que les gusta a los pantcakes?', options: ['La convivencia en el VC', 'El respeto entre todos', 'El apoyo entre sí', 'Todas las anteriores'], correctIndexes: 3 },
-    { id: 222, difficulty: 'hard', question: '¿Algo que caracteriza a los pantcakes?', options: ['Son comidos en el desayuno', 'Somos un accesorio', 'Somos calvos', 'Andamos sin pantalones'], correctIndexes: 3 },
+    { id: 220, difficulty: 'easy', question: '¿Te gusta ser un pantcake?', options: ['¡Sí!', 'Obvio', '¡Me encanta!', 'Todas las anteriores'], correctIndex: 3 },
+    { id: 221, difficulty: 'hard', question: '¿Que es lo que les gusta a los pantcakes?', options: ['La convivencia en el VC', 'El respeto entre todos', 'El apoyo entre sí', 'Todas las anteriores'], correctIndex: 3 },
+    { id: 222, difficulty: 'hard', question: '¿Algo que caracteriza a los pantcakes?', options: ['Son comidos en el desayuno', 'Somos un accesorio', 'Somos calvos', 'Andamos sin pantalones'], correctIndex: 3 },
     { id: 223, difficulty: 'hard', question: '¿Algo que caracteriza a los pantcakes?', options: ['El respeto mutuo', 'La honestidad', 'La amabilidad', 'Todas las anteriores'], correctIndexes: [2, 3] },
   ]
 };
