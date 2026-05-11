@@ -154,8 +154,6 @@ export default function AdminDashboard() {
             console.error('Logout error:', error);
         }
     };
-
-    // Data Fetching
     const fetchScores = async () => {
         setLoading(true);
         const { data, error } = await supabase
@@ -239,9 +237,7 @@ export default function AdminDashboard() {
                     </p>
                     <div className="space-y-6">
                         <div className="relative">
-                            {/* CAMBIO: Icono de candado más oscuro en light mode (text-zinc-500) */}
                             <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 dark:text-slate-500" size={20} />
-                            {/* CAMBIO: Input con fondo zinc-100, borde zinc-300 y texto zinc-950 en light mode */}
                             <input
                                 type="password"
                                 value={password}
@@ -250,12 +246,11 @@ export default function AdminDashboard() {
                                 className="w-full pl-12 pr-4 py-4 rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-100 dark:bg-black/50 text-zinc-950 dark:text-white placeholder-zinc-500 dark:placeholder-slate-500 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all font-mono text-sm shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] dark:shadow-none"
                             />
                         </div>
-                        <button type="submit" className="w-full bg-primary hover:bg-primary-dark font-black tracking-widest text-sm py-4 rounded-xl transition-all shadow-[0_10px_20px_-5px_rgba(255,31,142,0.4),0_0_15px_rgba(255,31,142,0.2)] 
-  dark:shadow-[0_0_15px_rgba(255,31,142,0.3)] 
-  hover:shadow-[0_20px_25px_-5px_rgba(255,31,142,0.5)] 
-  dark:hover:shadow-[0_0_25px_rgba(255,31,142,0.5)] 
-  border border-primary/70 dark:border-primary/50 
-  uppercase transform hover:-translate-y-1 active:scale-[0.98]"
+                        <button type="submit" className="w-full bg-primary hover:bg-primary-dark font-black tracking-widest text-sm py-4 rounded-xl transition-all shadow-[0_10px_20px_-5px_rgba(255,31,142,0.4),0_0_15px_rgba(255,31,142,0.2)] dark:shadow-[0_0_15px_rgba(255,31,142,0.3)] 
+                        hover:shadow-[0_20px_25px_-5px_rgba(255,31,142,0.5)] 
+                        dark:hover:shadow-[0_0_25px_rgba(255,31,142,0.5)] 
+                        border border-primary/70 dark:border-primary/50 
+                        uppercase transform hover:-translate-y-1 active:scale-[0.98]"
                         >
                             {t('admin.loginButton')}
                         </button>
@@ -266,12 +261,8 @@ export default function AdminDashboard() {
     }
 
     return (
-        // CAMBIO: Fondo principal del dashboard zinc-50 en light mode y texto zinc-900 por defecto
         <div className="bg-zinc-50 dark:bg-background-dark text-zinc-900 dark:text-slate-100 font-sans min-h-screen selection:bg-primary selection:text-white overflow-x-hidden transition-colors duration-300 relative">
-            {/* Fondo de rejilla adaptado */}
             <div className="fixed inset-0 cyber-grid-bg bg-[radial-gradient(circle,rgba(255,31,142,0.08)_1px,transparent_1px)] opacity-40 dark:opacity-30 pointer-events-none"></div>
-
-            {/* Elipses de fondo con opacidad reducida en light mode para no ensuciar */}
             <div className="fixed top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary/5 dark:bg-primary/10 blur-[150px] rounded-full pointer-events-none -z-10"></div>
             <div className="fixed bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#00f2ff]/3 dark:bg-[#00f2ff]/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
 
@@ -303,23 +294,19 @@ export default function AdminDashboard() {
                         </nav>
                     </div>
                     <div className="flex items-center gap-6">
-                        {/* CAMBIO: Tag 'Live System' con fondo zinc-100 y borde zinc-200 en light mode */}
                         <div className="hidden md:flex items-center gap-4 px-4 py-2 rounded-full bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10">
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full bg-[#FF0000] animate-pulse"></div>
                                 <span className="text-[10px] font-bold text-[#FF0000] tracking-widest uppercase">{t('admin.status.live')}</span>
                             </div>
                             <div className="h-4 w-[1px] bg-zinc-300 dark:bg-white/10"></div>
-                            {/* CAMBIO: Texto secundario zinc-600 en light mode */}
                             <span className="text-[10px] font-mono text-zinc-600 dark:text-slate-400 uppercase">{t('admin.status.nodes')}</span>
                         </div>
                         <div className="flex items-center gap-3">
                             <div className="text-right hidden sm:block">
-                                {/* CAMBIO: Nombre de usuario zinc-950, rol zinc-600 en light mode */}
                                 <p className="text-xs font-bold text-zinc-950 dark:text-white">Admin_User</p>
                                 <p className="text-[10px] text-zinc-600 dark:text-slate-400">Super Administrator</p>
                             </div>
-                            {/* CAMBIO: Contenedor de avatar zinc-200 en light mode */}
                             <div className="w-11 h-11 rounded-full bg-zinc-200 dark:bg-slate-800 flex items-center justify-center border-2 border-primary/50 cursor-pointer hover:scale-105 transition-transform overflow-hidden shadow-[0_0_10px_rgba(255,31,142,0.3)]">
                                 <img
                                     alt="User Avatar"
@@ -338,11 +325,8 @@ export default function AdminDashboard() {
             </header>
 
             <main className="max-w-[1800px] mx-auto p-6 grid grid-cols-12 gap-6 relative z-10">
-                {/* Sidebar Navigation */}
                 <aside className="col-span-12 lg:col-span-1 flex flex-col gap-4">
-                    {/* CAMBIO: Sidebar con fondo blanco sólido, borde zinc-200 y sombra suave en light mode */}
                     <div className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 border border-zinc-200 dark:border-white/10 p-3 rounded-2xl flex flex-row lg:flex-col items-center justify-around lg:justify-start gap-4 lg:min-h-[600px] shadow-sm dark:shadow-none">
-                        {/* CAMBIO: Botones inactivos zinc-500, hover zinc-100 bg en light mode */}
                         <button onClick={() => setActiveTab('scores')} className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${activeTab === 'scores' ? 'bg-primary/20 text-primary shadow-[0_0_15px_rgba(255,31,142,0.2)]' : 'hover:bg-zinc-100 dark:hover:bg-white/5 text-zinc-500 dark:text-slate-400 hover:text-zinc-950 dark:hover:text-white'}`}>
                             <MdSportsEsports />
                         </button>
@@ -370,22 +354,16 @@ export default function AdminDashboard() {
                     </div>
                 </aside>
 
-                {/* Main Content Area */}
                 <div className="col-span-12 lg:col-span-8 flex flex-col gap-6">
-
-                    {/* Data Table Section */}
                     {activeTab !== 'analytics' && activeTab !== 'moderation' ? (
                         <section className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/60 rounded-3xl overflow-hidden border border-zinc-200 dark:border-white/10 shadow-[0_15px_50px_-10px_rgba(0,0,0,0.08)] dark:shadow-2xl flex flex-col transition-shadow duration-300">
-                            {/* CAMBIO: Header de la tabla zinc-100 bg, borde zinc-200 en light mode */}
                             <div className="p-6 border-b border-zinc-200 dark:border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-zinc-100 dark:bg-white/5 gap-4">
                                 <div className="flex items-center gap-4">
                                     <div className="w-2 h-8 bg-primary rounded-full"></div>
                                     <div>
-                                        {/* CAMBIO: Titulo zinc-950 en light mode */}
                                         <h2 className="font-display font-extrabold text-xl tracking-tight uppercase text-zinc-950 dark:text-white">
                                             {activeTab === 'scores' ? t('admin.dashboard.globalScores') : t('admin.dashboard.wallOfFame')}
                                         </h2>
-                                        {/* CAMBIO: Subtitulo zinc-600 en light mode */}
                                         <p className="text-[10px] font-bold text-zinc-600 dark:text-slate-400 uppercase tracking-[0.2em]">{t('admin.dashboard.dbRecords')}</p>
                                     </div>
                                 </div>
@@ -393,9 +371,7 @@ export default function AdminDashboard() {
                                     {activeTab === 'scores' && (
                                         <>
                                             <div className="relative">
-                                                {/* CAMBIO: Icono búsqueda zinc-500 en light mode */}
                                                 <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 dark:text-zinc-400" />
-                                                {/* CAMBIO: Input búsqueda zinc-50 bg, borde zinc-300, texto zinc-950 en light mode */}
                                                 <input
                                                     type="text"
                                                     placeholder={t('admin.dashboard.searchPlayer')}
@@ -404,7 +380,6 @@ export default function AdminDashboard() {
                                                     className="w-full sm:w-48 pl-9 pr-3 py-2 text-xs rounded-xl border border-zinc-300 dark:border-white/10 bg-zinc-50 dark:bg-black/20 text-zinc-950 dark:text-white focus:border-primary outline-none transition-colors placeholder-zinc-500 dark:placeholder-zinc-400"
                                                 />
                                             </div>
-                                            {/* CAMBIO: Select zinc-50 bg, borde zinc-300, texto zinc-950 en light mode */}
                                             <select
                                                 value={filterGame}
                                                 onChange={(e) => setFilterGame(e.target.value)}
@@ -426,7 +401,6 @@ export default function AdminDashboard() {
                             <div className="overflow-x-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-primary/20 [&::-webkit-scrollbar-thumb]:rounded-full">
                                 <table className="w-full text-left border-collapse">
                                     <thead>
-                                        {/* CAMBIO: Th de la tabla zinc-50 bg, borde zinc-200, texto zinc-600 en light mode */}
                                         <tr className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-600 dark:text-slate-400 bg-zinc-50 dark:bg-black/20 border-b border-zinc-200 dark:border-white/5">
                                             {activeTab === 'scores' ? (
                                                 <>
@@ -447,7 +421,6 @@ export default function AdminDashboard() {
                                             )}
                                         </tr>
                                     </thead>
-                                    {/* CAMBIO: Divide-y zinc-200 en light mode */}
                                     <tbody className="divide-y divide-zinc-200 dark:divide-white/5">
                                         {loading ? (
                                             <tr><td colSpan={5} className="px-8 py-10 text-center font-mono text-sm text-zinc-500 dark:text-slate-500 uppercase tracking-widest">Awaiting Data Streams...</td></tr>
@@ -574,7 +547,6 @@ export default function AdminDashboard() {
                                     </tbody>
                                 </table>
                             </div>
-                            {/* CAMBIO: Footer tabla zinc-100/50 bg, borde zinc-200, texto zinc-500 en light mode */}
                             <div className="p-4 bg-zinc-100/50 dark:bg-black/40 border-t border-zinc-200 dark:border-white/5 flex items-center justify-between px-8 mt-auto relative z-10">
                                 <span className="text-[10px] font-bold text-zinc-500 dark:text-slate-500 uppercase tracking-widest">
                                     {t('admin.dashboard.displaying', { count: activeTab === 'scores' ? filteredScores.length : messages.length })}
@@ -582,7 +554,6 @@ export default function AdminDashboard() {
                             </div>
                         </section>
                     ) : activeTab === 'moderation' ? (
-                        /* Moderation Center UI */
                         <section className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/60 rounded-3xl overflow-hidden border border-rose-500/20 shadow-2xl flex flex-col animate-in slide-in-from-bottom duration-500">
                             <div className="p-6 border-b border-rose-500/10 flex items-center justify-between bg-rose-500/5">
                                 <div className="flex items-center gap-4">
@@ -651,15 +622,10 @@ export default function AdminDashboard() {
                     ) : (
                         <SocialAnalyticsContent />
                     )}
-
                 </div>
-
-                {/* Right Side Panel */}
                 <div className="col-span-12 lg:col-span-3 flex flex-col gap-6">
-                    {/* CAMBIO: Panel actividad con fondo blanco sólido y sombra suave en light mode */}
                     <section className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 rounded-3xl border border-zinc-200 dark:border-white/10 shadow-sm dark:shadow-none flex flex-col transition-shadow duration-300">
                         <div className="p-6 border-b border-zinc-200 dark:border-white/5">
-                            {/* CAMBIO: Titulo zinc-950 en light mode */}
                             <h3 className="font-display font-extrabold text-sm uppercase tracking-widest flex items-center gap-2 text-zinc-950 dark:text-white">
                                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#FF1F8E]"></span>
                                 {t('admin.dashboard.recentActivity')}
@@ -668,7 +634,6 @@ export default function AdminDashboard() {
                         <div className="p-6 space-y-6 flex-grow">
                             {recentActivity.map((activity) => (
                                 <div key={activity.id} className="flex gap-4 relative">
-                                    {/* CAMBIO: Icono actividad borde primary/30 en light mode */}
                                     <div className="w-8 h-8 rounded-full bg-primary/10 dark:bg-white/5 flex items-center justify-center flex-shrink-0 z-10 border border-primary/30 dark:border-primary/20 transition-colors duration-300">
                                         {activity.type === 'auth' ? <MdLogin className="text-primary text-sm" /> :
                                             activity.type === 'sync' ? <MdSync className="text-primary text-sm" /> :
@@ -677,11 +642,9 @@ export default function AdminDashboard() {
                                                         <MdDelete className="text-primary text-sm" />}
                                     </div>
                                     <div className="flex-grow">
-                                        {/* CAMBIO: Texto actividad zinc-900 en light mode */}
                                         <p className="text-xs font-semibold leading-tight text-zinc-900 dark:text-white">
                                             <span className="text-primary">{activity.action}</span> {t(`admin.activity.${activity.detail.split(' ')[0].toLowerCase()}`) || activity.detail} {activity.detail.includes('(#') ? activity.detail.substring(activity.detail.indexOf('(#')) : ''}
                                         </p>
-                                        {/* CAMBIO: Timestamp zinc-500 en light mode */}
                                         <p className="text-[10px] text-zinc-500 dark:text-slate-500 mt-1 uppercase font-bold relative z-10">
                                             {format(new Date(activity.timestamp), "HH:mm:ss 'HRS'")}
                                         </p>
@@ -690,26 +653,18 @@ export default function AdminDashboard() {
                             ))}
                         </div>
                     </section>
-
-                    {/* CAMBIO: Panel Hardware con fondo blanco sólido y sombra suave en light mode */}
                     <section className="glass-panel backdrop-blur-xl bg-white dark:bg-slate-900/40 rounded-3xl border border-zinc-200 dark:border-white/10 shadow-sm dark:shadow-none p-6 transition-shadow duration-300">
                         <div className="flex items-center justify-between mb-6">
-                            {/* CAMBIO: Subtitulo zinc-600 en light mode */}
                             <h3 className="text-[10px] font-bold tracking-[0.2em] text-zinc-600 dark:text-slate-400 uppercase">Hardware Load</h3>
-                            {/* CAMBIO: Pulso cian (#00c2cc) en light mode */}
                             <div className="w-2 h-2 rounded-full bg-[#00c2cc] dark:bg-[#00f2ff] animate-pulse shadow-[0_0_8px_rgba(0,194,204,0.7)] dark:shadow-[0_0_8px_rgba(0,242,255,0.6)]"></div>
                         </div>
                         <div className="space-y-5">
                             <div>
                                 <div className="flex justify-between items-end mb-2 relative z-10">
-                                    {/* CAMBIO: Label zinc-600 en light mode */}
                                     <span className="text-[10px] font-bold text-zinc-600 dark:text-slate-400 uppercase tracking-widest">CPU Usage</span>
-                                    {/* CAMBIO: Valor cian (#00a8b3) en light mode */}
                                     <span className="text-xs font-mono font-bold text-[#00a8b3] dark:text-[#00f2ff]">{hardwareStats.cpu}%</span>
                                 </div>
-                                {/* CAMBIO: Rail barra progreso zinc-200 en light mode */}
                                 <div className="h-1 bg-zinc-200 dark:bg-white/5 rounded-full overflow-hidden">
-                                    {/* CAMBIO: Barra progreso de cian claro (#00c2cc) a azul en light mode */}
                                     <div className="h-full bg-gradient-to-r from-[#00c2cc] dark:from-[#00f2ff] to-blue-500 transition-all duration-1000" style={{ width: `${hardwareStats.cpu}%` }}></div>
                                 </div>
                             </div>
@@ -722,14 +677,11 @@ export default function AdminDashboard() {
                                     <div className="h-full bg-gradient-to-r from-primary to-purple-500 transition-all duration-1000" style={{ width: `${hardwareStats.memory}%` }}></div>
                                 </div>
                             </div>
-                            {/* CAMBIO: Separador zinc-200 en light mode */}
                             <div className="pt-4 border-t border-zinc-200 dark:border-white/5 flex items-center justify-around relative z-10">
                                 <div className="text-center">
-                                    {/* CAMBIO: Label zinc-500, valor zinc-900 en light mode */}
                                     <p className="text-[10px] text-zinc-500 dark:text-slate-500 font-bold uppercase mb-1">Ping</p>
                                     <p className="text-sm font-mono font-bold text-zinc-900 dark:text-white">{hardwareStats.ping}ms</p>
                                 </div>
-                                {/* CAMBIO: Separador vertical zinc-200 en light mode */}
                                 <div className="w-[1px] h-8 bg-zinc-200 dark:bg-white/5"></div>
                                 <div className="text-center">
                                     <p className="text-[10px] text-zinc-500 dark:text-slate-500 font-bold uppercase mb-1">Loss</p>
@@ -740,10 +692,6 @@ export default function AdminDashboard() {
                     </section>
                 </div>
             </main>
-
-            {/* Modal system removed for integration */}
-
         </div>
-
     );
 }

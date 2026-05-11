@@ -16,23 +16,41 @@ const Gallery = ({ query = '' }) => {
     const containerRef = useRef(null);
 
     const imageList = useMemo(() => [
-        { 
-            filename: 'image_iyhqyo', 
+        {
+            filename: 'image_iyhqyo',
             description: t('multimedia.gallery.img1'),
             title: t('multimedia.gallery.titles.img1'),
             credit: t('multimedia.gallery.credits.img1')
         },
-        { 
-            filename: 'image_tvh8vq', 
+        {
+            filename: 'image_tvh8vq',
             description: t('multimedia.gallery.img2'),
             title: t('multimedia.gallery.titles.img2'),
             credit: t('multimedia.gallery.credits.img2')
         },
-        { 
-            filename: 'Untitled_design_9_ccg9g8', 
+        {
+            filename: 'Untitled_design_9_ccg9g8',
             description: t('multimedia.gallery.img3'),
             title: t('multimedia.gallery.titles.img3'),
             credit: t('multimedia.gallery.credits.img3')
+        },
+        {
+            filename: 'VRChat_2026-05-09_22-15-39.861_2560x1440_rz8prs',
+            description: t('multimedia.gallery.img4'),
+            title: t('multimedia.gallery.titles.img4'),
+            credit: t('multimedia.gallery.credits.img4')
+        },
+        {
+            filename: 'ElViciooo_kw12zv',
+            description: t('multimedia.gallery.img5'),
+            title: t('multimedia.gallery.titles.img5'),
+            credit: t('multimedia.gallery.credits.img5')
+        },
+        {
+            filename: 'image_j0ctql',
+            description: t('multimedia.gallery.img6'),
+            title: t('multimedia.gallery.titles.img6'),
+            credit: t('multimedia.gallery.credits.img6')
         },
     ], [t]);
 

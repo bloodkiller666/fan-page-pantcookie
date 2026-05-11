@@ -63,16 +63,25 @@ export const translations = {
                 img1: "Este arte me lo habian pedido colocar en la anterior versión, pero preferí guardarlo para una mejor ocasión. Quién quisiera tener una flor amarilla en este aniversario.",
                 img2: "Me encantó mucho este arte porque así la vemos cuando haces tus karaokes o practicas para algún cover.",
                 img3: "Un 12 de abril dejaste de ser una pantera y te convertiste en una conejita solo por ese día, nos encantó mucho tu outfit te luciste demasiado. Estuvo muy cute.",
+                img4: "Aquel día lo tendré muy recordado, fue una linda noche y un hermoso stream como siempre de costumbre, siempre llenandonos de ternura.",
+                img5: "Esto no solo fue es un juego, es más que eso. Se volvió una cultura, un entretenimiento pero ahora es una novela mejora que la Rosa de Guadalupe. El Tomodachi estará ahí por siempre y para siempre.",
+                img6: "Cualquier lugar a donde vayamos habrá una Shake-Gang, el día en que te gradues (ojalá no pase) siempre recordaremos esa frase, más que una despedida al finalizar stream es un icono imborrable de nuestra comunidad.",
                 fanArt: "Fan Art",
                 titles: {
                     img1: "Flor Amarilla",
                     img2: "Sesión de Karaoke",
-                    img3: "Coneja Pantera"
+                    img3: "Coneja Pantera",
+                    img4: "Tu Maid Idol",
+                    img5: "El Vicio de Tomodachi Life",
+                    img6: "Shakeeeeee-Gang"
                 },
                 credits: {
                     img1: "✨✫ AlkerVGN ✫🏍💥",
                     img2: "✨✫ AlkerVGN ✫🏍💥",
-                    img3: "✨✫ AlkerVGN ✫🏍💥"
+                    img3: "✨✫ AlkerVGN ✫🏍💥",
+                    img4: "Shura Hiwa",
+                    img5: "PantQuaker🏍💥",
+                    img6: "PantQuaker🏍💥"
                 }
             }
         },
@@ -343,7 +352,7 @@ export const translations = {
             communityTitle: "La Comunidad pantcake",
             joinDiscord: "Únete al Discord",
             shuraTitle: "ShuraHiwa",
-            shuraDesc1: "ShuraHiwa es una VTuber mexicana que debutó el 11 de junio de 2023. Hace streams en Twitch y YouTube, donde crea contenido variado como Just Chatting, videojuegos, karaokes, handcams y collabs. Su nombre significa «Defensora de la Esperanza» le gustá del salmón ahumado, las siestas y la diversión. Destaca por su personalidad dulce y maternal, con la meta de reclutar miembros para su «pandilla», a quienes recibe de forma cálida para crear un espacio seguro y reconfortante. Visualmente es una pantera motociclista: cabello azul con rosa, orejas de pantera, ojos rosa intenso que hipnotizan a los pantcakes, chaqueta azul y un bate con la palabra Oyazumi para usar si alguien se porta mal. Tiene cinco lunares visibles y varios accesorios llamativos como guantes de motociclista, shorts azul oscuro, botas, un tamagotchi en el cinturón y gafas sobre la cabeza. Y, sobre todo (y no, no hablo de su frente), destacan sus orejas y cola, cuyo origen sigue en debate: ¿pantera o gato? (aunque las panteras también son gatos).",
+            shuraDesc1: "ShuraHiwa es una VTuber mexicana que debutó el 11 de junio de 2023. Hace streams en Twitch y YouTube, donde crea contenido variado como Just Chatting, videojuegos, karaokes, handcams y collabs. Su nombre significa «Defensora de la Esperanza» le gustá del salmón ahumado, las siestas y la diversión. Destaca por su personalidad dulce y maternal, con la meta de reclutar miembros para su «pandilla», a quienes recibe de forma cálida para crear un espacio seguro y reconfortante. Visualmente es una pantera motociclista: cabello azul con rosa, orejas de pantera, ojos rosa intenso que hipnotizan a los pantcakes, chaqueta azul y un bate con la palabra Oyazumi para usar si alguien se porta mal. Tiene cinco lunares visibles y varios accesorios llamativos como guantes de motociclista, shorts azul oscuro, botas, un tamagotchi en el cinturón y gafas sobre la cabeza. Y, sobre todo (y no, no hablo de su frente), destacan sus orejas and cola, cuyo origen sigue en debate: ¿pantera o gato? (aunque las panteras también son gatos).",
             shuraDesc2: "A través de sus streams...",
             communityDesc1: "¡Bienvenidos a la familia! Los pantcakes o Pantcakes somos la comunidad fan oficial de ShuraHiwa, somos como un dorayakis con casco y un cubito de mantequilla. ¿Cuál es nuestro rol? Pues, solo ser fiel y apoyar a ShuraHiwa en sus streams o fuera de stream. Demostrar que no solo somos más que fans, sino una familia o un grupo que solo busca acoger amablemente nueva gente e integrarlo a la comunidad divertirnos y socializarnos son nuestras funciones pero como misión principal es <<Llevarnos bien con unos a los otros>> nuestro lugar de reuniones aparte de los streams siempre será Discord en donde jugamos, charlmos, hacemos chupi (a veces) y vemos películas y/o series (legalmente). Si desobedecemos o no cumplimos con alguno de estas acciones seremos el desayuno de ShuraHiwa.",
             values: {
@@ -623,16 +632,25 @@ export const translations = {
                 img1: "This art was requested in the previous version, but I preferred to save it for a better occasion. Who would like to have a yellow flower on this anniversary?",
                 img2: "I really loved this art because it shows how we see her during your karaokes or when you practice for a cover.",
                 img3: "On April 12th you stopped being a panther and became a bunny just for that day, we loved your outfit, you looked amazing. It was very cute.",
+                img4: "I will always remember that day, it was a beautiful night and a wonderful stream as always, always filling us with tenderness.",
+                img5: "This wasn't just a game, it's more than that. It became a culture, entertainment, but now it's a novel better than 'La Rosa de Guadalupe'. Tomodachi will be there forever and always.",
+                img6: "Wherever we go, there will be a Shake-Gang. The day you graduate (hopefully never), we will always remember that phrase; more than a goodbye at the end of a stream, it's an indelible icon of our community.",
                 fanArt: "Fan Art",
                 titles: {
                     img1: "Yellow Flower",
                     img2: "Karaoke Session",
-                    img3: "Bunny Panther"
+                    img3: "Bunny Panther",
+                    img4: "Your Maid Idol",
+                    img5: "The Tomodachi Life Addiction",
+                    img6: "Shakeeeeee-Gang"
                 },
                 credits: {
-                    img1: "Anonymous Contribution",
-                    img2: "pantcake Community",
-                    img3: "ShakeGang Artist"
+                    img1: "✨✫ AlkerVGN ✫🏍💥",
+                    img2: "✨✫ AlkerVGN ✫🏍💥",
+                    img3: "✨✫ AlkerVGN ✫🏍💥",
+                    img4: "Shura Hiwa",
+                    img5: "PantQuaker🏍💥",
+                    img6: "PantQuaker🏍💥"
                 }
             }
         },
@@ -978,7 +996,7 @@ export const translations = {
                 aiTitle: "AI Chatbot Usage",
                 aiDesc: "The site includes a chatbot that uses artificial intelligence to generate responses automatically. Interactions may be used to improve its operation and user experience. The chatbot does not replace professional advice and does not guarantee the total accuracy of its responses.",
                 rightsTitle: "Your Rights",
-                rightsDesc: "As a user, you have the right to:",
+                rightsDesc: "As a user, you have the right to :",
                 rightsPoint1: "1. Access, rectify, or request the deletion of your personal information.",
                 rightsPoint2: "2. Request details about the treatment of the data and the purposes for which it is used.",
                 rightsPoint3: "3. Withdraw your consent when appropriate, according to applicable regulations.",
@@ -1182,8 +1200,27 @@ export const translations = {
             gallery: {
                 img1: "このアートは前のバージョンで掲載を頼まれていましたが、より良い機会のために取っておきました。この記念日に黄色の花を受け取りたい人は誰ですか？",
                 img2: "カラオケやカバーの練習をしている時の彼女の姿が見えるので、このアートがとても気に入りました。",
-                img3: "",
-                fanArt: "ファンアート"
+                img3: "4月12日、あなたはあの日だけパンサーからうさぎさんになりました。あなたの衣装はとても素敵で、本当に可愛かったです。",
+                img4: "あの日ことはずっと覚えています。いつものように素敵な夜で、素晴らしい配信でした。いつも私たちを優しさで満たしてくれます。",
+                img5: "これはただのゲームではありません、それ以上のものです。文化になり、娯楽になりましたが、今では『ラ・ロサ・デ・グアダルーペ』よりも優れたドラマになっています。トモダチは永遠にそこにあり続けます。",
+                img6: "私たちがどこへ行こうとも、そこにはシェイクギャングがいます。あなたが卒業する日（そんな日が来ないことを願っていますが）、私たちはいつもその言葉を思い出すでしょう。配信終了時の単なる別れの挨拶ではなく、私たちのコミュニティの消えないアイコンです。",
+                fanArt: "ファンアート",
+                titles: {
+                    img1: "黄色い花",
+                    img2: "カラオケセッション",
+                    img3: "バニー・パンサー",
+                    img4: "あなたのメイドアイドル",
+                    img5: "トモダチコレクション中毒",
+                    img6: "シェイクーーーギャング"
+                },
+                credits: {
+                    img1: "✨✫ AlkerVGN ✫🏍💥",
+                    img2: "✨✫ AlkerVGN ✫🏍💥",
+                    img3: "✨✫ AlkerVGN ✫🏍💥",
+                    img4: "Shura Hiwa",
+                    img5: "PantQuaker🏍💥",
+                    img6: "PantQuaker🏍💥"
+                }
             }
         },
         games: {
@@ -1451,7 +1488,7 @@ export const translations = {
             communityTitle: "pantcakeコミュニティ",
             joinDiscord: "Discordに参加する",
             shuraTitle: "ShuraHiwa (シュラヒワ)",
-            shuraDesc1: "ShuraHiwaは、2023年6月11日にデビューしたメキシコのVTuberです。TwitchとYouTubeで配信を行っており、雑談、ゲーム、カラオケ、ハンドカメラ、コラボなど、多彩なコンテンツを作成しています。彼女の名前は「希望の守護者」を意味し、スモークサーモン、お昼寝、そして楽しむことが大好きです。甘くて母親のような性格が特徴で、自分の「ギャング」のメンバーを募集することを目指しており、安全で居心地の良い空間を作るために温かく迎え入れてくれます。外見はバイカーのパンサーで、青とピンクの髪、パンサーの耳、pantcakeを魅了する強烈なピンクの瞳、青いジャケット、そして誰かが悪いことをした時に使う「Oyazumi」という言葉が書かれたバットを持っています。5つの目立つほくろがあり、バイカーグローブ、濃い青のショーツ、ブーツ、ベルトのたまごっち、頭の上のゴーグルなど、いくつか印象的なアクセサリーを身に着けています。そして何よりも（おでこのことではありません）、彼女の耳と尻尾が目立っており、その起源については今も議論が続いています：パンサーか猫か？（パンサーも猫科ではありますが）。",
+            shuraDesc1: "ShuraHiwaは、2023年6月11日にデビューしたメキシコのVTuberです。TwitchとYouTubeで配信を行っており、雑談、ゲーム、カラオケ、ハンドカメラ、コラボなど、多彩なコンテンツを作成しています。彼女の名前は「希望の守護者」を意味し、スモークサーモン、お昼寝、および楽しむことが大好きです。甘くて母親のような性格が特徴で、自分の「ギャング」のメンバーを募集することを目指しており、安全で居心地の良い空間を作るために温かく迎え入れてくれます。外見はバイカーのパンサーで、青とピンクの髪、パンサーの耳、pantcakeを魅了する強烈なピンクの瞳、青いジャケット、および誰かが悪いことをした時に使う「Oyazumi」という言葉が書かれたバットを持っています。5つの目立つほくろがあり、バイカーグローブ、濃い青のショーツ、ブーツ、ベルトのたまごっち、頭の上のゴーグルなど、いくつか印象的なアクセサリーを身に着けています。および何よりも（おでこのことではありません）、彼女の耳と尻尾が目立っており、その起源については今も議論が続いています：パンサーか猫か？（パンサーも猫科ではありますが）。",
             shuraDesc2: "配信を通じて...",
             communityDesc1: "ファミリーへようこそ！私たちpantcake（またはPantcake）はShuraHiwaの公式ファンコミュニティです。ヘルメットを被り、バターを乗せたどら焼きのような存在です。私たちの役割は？ただ忠実であり、配信中も配信外もShuraHiwaをサポートすることです。私たちが単なるファンではなく、新しい人々を温かく迎え入れ、コミュニティに溶け込ませることを目指す、家族やグループであることを示しています。楽しむことと社交することが私たちの機能ですが、主な使命は「お互いに仲良くすること」です。配信以外の交流場所は常にDiscordであり、そこでゲームをしたり、チャットをしたり、お酒を飲んだり（時々）、映画やシリーズを観たり（合法的に）しています。もし不服従だったり、これらの行動に従わなかったりした場合、私たちはShuraHiwaの朝食になってしまいます。",
             values: {
@@ -1503,11 +1540,31 @@ export const translations = {
                     items: [
                         {
                             question: "このページは何ですか？",
-                            answer: "これは公式のpantcakeファンページです。写真やビデオ、インタラクティブなゲーム、メッセージウォールが集まるShuraHiwaコミュニティのための空間です。"
+                            answer: "これはShake-Gang de Fan Pageです。ShuraHiwaとコミュニティ全体のために作成された空間で、週間カレンダー、リアルタイムのSNSフォロワー数、マルチメディア、ゲーム、メッセージ、およびインタラクティブな人工知能が用意されています。"
                         },
                         {
                             question: "ShuraHiwaとは誰ですか？",
-                            answer: "ShuraHiwaは、VTuberでありパンサーのママであり、ShakeGangの司令官です。TwitchとYouTubeで配信を行い、愛するpantcakeたちを楽しませています。"
+                            answer: "ShuraHiwaは、メキシコのVTuberであり、パンサーであり、ShakeGangの創設者です。TwitchとYouTubeで配信を行い、愛するpantcakeたちを楽しませています。"
+                        },
+                        {
+                            question: "彼女はSNSを持っていますか？",
+                            answer: "はい、ページ内の「私たちについて」セクションで彼女のSNSを確認できます。"
+                        },
+                        {
+                            question: "どのようにShuraHiwaを応援できますか？",
+                            answer: "TwitchやYouTubeチャンネルの登録、動画への高評価、共有、コメント、およびDiscordサーバーへの参加を通じて応援できます。"
+                        },
+                        {
+                            question: "どうすればpantcakeになれますか？",
+                            answer: "次の3つのステップに従ってください：ShuraHiwaのTwitchまたはYouTubeチャンネルを登録し、Discordサーバーに参加し、配信中に企画されるイベントやアクティビティに参加してください。"
+                        },
+                        {
+                            question: "このページにモデレーションはありますか？",
+                            answer: "はい、このページには独自のモデレーションパネルがあり、開発者がコミュニティのルールに違反する行為をモデレートできるようになっています。"
+                        },
+                        {
+                            question: "ページに入るのにアカウントは必要ですか？",
+                            answer: "現時点では、ページに入るのにアカウントは必要ありません。ただし、ゲームをプレイするにはニックネームが必要です。"
                         }
                     ]
                 },
@@ -1516,11 +1573,27 @@ export const translations = {
                     items: [
                         {
                             question: "スコアはどのように保存されますか？",
-                            answer: "スコアは入力したニックネームを使用して自動的に保存および同期されます。ブラウザを変更した場合は、再入力が求められます。"
+                            answer: "スコアは、開始時に提供したニックネームを使用して自動的に保存および同期されます。ブラウザを変更した場合は、再入力が求められます。"
                         },
                         {
                             question: "Shura Runのルールは何ですか？",
-                            answer: "ゴールデンPantcakes（10 pts）とクラシックを集めながら、赤い箱を避けてください。スピードが上がるので注意してください！"
+                            answer: "Shura Runでは、最悪の恐怖を避けながらゴールデンPantcakeを集めることが目的です。注意してください、スピードは上がっていきます！"
+                        },
+                        {
+                            question: "パズルはいくつありますか？",
+                            answer: "合計で5つのパズルがあり、ランダムに出現します。難易度（簡単、普通、難しい）によってピースの数が変わります。"
+                        },
+                        {
+                            question: "トリビアゲームはどのように分かれていますか？",
+                            answer: "トリビアゲームは3つのセクションに分かれています：「ShuraHiwaを知る」（ShuraHiwaに関する質問）、「pantcakeを知る」（pantcakeに関する質問）、および「曲を当てる」（コミュニティから推薦された曲を当てる）。"
+                        },
+                        {
+                            question: "どのようにゲームをプレイできますか？",
+                            answer: "ページのゲームセクションからプレイできます。ニックネームを入力して、プレイボタンを押すだけです。"
+                        },
+                        {
+                            question: "スコアは毎週または毎月クリアされますか？",
+                            answer: "スコアは毎月クリアされます。スケーラビリティを維持し、データベースの問題を避けることで、より良いユーザー体験を提供するためです。"
                         }
                     ]
                 },
@@ -1528,12 +1601,32 @@ export const translations = {
                     title: "テクニカルサポート",
                     items: [
                         {
-                            question: "画像や動画が読み込まれないのはなぜですか？",
-                            answer: "ギャラリーはクラウドや外部ドメインから提供されるため、強力な広告ブロッカーを無効にしてください。"
+                            question: "一部の動画や画像が読み込まれないのはなぜですか？",
+                            answer: "強力な広告ブロック拡張機能が有効になっていないか確認してください。多くのギャラリーはクラウド型ドメインや埋め込みから提供されているためです。"
                         },
                         {
-                            question: "チャットでバグが発生しました",
-                            answer: "AIチャットボットはリアルタイムで接続されています。ボットが「休んでいる」と言う場合は、APIの制限に達していることを意味します。接続を確認して再試行してください。"
+                            question: "インタラクティブチャットでバグが発生しました",
+                            answer: "私たちのボットはリアルタイムでAIに接続されています。問題が発生した場合は、インターネット接続を確認するか、ページを更新してみてください。ボットが「お休み中」と表示される場合は、5分間操作がなかったためです。"
+                        },
+                        {
+                            question: "このページは常に更新されますか？",
+                            answer: "はい、新しいコンテンツ、ゲーム、機能で常に更新されます。ただし、すべて適切なタイミングで行われます。"
+                        },
+                        {
+                            question: "このページは安全ですか？",
+                            answer: "はい、安全です。機密性の高い個人情報は収集しません。ニックネーム、メッセージ、音楽のみが保存されます。いずれにせよ、ページの完全性を保護するためにセキュリティ対策が取られています。"
+                        },
+                        {
+                            question: "このページはGoogleにインデックスされますか？",
+                            answer: "現時点ではいいえ、すべてはShuraHiwaの手の中にあります。"
+                        },
+                        {
+                            question: "このページは多言語サポートに対応していますか？",
+                            answer: "はい、ページは多言語（スペイン語、英語、フランス語、日本語）に対応しています。今後も言語パックの更新を続けていきます。"
+                        },
+                        {
+                            question: "このページはモバイルに対応していますか？",
+                            answer: "はい、スマートフォンやタブレットなどのモバイルデバイスで使用できます。最小要件はAndroid 8.0、iOS 13.0以上、および4GBのRAMです。これは、ページにリソースを必要とするエフェクトやアニメーションが含まれているためです。"
                         }
                     ]
                 }
@@ -1568,7 +1661,7 @@ export const translations = {
             emptyWall: "壁は空っぽです...",
             emptySub: "最初のメッセージを書きましょう！",
             emptyGoWrite: "書きに行く"
-        },
+        }
     },
     fr: {
         nav: {
@@ -1633,8 +1726,27 @@ export const translations = {
             gallery: {
                 img1: "On m'avait demandé de placer cet art dans la version précédente, mais j'ai préféré le garder pour une meilleure occasion. Qui aimerait avoir une fleur jaune pour cet anniversaire ?",
                 img2: "J'ai beaucoup aimé cet art parce qu'on la voit ainsi quand elle fait ses karaokés ou qu'elle s'entraîne pour une reprise.",
-                img3: "",
-                fanArt: "Fan Art"
+                img3: "Le 12 avril, tu as cessé d'être une panthère pour devenir une lapine juste pour cette journée. Nous avons adoré ta tenue, tu étais magnifique. C'était très mignon.",
+                img4: "Je me souviendrai toujours de ce jour, c'était une belle nuit et un stream magnifique comme d'habitude, nous remplissant toujours de tendresse.",
+                img5: "Ce n'était pas seulement un jeu, c'est plus que ça. C'est devenu une culture, un divertissement, mais c'est maintenant un roman meilleur que 'La Rosa de Guadalupe'. Tomodachi sera là pour toujours.",
+                img6: "Où que nous allions, il y aura une Shake-Gang. Le jour où tu seras diplômée (en espérant que cela n'arrive jamais), nous nous souviendrons toujours de cette phrase ; plus qu'un adieu à la fin d'un stream, c'est une icône indélébile de notre communauté.",
+                fanArt: "Fan Art",
+                titles: {
+                    img1: "Fleur Jaune",
+                    img2: "Session de Karaoké",
+                    img3: "Lapine Panthère",
+                    img4: "Ta Maid Idol",
+                    img5: "L'addiction à Tomodachi Life",
+                    img6: "Shakeeeeee-Gang"
+                },
+                credits: {
+                    img1: "✨✫ AlkerVGN ✫🏍💥",
+                    img2: "✨✫ AlkerVGN ✫🏍💥",
+                    img3: "✨✫ AlkerVGN ✫🏍💥",
+                    img4: "Shura Hiwa",
+                    img5: "PantQuaker🏍💥",
+                    img6: "PantQuaker🏍💥"
+                }
             }
         },
         games: {
@@ -1775,12 +1887,12 @@ export const translations = {
                 chaosModeDesc: "100 chansons en 120s.\n+10pts Correct / -3pts Incorrect.",
                 musicRulesTitle: "🧠 Règles Musicales",
                 musicInsane1: "1. Lisez l'énigme et essayez de deviner sans écouter.",
-                musicInsane2: "2. Si vous devinez directement : ",
-                musicInsane3: "3. Si vous utilisez le lecteur : ",
+                musicInsane2: "2. Si vous devinez sans utiliser le lecteur, vous ne serez pas pénalisé.",
+                musicInsane3: "3. Si vous utilisez le lecteur, vous serez pénalisé par une réduction de points et un minuteur s'activera.",
                 headphonesRecommended: "Recommandé : Utilisez des écouteurs pour une meilleure expérience.",
                 musicChaos1: "1. Course contre la montre : 2400 secondes au total.",
                 musicChaos2: "2. Devinez-en autant que possible (Total 100).",
-                musicChaos3: "3. Correct : ",
+                musicChaos3: "3. Écoutez attentivement l'énigme et/ou la chanson pour marquer la bonne réponse.",
                 musicChaos4: "4. Vous pouvez utiliser le lecteur sans pénalité.",
                 go: "C'est parti !",
                 rulesTitle: "🧠 Règles de Trivia",
@@ -1791,7 +1903,23 @@ export const translations = {
                 countdownReady: "Prêt",
                 countdownSet: "Concentrez-vous",
                 countdownSteady: "En place",
-                countdownGo: "Partez !"
+                countdownGo: "Partez !",
+                back: "← Retour",
+                incorrect: "Incorrect !",
+                correctAnswerIs: "La bonne réponse était",
+                submitAnswer: "Envoyer la réponse",
+                timeUp: "Temps écoulé !",
+                chaosCorrect: "Correct",
+                chaosIncorrect: "Incorrect",
+                totalTime: "Temps total",
+                audioPlaying: "♪ Lecture en cours...",
+                audioUsed: "Déjà écouté",
+                playTrack: "▶ Lire la piste",
+                playSong: "▶ Lire",
+                legendInsaneRight: "Sans audio : 5pts",
+                legendInsaneAudio: "Avec audio : 3pts + 7s",
+                legendChaosRight: "Correct : +10pts",
+                legendChaosWrong: "Incorrect : -3pts"
             }
         },
         admin: {
@@ -2044,7 +2172,7 @@ export const translations = {
                             answer: "Assurez-vous de ne pas avoir d'extensions de blocage trop agressives actives sur le site, car de nombreuses galeries sont servies depuis des domaines dans le cloud ou intégrées."
                         },
                         {
-                            question: "J'ai un bug dans le chat interactif",
+                            question: "J'ai un bug dans le chat interactivo",
                             answer: "Notre bot est connecté à l'IA en temps réel. Si vous rencontrez des problèmes, vérifiez votre connexion Internet ou essayez de rafraîchir la page. Si le bot indique qu'il 'se repose', c'est parce que vous avez été inactif pendant cinq minutes."
                         },
                         {

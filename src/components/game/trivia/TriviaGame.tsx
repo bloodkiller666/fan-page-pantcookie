@@ -28,12 +28,10 @@ export interface TriviaQuestion {
 
 const TIMER_PER_QUESTION = 15;
 const TOTAL_QUESTIONS = 20;
-
-// Constantes para los nuevos modos
 const INSANE_MODE_QUESTIONS = 20;
-const INSANE_MODE_TIMER = 10; // Segundos tras reproducir
+const INSANE_MODE_TIMER = 10;
 const CHAOS_MODE_QUESTIONS = 100;
-const CHAOS_MODE_TIMER = 2400; // Segundos totales
+const CHAOS_MODE_TIMER = 2400;
 
 const getPointsByRemainingTime = (remaining: number, isCorrect: boolean): number => {
   if (!isCorrect) return -2;
@@ -82,7 +80,6 @@ const ScoreIndicator = ({ points, onComplete }: ScoreIndicatorProps) => {
 };
 
 const TriviaGame = ({ playerName }: { playerName: string }) => {
-  // Styles as strings for injection
   const customStyles = `
     .retro-grid {
         background-image: radial-gradient(#dbdddd 0.5px, transparent 0.5px);
@@ -107,8 +104,8 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   const { t } = useLanguage();
   const router = useRouter();
   const { playSelect, playCorrect, playIncorrect, playVictory, playCountdown } = useGameSounds();
-  const [category, setCategory] = useState<Category | null>(null); // null, 'music', 'pantcake', 'shurahiwa'
-  const [gameMode, setGameMode] = useState<GameMode | null>(null); // Added 'insane' and 'chaos'
+  const [category, setCategory] = useState<Category | null>(null);
+  const [gameMode, setGameMode] = useState<GameMode | null>(null);
   const [started, setStarted] = useState(false);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [updateMessage, setUpdateMessage] = useState<string | null>(null);
@@ -142,6 +139,9 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   // Insane Mode State
   const [hasPlayedAudio, setHasPlayedAudio] = useState(false);
 
+  // Randomization session state
+  const [gameSessionId, setGameSessionId] = useState<number>(0);
+
   // Audio state
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -161,7 +161,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     }
 
     return pickQuestions(triviaQuestions[currentCategory], TOTAL_QUESTIONS);
-  }, [category, gameMode]);
+  }, [category, gameMode, gameSessionId]);
 
   const current = questions[index];
 
@@ -256,7 +256,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
     const interval = setInterval(() => {
       setRemaining(prev => {
-        if (prev <= 1) {
+        if (prev <= 0) {
           clearInterval(interval);
           handleTimeout();
           return 0;
@@ -273,6 +273,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   };
 
   const realStartGame = useCallback(() => {
+    setGameSessionId(Date.now());
     setStarted(true);
     setIndex(0);
     setScore(0);
