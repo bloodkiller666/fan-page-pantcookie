@@ -44,6 +44,7 @@ const MensajesContent = () => {
   const [activeTab, setActiveTab] = useState<'write' | 'read' | 'view'>('write');
   const [messages, setMessages] = useState<Message[]>([]);
   const [countryFlash, setCountryFlash] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
 
   // Form State
   const [username, setUsername] = useState('');
@@ -698,15 +699,16 @@ const MensajesContent = () => {
                     </p>
                   </div>
 
-                  {/* Vertical Grid wrapper */}
+                  {/* Vertical Grid wrapper (Masonry) */}
                   <div
                     ref={cardsWrapperRef}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10"
+                    className="columns-1 md:columns-2 lg:columns-3 gap-8 relative z-10"
                   >
                     {messages.map((msg, index) => (
                       <div
                         key={msg.id}
-                        className={`message-card w-full h-[480px] bg-white dark:bg-zinc-900 border-t-8 border-[var(--poke-pink)] rounded-[2.5rem] p-8 shadow-[0_15px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative hover:-translate-y-2 transition-all duration-300 ${msg.color.hover} flex flex-col`}
+                        onClick={() => setSelectedMessage(msg)}
+                        className={`message-card group w-full break-inside-avoid bg-white dark:bg-zinc-900 border-t-8 border-[var(--poke-pink)] rounded-[2.5rem] p-8 shadow-[0_15px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative hover:-translate-y-2 transition-all duration-300 cursor-pointer ${msg.color.hover} flex flex-col mb-8`}
                       >
                         <div className="flex justify-between items-start mb-6">
                           <div className="flex items-center gap-4">
@@ -723,14 +725,14 @@ const MensajesContent = () => {
                           </div>
                         </div>
 
-                        <div className="bg-gray-50 dark:bg-black/30 p-5 rounded-3xl border border-gray-100 dark:border-white/5 flex flex-col justify-start flex-grow overflow-hidden mb-6 relative">
+                        <div className="bg-gray-50 dark:bg-black/30 p-5 rounded-3xl border border-gray-100 dark:border-white/5 flex flex-col justify-start flex-grow mb-6 relative">
                           {msg.image && (
                             <div className="mb-4 rounded-2xl overflow-hidden border border-gray-200 dark:border-black/50 aspect-video relative flex-shrink-0 shadow-lg">
                               <Image src={msg.image} alt="User upload" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
                             </div>
                           )}
                           <div className="relative">
-                            <p className="text-gray-700 dark:text-gray-300 text-base italic font-medium leading-relaxed font-serif">&ldquo;{msg.text}&rdquo;</p>
+                            <p className="text-gray-700 dark:text-gray-300 text-base italic font-medium leading-relaxed font-serif whitespace-pre-wrap">&ldquo;{msg.text}&rdquo;</p>
                           </div>
                         </div>
 
@@ -740,6 +742,11 @@ const MensajesContent = () => {
                             REG_NO #{index + 1}
                           </span>
                           <span>{msg.timestamp}</span>
+                        </div>
+                        
+                        {/* Expand hint */}
+                        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                           <span className="bg-black/50 text-white text-xs px-2 py-1 rounded-lg">Ampliar</span>
                         </div>
                       </div>
                     ))}
@@ -751,6 +758,61 @@ const MensajesContent = () => {
 
         </div>
       </div>
+
+      {/* Full Message Modal */}
+      {selectedMessage && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in" onClick={() => setSelectedMessage(null)}>
+          <div 
+            className="bg-white dark:bg-zinc-900 border-t-8 border-[var(--poke-pink)] rounded-[2.5rem] p-6 md:p-10 max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative animate-bounce-in"
+            onClick={e => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setSelectedMessage(null)}
+              className="absolute top-6 right-6 text-gray-400 hover:text-white bg-black/5 dark:bg-white/10 hover:bg-[var(--poke-pink)] dark:hover:bg-[var(--poke-pink)] rounded-full p-2 transition-all"
+            >
+              <FaTimesCircle size={24} />
+            </button>
+            
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-14 h-14 rounded-2xl bg-[var(--poke-pink)]/10 dark:bg-white/10 flex items-center justify-center border border-[var(--poke-pink)]/20 shadow-sm">
+                <FaUser className="text-[var(--poke-pink)] text-2xl" />
+              </div>
+              <div>
+                <h4 className="text-gray-900 dark:text-white font-bold text-2xl leading-none mb-2">{selectedMessage.username}</h4>
+                <div className="flex items-center gap-2">
+                  <span className="font-pixel text-[10px] text-[var(--poke-pink)] uppercase tracking-widest">{selectedMessage.country}</span>
+                  <FaAward className="text-yellow-500 text-[12px]" />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 dark:bg-black/30 p-6 md:p-8 rounded-3xl border border-gray-100 dark:border-white/5 mb-8">
+              {selectedMessage.image && (
+                <div className="mb-6 rounded-2xl overflow-hidden border border-gray-200 dark:border-black/50 relative shadow-lg flex justify-center bg-black/10">
+                  <Image 
+                    src={selectedMessage.image} 
+                    alt="User upload" 
+                    width={800} 
+                    height={600} 
+                    className="w-full h-auto object-contain max-h-[50vh]" 
+                  />
+                </div>
+              )}
+              <p className="text-gray-800 dark:text-gray-200 text-lg md:text-xl italic font-medium leading-relaxed font-serif whitespace-pre-wrap">
+                &ldquo;{selectedMessage.text}&rdquo;
+              </p>
+            </div>
+            
+            <div className="flex justify-between items-center font-pixel text-[10px] text-gray-400/80 border-t border-gray-100 dark:border-white/10 pt-6">
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[var(--poke-pink)] shadow-[0_0_8px_var(--poke-pink)]" />
+                REG_NO #{messages.findIndex(m => m.id === selectedMessage.id) + 1}
+              </span>
+              <span>{selectedMessage.timestamp}</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Success Modal */}
       {showSuccessModal.show && (

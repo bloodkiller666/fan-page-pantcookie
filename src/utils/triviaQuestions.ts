@@ -808,6 +808,78 @@ export const triviaQuestions = {
       correctIndex: 2,
       audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/a-ha%20-%20Take%20On%20Me%20(Lyrics).mp3'
     },
+    {
+      id: 402,
+      difficulty: 'easy',
+      question: 'Tres pasos que marcan el ritmo del destino, un giro suave en el mismo camino. El reloj se detiene, el mundo se calla; ¡en este abrazo la magia no falla!',
+      options: ['Torero - Chayanne', 'De Musika - Chayanne', 'Salome - Chayanne', 'Tiempo de Vals - Chayanne'],
+      correctIndex: 3,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Chayanne%20-%20Tiempo%20De%20Vals%20%20Letra.mp3'
+    },
+    {
+      id: 403,
+      difficulty: 'easy',
+      question: 'Motores que vibran en un aire invisible, un pulso de caos que suena increíble. Entre saltos y ruidos que nadie detiene; ¡este ritmo loco el mundo mantiene!',
+      options: ['Mr. Saxobeat - Alexandra Stan', 'Axel F - Crazy Frog', 'Dragostea Din Tei - O-Zone', 'Cotton Eye Joe - Rednex'],
+      correctIndex: 1,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Crazy%20Frog%20-%20Axel%20F%20(Official%20Video).mp3'
+    },
+    {
+      id: 404,
+      difficulty: 'hard',
+      question: 'Danza de colores y un latido que acelera, el ritmo nos une borrando cualquier frontera. Brillo en la mirada y un paso que cautiva; ¡celebra la vida, que la fiesta está viva!',
+      options: ['Biba - Marshmello x Pritam Feat Shirley Setia', 'Cotton Eye Joe - Rednex', 'Dragostea Din Tei - O-Zone', 'Axel F - Crazy Frog'],
+      correctIndex: 0,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/BIBA%20-%20Marshmello%20x%20Pritam%20Feat%20Shirley%20Setia%20(Lyrics).mp3'
+    },
+    {
+      id: 405,
+      difficulty: 'easy',
+      question: 'Luces que caen y verdades ocultas, un refugio de sombras donde el miedo consulta. Mira en mis ojos, no intentes salvarme; ¡llevo monstruos dentro que temen dejarme!',
+      options: ['Imagine Dragons - Demons', 'ColdPlay - Viva La Vida', 'Someone You Loved - Lewis Capaldi', 'Perfect - Ed Sheeran'],
+      correctIndex: 0,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Imagine%20Dragons%20-%20Demons%20(Lyrics).mp3'
+    },
+    {
+      id: 406,
+      difficulty: 'hard',
+      question: 'Un brillo lejano en la inmensa oscuridad, buscando un refugio frente a la soledad. Rostro de plata que el cielo sostiene; ¡un eco de luz que mi alma detiene!',
+      options: ['Man in the Mirror - Michael Jackson', 'Man on the Moon - R.E.M.', 'Man in the Moon - Coldplay', 'Man on the Moon - Alan Walker ft. Benjamin Ingrosso'],
+      correctIndex: 2,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Coldplay%20-%20Man%20in%20The%20Moon%20%20Lyrics%20%2B%20Espa%C3%B1ol.mp3'
+    },
+    {
+      id: 407,
+      difficulty: 'medium',
+      question: '¡Banderas al viento y el alma en la cancha, un sueño que crece y el pecho se ensancha! El mundo se une en un solo latido; ¡la meta te espera, el triunfo es tu grito! ',
+      options: ['Livin la vida loca - Ricky Martin', 'La Gozadera - Gente de Zona ft. Marc Anthony', 'La Copa de la Vida - Ricky Martin', 'Waka Waka - Shakira'],
+      correctIndex: 2,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/La%20Copa%20de%20la%20Vida%20(The%20Cup%20of%20Life)%20-%20Ricky%20Martin%20Spanglish%20(Lyrics)%20%5BWith%20Film%20Grain%20Effect%5D.mp3'
+    },
+    {
+      id: 408,
+      difficulty: 'easy',
+      question: 'Traje con clase y un paso que asombra, galopa con fuerza rompiendo la sombra. Un grito que estalla, la pista se enciende; ¡con este baile el mundo comprende!',
+      options: ['Gangnam Style - PSY', 'Daddy - PSY', 'Gentleman - PSY', 'I Luv It - PSY'],
+      correctIndex: 0,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/PSY%20-%20Gangnam%20style%20(Lyrics%20with%20English%20meaning).mp3'
+    },
+    {
+      id: 409,
+      difficulty: 'easy',
+      question: 'Silencio aparente en un cuadro normal, un casco, un baile, ¡un giro total! Cuando el bajo golpea, la calma se rompe; ¡caos colectivo que al mundo corrompe!',
+      options: ['Ultimate - Denzel Curry', 'Turn Down for What - DJ Snake & Lil Jon', 'Designer - Panda', 'Harlem Shake - Baauer'],
+      correctIndex: 3,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Baauer%20-%20Harlem%20Shake%20%5BOfficial%20Audio%5D.mp3'
+    },
+    {
+      id: 410,
+      difficulty: 'medium',
+      question: 'Solté las cadenas, dejé el rincón, vistiéndome entera con mi propio perdón. Caminando con fuerza, la envidia se inspira; ¡brillo con gloria y el mundo me mira!',
+      options: ['Vivir Mi Vida - Marc Anthony', 'Todos Me Miran - Gloria Trevi', 'Bzrp Music Sessions, Vol 52 - Quevedo', 'El Perdón - Nicky Jam & Enrique Iglesias'],
+      correctIndex: 1,
+      audioUrl: 'https://pub-e0873e7e89f84fad95a46308bae2f240.r2.dev/Gloria%20Trevi%20-%20Todos%20Me%20Miran%20(Visualizer).mp3'
+    },
   ],
   shurahiwa: [
     { id: 101, difficulty: 'easy', question: '¿Quién es ShuraHiwa?', options: ['Una cantante', 'Una VTuber', 'Una chef', 'Una astronauta'], correctIndex: 1 },
@@ -849,7 +921,7 @@ export const triviaQuestions = {
     { id: 137, difficulty: 'medium', question: '¿En un directo, motoperro se comió algo de la mesa que fue? ', options: ['Una chuwacookie', 'Una kittyconcha', 'Sus croquetas', 'Ninguna de las anteriores'], correctIndex: 1 },
     { id: 138, difficulty: 'hard', question: '¿Te gusta realizar viajes con amigas? ', options: ['No', 'Sí', 'Solo a lugares específicos', 'No me importa'], correctIndex: 1 },
     { id: 139, difficulty: 'easy', question: '¿Quien es o quienes son tu(s) mejor(es) amiga(s)? ', options: ['Vomori', 'Melty', 'Cheri', 'Todas las anteriores'], correctIndex: 3 },
-
+    { id: 140, difficulty: 'easy', question: '¿Le gusta los juegos gachas? ', options: ['Sí me gusta', 'Rara vez me gusta', 'Casi nunca me gusta', 'No me gustan'], correctIndex: 3 },
   ],
   pantcake: [
     { id: 201, difficulty: 'easy', question: '¿Qué es un pantcake?', options: ['Una galleta', 'Un fan de ShuraHiwa', 'Un hater', 'Un postre'], correctIndex: 1 },
@@ -874,6 +946,7 @@ export const triviaQuestions = {
     { id: 220, difficulty: 'easy', question: '¿Te gusta ser un pantcake?', options: ['¡Sí!', 'Obvio', '¡Me encanta!', 'Todas las anteriores'], correctIndex: 3 },
     { id: 221, difficulty: 'hard', question: '¿Que es lo que les gusta a los pantcakes?', options: ['La convivencia en el VC', 'El respeto entre todos', 'El apoyo entre sí', 'Todas las anteriores'], correctIndex: 3 },
     { id: 222, difficulty: 'hard', question: '¿Algo que caracteriza a los pantcakes?', options: ['Son comidos en el desayuno', 'Somos un accesorio', 'Somos calvos', 'Andamos sin pantalones'], correctIndex: 3 },
-    { id: 223, difficulty: 'hard', question: '¿Algo que caracteriza a los pantcakes?', options: ['El respeto mutuo', 'La honestidad', 'La amabilidad', 'Todas las anteriores'], correctIndexes: [2, 3] },
+    { id: 223, difficulty: 'hard', question: '¿Algo que hace unicos a los pantcakes?', options: ['El respeto mutuo', 'La honestidad', 'La amabilidad', 'Todas las anteriores'], correctIndexes: [2, 3] },
+    { id: 224, difficulty: 'easy', question: '¿Todo pantcake que debe de llevar siempre?', options: ['El casco', 'El bate', 'Los lentes', 'La chaqueta'], correctIndexes: [0, 3] },
   ]
 };

@@ -146,9 +146,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
-  // Memoize questions based on selected category
   const questions = useMemo(() => {
-    // Aquí le decimos que category es una de las llaves del objeto triviaQuestions
     const currentCategory = category as keyof typeof triviaQuestions;
 
     if (!category || !triviaQuestions[currentCategory]) return [];
@@ -167,12 +165,8 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
   const current = questions[index];
 
-  // Handle music category audio fragment
   useEffect(() => {
-    // Only auto-play for non-music categories or normal modes. 
-    // Insane/Chaos logic handles audio differently (manual play)
     if (category === 'music' && (gameMode === 'insane' || gameMode === 'chaos')) {
-      // Reset audio state for new question
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
@@ -198,12 +192,8 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
       try {
         await audio.play();
         setIsAudioPlaying(true);
+        audio.currentTime = 15;
 
-        // Generate a random start point (between 10% and 60% of duration if available, or just random small offset)
-        // Since we might not have duration yet, we'll just start at 0 or a fixed offset for covers
-        audio.currentTime = 15; // Start at 15s to get into the song usually
-
-        // Play for 7-10 seconds
         const duration = 7000 + Math.random() * 3000;
         setTimeout(() => {
           if (audioRef.current === audio) {
@@ -224,7 +214,6 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     };
   }, [index, started, gameOver, current, category, gameMode]);
 
-  // Stop audio when answered
   useEffect(() => {
     if (answered && audioRef.current) {
       audioRef.current.pause();
@@ -232,7 +221,6 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     }
   }, [answered]);
 
-  // Pause audio when menu is open
   useEffect(() => {
     if (showPauseMenu && audioRef.current) {
       audioRef.current.pause();
@@ -240,9 +228,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     }
   }, [showPauseMenu]);
 
-  // Check if current question has multiple answers
   const isMultipleAnswer = current && Array.isArray(current.correctIndexes);
-  // FIX: Add safety check for current
   const correctAnswerIndexes: number[] = current
     ? (isMultipleAnswer ? (current.correctIndexes || []) : [current.correctIndex ?? 0])
     : [];
@@ -263,7 +249,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
     if (gameMode === 'chaos') {
     } else if (gameMode === 'insane') {
-      if (!hasPlayedAudio) return; // No timer until audio is played
+      if (!hasPlayedAudio) return;
     } else {
       setRemaining(TIMER_PER_QUESTION);
     }
@@ -296,11 +282,10 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     setTimedStats({ correct: 0, incorrect: 0, streak: 0 });
     setMaxStreak(0);
 
-    // Initialize Timer based on Mode
     if (pendingMode === 'chaos') {
       setRemaining(CHAOS_MODE_TIMER);
     } else if (pendingMode === 'insane') {
-      setRemaining(0); // Timer inactive initially
+      setRemaining(0);
       setHasPlayedAudio(false);
     } else {
       setRemaining(TIMER_PER_QUESTION);
@@ -332,8 +317,6 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
       setScore(prev => Math.max(0, prev - 3));
     }
 
-    // Si audioRef.current es null (ocurre en modos insane/chaos porque el useEffect
-    // hace un return temprano sin crear el objeto Audio), lo creamos aquí.
     if (!audioRef.current) {
       audioRef.current = new Audio();
       audioRef.current.volume = 0.5;
@@ -341,13 +324,10 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
     const audio = audioRef.current;
 
-    // 1. FORZAR EL NUEVO SRC: R2 a veces necesita que se le asigne el src justo antes de tocar
     audio.src = current.audioUrl;
 
-    // 2. CARGAR EL ARCHIVO
     audio.load();
 
-    // 3. REPRODUCIR CON MANEJO DE ERRORES (Importante para depurar)
     audio.play()
       .then(() => {
         setIsAudioPlaying(true);
@@ -358,14 +338,12 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
       })
       .catch(error => {
         console.error("Error de R2:", error);
-        // Si sale error de CORS, aquí lo verás en la consola
       });
   };
 
-  // Countdown logic
   useEffect(() => {
     if (!isCountingDown) {
-      setCountValue(3); // Reset when not counting down
+      setCountValue(3);
       return;
     }
 
@@ -386,7 +364,6 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     return () => clearInterval(timer);
   }, [isCountingDown, realStartGame]);
 
-  // Audio for countdown
   useEffect(() => {
     if (!isCountingDown) return;
     playCountdown(countValue);
@@ -394,7 +371,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
 
 
   const handleOptionClick = (optIndex: number) => {
-    if (answered && gameMode !== 'chaos') return; // In chaos mode, we might want rapid fire? No, usually one answer per question.
+    if (answered && gameMode !== 'chaos') return;
 
     if (isMultipleAnswer) {
 
@@ -447,10 +424,7 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
       setTimedStats(prev => ({ ...prev, incorrect: prev.incorrect + 1, streak: 0 }));
     }
 
-    // --- LÓGICA DE PUNTOS ACTUALIZADA ---
     if (gameMode === 'insane') {
-      // +10 si es correcto, -5 si es incorrecto
-      // (La penalización de -3 por audio se aplica en handleManualPlay)
       pts = isCorrect ? 10 : -5;
     } else if (gameMode === 'chaos') {
       pts = isCorrect ? 10 : -3;
