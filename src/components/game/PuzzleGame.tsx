@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import DifficultySelector from './DifficultySelector';
 import PuzzleBoard from './PuzzleBoard';
 import PlayerInput from './PlayerInput';
@@ -29,18 +30,22 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
     const [showOverwriteModal, setShowOverwriteModal] = useState(false);
     const [pendingScoreData, setPendingScoreData] = useState<{ score: number, oldScore: number } | null>(null);
 
-    // Timer Logic
-    useEffect(() => {
-        let interval: NodeJS.Timeout;
-        if (isTimerRunning) {
-            interval = setInterval(() => {
-                setElapsedTime(prev => prev + 1);
-            }, 1000);
-        }
-        return () => {
-            if (interval) clearInterval(interval);
-        };
-    }, [isTimerRunning]);
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    const resetGame = () => {
+        setGameState('setup');
+        setElapsedTime(0);
+        setIsTimerRunning(false);
+        setCurrentImage('');
+        setShowVictoryScreen(false);
+
+        const params = new URLSearchParams(searchParams?.toString() || "");
+        params.delete('difficulty');
+        params.delete('state');
+        router.push(`/games?${params.toString()}`, { scroll: false });
+    };
+
 
     const startGame = () => {
         setShowRules(true);
@@ -53,6 +58,11 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
         setGameState('playing');
         setElapsedTime(0);
         setIsTimerRunning(true);
+
+        const params = new URLSearchParams(searchParams?.toString() || "");
+        params.set('difficulty', difficulty);
+        params.set('state', 'playing');
+        router.push(`/games?${params.toString()}`, { scroll: false });
     };
 
     const handlePuzzleComplete = async () => {
@@ -82,13 +92,6 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
         setPendingScoreData(null);
     };
 
-    const resetGame = () => {
-        setGameState('setup');
-        setElapsedTime(0);
-        setIsTimerRunning(false);
-        setCurrentImage('');
-        setShowVictoryScreen(false);
-    };
 
     const handleShare = () => {
         const timeStr = `${Math.floor(elapsedTime / 60)}:${(elapsedTime % 60).toString().padStart(2, '0')}`;
@@ -121,9 +124,57 @@ const PuzzleGame = ({ playerName }: { playerName: string }) => {
             if (!confirm) return;
         }
         setDifficulty(newDifficulty);
+        const params = new URLSearchParams(searchParams?.toString() || "");
+        params.set('difficulty', newDifficulty);
+        params.delete('state');
+        router.push(`/games?${params.toString()}`, { scroll: false });
+
         setGameState('setup');
         setShowVictoryScreen(false);
     };
+
+    // Sync state with URL
+    useEffect(() => {
+        if (!searchParams) return;
+        const diff = searchParams.get('difficulty');
+        const state = searchParams.get('state');
+
+        // Intercept back button if playing
+        if (gameState === 'playing' && !state) {
+            router.forward();
+            setIsTimerRunning(false);
+            setShowPauseMenu(true);
+            return;
+        }
+
+        if (diff) {
+            setDifficulty(diff);
+        }
+
+        if (state === 'playing') {
+            if (gameState !== 'playing' && gameState !== 'completed') {
+                // Trigger game start if not already playing
+                confirmStartGame();
+            }
+        } else if (state === 'setup' || !state) {
+            setGameState('setup');
+            setIsTimerRunning(false);
+            setShowVictoryScreen(false);
+        }
+    }, [searchParams, gameState, router]);
+
+    // Timer Logic
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        if (isTimerRunning) {
+            interval = setInterval(() => {
+                setElapsedTime(prev => prev + 1);
+            }, 1000);
+        }
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [isTimerRunning]);
 
     const puzzleRules = [
         {

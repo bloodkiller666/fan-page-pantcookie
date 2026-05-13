@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
 import PuzzleGame from '../components/game/PuzzleGame';
 import TriviaGame from '../components/game/trivia/TriviaGame';
@@ -27,6 +27,8 @@ const GamesContent = () => {
         return <i className={iconBase + "text-neon-pink animate-bounce"} />;
     };
 
+    const router = useRouter();
+
     useEffect(() => {
         const savedName = localStorage.getItem('playerName');
         if (savedName) {
@@ -41,10 +43,7 @@ const GamesContent = () => {
             localStorage.setItem('playerName', playerName.trim());
             setShowNamePrompt(false);
             // Requirement: Stay on main menu selecting the game manually after registration
-            setSelected(null);
-            if (window.location.search.includes('game=')) {
-                window.history.replaceState(null, '', '/games');
-            }
+            router.push('/games', { scroll: false });
         }
     };
 
@@ -59,10 +58,10 @@ const GamesContent = () => {
                 // Requirement: Redirect to main menu if accessing via link without registration
                 setSelected(null);
                 setShowNamePrompt(true);
-                if (window.location.search.includes('game=')) {
-                    window.history.replaceState(null, '', '/games');
-                }
+                router.replace('/games', { scroll: false });
             }
+        } else {
+            setSelected(null);
         }
 
         const timer = setInterval(() => {
@@ -70,7 +69,11 @@ const GamesContent = () => {
             setTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
         }, 1000);
         return () => clearInterval(timer);
-    }, [searchParams]);
+    }, [searchParams, router]);
+
+    const handleSelectGame = (game: 'puzzle' | 'trivia' | 'shuraRun') => {
+        router.push(`/games?game=${game}`, { scroll: false });
+    };
 
     useEffect(() => {
         if (!selected) {
@@ -171,7 +174,7 @@ const GamesContent = () => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 items-start">
-                    <div onClick={() => setSelected('puzzle')} className="game-card group relative aspect-square cursor-pointer transform transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]">
+                    <div onClick={() => handleSelectGame('puzzle')} className="game-card group relative aspect-square cursor-pointer transform transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]">
                         <div className="absolute -inset-0.5 bg-neon-pink rounded-2xl blur opacity-0 group-hover:opacity-80 transition duration-300" />
                         <div className="relative h-full flex flex-col rounded-2xl overflow-hidden border-2 border-neon-pink/40 glow-pink bg-zinc-900 transition-colors group-hover:border-neon-pink">
                             <div className="h-full w-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.9), transparent), url('https://lh3.googleusercontent.com/aida-public/AB6AXuAPYRsIWbUqNh-a-VWR_MO8g3khJ6eVMNX6l3H5fGPrUnEp01Ml2s40NsSvlvtiTugefIBHdWXFvpoW1Spin-uS77FQg9MXgAGwETbGisA0l-KLocksxXidPCAfLzLKLDN7np1hrP5S3aTv-YIdLwCIMV-66Vkjv2kVfQEi7UrO_Ev_Pcfs6kE5soxk7nbBk3M4FrD0Ezo5GotWMcnP64qcdaZfCUGC2ttpMGPwOPi0CvuAWp0Bp4YDnMR-wH4NnS5u_JdcX3Gto3c')` }} />
@@ -186,7 +189,7 @@ const GamesContent = () => {
                     </div>
 
                     {/* Card 2: PREGUNTADOS - Brillo Intensificado */}
-                    <div onClick={() => setSelected('trivia')} className="game-card group relative aspect-square cursor-pointer transform transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]">
+                    <div onClick={() => handleSelectGame('trivia')} className="game-card group relative aspect-square cursor-pointer transform transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]">
                         <div className="absolute -inset-0.5 bg-neon-cyan rounded-2xl blur opacity-0 group-hover:opacity-80 transition duration-300" />
                         <div className="relative h-full flex flex-col rounded-2xl overflow-hidden border-2 border-neon-cyan/40 glow-cyan bg-zinc-900 transition-colors group-hover:border-neon-cyan">
                             <div className="h-full w-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.9), transparent), url('https://lh3.googleusercontent.com/aida-public/AB6AXuBy-_fx_lxjGNHUxeykasMYI7eCci5mIMRdbli2KJoQ6ZOh8zPX5DsPI2KOsFqJc9HcSLBsDlcI452Ao_WLwmI-0ulGTvujpIrNw3rV6EP23rWHoHyC0b_9WhsTu4gXGCNs7wrIB3x848y8sHaHOeeQxjezO_009KLOKX3ave43CMREIOLv0NG3rlSq6s0xtqfkZgW_FPAZOSlTUxkXeqbJBSxOFsD9ulxIm0WtO1OoPBymDTz75NSrsqNfrLgeK_s4DuFkLATDz-Q')` }} />
@@ -201,7 +204,7 @@ const GamesContent = () => {
                     </div>
 
                     {/* Card 3: SHURA RUN - Brillo Intensificado */}
-                    <div onClick={() => setSelected('shuraRun')} className="game-card group relative aspect-square cursor-pointer transform transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]">
+                    <div onClick={() => handleSelectGame('shuraRun')} className="game-card group relative aspect-square cursor-pointer transform transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]">
                         <div className="absolute -inset-0.5 bg-neon-volt rounded-2xl blur opacity-0 group-hover:opacity-80 transition duration-300" />
                         <div className="relative h-full flex flex-col rounded-2xl overflow-hidden border-2 border-neon-volt/40 glow-volt bg-zinc-900 transition-colors group-hover:border-neon-volt">
                             <div className="h-full w-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110" style={{ backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.9), transparent), url('https://lh3.googleusercontent.com/aida-public/AB6AXuDdjL2V2Ot0p54beKJQMARTwB1-XsW7cbFdKE5S52XQnc3SkQl9nnZxUf5DT65t7bswUpYmW8cPJgJsyX2GRNELbKNEQaJ2aI47-UwDKipeFkQk7n2qC2GohuiQ0-FQsDpKZBRR1sElFOMN8zWZwGFSvqJ1WRfzAssc4j0TufHB5Bk2AprrWzu1mQ4TKYVeN4uX2c37yabAFKve30KaaRQYWJXXigGO4-usqEGCZ6Ji8vJblJx2hCX5C2Z42WjtRpyCnuT1LDxXZSk')` }} />
@@ -249,7 +252,7 @@ const GamesContent = () => {
                         <span className="text-zinc-500 dark:text-white/60 text-[10px] font-bold uppercase italic tracking-widest">Details</span>
                     </div>
                     {/* Botón B Corregido */}
-                    <div className="flex items-center gap-3 group cursor-pointer">
+                    <div onClick={() => router.back()} className="flex items-center gap-3 group cursor-pointer">
                         <div className="size-8 rounded-full bg-neon-pink/20 border-2 border-neon-pink flex items-center justify-center group-hover:bg-neon-pink transition-all group-hover:shadow-[0_0_15px_#ff007a]">
                             <span className="text-zinc-900 dark:text-white font-black text-xs">B</span>
                         </div>

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useMemo, useState, useRef, useCallback, ReactNode, Dispatch, SetStateAction } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { triviaQuestions } from '../../../utils/triviaQuestions';
 import { useLanguage } from '../../../context/LanguageContext';
 import PlayerInput from '../PlayerInput';
@@ -267,9 +267,46 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     return () => clearInterval(interval);
   }, [index, started, gameOver, answered, gameMode, hasPlayedAudio, showPauseMenu]);
 
+  const searchParams = useSearchParams();
+
+  // Sync state with URL on mount and when URL changes
+  useEffect(() => {
+    if (!searchParams) return;
+    const cat = searchParams.get('category');
+    const mode = searchParams.get('mode');
+
+    // Detect if we were playing and just hit back
+    if (started && !gameOver && gameMode && !mode) {
+      // Restore the URL to keep the game state and show pause menu
+      router.forward();
+      setShowPauseMenu(true);
+      return;
+    }
+
+    if (cat) {
+      setCategory(cat as Category);
+    } else {
+      setCategory(null);
+      setGameMode(null);
+      setStarted(false);
+      setGameOver(false);
+    }
+
+    if (mode) {
+      setGameMode(mode as GameMode);
+      setPendingMode(mode as GameMode);
+    } else {
+      setGameMode(null);
+      setStarted(false);
+      setGameOver(false);
+    }
+  }, [searchParams, started, gameOver, gameMode, router]);
+
   const selectCategory = (cat: Category) => {
     playSelect();
-    setCategory(cat);
+    const params = new URLSearchParams(searchParams?.toString() || "");
+    params.set('category', cat);
+    router.push(`/games?${params.toString()}`, { scroll: false });
   };
 
   const realStartGame = useCallback(() => {
@@ -304,7 +341,9 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     setShowRules(false);
     if (pendingMode) {
       playSelect();
-      setGameMode(pendingMode);
+      const params = new URLSearchParams(searchParams?.toString() || "");
+      params.set('mode', pendingMode);
+      router.push(`/games?${params.toString()}`, { scroll: false });
       setIsCountingDown(true);
       setCountValue(3);
     }
@@ -542,6 +581,12 @@ const TriviaGame = ({ playerName }: { playerName: string }) => {
     setScoreChange(null);
     setTimedStats({ correct: 0, incorrect: 0, streak: 0 });
     setMaxStreak(0);
+
+    const params = new URLSearchParams(searchParams?.toString() || "");
+    params.delete('category');
+    params.delete('mode');
+    router.push(`/games?${params.toString()}`, { scroll: false });
+
     if (audioRef.current) {
       audioRef.current.pause();
     }
