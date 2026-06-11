@@ -49,6 +49,7 @@ const MusicPlayer = () => {
     const [playerColor, setPlayerColor] = useState('#ff007a');
     const [showVisualizer, setShowVisualizer] = useState(true);
     const [performanceMode, setPerformanceMode] = useState(false);
+    const [isVideoLoading, setIsVideoLoading] = useState(false);
 
     // -- Equalizer State (DJ Mixer) --
     const [eqBands, setEqBands] = useState([0, 0, 0, 0, 0]);
@@ -358,7 +359,10 @@ const MusicPlayer = () => {
             if (isPlaying) {
                 try {
                     if (audioRef.current) await audioRef.current.play();
-                    if (bgVideoRef.current && currentSong?.backgroundVideo && !performanceMode && !isLocalSong) await bgVideoRef.current.play();
+                    if (bgVideoRef.current && currentSong?.backgroundVideo && !performanceMode && !isLocalSong) {
+                        setIsVideoLoading(true);
+                        await bgVideoRef.current.play();
+                    }
                 } catch (err) { console.error(err); }
             } else {
                 audioRef.current?.pause();
@@ -367,6 +371,26 @@ const MusicPlayer = () => {
         };
         playMedia();
     }, [isPlaying, currentSongIndex, performanceMode, currentSong?.backgroundVideo, isLocalSong]);
+
+    // Handle video loading state
+    useEffect(() => {
+        const video = bgVideoRef.current;
+        if (!video) return;
+
+        const handleCanPlay = () => setIsVideoLoading(false);
+        const handleWaiting = () => setIsVideoLoading(true);
+        const handleLoadStart = () => setIsVideoLoading(true);
+
+        video.addEventListener('canplay', handleCanPlay);
+        video.addEventListener('waiting', handleWaiting);
+        video.addEventListener('loadstart', handleLoadStart);
+
+        return () => {
+            video.removeEventListener('canplay', handleCanPlay);
+            video.removeEventListener('waiting', handleWaiting);
+            video.removeEventListener('loadstart', handleLoadStart);
+        };
+    }, [currentSong?.backgroundVideo]);
 
     const handlePlayPause = () => setIsPlaying(!isPlaying);
     const handleTimeUpdate = () => { if (audioRef.current) setCurrentTime(audioRef.current.currentTime); };
@@ -430,7 +454,21 @@ const MusicPlayer = () => {
 
                 {!performanceMode && currentSong.backgroundVideo && !isLocalSong && (
                     <div className="absolute inset-0 opacity-100 mix-blend-screen overflow-hidden">
-                        <video ref={bgVideoRef} src={currentSong.backgroundVideo} loop muted playsInline autoPlay={isPlaying} className="w-full h-full object-cover scale-110" />
+                        {isVideoLoading && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-10">
+                                <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            </div>
+                        )}
+                        <video 
+                            ref={bgVideoRef} 
+                            src={currentSong.backgroundVideo} 
+                            loop 
+                            muted 
+                            playsInline 
+                            preload="auto"
+                            poster={currentSong.coverUrl}
+                            className="w-full h-full object-cover scale-110" 
+                        />
                     </div>
                 )}
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] mix-blend-overlay"></div>
@@ -477,7 +515,7 @@ const MusicPlayer = () => {
                                                     return (
                                                         <button key={song.id} onClick={() => { setCurrentSongIndex(idx); setIsPlaying(true); setSearchQuery(''); }} className="w-full text-left p-4 hover:bg-white/10 transition-all border-b border-white/5 last:border-0 flex items-center gap-4 group/item">
                                                             <div className="relative size-12 rounded-xl overflow-hidden shadow-2xl shrink-0">
-                                                                <img src={song.coverUrl} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
+                                                                <img src={song.coverUrl} className="w-full h-full object-contain group-hover/item:scale-110 transition-transform duration-500" />
                                                                 {isActive && <div className="absolute inset-0 flex items-center justify-center bg-black/40"><MdEqualizer className="text-white animate-pulse" /></div>}
                                                             </div>
                                                             <div className="min-w-0 flex-1">
@@ -496,7 +534,7 @@ const MusicPlayer = () => {
                                                     return (
                                                         <button key={song.id} onClick={() => { setCurrentSongIndex(idx); setIsPlaying(true); setSearchQuery(''); }} className="w-full text-left p-4 hover:bg-white/10 transition-all border-b border-white/5 last:border-0 flex items-center gap-4 group/item">
                                                             <div className="relative size-12 rounded-xl overflow-hidden shadow-2xl shrink-0">
-                                                                <img src={song.coverUrl} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
+                                                                <img src={song.coverUrl} className="w-full h-full object-contain group-hover/item:scale-110 transition-transform duration-500" />
                                                                 {isActive && <div className="absolute inset-0 flex items-center justify-center bg-black/40"><MdEqualizer className="text-white animate-pulse" /></div>}
                                                             </div>
                                                             <div className="min-w-0 flex-1">
@@ -600,7 +638,7 @@ const MusicPlayer = () => {
                                     <div className={`absolute -inset-4 rounded-2xl blur-3xl transition duration-1000 ${isPlaying ? 'opacity-80 scale-110' : 'opacity-50'}`} style={{ backgroundColor: `${playerColor}33` }}></div>
                                     <div className="relative glass p-2 rounded-3xl shadow-2xl border border-white/10 transition-transform duration-700 ease-in-out" style={{ transform: isPlaying ? 'scale(1.02)' : 'scale(1)' }}>
                                         <div className="aspect-square w-64 md:w-80 rounded-2xl overflow-hidden shadow-2xl relative bg-black/20">
-                                            <img className="w-full h-full object-cover" src={currentSong?.coverUrl || "https://img.freepik.com/vector-gratis/gato-lindo-escuchando-musica-telefono-auriculares-icono-vectorial-dibujos-animados-ilustracion-tecnologia-animal_138676-11290.jpg"} alt={currentSong?.title || "No song"} />
+                                            <img className="w-full h-full object-contain" src={currentSong?.coverUrl || "https://img.freepik.com/vector-gratis/gato-lindo-escuchando-musica-telefono-auriculares-icono-vectorial-dibujos-animados-ilustracion-tecnologia-animal_138676-11290.jpg"} alt={currentSong?.title || "No song"} />
                                         </div>
                                     </div>
                                 </div>
@@ -658,7 +696,7 @@ const MusicPlayer = () => {
                                             return (
                                                 <div key={song.id} onClick={() => { setCurrentSongIndex(idxInOrig); setIsPlaying(true); }} className={`flex items-center gap-4 p-3 rounded-xl transition-all group cursor-pointer border ${isActive ? 'bg-white/5 border-white/10' : 'border-transparent hover:bg-white/5 hover:border-white/5'}`}>
                                                     <div className="relative size-10 rounded-lg overflow-hidden flex-shrink-0">
-                                                        <img className={`w-full h-full object-cover ${!isActive ? 'grayscale group-hover:grayscale-0' : ''}`} src={song.coverUrl} alt={song.title} />
+                                                        <img className={`w-full h-full object-contain ${!isActive ? 'grayscale group-hover:grayscale-0' : ''}`} src={song.coverUrl} alt={song.title} />
                                                         {isActive && <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: `${playerColor}99` }}><MdEqualizer className="text-white text-xl animate-pulse" /></div>}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
@@ -694,7 +732,7 @@ const MusicPlayer = () => {
                                             return (
                                                 <div key={song.id} onClick={() => { setCurrentSongIndex(idxInOrig); setIsPlaying(true); }} className={`flex items-center gap-4 p-3 rounded-xl transition-all group cursor-pointer border ${isActive ? 'bg-white/5 border-white/10' : 'border-transparent hover:bg-white/5 hover:border-white/5'}`}>
                                                     <div className="relative size-10 rounded-lg overflow-hidden flex-shrink-0">
-                                                        <img className={`w-full h-full object-cover ${!isActive ? 'grayscale group-hover:grayscale-0' : ''}`} src={song.coverUrl} alt={song.title} />
+                                                        <img className={`w-full h-full object-contain ${!isActive ? 'grayscale group-hover:grayscale-0' : ''}`} src={song.coverUrl} alt={song.title} />
                                                         {isActive && <div className="absolute inset-0 flex items-center justify-center" style={{ backgroundColor: `${playerColor}99` }}><MdEqualizer className="text-white text-xl animate-pulse" /></div>}
                                                     </div>
                                                     <div className="flex-1 min-w-0">
@@ -741,7 +779,7 @@ const MusicPlayer = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4 w-1/4">
                                 <div className="size-12 rounded-lg overflow-hidden shrink-0 border border-white/5">
-                                    <img className="w-full h-full object-cover" src={currentSong?.coverUrl || "https://img.freepik.com/vector-gratis/gato-lindo-escuchando-musica-telefono-auriculares-icono-vectorial-dibujos-animados-ilustracion-tecnologia-animal_138676-11290.jpg"} alt={currentSong?.title || "No song"} />
+                                    <img className="w-full h-full object-contain" src={currentSong?.coverUrl || "https://img.freepik.com/vector-gratis/gato-lindo-escuchando-musica-telefono-auriculares-icono-vectorial-dibujos-animados-ilustracion-tecnologia-animal_138676-11290.jpg"} alt={currentSong?.title || "No song"} />
                                 </div>
                                 <div className="flex flex-col min-w-0">
                                     <span className="text-sm font-bold truncate text-white">{currentSong?.title || "Seleccionar música"}</span>

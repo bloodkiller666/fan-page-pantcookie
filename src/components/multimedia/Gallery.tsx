@@ -52,6 +52,24 @@ const Gallery = ({ query = '' }) => {
             title: t('multimedia.gallery.titles.img6'),
             credit: t('multimedia.gallery.credits.img6')
         },
+        {
+            filename: 'Se_buscan_gwkkfu',
+            description: t('multimedia.gallery.img7'),
+            title: t('multimedia.gallery.titles.img7'),
+            credit: t('multimedia.gallery.credits.img7')
+        },
+        {
+            filename: '120_hrs_j746zp',
+            description: t('multimedia.gallery.img8'),
+            title: t('multimedia.gallery.titles.img8'),
+            credit: t('multimedia.gallery.credits.img8')
+        },
+        {
+            filename: 'Quien_es_tu_princesa_hitnyg',
+            description: t('multimedia.gallery.img9'),
+            title: t('multimedia.gallery.titles.img9'),
+            credit: t('multimedia.gallery.credits.img9')
+        },
     ], [t]);
 
     const images = useMemo(() => imageList.map((item, index) => {

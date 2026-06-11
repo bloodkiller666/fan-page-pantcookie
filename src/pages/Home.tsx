@@ -245,7 +245,7 @@ export default function Home() {
                                 {!showInteractiveCalendar ? (
                                     <>
                                         <img
-                                            src="https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/ShuraHiwa%20Weekly%20Schedule.jpg"
+                                            src="https://ik.imagekit.io/7zy1frxsr/Fotos/maxresdefault.png"
                                             alt={t('home.weeklyCalendar')}
                                             className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity"
                                             onError={(e) => {

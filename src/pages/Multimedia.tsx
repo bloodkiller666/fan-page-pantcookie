@@ -32,7 +32,7 @@ const MultimediaContent = () => {
 
     // Terms for autocomplete (Simplified list based on known content)
     const searchableTerms = useMemo(() => [
-        'Robert', 'Roberto', 'Salmonsito', 'Chura', 'Arte', 'Pandilla', 'Stream', 'Vlog',
+        'Salmonsito', 'Chura', 'Arte', 'Pandilla', 'Stream', 'Vlog',
         'Drawing', 'Gaming', 'Cover', 'Canción', 'Video', 'Foto', 'Fan Art'
     ], []);
 

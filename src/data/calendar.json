@@ -1,44 +1,44 @@
 [
   {
     "day": "Lunes",
-    "activity": "",
+    "activity": "Charla",
     "time": "18:00 CDMX || 21:00 ARG",
     "icon": "💬"
   },
   {
     "day": "Martes",
-    "activity": "",
-    "time": "--:--",
-    "icon": "😴"
+    "activity": "Donkey Kong 64",
+    "time": "18:00 CDMX || 21:00 ARG",
+    "icon": "🎮"
   },
   {
     "day": "Miércoles",
     "activity": "",
     "time": "",
-    "icon": "🎮"
+    "icon": "😴"
   },
   {
     "day": "Jueves",
-    "activity": "",
+    "activity": "Chuwaversario",
     "time": "18:00 CDMX || 21:00 ARG",
     "icon": "🎮"
   },
   {
     "day": "Viernes",
-    "activity": "",
-    "time": "18:00 CDMX || 21:00 ARG",
-    "icon": "💬"
+    "activity": "Chuwaversario",
+    "time": "12:00 CDMX || 15:00 ARG",
+    "icon": "🎮"
   },
   {
     "day": "Sábado",
-    "activity": "",
-    "time": "18:00 CDMX || 21:00 ARG",
+    "activity": "Chuwaversario",
+    "time": "12:00 CDMX || 15:00 ARG",
     "icon": "🎮"
   },
   {
     "day": "Domingo",
-    "activity": "",
-    "time": "17:00 XDMX || 20:00 ARG",
+    "activity": "Chuwaversario",
+    "time": "12:00 CDMX || 15:00 ARG",
     "icon": "🎮"
   }
 ]

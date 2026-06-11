@@ -23,7 +23,10 @@ const VideoPlayer = ({ query = '' }) => {
         { id: 'Atrapado_con_las_patas_en_la_masa_rubfeo', title: 'Poder perruno' },
         { id: 'Shura_Fuera_de_Contexto_pt._1_koknsu', title: 'Fuera de Contexto PARTE 1' },
         { id: 'ssstwitter.com_1776117025001_uo9ul6', title: '¿Chicos, ahora el Vtubing es así?' },
-        { id: 'Shura_Fuera_de_Contexto_pt._2_ei6pfl', title: 'Fuera de Contexto PARTE 2' }
+        { id: 'Shura_Fuera_de_Contexto_pt._2_ei6pfl', title: 'Fuera de Contexto PARTE 2' },
+        { id: 'Y_es_por_eso_no_hay_casa_diebfk', title: 'Y nunca hubo casa' },
+        { id: 'Hay_animales_en_chile_widi7n', title: '¿Hay animales en Chile?' },
+        { id: 'Mi_alarma_favorita_ymtkvd', title: 'Mi alarma favorita' }
     ];
 
     const videos = useMemo(() => videoList.map((video, index) => ({

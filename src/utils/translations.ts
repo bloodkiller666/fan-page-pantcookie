@@ -66,6 +66,9 @@ export const translations = {
                 img4: "Aquel día lo tendré muy recordado, fue una linda noche y un hermoso stream como siempre de costumbre, siempre llenandonos de ternura.",
                 img5: "Esto no solo fue es un juego, es más que eso. Se volvió una cultura, un entretenimiento pero ahora es una novela mejora que la Rosa de Guadalupe. El Tomodachi estará ahí por siempre y para siempre.",
                 img6: "Cualquier lugar a donde vayamos habrá una Shake-Gang, el día en que te gradues (ojalá no pase) siempre recordaremos esa frase, más que una despedida al finalizar stream es un icono imborrable de nuestra comunidad.",
+                img7: "¿Alguien ha visto a estos fugitivos? Si los ha visto por ahí, por favor avisen a las autoridades y serán bien recompesados. No es crean, me gustó el trabajo que hizo Alker y ser parte de...agradezco de corazón al tenerme en cuenta, por cierto el hacker soy yo (risitas).",
+                img8: "Todo fue como una simple junta pankoki, diversión y charlita. Pensabamos que estarían hasta las 5 am como lo suelen hacerlo pero no fue hasta las 11 am de la mañana que seguian ahí algunos pankokis. Llega la noche y les digo (en plan de broma) que si hacemos un extensible de VC, la idea principal era dejarlo en solo 48 horas pensando que no lo ibamos a lograrlo; pero resultó que si lo estaban cumpliendo. Así que los días transcurrian, veiamos el stream, jugabamos, reaccionamos videos en VC y también se llegó a unirse algunos pankokis que suelen ser activos en el chat pero no el VC del chat general. Este challenge duró como 128 horas nada más porque se me cortó el internet (triste). Se planeará para otro extensible ¡No lo sabemos!",
+                img9: "Cada foto u arte comisiado que le hacen se vuelve un recuerdo especial para todos los pankokis. Creo que me quedó corto la palabra arte, quise decir 'ABSOLUTE CINEMA' aunque ya tiene su corona pero...le falta su trono (coloquelo en throne)",
                 fanArt: "Fan Art",
                 titles: {
                     img1: "Flor Amarilla",
@@ -73,7 +76,10 @@ export const translations = {
                     img3: "Coneja Pantera",
                     img4: "Tu Maid Idol",
                     img5: "El Vicio de Tomodachi Life",
-                    img6: "Shakeeeeee-Gang"
+                    img6: "Shakeeeeee-Gang",
+                    img7: "Se buscan",
+                    img8: "El challenge pantkoki",
+                    img9: "¿Quién es esa princesita?",
                 },
                 credits: {
                     img1: "✨✫ AlkerVGN ✫🏍💥",
@@ -81,7 +87,10 @@ export const translations = {
                     img3: "✨✫ AlkerVGN ✫🏍💥",
                     img4: "Shura Hiwa",
                     img5: "PantQuaker🏍💥",
-                    img6: "PantQuaker🏍💥"
+                    img6: "PantQuaker🏍💥",
+                    img7: "✨✫ AlkerVGN ✫🏍💥",
+                    img8: "Roberto_YTPH(iwa)🏍💥",
+                    img9: "Tate Mumi"
                 }
             }
         },
@@ -635,6 +644,9 @@ export const translations = {
                 img4: "I will always remember that day, it was a beautiful night and a wonderful stream as always, always filling us with tenderness.",
                 img5: "This wasn't just a game, it's more than that. It became a culture, entertainment, but now it's a novel better than 'La Rosa de Guadalupe'. Tomodachi will be there forever and always.",
                 img6: "Wherever we go, there will be a Shake-Gang. The day you graduate (hopefully never), we will always remember that phrase; more than a goodbye at the end of a stream, it's an indelible icon of our community.",
+                img7: "Has anyone seen these fugitives? If you've seen them around, please notify the authorities and they will be well rewarded. Don't believe it, I liked the work Alker did and being part of...I thank you from the bottom of my heart for considering me, by the way I'm the hacker (giggles).",
+                img8: "It all started as a simple pantkoki gathering, fun and chatting. We thought they would be there until 5 am as they usually do, but it wasn't until 11 am that some pantkoki were still there. Night comes and I tell them (as a joke) if we do a VC extension, the main idea was to leave it at only 48 hours thinking we wouldn't achieve it; but it turned out they were fulfilling it. So the days went by, we watched the stream, played games, reacted to videos in VC and some pantkoki who are usually active in chat but not in the general chat VC also joined. This challenge lasted about 128 hours just because my internet got cut (sad). It's planned for another extension ¡We don't know!",
+                img9: "Every photo or commissioned art made for her becomes a special memory for all pantkoki. I think the word art fell short, I meant to say 'ABSOLUTE CINEMA' although it already has its crown but...it lacks its throne (place it in throne)",
                 fanArt: "Fan Art",
                 titles: {
                     img1: "Yellow Flower",
@@ -642,7 +654,10 @@ export const translations = {
                     img3: "Bunny Panther",
                     img4: "Your Maid Idol",
                     img5: "The Tomodachi Life Addiction",
-                    img6: "Shakeeeeee-Gang"
+                    img6: "Shakeeeeee-Gang",
+                    img7: "Wanted",
+                    img8: "The pantkoki Challenge",
+                    img9: "Who is that princess?"
                 },
                 credits: {
                     img1: "✨✫ AlkerVGN ✫🏍💥",
@@ -650,7 +665,10 @@ export const translations = {
                     img3: "✨✫ AlkerVGN ✫🏍💥",
                     img4: "Shura Hiwa",
                     img5: "PantQuaker🏍💥",
-                    img6: "PantQuaker🏍💥"
+                    img6: "PantQuaker🏍💥",
+                    img7: "✨✫ AlkerVGN ✫🏍💥",
+                    img8: "Roberto_YTPH(iwa)🏍💥",
+                    img9: "Tate Mumi"
                 }
             }
         },
@@ -1204,6 +1222,9 @@ export const translations = {
                 img4: "あの日ことはずっと覚えています。いつものように素敵な夜で、素晴らしい配信でした。いつも私たちを優しさで満たしてくれます。",
                 img5: "これはただのゲームではありません、それ以上のものです。文化になり、娯楽になりましたが、今では『ラ・ロサ・デ・グアダルーペ』よりも優れたドラマになっています。トモダチは永遠にそこにあり続けます。",
                 img6: "私たちがどこへ行こうとも、そこにはシェイクギャングがいます。あなたが卒業する日（そんな日が来ないことを願っていますが）、私たちはいつもその言葉を思い出すでしょう。配信終了時の単なる別れの挨拶ではなく、私たちのコミュニティの消えないアイコンです。",
+                img7: "この逃亡者たちを見た人はいますか？もし見かけたら、当局に通報してください。十分に報酬されます。信じないでください、Alkerの仕事が気に入りましたし、...の一部になれて嬉しいです。心から感謝しています、ちなみにハッカーは私です（笑）。",
+                img8: "すべては単なるパントコキの集まり、楽しみとおしゃべりから始まりました。彼らはいつものように午前5時までいると思っていましたが、午前11時になってもまだパントコキがいました。夜になって私は（冗談で）VCの延長をしようと言いました。主なアイデアは48時間だけにするつもりでしたが、彼らが達成していることがわかりました。そこで日々が過ぎ、配信を見て、ゲームをして、VCで動画に反応し、チャットでは活発だが一般チャットVCにはいないパントコキも参加しました。このチャレンジは私のインターネットが切れたため（悲しい）、約128時間しか続きませんでした。別の延長が計画されています！わかりません！",
+                img9: "彼女のために作られたすべての写真や依頼アートは、すべてのパントコキにとって特別な思い出になります。アートという言葉が短すぎたと思います。「ABSOLUTE CINEMA」と言いたかったです。すでに王冠はありますが...玉座が欠けています（玉座に置いてください）",
                 fanArt: "ファンアート",
                 titles: {
                     img1: "黄色い花",
@@ -1211,7 +1232,10 @@ export const translations = {
                     img3: "バニー・パンサー",
                     img4: "あなたのメイドアイドル",
                     img5: "トモダチコレクション中毒",
-                    img6: "シェイクーーーギャング"
+                    img6: "シェイクーーーギャング",
+                    img7: "指名手配",
+                    img8: "パントコキチャレンジ",
+                    img9: "あのお姫様は誰？"
                 },
                 credits: {
                     img1: "✨✫ AlkerVGN ✫🏍💥",
@@ -1219,7 +1243,10 @@ export const translations = {
                     img3: "✨✫ AlkerVGN ✫🏍💥",
                     img4: "Shura Hiwa",
                     img5: "PantQuaker🏍💥",
-                    img6: "PantQuaker🏍💥"
+                    img6: "PantQuaker🏍💥",
+                    img7: "✨✫ AlkerVGN ✫🏍💥",
+                    img8: "Roberto_YTPH(iwa)🏍💥",
+                    img9: "Tate Mumi"
                 }
             }
         },
@@ -1730,6 +1757,9 @@ export const translations = {
                 img4: "Je me souviendrai toujours de ce jour, c'était une belle nuit et un stream magnifique comme d'habitude, nous remplissant toujours de tendresse.",
                 img5: "Ce n'était pas seulement un jeu, c'est plus que ça. C'est devenu une culture, un divertissement, mais c'est maintenant un roman meilleur que 'La Rosa de Guadalupe'. Tomodachi sera là pour toujours.",
                 img6: "Où que nous allions, il y aura une Shake-Gang. Le jour où tu seras diplômée (en espérant que cela n'arrive jamais), nous nous souviendrons toujours de cette phrase ; plus qu'un adieu à la fin d'un stream, c'est une icône indélébile de notre communauté.",
+                img7: "Quelqu'un a-t-il vu ces fugitifs ? Si vous les avez vus quelque part, veuillez en informer les autorités et ils seront bien récompensés. Ne me croyez pas, j'ai aimé le travail d'Alker et faire partie de...je remercie du fond du cœur de m'avoir pris en compte, d'ailleurs le hacker c'est moi (rigolotes).",
+                img8: "Tout a commencé comme une simple réunion pantkoki, amusement et discussion. Nous pensions qu'ils seraient là jusqu'à 5h du matin comme ils le font d'habitude, mais ce n'est qu'à 11h du matin que certains pantkoki étaient encore là. La nuit arrive et je leur dis (en plaisantant) si nous faisons une extension de VC, l'idée principale était de le laisser seulement 48 heures en pensant que nous n'y arriverions pas ; mais il s'est avéré qu'ils le respectaient. Alors les jours passaient, nous regardions le stream, jouions, réagissions aux vidéos en VC et certains pantkoki qui sont habituellement actifs dans le chat mais pas dans le VC du chat général se sont aussi joints. Ce défi a duré environ 128 heures juste parce que mon internet s'est coupé (triste). Il est prévu pour une autre extension ¡Nous ne savons pas !",
+                img9: "Chaque photo ou art commandé qui lui est fait devient un souvenir spécial pour tous les pantkoki. Je pense que le mot art est trop court, je voulais dire 'ABSOLUTE CINEMA' bien qu'il ait déjà sa couronne mais...il lui manque son trône (mettez-le dans trône)",
                 fanArt: "Fan Art",
                 titles: {
                     img1: "Fleur Jaune",
@@ -1737,7 +1767,10 @@ export const translations = {
                     img3: "Lapine Panthère",
                     img4: "Ta Maid Idol",
                     img5: "L'addiction à Tomodachi Life",
-                    img6: "Shakeeeeee-Gang"
+                    img6: "Shakeeeeee-Gang",
+                    img7: "Recherchés",
+                    img8: "Le Défi pantkoki",
+                    img9: "Qui est cette princesse ?"
                 },
                 credits: {
                     img1: "✨✫ AlkerVGN ✫🏍💥",
@@ -1745,7 +1778,10 @@ export const translations = {
                     img3: "✨✫ AlkerVGN ✫🏍💥",
                     img4: "Shura Hiwa",
                     img5: "PantQuaker🏍💥",
-                    img6: "PantQuaker🏍💥"
+                    img6: "PantQuaker🏍💥",
+                    img7: "✨✫ AlkerVGN ✫🏍💥",
+                    img8: "Roberto_YTPH(iwa)🏍💥",
+                    img9: "Tate Mumi"
                 }
             }
         },
