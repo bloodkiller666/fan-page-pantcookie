@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { submitGameScore, checkExistingScore } from '../../../utils/supabaseScoreService';
 import Leaderboard from '../Leaderboard';
 import { useLanguage } from '../../../context/LanguageContext';
@@ -42,8 +41,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     const [isBgmMuted, setIsBgmMuted] = useState(false);
     const [isSfxMuted, setIsSfxMuted] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const router = useRouter();
-    const searchParams = useSearchParams();
 
     const [aspectRatio, setAspectRatio] = useState<'16:9' | '21:9'>('16:9');
     const [menuView, setMenuView] = useState<'main' | 'settings' | 'controls'>('main');
@@ -144,7 +141,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         assets.muerteCaida.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/muerte%20part1.png';
         assets.muerteLoop.src = 'https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/muerte%20part2.png';
 
-        // Configuración para que el pixel art no se vea borroso
         const canvas = canvasRef.current;
         if (canvas) {
             const ctx = canvas.getContext('2d');
@@ -167,7 +163,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         const savedScore = localStorage.getItem('shuraRunHighScore');
         if (savedScore) setHighScore(parseInt(savedScore));
 
-        // Initialize Audio
         jumpSound.current = new Audio('https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/jump.mp3');
         collectSound.current = new Audio('https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/collect.mp3');
         deathSound.current = new Audio('https://pub-c4667318dbeb475aaf97ced2e83d838b.r2.dev/death.mp3');
@@ -210,28 +205,22 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         isPlayingRef.current = false;
         setGameState('gameover');
         deathTimestampRef.current = performance.now();
-        // Sonido de muerte al instante
         if (deathSound.current) {
             deathSound.current.currentTime = 0;
             deathSound.current.play().catch(() => { });
         }
         if (bgMusic.current) bgMusic.current.pause();
 
-        // The requestRef will be handled by the gameLoop which continues if gameState === 'gameover'
         const currentHigh = parseInt(localStorage.getItem('shuraRunHighScore') || '0');
         if (scoreRef.current > currentHigh) {
             localStorage.setItem('shuraRunHighScore', scoreRef.current.toString());
             setHighScore(scoreRef.current);
         }
 
-        // Submit to Supabase if we have a name
         const name = playerName || 'Anonymous';
-
-        // 1. Check if we beat the existing score
         const check = await checkExistingScore('shura_run', name);
 
         if (check.exists && check.score !== null) {
-            // Auto-overwrite if better
             if (scoreRef.current > check.score) {
                 const result = await submitGameScore('shura_run', name, scoreRef.current);
                 if (result.success && result.updated) {
@@ -240,7 +229,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 }
             }
         } else {
-            // New entry entirely
             const result = await submitGameScore('shura_run', name, scoreRef.current);
             if (result.success && result.updated) {
                 setUpdateMessage(t('games.shuraRun.updatingScore'));
@@ -257,16 +245,13 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // Calcular Delta Time
         let deltaTime = lastTimeRef.current ? (timestamp - lastTimeRef.current) / 1000 : 0;
         if (deltaTime > 0.1) deltaTime = 0.016;
 
         lastTimeRef.current = timestamp;
         frameCountRef.current++;
 
-        // --- 1. ACTUALIZAR (Solo si está en juego) ---
         if (gameState === 'playing') {
-            // Actualizar jugador
             const player = playerRef.current;
             player.dy += GRAVITY * deltaTime * 60;
             player.y += player.dy * deltaTime * 60;
@@ -280,7 +265,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 player.grounded = false;
             }
 
-            // Actualizar decoraciones
             if (timestamp - lastDecorationTimeRef.current > 2000 + Math.random() * 3000) {
                 const houseTypes: Array<'casa1' | 'casa2' | 'casa3'> = ['casa1', 'casa2', 'casa3'];
                 const randomHouse = houseTypes[Math.floor(Math.random() * houseTypes.length)];
@@ -300,7 +284,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             });
             decorationsRef.current = decorationsRef.current.filter(dec => !dec.markedForDeletion);
 
-            // Actualizar estela
             if (player.grounded && frameCountRef.current % 5 === 0) {
                 particlesRef.current.push({
                     x: player.x + 20,
@@ -313,7 +296,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 });
             }
 
-            // Actualizar partículas
             particlesRef.current.forEach(p => {
                 p.x += p.vx * deltaTime * 60;
                 p.y += p.vy * deltaTime * 60;
@@ -323,7 +305,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             });
             particlesRef.current = particlesRef.current.filter(p => !p.markedForDeletion);
 
-            // Actualizar y spawneo de obstáculos
             const speedIncrease = Math.floor(scoreRef.current / 100) * 0.5;
             speedRef.current = Math.min(INITIAL_SPEED + speedIncrease, MAX_SPEED);
             const currentInterval = (INITIAL_SPEED * INITIAL_OBSTACLE_INTERVAL) / speedRef.current;
@@ -351,7 +332,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 }
             }
 
-            // Mover obstáculos y Colisiones
             obstaclesRef.current.forEach(obs => {
                 obs.x -= speedRef.current * deltaTime * 60;
                 if (
@@ -400,20 +380,16 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             obstaclesRef.current = obstaclesRef.current.filter(obs => !obs.markedForDeletion);
         }
 
-        // --- 2. DIBUJAR (Siempre que el loop esté activo) ---
-        // Fondo y Cielo
         ctx.fillStyle = '#87CEEB';
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         ctx.drawImage(assetsRef.current.sol, CANVAS_WIDTH - 400, 100, 200, 200);
 
-        // Nubes (Parallax - basado en speedRef que sigue existiendo)
         const cloudGap = 800;
         for (let i = 0; i < 3; i++) {
             const cloudX = ((timestamp * 0.02 + i * cloudGap) % (CANVAS_WIDTH + 400)) - 200;
             ctx.drawImage(assetsRef.current.nube, CANVAS_WIDTH - cloudX, 100 + i * 50, 300, 150);
         }
 
-        // Decoraciones (Casas)
         decorationsRef.current.forEach(dec => {
             ctx.globalAlpha = 0.5;
             ctx.drawImage(assetsRef.current[dec.asset], dec.x, dec.y, dec.width, dec.height);
@@ -421,17 +397,9 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         });
 
         const groundLevel = CANVAS_HEIGHT - 140;
-
-        // Suelo Infinito (Parallax - basado en timestamp * speed, el speed no varía si murió)
         const groundImg = assetsRef.current.tierra;
         const groundWidth = 400;
-        const groundOffset = (gameState === 'playing')
-            ? (timestamp * (speedRef.current * 0.05)) % groundWidth
-            : (lastTimeRef.current * (speedRef.current * 0.05)) % groundWidth; // Se congela si no está jugando? 
-        // Wait, el usuario quiere que se vea quieto? Si "updatePhysics" no corre, x no cambia. 
-        // El suelo depende del cálculo (timestamp * speed). Debo fijar el offset si no juega.
 
-        // Corregir offset para que se detenga visualmente
         const currentGroundOffset = (gameState === 'playing')
             ? (timestamp * (speedRef.current * 0.05)) % groundWidth
             : (deathTimestampRef.current * (speedRef.current * 0.05)) % groundWidth;
@@ -440,7 +408,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             ctx.drawImage(groundImg, (i * groundWidth) - currentGroundOffset, groundLevel, groundWidth, 140);
         }
 
-        // Partículas
         particlesRef.current.forEach(p => {
             ctx.fillStyle = `rgba(200, 200, 200, ${p.opacity})`;
             ctx.beginPath();
@@ -448,7 +415,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             ctx.fill();
         });
 
-        // Obstáculos
         obstaclesRef.current.forEach(obs => {
             const assetName = obs.type === 'hater' ? 'enemigo' :
                 obs.type === 'hater2' ? 'enemigo2' :
@@ -457,14 +423,12 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             ctx.drawImage(assetsRef.current[assetName as keyof typeof assetsRef.current], obs.x, obs.y, obs.width, obs.height);
         });
 
-        // Avatar / Muerte
         const player = playerRef.current;
         if (gameState === 'gameover') {
             const timeSinceDeath = timestamp - deathTimestampRef.current;
             const dropDuration = 400;
 
             if (timeSinceDeath < dropDuration) {
-                // ESCENA 1: CAÍDA
                 const frame = Math.floor(timeSinceDeath / 100);
                 ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(
@@ -475,7 +439,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                     player.width, player.height
                 );
             } else {
-                // ESCENA 2: MAREO (Loop)
                 const loopFrame = Math.floor((timeSinceDeath - dropDuration) / 150) % 2;
                 ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(
@@ -486,13 +449,11 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                     player.width, player.height
                 );
 
-                // Mostrar UI demorada
                 if (timeSinceDeath - dropDuration > 3000 && !showGameOverUI) {
                     setShowGameOverUI(true);
                 }
             }
         } else {
-            // Animación Normal
             const isJumping = !player.grounded;
             const activeAvatar = isJumping ? assetsRef.current.avatarSalto : assetsRef.current.avatar;
             const FRAME_W = 64;
@@ -510,14 +471,12 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 currentFrame = Math.floor(timestamp / 80) % TOTAL_FRAMES;
             }
 
-            // GOKU SUPER SAIYAN EFFECT (GOD MODE)
             if (powerUpsRef.current.salmon.active && gameState === 'playing') {
                 ctx.save();
-                ctx.shadowColor = '#ffff00'; // Yellow glow
+                ctx.shadowColor = '#ffff00';
                 ctx.shadowBlur = 25;
                 ctx.shadowOffsetX = 0;
                 ctx.shadowOffsetY = 0;
-                // Add a slightly golden tint filter
                 ctx.globalCompositeOperation = 'source-over';
             }
 
@@ -535,7 +494,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             }
         }
 
-        // HUD Power-ups
         const pNowCheck = performance.now();
         if (powerUpsRef.current.salmon.active && pNowCheck > powerUpsRef.current.salmon.endTime) powerUpsRef.current.salmon.active = false;
         if (powerUpsRef.current.concha.active && pNowCheck > powerUpsRef.current.concha.endTime) {
@@ -631,11 +589,11 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     }, []);
 
     const startGame = () => {
-        const params = new URLSearchParams(searchParams?.toString() || "");
-        params.set('state', 'playing');
-        router.push(`/games?${params.toString()}`, { scroll: false });
+        if (typeof window !== 'undefined') {
+            const newUrl = `${window.location.pathname}?game=shuraRun&state=playing`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+        }
 
-        // Load high score
         const savedHigh = localStorage.getItem('shuraRunHighScore');
         setHighScore(savedHigh ? parseInt(savedHigh) : 0);
 
@@ -677,7 +635,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             bgMusic.current.play().catch(() => { });
         }
 
-        // Ensure loop restarts if already in playing state
         if (gameState === 'playing') {
             lastTimeRef.current = performance.now();
             if (requestRef.current) cancelAnimationFrame(requestRef.current);
@@ -708,26 +665,22 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         setIsPaused(false);
         isPausedRef.current = false;
         setMenuViewSync('main');
+        setShowPauseMenu(false);
         if (bgMusic.current) bgMusic.current.pause();
-
-        const params = new URLSearchParams(searchParams?.toString() || "");
-        params.delete('state');
-        router.push(`/games?${params.toString()}`, { scroll: false });
-    }, [router, searchParams]);
-
-    // Sync state with URL
-    useEffect(() => {
-        if (!searchParams) return;
-        const state = searchParams.get('state');
-
-        // Intercept back button if playing
-        if (gameState === 'playing' && !state) {
-            router.forward();
-            if (!isPausedRef.current) {
-                togglePause();
-            }
-            return;
+        
+        if (typeof window !== 'undefined') {
+            const cleanUrl = `${window.location.pathname}?game=shuraRun`;
+            window.history.pushState({ path: cleanUrl }, '', cleanUrl);
         }
+    }, []);
+
+    // =========================================================================
+    // ¡CORRECCIÓN AQUÍ! Se eliminó la línea "setMenuViewSync('main')" de este bloque
+    // =========================================================================
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const params = new URLSearchParams(window.location.search);
+        const state = params.get('state');
 
         if (state === 'playing') {
             if (gameState !== 'playing' && gameState !== 'gameover') {
@@ -738,10 +691,10 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             isPlayingRef.current = false;
             setIsPaused(false);
             isPausedRef.current = false;
-            setMenuViewSync('main');
+            // Quitamos setMenuViewSync('main') de aquí para que no rompa Ajustes/Controles al leer la URL limpia
             if (bgMusic.current) bgMusic.current.pause();
         }
-    }, [searchParams, gameState, router, togglePause, startGame]);
+    }, [gameState]); // Reducidas las dependencias inestables para evitar bucles
 
     useEffect(() => {
         if (gameState === 'playing') {
@@ -763,7 +716,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
         };
     }, [gameState, gameLoop]);
 
-    // Reproducir sonido de gameover cuando aparece el UI
     useEffect(() => {
         if (showGameOverUI) {
             if (gameOverSound.current) {
@@ -775,23 +727,22 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
+            if (gameState === 'playing') {
+                if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+                    e.preventDefault();
+                    togglePause();
+                }
+            }
             if (!isGameFocusedRef.current) return;
             if (e.code === 'Space' || e.code === 'ArrowUp') {
                 e.preventDefault();
-                // Bloquear durante animación de muerte
                 if (gameState === 'gameover' && (!showGameOverUI || menuView !== 'main')) return;
                 if (gameState === 'playing') jump();
                 else if (gameState === 'start' && menuView === 'main') startGame();
             }
             if (e.code === 'ArrowDown') {
-                if (!isGameFocusedRef.current) return;
                 e.preventDefault();
                 if (gameState === 'playing' && !isPausedRef.current) fastFall();
-            }
-            if (e.code === 'KeyP' || e.code === 'Escape') {
-                if (!isGameFocusedRef.current) return;
-                e.preventDefault();
-                togglePause();
             }
         };
 
@@ -803,7 +754,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
 
         const handleTouchStart = (e: TouchEvent) => {
             if (!isGameFocusedRef.current) return;
-            // Bloquear durante animación de muerte
             if (gameState === 'gameover' && (!showGameOverUI || menuView !== 'main')) return;
             if (gameState === 'playing') {
                 if (!isPausedRef.current) jump();
@@ -818,9 +768,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
 
         const handleMouseDown = (e: MouseEvent) => {
             if (!isGameFocusedRef.current) return;
-            // Bloquear durante animación de muerte
             if (gameState === 'gameover' && (!showGameOverUI || menuViewRef.current !== 'main')) return;
-            // Block if in sub-menus (use ref to avoid stale closure)
             if (menuViewRef.current !== 'main') return;
             if (gameState === 'playing' && !isPausedRef.current) {
                 jump();
@@ -849,7 +797,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             window.removeEventListener('mousedown', handleMouseDown);
             window.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [gameState, jump, cutJump, fastFall, togglePause, showGameOverUI, startGame]);
+    }, [gameState, jump, cutJump, fastFall, togglePause, showGameOverUI, menuView]);
 
     const gameOverContainerRef = useRef<HTMLDivElement>(null);
     const [prevGameState, setPrevGameState] = useState<'start' | 'playing' | 'gameover'>('start');
@@ -864,7 +812,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                         opacity: 1,
                         rotation: 0,
                         duration: 0.8,
-                        ease: "back.out(1.7)", // Springy Mario-like bounce
+                        ease: "back.out(1.7)",
                         force3D: true
                     }
                 );
@@ -876,7 +824,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
     return (
         <main className="px-6 md:px-12 pb-12 w-full max-w-7xl mx-auto select-none">
             <div className="max-w-6xl mx-auto py-8">
-                {/* Hero Game Section */}
                 <section className="relative mb-16">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
                         <div>
@@ -907,7 +854,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                         </div>
                     </div>
 
-                    {/* Game Viewport Container */}
                     <div className="relative p-1 bg-gray-100 dark:bg-zinc-950 border border-neon-cyan/20 rounded-xl overflow-hidden shadow-[0_0_50px_-12px_rgba(0,243,255,0.15)]">
                         <div
                             ref={gameContainerRef}
@@ -928,11 +874,12 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                 className="w-full h-full block object-contain"
                             />
 
-                            {/* Scanline & Grid Effect Overlays */}
                             <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-black/20"></div>
                             <div className="absolute inset-0 pointer-events-none opacity-10 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]"></div>
 
-                            {/* Game State Overlays */}
+                            {/* ========================================================= */}
+                            {/* INTERFAZ: MENÚ PRINCIPAL MALLEABLE                        */}
+                            {/* ========================================================= */}
                             {gameState === 'start' && menuView === 'main' && (
                                 <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-[2px] transition-all z-20"
                                     style={{ fontFamily: '"Press Start 2P", cursive' }}>
@@ -944,6 +891,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); startGame(); }}
                                                 onMouseDown={(e) => e.stopPropagation()}
+                                                onTouchStart={(e) => e.stopPropagation()}
                                                 className="w-full bg-white text-black text-sm md:text-base py-4 px-8 border-4 border-white hover:bg-neon-cyan hover:border-neon-cyan hover:text-black transition-colors pixel-shadow group flex items-center justify-center"
                                             >
                                                 <span className="opacity-0 group-hover:opacity-100 mr-3">▶</span>
@@ -953,6 +901,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); setMenuViewSync('settings'); }}
                                                 onMouseDown={(e) => e.stopPropagation()}
+                                                onTouchStart={(e) => e.stopPropagation()}
                                                 className="w-full bg-black text-white text-sm md:text-base py-4 px-8 border-4 border-white hover:bg-zinc-800 transition-colors pixel-shadow group flex items-center justify-center"
                                             >
                                                 <span className="opacity-0 group-hover:opacity-100 mr-3">▶</span>
@@ -962,6 +911,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); setMenuViewSync('controls'); }}
                                                 onMouseDown={(e) => e.stopPropagation()}
+                                                onTouchStart={(e) => e.stopPropagation()}
                                                 className="w-full bg-black text-white text-sm md:text-base py-4 px-8 border-4 border-white hover:bg-zinc-800 transition-colors pixel-shadow group flex items-center justify-center"
                                             >
                                                 <span className="opacity-0 group-hover:opacity-100 mr-3">▶</span>
@@ -973,36 +923,10 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                 </div>
                             )}
 
-                            {gameState === 'gameover' && showGameOverUI && (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 z-20"
-                                    style={{ fontFamily: '"Press Start 2P" , cursive' }}>
-                                    <div className="bg-black/80 border-4 border-white p-8 md:p-12 pixel-shadow max-w-[90%] flex flex-col items-center animate-scale-in">
-                                        <h1 className="text-white text-3xl md:text-5xl lg:text-6xl mb-8 tracking-tighter text-center italic drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-                                            {t('games.shuraRun.gameOver')}
-                                        </h1>
-                                        <div className="flex gap-10 md:gap-20 mb-12 py-6 border-y-4 border-white/20 w-full justify-center">
-                                            <div className="flex flex-col items-center">
-                                                <span className="text-gray-400 text-[10px] md:text-xs mb-2 uppercase">{t('games.shuraRun.score')}</span>
-                                                <span className="text-neon-cyan text-2xl md:text-3xl font-pixel">{score.toString().padStart(5, '0')}</span>
-                                            </div>
-                                            <div className="flex flex-col items-center">
-                                                <span className="text-gray-400 text-[10px] md:text-xs mb-2 uppercase">{t('games.shuraRun.highScore')}</span>
-                                                <span className="text-white text-2xl md:text-3xl font-pixel">{highScore.toString().padStart(5, '0')}</span>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); startGame(); }}
-                                            className="w-full bg-red-600 hover:bg-red-500 text-white font-pixel text-lg md:text-xl py-4 border-4 border-white transition-all transform active:scale-95 pixel-shadow uppercase tracking-widest flex items-center justify-center group"
-                                        >
-                                            <span className="opacity-0 group-hover:opacity-100 mr-4">▶</span>
-                                            {t('games.shuraRun.continue')}
-                                            <span className="opacity-0 group-hover:opacity-100 ml-4">◀</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {gameState === 'playing' && isPausedRef.current && (
+                            {/* ========================================================= */}
+                            {/* INTERFAZ: MENÚ DE PAUSA                                   */}
+                            {/* ========================================================= */}
+                            {gameState === 'playing' && showPauseMenu && (
                                 <div className="absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-30"
                                     style={{ fontFamily: '"Press Start 2P", cursive' }}>
                                     <div className="flex flex-col items-center bg-[#111] border-2 border-white p-8 pixel-shadow text-center min-w-[280px] md:min-w-[340px]">
@@ -1014,6 +938,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); togglePause(); }}
                                                 onMouseDown={(e) => e.stopPropagation()}
+                                                onTouchStart={(e) => e.stopPropagation()}
                                                 className="w-full bg-[#00ffff] text-black text-xs md:text-sm py-4 border-2 border-black pixel-shadow hover:scale-105 transition-transform"
                                             >
                                                 {t('games.shuraRun.pauseContinue')}
@@ -1021,16 +946,15 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); startGame(); }}
                                                 onMouseDown={(e) => e.stopPropagation()}
+                                                onTouchStart={(e) => e.stopPropagation()}
                                                 className="w-full bg-[#ffff00] text-black text-xs md:text-sm py-4 border-2 border-black pixel-shadow hover:scale-105 transition-transform"
                                             >
                                                 {t('games.shuraRun.pauseRestart')}
                                             </button>
                                             <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    exitToMain();
-                                                }}
+                                                onClick={(e) => { e.stopPropagation(); exitToMain(); }}
                                                 onMouseDown={(e) => e.stopPropagation()}
+                                                onTouchStart={(e) => e.stopPropagation()}
                                                 className="w-full bg-[#ff003c] text-white text-xs md:text-sm py-4 border-2 border-black pixel-shadow hover:scale-105 transition-transform"
                                             >
                                                 {t('games.shuraRun.pauseExit')}
@@ -1045,10 +969,13 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                 </div>
                             )}
 
+                            {/* ========================================================= */}
+                            {/* MODAL GLOBAL CAPA INDEPENDIENTE: AJUSTES (z-50 definitivo) */}
+                            {/* ========================================================= */}
                             {menuView === 'settings' && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/90 backdrop-blur-[2px] z-40 transition-all"
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/95 backdrop-blur-[2px] z-50 transition-all"
                                     style={{ fontFamily: '"Press Start 2P", cursive' }}>
-                                    <div className="flex flex-col items-center gap-6 p-8 border-4 border-neon-cyan bg-black/90 pixel-shadow w-[80%] max-w-[500px]">
+                                    <div className="flex flex-col items-center gap-6 p-8 border-4 border-neon-cyan bg-black pixel-shadow w-[80%] max-w-[500px]">
                                         <h2 className="text-neon-cyan text-2xl md:text-3xl mb-4 text-center uppercase">{t('games.shuraRun.settingsTitle')}</h2>
                                         <div className="flex flex-col w-full gap-4">
                                             <button
@@ -1087,8 +1014,11 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                 </div>
                             )}
 
+                            {/* ========================================================= */}
+                            {/* MODAL GLOBAL CAPA INDEPENDIENTE: CONTROLES (z-50 definitivo)*/}
+                            {/* ========================================================= */}
                             {menuView === 'controls' && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-black/95 backdrop-blur-[2px] z-40 transition-all"
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/95 backdrop-blur-[2px] z-50 transition-all"
                                     style={{ fontFamily: '"Press Start 2P", cursive' }}>
                                     <div className="flex flex-col items-center p-8 border-4 border-white bg-black pixel-shadow w-[80%] max-w-[500px]">
                                         <h2 className="text-white text-xl md:text-2xl mb-8 border-b-4 border-white pb-4 w-full text-center uppercase">{t('games.shuraRun.controlsTitle')}</h2>
@@ -1128,13 +1058,44 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                                     </div>
                                 </div>
                             )}
+
+                            {/* UI de GameOver */}
+                            {gameState === 'gameover' && showGameOverUI && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 z-20"
+                                    style={{ fontFamily: '"Press Start 2P" , cursive' }}>
+                                    <div ref={gameOverContainerRef} className="bg-black/80 border-4 border-white p-8 md:p-12 pixel-shadow max-w-[90%] flex flex-col items-center opacity-0">
+                                        <h1 className="text-white text-3xl md:text-5xl lg:text-6xl mb-8 tracking-tighter text-center italic drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+                                            {t('games.shuraRun.gameOver')}
+                                        </h1>
+                                        <div className="flex gap-10 md:gap-20 mb-12 py-6 border-y-4 border-white/20 w-full justify-center">
+                                            <div className="flex flex-col items-center">
+                                                <span className="text-gray-400 text-[10px] md:text-xs mb-2 uppercase">{t('games.shuraRun.score')}</span>
+                                                <span className="text-neon-cyan text-2xl md:text-3xl font-pixel">{score.toString().padStart(5, '0')}</span>
+                                            </div>
+                                            <div className="flex flex-col items-center">
+                                                <span className="text-gray-400 text-[10px] md:text-xs mb-2 uppercase">{t('games.shuraRun.highScore')}</span>
+                                                <span className="text-white text-2xl md:text-3xl font-pixel">{highScore.toString().padStart(5, '0')}</span>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); startGame(); }}
+                                            onMouseDown={(e) => e.stopPropagation()}
+                                            onTouchStart={(e) => e.stopPropagation()}
+                                            className="w-full bg-red-600 hover:bg-red-500 text-white font-pixel text-lg md:text-xl py-4 border-4 border-white transition-all transform active:scale-95 pixel-shadow uppercase tracking-widest flex items-center justify-center group"
+                                        >
+                                            <span className="opacity-0 group-hover:opacity-100 mr-4">▶</span>
+                                            {t('games.shuraRun.continue')}
+                                            <span className="opacity-0 group-hover:opacity-100 ml-4">◀</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>
 
                 {/* Ranking and Stats Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Ranking Table (The Spotlight) */}
                     <div className="lg:col-span-2 space-y-6">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white uppercase tracking-tighter">
@@ -1147,7 +1108,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                             </div>
                         </div>
 
-                        {/* Integrated Leaderboard Component with Custom Styling */}
                         <div className="bg-white dark:bg-zinc-900/50 rounded-2xl border border-gray-200 dark:border-zinc-800 overflow-hidden shadow-sm">
                             <Leaderboard
                                 game="shura_run"
@@ -1157,9 +1117,7 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                         </div>
                     </div>
 
-                    {/* Secondary Info Panel */}
                     <div className="space-y-8">
-                        {/* Status Card */}
                         <div className="bg-gray-100 dark:bg-zinc-900 p-8 rounded-2xl border border-gray-200 dark:border-zinc-800 relative overflow-hidden group">
                             <div className="absolute top-0 right-0 w-24 h-24 bg-neon-cyan/5 rounded-full -mr-8 -mt-8 group-hover:bg-neon-cyan/10 transition-all"></div>
                             <h4 className="text-gray-500 dark:text-gray-400 text-[10px] font-bold uppercase tracking-[0.3em] mb-6">
@@ -1187,7 +1145,6 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                             </div>
                         </div>
 
-                        {/* Controls Hint */}
                         <div className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800 hidden md:block">
                             <h4 className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.3em] mb-4">{t('games.shuraRun.menuControls')}</h4>
                             <div className="grid grid-cols-2 gap-4">
@@ -1205,12 +1162,8 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
                 </div>
             </div>
 
-            {/* Existing Modals were successfully removed to retain everything in-canvas. */}
-
-
-            {/* Interactive FAB */}
             <button
-                onClick={startGame}
+                onClick={(e) => { e.stopPropagation(); startGame(); }}
                 className="fixed bottom-8 right-8 h-16 w-16 bg-neon-pink text-white rounded-full shadow-[0_0_30px_rgba(255,0,127,0.4)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all group z-50 overflow-visible"
             >
                 <MdDirectionsRun className="text-3xl" />
@@ -1220,5 +1173,4 @@ export default function ShuraRunGame({ playerName }: { playerName: string }) {
             </button>
         </main>
     );
-
 }
