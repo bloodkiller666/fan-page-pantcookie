@@ -1,0 +1,116 @@
+- generic [ref=f4e2]:
+  - navigation "Principal" [ref=f4e3]:
+    - generic [ref=f4e4]:
+      - link "SHAKE-GANG" [ref=f4e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f4e7]:
+          - generic [ref=f4e8]: Shake-Gang
+          - generic [ref=f4e9]: Community Network
+      - generic [ref=f4e10]:
+        - button "es" [ref=f4e12] [cursor=pointer]
+        - button "Light mode" [ref=f4e25] [cursor=pointer]
+        - button "Menu" [ref=f4e29] [cursor=pointer]
+    - dialog "Menu" [ref=f4e33]:
+      - generic [ref=f4e34]:
+        - generic [ref=f4e35]: Menu
+        - button "Close" [ref=f4e36] [cursor=pointer]
+      - list [ref=f4e40]:
+        - listitem [ref=f4e41]:
+          - link "Inicio" [ref=f4e42] [cursor=pointer]:
+            - /url: /
+        - listitem [ref=f4e44]:
+          - link "Multimedia" [ref=f4e45] [cursor=pointer]:
+            - /url: /multimedia
+          - list [ref=f4e47]:
+            - listitem [ref=f4e48]:
+              - link "Fotos" [ref=f4e49] [cursor=pointer]:
+                - /url: /multimedia?tab=images
+            - listitem [ref=f4e50]:
+              - link "Videos" [ref=f4e51] [cursor=pointer]:
+                - /url: /multimedia?tab=videos
+            - listitem [ref=f4e52]:
+              - link "Covers" [ref=f4e53] [cursor=pointer]:
+                - /url: /multimedia?tab=covers
+        - listitem [ref=f4e54]:
+          - link "Juegos" [ref=f4e55] [cursor=pointer]:
+            - /url: /games
+          - list [ref=f4e57]:
+            - listitem [ref=f4e58]:
+              - link "Rompecabezas" [ref=f4e59] [cursor=pointer]:
+                - /url: /games?game=puzzle
+            - listitem [ref=f4e60]:
+              - link "Trivias" [ref=f4e61] [cursor=pointer]:
+                - /url: /games?game=trivia
+            - listitem [ref=f4e62]:
+              - link "Shura Run" [ref=f4e63] [cursor=pointer]:
+                - /url: /games?game=shuraRun
+        - listitem [ref=f4e64]:
+          - link "Chat" [ref=f4e65] [cursor=pointer]:
+            - /url: /chat
+        - listitem [ref=f4e67]:
+          - link "Mensajes" [ref=f4e68] [cursor=pointer]:
+            - /url: /mensajes
+          - list [ref=f4e70]:
+            - listitem [ref=f4e71]:
+              - link "Escribir Mensaje" [ref=f4e72] [cursor=pointer]:
+                - /url: /mensajes?view=write
+            - listitem [ref=f4e73]:
+              - link "Leer Mensajes" [ref=f4e74] [cursor=pointer]:
+                - /url: /mensajes?view=read
+        - listitem [ref=f4e75]:
+          - link "Sobre nosotros" [ref=f4e76] [cursor=pointer]:
+            - /url: /about
+      - generic [ref=f4e79]:
+        - button "Español" [pressed] [ref=f4e80] [cursor=pointer]
+        - button "English" [ref=f4e90] [cursor=pointer]
+        - button "日本語" [ref=f4e98] [cursor=pointer]
+        - button "Français" [ref=f4e104] [cursor=pointer]
+  - main [ref=f4e111]:
+    - generic [ref=f4e114]:
+      - generic [ref=f4e116]:
+        - heading "¿Qué quieres jugar?" [level=1] [ref=f4e117]
+        - paragraph [ref=f4e118]: Elige un juego para comenzar
+      - generic [ref=f4e119]:
+        - button [ref=f4e120] [cursor=pointer]:
+          - generic [ref=f4e125]:
+            - heading "Rompecabezas" [level=2] [ref=f4e126]
+            - paragraph [ref=f4e127]: Elige el tamaño del tablero para comenzar tu desafío
+            - generic [ref=f4e128]: Jugar Rompecabezas
+        - button [ref=f4e133] [cursor=pointer]:
+          - generic [ref=f4e138]:
+            - heading "Trivia" [level=2] [ref=f4e139]
+            - paragraph [ref=f4e140]: ¿Eres capaz de responder todas las preguntas en sus tres modalidades?
+            - generic [ref=f4e141]: Jugar Trivia
+        - button [ref=f4e146] [cursor=pointer]:
+          - generic [ref=f4e151]:
+            - heading "Shura Run" [level=2] [ref=f4e152]
+            - paragraph [ref=f4e153]: ¡Corre con Shura, evita a los haters y recolecta ingredientes! ¿Qué tan lejos llegarás?
+            - generic [ref=f4e154]: Jugar Shura Run
+        - generic [ref=f4e160]: COMING SOON
+  - contentinfo [ref=f4e165]:
+    - generic [ref=f4e167]:
+      - generic [ref=f4e170]:
+        - heading "¡Gracias por ser parte de la comunidad!" [level=2] [ref=f4e171]
+        - paragraph [ref=f4e172]: Este espacio especial está dedicado a ShuraHiwa y a todos los pantcakes que hacen de esta comunidad algo único.
+      - generic [ref=f4e173]:
+        - heading "Legal" [level=3] [ref=f4e174]
+        - list [ref=f4e175]:
+          - listitem [ref=f4e176]:
+            - link "Términos y Condiciones" [ref=f4e177] [cursor=pointer]:
+              - /url: /legal/terms
+          - listitem [ref=f4e178]:
+            - link "Privacidad" [ref=f4e179] [cursor=pointer]:
+              - /url: /legal/privacy
+      - generic [ref=f4e180]:
+        - heading "Ayuda" [level=3] [ref=f4e181]
+        - list [ref=f4e182]:
+          - listitem [ref=f4e183]:
+            - link "FAQ" [ref=f4e184] [cursor=pointer]:
+              - /url: /legal/faq
+    - generic [ref=f4e186]:
+      - paragraph [ref=f4e187]: © 2025 Fan Page Shake-Gang. Creado con ❤️ para la comunidad.
+      - paragraph [ref=f4e188]:
+        - text: Made with
+        - img "love" [ref=f4e189]
+        - text: by
+        - generic [ref=f4e192]: pantcakes

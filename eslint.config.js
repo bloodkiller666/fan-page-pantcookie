@@ -1,45 +1,18 @@
-import js from "@eslint/js";
+import { FlatCompat } from "@eslint/eslintrc";
 import pluginSecurity from "eslint-plugin-security";
-import nextPlugin from "@next/eslint-plugin-next";
-import globals from "globals";
+
+const compat = new FlatCompat({ baseDirectory: import.meta.dirname });
 
 export default [
-  {
-    ignores: [
-      "**/node_modules/**",
-      "**/.next/**",
-      "**/dist/**",
-      "**/out/**",
-      "**/public/**",
-      "**/*.config.js"
-    ]
-  },
-  js.configs.recommended,
+  { ignores: ["**/node_modules/**", "**/.next/**", "**/out/**", "**/public/**", "next-env.d.ts"] },
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
   pluginSecurity.configs.recommended,
   {
-      plugins: {
-          "@next/next": nextPlugin,
-      },
-      languageOptions: {
-          globals: {
-              ...globals.browser,
-              ...globals.node,
-              ...globals.es2021
-          },
-          parserOptions: {
-              ecmaFeatures: { jsx: true },
-              ecmaVersion: 'latest',
-              sourceType: 'module',
-          },
-      },
-      rules: {
-         ...nextPlugin.configs.recommended.rules,
-         ...nextPlugin.configs["core-web-vitals"].rules,
-         "no-eval": "error",
-         "no-implied-eval": "error",
-         "no-new-func": "error",
-         "no-script-url": "error",
-         "security/detect-object-injection": "off" 
-      }
-  }
+    rules: {
+      // Pragmatic baseline: surfaced as warnings so they can be cleaned up incrementally.
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "security/detect-object-injection": "off",
+    },
+  },
 ];

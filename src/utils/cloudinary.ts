@@ -36,6 +36,18 @@ export const getCloudinaryThumbnail = (publicId: string, width = 400, height = 3
     return myImage;
 };
 
+// Large display version: never ship a 2560px original into a lightbox
+export const getCloudinaryDisplay = (publicId: string, width = 1600) => {
+    const myImage = cld.image(publicId);
+
+    myImage
+        .resize(scale().width(width))
+        .delivery(format('auto'))
+        .delivery(quality('auto'));
+
+    return myImage;
+};
+
 // Helper for video
 export const getCloudinaryVideo = (publicId: string) => {
     const myVideo = cld.video(publicId);

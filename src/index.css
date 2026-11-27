@@ -1,79 +1,247 @@
-@import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap');
-/* @import url('https://fonts.cdnfonts.com/css/8-bit-hud'); */
 @import '../node_modules/@hackernoon/pixel-icon-library/fonts/iconfont.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply font-8-bit bg-[var(--poke-bg)] text-[var(--poke-text)] transition-colors duration-300;
-    image-rendering: pixelated;
-  }
-
-  /* Force ONLY the 8-bit font-family globally, preserving all other Tailwind typography */
-  *, *::before, *::after {
-    font-family: '8-bit HUD', 'Press Start 2P', 'DotGothic16', sans-serif !important;
-  }
-}
-
+/* ------------------------------------------------------------------
+   Design tokens: "arcade cartridge" system.
+   The palette is the project's original one; only the roles are named here.
+   ------------------------------------------------------------------ */
 :root {
-  --poke-pink: #fd219f;
-  --poke-blue: #3b4cca;
-  --poke-yellow: #ffde00;
+  --pink: #ff007f;
+  --blue: #0070ff;
+  --cyan: #00f3ff;
+  --yellow: #ffee00;
+
+  --bg: #fff5f9;
+  --surface: #ffffff;
+  --surface-2: #ffe6f1;
+  --text: #180917;
+  --muted: #6d4f69;
+  --line: #180917;      /* outlines */
+  --shadow: #180917;    /* hard offset shadows */
+  --ink: #180917;       /* text on bright fills */
+  --focus: #0070ff;
+
+  --nav-h: 72px;
+  --notch: 18px;        /* chamfered cartridge corner */
+  --outline: 3px;
+
+  /* legacy aliases kept while pages are migrated */
+  --poke-pink: var(--pink);
+  --poke-blue: var(--blue);
+  --poke-yellow: var(--yellow);
   --poke-green: #4dad5b;
-  --poke-bg: #fff5f9;
-  --poke-card: #ffffff;
-  --poke-text: #1a1a1a;
+  --poke-bg: var(--bg);
+  --poke-card: var(--surface);
+  --poke-text: var(--text);
 }
 
 .dark {
-  --poke-bg: #1a0f16;
-  --poke-card: #2a1b25;
-  --poke-text: #ffffff;
+  --bg: #180917;
+  --surface: #261325;
+  --surface-2: #351e33;
+  --text: #fde0f6;
+  --muted: #bda3b8;
+  --line: #fde0f6;
+  --shadow: #ff007f;
+  --focus: #00f3ff;
 }
 
+@layer base {
+  html {
+    scroll-padding-top: calc(var(--nav-h) + 16px);
+    color-scheme: light;
+  }
+  html.dark { color-scheme: dark; }
 
-
-[data-theme='pokemon'] {
-  font-family: '8-bit HUD', 'Press Start 2P', 'DotGothic16', cursive;
-}
-
-
-  /* Padding top controlado individualmente por cada página */
-  main, .page-container {
-    padding-top: 70px;
+  body {
+    @apply font-body antialiased;
+    background: var(--bg);
+    color: var(--text);
+    transition: background-color 0.3s, color 0.3s;
   }
 
+  h1, h2, h3, h4, h5, h6 { @apply font-display; text-wrap: balance; }
+  p { text-wrap: pretty; }
+
+  ::selection { background: var(--pink); color: #fff; }
+
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  /* Scrollbar drawn from the palette */
+  * { scrollbar-color: var(--pink) var(--surface-2); scrollbar-width: thin; }
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: var(--surface-2); }
+  ::-webkit-scrollbar-thumb { background: var(--pink); border: 3px solid var(--surface-2); }
+
+  /* Page offset for the fixed slot bar */
+  main, .page-container { padding-top: var(--nav-h); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------
+   Components
+   ------------------------------------------------------------------ */
 @layer components {
 
-  /* Pokemon Gamer Button Style */
-  .poke-button {
-    @apply relative px-8 py-3 rounded-xl font-black uppercase tracking-widest transition-all duration-200 border-4 border-black shadow-[4px_4px_0px_0px_black] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none flex items-center justify-center gap-2 overflow-hidden;
+  /* Cartridge: shell (shadow) > .cart (outline, chamfer) > .cart__face (fill).
+     The shadow lives on the shell because filters run before clip-path. */
+  .cart-shell {
+    --sx: 6px;
+    --sy: 6px;
+    filter: drop-shadow(var(--sx) var(--sy) 0 var(--shadow));
+    transition: filter 0.18s cubic-bezier(0.22, 1, 0.36, 1), transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .cart-shell.is-interactive:hover { --sx: 9px; --sy: 9px; transform: translate(-3px, -3px); }
+  .cart-shell.is-interactive:active { --sx: 2px; --sy: 2px; transform: translate(4px, 4px); }
+
+  .cart {
+    background: var(--line);
+    padding: var(--outline);
+    clip-path: polygon(0 0, calc(100% - var(--notch)) 0, 100% var(--notch), 100% 100%, 0 100%);
+  }
+  .cart__face {
+    background: var(--surface);
+    color: var(--text);
+    height: 100%;
+    clip-path: polygon(0 0, calc(100% - var(--notch) + 4px) 0, 100% calc(var(--notch) - 4px), 100% 100%, 0 100%);
+  }
+  .cart--pink .cart__face { background: var(--pink); color: var(--ink); }
+  .cart--blue .cart__face { background: var(--blue); color: #fff; }
+  .cart--yellow .cart__face { background: var(--yellow); color: var(--ink); }
+  .cart--cyan .cart__face { background: var(--cyan); color: var(--ink); }
+
+  /* Edge connector at the cartridge foot */
+  .pins {
+    height: 14px;
+    background:
+      repeating-linear-gradient(90deg, var(--yellow) 0 7px, transparent 7px 11px) center / 100% 8px no-repeat,
+      var(--ink);
+    border-top: 2px solid var(--ink);
   }
 
-  .poke-button-pink {
-    @apply poke-button bg-primary-pink text-white;
+  /* Label sticker */
+  .tag {
+    @apply font-display font-bold uppercase inline-flex items-center gap-1.5;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    padding: 0.35rem 0.6rem;
+    background: var(--yellow);
+    color: var(--ink);
+    border: 2px solid var(--ink);
+  }
+  .tag--pink { background: var(--pink); }
+  .tag--cyan { background: var(--cyan); }
+  .tag--blue { background: var(--blue); color: #fff; }
+
+  /* Press buttons: the face travels on active */
+  .btn {
+    @apply font-display font-bold uppercase inline-flex items-center justify-center gap-2 select-none cursor-pointer;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    min-height: 48px;
+    padding: 0.75rem 1.4rem;
+    background: var(--pink);
+    color: var(--ink);
+    border: var(--outline) solid var(--line);
+    box-shadow: 5px 5px 0 var(--shadow);
+    transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.12s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.15s;
+  }
+  .btn:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--shadow); }
+  .btn:active { transform: translate(5px, 5px); box-shadow: 0 0 0 var(--shadow); }
+  .btn:disabled, .btn[aria-disabled='true'] { opacity: 0.45; filter: grayscale(0.7); pointer-events: none; }
+  .btn--blue { background: var(--blue); color: #fff; }
+  .btn--yellow { background: var(--yellow); color: var(--ink); }
+  .btn--cyan { background: var(--cyan); color: var(--ink); }
+  .btn--ghost { background: var(--surface); color: var(--text); }
+
+  /* CRT bezel for video and game screens */
+  .bezel {
+    background: #0b040a;
+    border: var(--outline) solid var(--line);
+    border-radius: 22px;
+    padding: 12px;
+    position: relative;
+  }
+  .bezel__screen {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: inset 0 0 0 2px #000, inset 0 0 40px rgba(0, 0, 0, 0.55);
+  }
+  .bezel__screen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.14) 0 1px, transparent 1px 3px);
   }
 
-  .poke-button-blue {
-    @apply poke-button bg-primary-blue text-white;
+  /* Segmented HUD bar. Set --v as a unitless 0-100 value. */
+  .hud-bar {
+    --v: 50;
+    height: 18px;
+    border: var(--outline) solid var(--line);
+    background: var(--surface-2);
+    position: relative;
+  }
+  .hud-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: calc(var(--v) * 1%);
+    background: var(--pink);
+    -webkit-mask: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 11px);
+    mask: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 11px);
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .hud-bar--blue::before { background: var(--blue); }
+  .hud-bar--cyan::before { background: var(--cyan); }
+  .hud-bar--yellow::before { background: var(--yellow); }
+
+  /* Pop-in for counters, stamps and fresh panels */
+  .pop-in { animation: pop-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  @keyframes pop-in {
+    from { transform: scale(0.6) rotate(-6deg); opacity: 0; }
+    to { transform: none; opacity: 1; }
   }
 
-  .poke-button-yellow {
-    @apply poke-button bg-pokemon-yellow text-black;
+  /* Numerals for scores and counters */
+  .score {
+    font-family: var(--font-pixel), monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
   }
 
-  /* Pokemon Card Style */
+  /* Legacy adapters while pages are migrated to the cartridge components */
+  .poke-button { @apply btn; }
+  .poke-button-pink { @apply btn; }
+  .poke-button-blue { @apply btn btn--blue; }
+  .poke-button-yellow { @apply btn btn--yellow; }
+  .cyber-button { @apply btn; }
   .poke-card {
-    @apply bg-[var(--poke-card)] rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_black] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0px_0px_black] transition-all duration-300;
+    background: var(--surface);
+    color: var(--text);
+    border: var(--outline) solid var(--line);
+    box-shadow: 6px 6px 0 var(--shadow);
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s cubic-bezier(0.22, 1, 0.36, 1);
   }
-
-  /* Legacy Class Adapters (To avoid massive code breakage while transitioning) */
-  .cyber-button {
-    @apply poke-button;
-  }
+  .poke-card:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--shadow); }
 }
 
 @layer utilities {

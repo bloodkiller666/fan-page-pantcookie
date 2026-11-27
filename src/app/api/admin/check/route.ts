@@ -1,27 +1,6 @@
 import { NextResponse } from 'next/server';
-import { jwtVerify } from 'jose';
-import { cookies } from 'next/headers';
-
-const JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'shura-run-fortress-secret-123';
+import { isAdmin } from '@/lib/adminAuth';
 
 export async function GET() {
-    try {
-        const cookieStore = await cookies();
-        const token = cookieStore.get('admin_token')?.value;
-
-        if (!token) {
-            return NextResponse.json({ authenticated: false }, { status: 200 });
-        }
-
-        const encoder = new TextEncoder();
-        await jwtVerify(token, encoder.encode(JWT_SECRET));
-
-        return NextResponse.json({ authenticated: true });
-    } catch (error) {
-        console.error('Check auth error (Vercel):', error);
-        return NextResponse.json({ 
-            authenticated: false, 
-            debug: error instanceof Error ? error.message : 'Unknown error' 
-        }, { status: 200 });
-    }
+    return NextResponse.json({ authenticated: await isAdmin() });
 }

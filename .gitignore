@@ -53,3 +53,8 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Environment
+.env
+.env.*
+!.env.example

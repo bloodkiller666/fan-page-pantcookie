@@ -3,152 +3,222 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MdKeyboardArrowDown, MdMovie, MdSportsEsports } from 'react-icons/md';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTransition } from '../../context/TransitionContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-import { splitText } from '../../utils/animations';
+// Cloudflare R2 video loop shown inside the CRT bezel
+const SCREEN_VIDEO =
+    'https://pub-ed644fbc43ed4c4788d9c013963a7b8e.r2.dev/%E3%80%90%20PancitoMerge%20%E3%80%91Cozy%20Game%20mexicanoooo%20%F0%9F%A5%90%E2%9D%A4%EF%B8%8F_%F0%9F%A9%B9%20-%20Shura%20Hiwa%20Ch.%20(720p%2C%20h264%2C%20youtube).mp4';
+
+const NAV_OFFSET = 72;
 
 const Hero = () => {
     const { t } = useLanguage();
-    const [isMounted, setIsMounted] = useState(false);
-    const heroRef = useRef<HTMLElement>(null);
-    const titleRef = useRef<HTMLHeadingElement>(null);
-    const subtitleRef = useRef<HTMLParagraphElement>(null);
-    const bgRef = useRef<HTMLVideoElement>(null);
+    const { transitionTo } = useTransition();
+    const [ready, setReady] = useState(false);
+    const rootRef = useRef<HTMLElement>(null);
 
-    // Cloudflare R2 Video Loop
-    const bgVideo = 'https://pub-ed644fbc43ed4c4788d9c013963a7b8e.r2.dev/%E3%80%90%20PancitoMerge%20%E3%80%91Cozy%20Game%20mexicanoooo%20%F0%9F%A5%90%E2%9D%A4%EF%B8%8F_%F0%9F%A9%B9%20-%20Shura%20Hiwa%20Ch.%20(720p%2C%20h264%2C%20youtube).mp4';
-
+    // Play the entrance once the first-visit loading screen (if any) has finished.
     useEffect(() => {
-        setIsMounted(true);
+        if (localStorage.getItem('shakegang_onboarding_done')) {
+            setReady(true);
+            return;
+        }
+        const onDone = () => setReady(true);
+        window.addEventListener('loading_complete', onDone);
+        return () => window.removeEventListener('loading_complete', onDone);
     }, []);
 
+    // Scroll choreography. Transforms and opacity only; scrubbed, so it costs nothing at rest.
     useEffect(() => {
-        if (!isMounted) return;
+        const root = rootRef.current;
+        if (!root) return;
 
-        const ctx = gsap.context(() => {
-            const runAnimations = () => {
-                // Remove any existing opacity:0 style if set in JSX to prevent being stuck
-                if (titleRef.current) titleRef.current.style.opacity = '1';
-                if (subtitleRef.current) subtitleRef.current.style.opacity = '1';
+        const mm = gsap.matchMedia();
 
-                // OceanX Style Title Animation
-                if (titleRef.current) {
-                    const chars = splitText(titleRef.current);
-                    gsap.fromTo(chars,
-                        {
-                            opacity: 0,
-                            filter: 'blur(20px)',
-                            scale: 1.2,
-                            y: 20
-                        },
-                        {
-                            opacity: 1,
-                            filter: 'blur(0px)',
-                            scale: 1,
-                            y: 0,
-                            duration: 1.2,
-                            stagger: 0.05,
-                            ease: 'power4.out',
-                        }
-                    );
-
-                    gsap.fromTo(titleRef.current,
-                        { letterSpacing: '0.2em' },
-                        { letterSpacing: '-0.02em', duration: 1.5, ease: 'power4.out' }
-                    );
-                }
-
-                if (subtitleRef.current) {
-                    gsap.from(subtitleRef.current, {
-                        y: 30,
-                        opacity: 0,
-                        duration: 1,
-                        ease: 'power3.out',
-                        delay: 0.5
-                    });
-                }
-            };
-
-            // Check if we should wait for loading screen
-            const handleLoadingComplete = () => runAnimations();
-            window.addEventListener('loading_complete', handleLoadingComplete);
-
-            // If loading was already done (verified by session storage), run immediately
-            if (sessionStorage.getItem('loading_done_v2')) {
-                // Small timeout to ensure splitText finds the text after t() provides it
-                setTimeout(runAnimations, 100);
-            }
-
-            // Parallax Effect for Background
-            gsap.to(bgRef.current, {
-                yPercent: 30,
-                ease: 'none',
+        mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+            const tl = gsap.timeline({
+                defaults: { ease: 'none' },
                 scrollTrigger: {
-                    trigger: heroRef.current,
-                    start: 'top top',
-                    end: 'bottom top',
-                    scrub: true
-                }
+                    trigger: root,
+                    start: `top top+=${NAV_OFFSET}`,
+                    end: () => `+=${Math.round(window.innerHeight * 0.85)}`,
+                    pin: true,
+                    scrub: 0.6,
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true,
+                },
             });
 
-            return () => window.removeEventListener('loading_complete', handleLoadingComplete);
-        }, heroRef);
+            tl.to('.hero__copy', { y: -140, opacity: 0, duration: 0.7 }, 0)
+                .to('.hero__screen-scroll', { scale: 1.5, x: () => -window.innerWidth * 0.11, duration: 1 }, 0)
+                .to('.hero__dots', { y: -160, duration: 1 }, 0)
+                .to('.hero__hint', { opacity: 0, duration: 0.15 }, 0);
 
-        return () => ctx.revert();
-    }, [isMounted, t]);
+            // Gentle pointer parallax (fine pointers only), kept off the scrubbed properties
+            let cleanupPointer: (() => void) | undefined;
+            if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                const rot = gsap.quickTo('.hero__screen-tilt', 'rotation', { duration: 0.8, ease: 'power3' });
+                const lift = gsap.quickTo('.hero__screen-tilt', 'y', { duration: 0.8, ease: 'power3' });
+                const onMove = (e: PointerEvent) => {
+                    const nx = e.clientX / window.innerWidth - 0.5;
+                    const ny = e.clientY / window.innerHeight - 0.5;
+                    rot(nx * 3);
+                    lift(ny * 14);
+                };
+                window.addEventListener('pointermove', onMove, { passive: true });
+                cleanupPointer = () => window.removeEventListener('pointermove', onMove);
+            }
+
+            return () => cleanupPointer?.();
+        });
+
+        // Phones and tablets: no pin, just a light drift as the hero leaves
+        mm.add('(max-width: 1023px) and (prefers-reduced-motion: no-preference)', () => {
+            gsap.to('.hero__copy', {
+                y: -50,
+                ease: 'none',
+                scrollTrigger: { trigger: root, start: 'top top+=72', end: 'bottom top', scrub: true },
+            });
+            gsap.to('.hero__dots', {
+                y: -80,
+                ease: 'none',
+                scrollTrigger: { trigger: root, start: 'top top+=72', end: 'bottom top', scrub: true },
+            });
+        });
+
+        return () => mm.revert();
+    }, []);
+
+    const go = (e: React.MouseEvent, path: string) => {
+        e.preventDefault();
+        transitionTo(path);
+    };
 
     return (
         <section
-            ref={heroRef}
-            className="relative min-h-screen flex items-center justify-center text-white overflow-hidden py-20"
+            ref={rootRef}
+            className={`hero relative overflow-hidden border-b-[3px] border-[var(--line)] bg-[var(--pink)] text-[var(--ink)] [--shadow:var(--ink)] ${ready ? 'is-ready' : ''}`}
         >
-            <video
-                ref={bgRef}
-                className="absolute inset-0 z-0 w-full h-full object-cover scale-105"
-                autoPlay
-                loop
-                muted
-                playsInline
+            {/* Printed-halftone ground */}
+            <div
+                aria-hidden
+                className="hero__dots pointer-events-none absolute -inset-x-0 -top-10 bottom-0 opacity-[0.18]"
                 style={{
-                    filter: 'brightness(0.6) contrast(1.1)'
+                    backgroundImage: 'radial-gradient(var(--ink) 1.4px, transparent 1.6px)',
+                    backgroundSize: '14px 14px',
+                    maskImage: 'linear-gradient(100deg, transparent 35%, #000 100%)',
+                    WebkitMaskImage: 'linear-gradient(100deg, transparent 35%, #000 100%)',
                 }}
-            >
-                <source src={bgVideo} type="video/mp4" />
-            </video>
+            />
 
-            <div className="absolute inset-0 bg-pattern opacity-10 pointer-events-none" />
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-black/20 via-transparent to-black/20 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-full h-1/2 to-transparent pointer-events-none opacity-80" />
+            <div className="relative mx-auto grid min-h-[calc(100svh-var(--nav-h))] max-w-[1400px] items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.15fr_1fr] lg:gap-16 lg:py-20">
+                <div className="hero__copy will-change-transform">
+                    <h1 className="font-display text-[clamp(2.6rem,7.2vw,6rem)] font-bold uppercase leading-[0.95] tracking-[-0.02em]">
+                        <span className="block overflow-hidden pb-[0.08em]">
+                            <span className="hero__line-inner block">{t('home.heroTitle')}</span>
+                        </span>
+                    </h1>
 
-            <div className="container mx-auto px-4 text-center relative z-10">
-                <div className="inline-block px-6 py-2 rounded-xl border-4 border-black bg-pokemon-yellow text-black text-xs uppercase tracking-[0.2em] font-black mb-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                    {t('home.heroBadge')}
+                    <p className="hero__rise mt-8 max-w-[52ch] text-lg font-semibold leading-relaxed sm:text-xl">
+                        {t('home.heroSubtitle')}
+                    </p>
+
+                    <div className="hero__rise mt-10 flex flex-wrap gap-4" style={{ animationDelay: '0.12s' }}>
+                        <Link href="/games" onClick={(e) => go(e, '/games')} className="btn btn--yellow">
+                            <MdSportsEsports className="text-2xl" aria-hidden />
+                            {t('home.heroGames')}
+                        </Link>
+                        <Link href="/multimedia" onClick={(e) => go(e, '/multimedia')} className="btn btn--ghost">
+                            <MdMovie className="text-2xl" aria-hidden />
+                            {t('home.heroMultimedia')}
+                        </Link>
+                    </div>
                 </div>
 
-                <h1
-                    ref={titleRef}
-                    className="hero-title text-5xl md:text-7xl lg:text-8xl font-black mb-8 neon-text-pink tracking-tighter uppercase italic leading-[0.9] max-w-[15ch] md:max-w-[20ch] mx-auto"
-                    style={{ opacity: isMounted ? 1 : 0 }}
-                >
-                    {t('home.heroTitle')}
-                </h1>
-
-                <p
-                    ref={subtitleRef}
-                    className="text-xl md:text-3xl mb-12 max-w-4xl mx-auto text-gray-300 font-medium uppercase tracking-widest leading-relaxed"
-                    style={{ opacity: isMounted ? 1 : 0 }}
-                >
-                    {t('home.heroSubtitle')}
-                </p>
-            </div>
-
-            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2">
-                <div className="w-8 h-12 border-4 border-black rounded-full flex justify-center p-1 bg-white shadow-[4px_4px_0px_0px_black]">
-                    <div className="w-1.5 h-3 bg-pokemon-pink rounded-full animate-bounce" />
+                {/* CRT bezel with the stream loop. Three layers: entrance > pointer tilt > scroll scale. */}
+                <div className="hero__screen relative mx-auto w-full max-w-[560px] lg:mx-0 lg:justify-self-end">
+                    <div className="hero__screen-tilt will-change-transform">
+                        <div className="hero__screen-scroll will-change-transform">
+                            <span className="tag tag--cyan absolute -left-2 -top-4 z-10 -rotate-3 shadow-[3px_3px_0_var(--ink)] sm:-left-5">
+                                {t('home.heroBadge')}
+                            </span>
+                            <div className="bezel shadow-[10px_10px_0_var(--ink)]">
+                                <div className="bezel__screen aspect-[4/3] bg-black">
+                                    <video
+                                        className="h-full w-full object-cover"
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        preload="metadata"
+                                        aria-hidden
+                                    >
+                                        <source src={SCREEN_VIDEO} type="video/mp4" />
+                                    </video>
+                                </div>
+                                <div className="mt-3 flex items-center justify-between px-1">
+                                    <span className="h-3 w-24 bg-[var(--surface-2)] opacity-20" aria-hidden />
+                                    <span className="flex gap-2" aria-hidden>
+                                        <span className="h-3 w-3 rounded-full bg-[var(--pink)]" />
+                                        <span className="h-3 w-3 rounded-full bg-[var(--yellow)]" />
+                                        <span className="h-3 w-3 rounded-full bg-[var(--cyan)]" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <div className="hero__hint pointer-events-none absolute inset-x-0 bottom-6 hidden flex-col items-center gap-1 lg:flex" aria-hidden>
+                <span className="score text-[0.6rem]">{t('home.scroll')}</span>
+                <MdKeyboardArrowDown className="hero__arrow text-3xl" />
+            </div>
+
+            <div className="pins absolute inset-x-0 bottom-0" aria-hidden />
+
+            <style jsx>{`
+                .hero__line-inner,
+                .hero__rise,
+                .hero__screen {
+                    opacity: 0;
+                }
+                .is-ready .hero__line-inner {
+                    animation: hero-line 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+                }
+                .is-ready .hero__rise {
+                    animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+                }
+                .is-ready .hero__screen {
+                    animation: hero-pop 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+                }
+                .hero__arrow {
+                    animation: hero-bob 1.4s ease-in-out infinite;
+                }
+                @keyframes hero-line {
+                    from { transform: translateY(105%); opacity: 1; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+                @keyframes hero-rise {
+                    from { transform: translateY(18px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
+                @keyframes hero-pop {
+                    from { transform: translate(16px, 16px) rotate(1.5deg); opacity: 0; }
+                    to { transform: translate(0, 0) rotate(0); opacity: 1; }
+                }
+                @keyframes hero-bob {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(6px); }
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .hero__line-inner, .hero__rise, .hero__screen { opacity: 1; }
+                }
+            `}</style>
         </section>
     );
 };

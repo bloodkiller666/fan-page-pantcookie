@@ -2,7 +2,8 @@
 import { useRef, forwardRef, useImperativeHandle } from 'react';
 import { gsap } from 'gsap';
 
-const PANEL_COUNT = 6;
+// One colour per panel, drawn from the palette
+const PANEL_COLORS = ['#ff007f', '#180917', '#0070ff', '#ffee00', '#00f3ff', '#180917'];
 
 const ShakeGangRevealer = forwardRef((props, ref) => {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -94,58 +95,30 @@ const ShakeGangRevealer = forwardRef((props, ref) => {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[9999] pointer-events-none overflow-hidden invisible opacity-0"
+      aria-hidden
+      className="fixed inset-0 z-[11000] pointer-events-none overflow-hidden invisible opacity-0"
     >
       <div
         className="absolute top-1/2 left-1/2 flex flex-col justify-center items-center w-[150vw] h-[150vh]"
         style={{ transform: 'translate(-50%, -50%) rotate(-15deg)' }}
       >
-        {Array.from({ length: PANEL_COUNT }).map((_, i) => (
+        {PANEL_COLORS.map((color, i) => (
           <div
             key={i}
             ref={(el) => { panelsRef.current[i] = el; }}
-            className="w-full h-full bg-[#050505] flex-1 border-b border-t border-[#0a0a0a]/20"
-            style={{
-              background: i % 2 === 0 ? '#050505' : '#080808',
-              willChange: 'transform'
-            }}
+            className="w-full h-full flex-1"
+            style={{ background: color, willChange: 'transform' }}
           />
         ))}
       </div>
 
-      <div
-        className="absolute top-1/2 left-1/2 pointer-events-none z-10 w-[150vw] h-[150vh] flex"
-        style={{ transform: 'translate(-50%, -50%) rotate(-15deg)', opacity: 0.07 }}
-      >
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-full w-[1px] bg-white absolute"
-            style={{
-              left: `${15 + i * 10}%`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Brand text centered over the panels */}
+      {/* Brand wordmark over the panels */}
       <div
         ref={textRef}
         className="absolute inset-0 flex flex-col items-center justify-center z-20 opacity-0 pointer-events-none"
       >
-        {/* SHAKE */}
-        <h1
-          className="text-7xl md:text-[10vw] lg:text-[8vw] font-black italic uppercase tracking-tighter text-white neon-text-pink leading-none"
-          style={{ textShadow: '0 0 40px rgba(255,46,151,0.6), 0 0 80px rgba(255,46,151,0.3)' }}
-        >
-          SHAKE
-        </h1>
-        {/* GANG */}
-        <span
-          className="text-4xl md:text-[4.5vw] lg:text-[3.5vw] font-bold uppercase tracking-[0.3em] -mt-2"
-          style={{ color: '#9146FF', textShadow: '0 0 30px rgba(145,70,255,0.7)' }}
-        >
-          GANG
+        <span className="font-display font-bold uppercase leading-none tracking-tight text-[#180917] text-6xl md:text-[9vw] bg-[#ffee00] border-[3px] border-[#180917] px-6 py-3 shadow-[10px_10px_0_#180917]">
+          Shake<span className="text-[#ff007f]">-</span>Gang
         </span>
       </div>
     </div>

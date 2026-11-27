@@ -96,13 +96,8 @@ export default function SocialAnalyticsContent() {
     const handleManualSync = async () => {
         setLoading(true);
         try {
-            const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
             await fetch('/api/admin/sync-metrics', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${adminPassword}`
-                }
-            });
+                method: 'POST' });
             await fetchData();
         } catch (e) {
             console.error("Sync failed", e);

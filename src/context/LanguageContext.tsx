@@ -12,15 +12,17 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
     const [language, setLanguage] = useState('es');
-    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         const savedLang = localStorage.getItem('pantcake_lang');
         if (savedLang) {
             setLanguage(savedLang);
         }
-        setMounted(true);
     }, []);
+
+    useEffect(() => {
+        document.documentElement.lang = language;
+    }, [language]);
 
     const handleSetLanguage = (lang: string) => {
         setLanguage(lang);
@@ -63,7 +65,7 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
 
     return (
         <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
-            {mounted ? children : <div className="min-h-screen bg-black" />}
+            {children}
         </LanguageContext.Provider>
     );
 };

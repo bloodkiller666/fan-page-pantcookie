@@ -1,7 +1,6 @@
 import React from 'react';
-import { FiUser } from 'react-icons/fi';
-import { useLanguage } from '../../context/LanguageContext';
 import { MdBadge } from 'react-icons/md';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface PlayerInputProps {
     playerName: string;
@@ -16,55 +15,50 @@ const PlayerInput = ({ playerName, onNameChange, onStartGame, hideButton = false
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (honeypot) {
-            // Silently reject bots
-            return;
-        }
+        // Silently reject bots that fill the hidden field
+        if (honeypot) return;
         onStartGame();
     };
 
     return (
-        <div className="bg-white dark:bg-slate-900/40 backdrop-blur-xl rounded-3xl p-8 border border-primary/20 shadow-2xl dark:shadow-none animate-fade-in-up">
-            <form onSubmit={handleSubmit} className="space-y-8">
-                {/* Honeypot field */}
-                <input 
-                    type="text" 
-                    name="contactPhone" 
-                    value={honeypot}
-                    onChange={(e) => setHoneypot(e.target.value)}
-                    tabIndex={-1} 
-                    autoComplete="off" 
-                    style={{ position: 'absolute', left: '-9999px', opacity: 0 }} 
-                />
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <input
+                type="text"
+                name="contactPhone"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden
+                style={{ position: 'absolute', left: '-9999px', opacity: 0 }}
+            />
 
-                <div className="space-y-4">
-                    <label className="block text-xs font-black uppercase tracking-[0.3em] text-primary/70 ml-1" htmlFor="username">
-                        {t('common.playerName') || 'Ingresa tu nombre de jugador'}
-                    </label>
-                    <div className="relative group">
-                        <MdBadge className="absolute left-5 top-1/2 -translate-y-1/2 text-primary/40 group-focus-within:text-primary transition-colors text-2xl" />
-                        <input
-                            id="username"
-                            type="text"
-                            value={playerName}
-                            onChange={(e) => onNameChange(e.target.value)}
-                            placeholder={t('common.placeholderNickname') || 'Escribe tu nickname...'}
-                            className="w-full bg-slate-50 dark:bg-background-dark/30 border-2 border-primary/20 rounded-2xl py-5 pl-14 pr-6 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300 font-bold text-lg shadow-inner"
-                            required
-                        />
-                    </div>
+            <div>
+                <label className="mb-2 block font-display text-sm font-bold uppercase tracking-[0.12em]" htmlFor="username">
+                    {t('common.playerName') || 'Nombre del jugador'}
+                </label>
+                <div className="relative">
+                    <MdBadge className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-2xl text-[var(--muted)]" aria-hidden />
+                    <input
+                        id="username"
+                        type="text"
+                        value={playerName}
+                        onChange={(e) => onNameChange(e.target.value)}
+                        placeholder={t('common.placeholderNickname') || 'Escribe tu nickname...'}
+                        maxLength={24}
+                        autoComplete="nickname"
+                        className="w-full border-[3px] border-[var(--line)] bg-[var(--surface-2)] py-4 pl-14 pr-4 font-display text-xl font-bold text-[var(--text)] shadow-[inset_4px_4px_0_rgba(0,0,0,0.12)] placeholder:font-medium placeholder:text-[var(--muted)] focus:outline-none focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)]"
+                        required
+                    />
                 </div>
+            </div>
 
-                {!hideButton && (
-                    <button
-                        type="submit"
-                        className="w-full py-6 rounded-2xl bg-gradient-to-r from-primary via-[#00f2ff] to-primary bg-[length:200%_auto] hover:bg-right transition-all duration-500 dark:text-white text-background-dark font-black text-xl uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(13,185,242,0.3)] hover:shadow-[0_0_50px_rgba(13,185,242,0.5)] active:scale-[0.98] transform"
-                    >
-                        {t('games.puzzle.startGame') || 'Comenzar Juego'}
-                    </button>
-                )}
-            </form>
-        </div>
+            {!hideButton && (
+                <button type="submit" className="btn w-full !text-lg">
+                    {t('games.puzzle.startGame') || 'Comenzar Juego'}
+                </button>
+            )}
+        </form>
     );
 };
 

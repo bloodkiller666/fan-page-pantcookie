@@ -1,9 +1,11 @@
 import '../index.css';
+import { fontVariables } from './fonts';
 import { LanguageProvider } from '../context/LanguageContext';
 import { TransitionProvider } from '../context/TransitionContext';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ScrollToTop from '../components/layout/ScrollToTop';
+import EventGate from '../components/event/EventGate';
 import ClientTransitionHandler from '../components/layout/ClientTransitionHandler';
 import ErrorBoundary from '../components/ui/ErrorBoundary';
 
@@ -39,14 +41,22 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en">
-            <head />
-            <body className="bg-white text-gray-900 dark:bg-[#0a0a0a] dark:text-white transition-colors duration-300">
+        <html lang="es" className={fontVariables} suppressHydrationWarning>
+            <head>
+                {/* Apply the saved theme before first paint (dark is the default). */}
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: "try{var m=localStorage.getItem('theme-mode');if(m!=='light')document.documentElement.classList.add('dark')}catch(e){document.documentElement.classList.add('dark')}",
+                    }}
+                />
+            </head>
+            <body className="font-body min-h-screen">
                 <LanguageProvider>
                     <TransitionProvider>
                         <ErrorBoundary>
                             <ClientTransitionHandler>
                                 <ScrollToTop />
+                                <EventGate />
                                 <div className="flex flex-col min-h-screen">
                                     <Navbar />
                                     <main className="flex-grow">

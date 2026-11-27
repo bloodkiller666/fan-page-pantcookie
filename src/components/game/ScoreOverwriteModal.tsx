@@ -1,8 +1,8 @@
 'use client';
 import React from 'react';
-
-import { FiAlertTriangle, FiCheck, FiX } from 'react-icons/fi';
+import { MdCheck, MdClose, MdWarning } from 'react-icons/md';
 import { useLanguage } from '../../context/LanguageContext';
+import GameDialog from './GameDialog';
 
 interface ScoreOverwriteModalProps {
     isOpen: boolean;
@@ -14,15 +14,7 @@ interface ScoreOverwriteModalProps {
     newScore: number;
 }
 
-export default function ScoreOverwriteModal({
-    isOpen,
-    onConfirm,
-    onCancel,
-    playerName,
-    gameType,
-    oldScore,
-    newScore
-}: ScoreOverwriteModalProps) {
+export default function ScoreOverwriteModal({ isOpen, onConfirm, onCancel, gameType, oldScore, newScore }: ScoreOverwriteModalProps) {
     const { t } = useLanguage();
 
     const formatScore = (val: number) => {
@@ -35,47 +27,26 @@ export default function ScoreOverwriteModal({
     };
 
     return (
-        <>
-            {isOpen && (
-                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <div
-                        className="bg-white dark:bg-gray-800 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden border-4 border-black dark:border-white relative p-6 text-center animate-fade-in-up"
-                    >
-                        <div className="w-20 h-20 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mx-auto mb-6 border-4 border-yellow-500">
-                            <FiAlertTriangle className="text-yellow-600 dark:text-yellow-400" size={40} />
-                        </div>
+        <GameDialog open={isOpen} onClose={onCancel} title={t('common.overwriteTitle')} icon={<MdWarning />} tone="yellow">
+            <p className="text-lg font-medium leading-snug">{t('common.overwriteMessage')}</p>
 
-                        <h2 className="text-2xl font-black uppercase italic tracking-tighter mb-4 text-gray-800 dark:text-white">
-                            {t('common.overwriteTitle')}
-                        </h2>
+            <div className="mt-5 flex items-center justify-between gap-3 border-[3px] border-[var(--line)] bg-[var(--surface-2)] px-4 py-3">
+                <span className="font-display text-sm font-bold uppercase text-[var(--muted)]">{t('common.score')}</span>
+                <span className="score text-sm sm:text-base">
+                    {formatScore(oldScore)} <span aria-hidden>&rarr;</span> <span className="text-[var(--pink)]">{formatScore(newScore)}</span>
+                </span>
+            </div>
 
-                        <p className="text-gray-600 dark:text-gray-300 mb-8 font-medium">
-                            {t('common.overwriteMessage')}
-                            <br />
-                            <span className="text-sm opacity-70 mt-2 block">
-                                ({t('common.score')}: {formatScore(oldScore)} → <span className="text-primary-blue font-bold">{formatScore(newScore)}</span>)
-                            </span>
-                        </p>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <button
-                                onClick={onCancel}
-                                className="py-3 px-6 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white font-black uppercase tracking-widest rounded-xl border-2 border-black hover:bg-gray-300 dark:hover:bg-gray-600 transition-all flex items-center justify-center gap-2"
-                            >
-                                <FiX size={20} />
-                                {t('games.puzzle.no')}
-                            </button>
-                            <button
-                                onClick={onConfirm}
-                                className="py-3 px-6 bg-primary-blue text-white font-black uppercase tracking-widest rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_black] hover:translate-y-0.5 hover:shadow-none transition-all flex items-center justify-center gap-2"
-                            >
-                                <FiCheck size={20} />
-                                {t('common.continue')}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </>
+            <div className="mt-6 grid grid-cols-2 gap-4">
+                <button type="button" onClick={onCancel} className="btn btn--ghost">
+                    <MdClose className="text-2xl" aria-hidden />
+                    {t('games.puzzle.no')}
+                </button>
+                <button type="button" onClick={onConfirm} className="btn">
+                    <MdCheck className="text-2xl" aria-hidden />
+                    {t('common.continue')}
+                </button>
+            </div>
+        </GameDialog>
     );
 }

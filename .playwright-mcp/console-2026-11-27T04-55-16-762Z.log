@@ -1,0 +1,18 @@
+[     857ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.5.28_@types+node@25_c5a2fbbf211e28f2f50a8486211ecae1/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25631
+[    7452ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.5.28_@types+node@25_c5a2fbbf211e28f2f50a8486211ecae1/node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:197
+[    8116ms] [LOG] [Fast Refresh] done in 666ms @ webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.5.28_@types+node@25_c5a2fbbf211e28f2f50a8486211ecae1/node_modules/next/dist/client/dev/report-hmr-latency.js:14
+[    9085ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/again.mp3:1
+[    9184ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/date.mp3:1
+[    9266ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/date.wav:1
+[   10221ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/no.mp3:1
+[   10310ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/no.wav:1
+[   16030ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/date.mp3:1
+[   16115ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/date.wav:1
+[   16849ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/yes.mp3:1
+[   16945ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/yes.wav:1
+[   29298ms] [LOG] [Fast Refresh] rebuilding @ webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.5.28_@types+node@25_c5a2fbbf211e28f2f50a8486211ecae1/node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js:197
+[   31262ms] [ERROR] The final argument passed to %s changed size between renders. The order and size of this array must remain constant.
+
+Previous: %s
+Incoming: %s useEffect [] [true] @ webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.5.28_@types+node@25_c5a2fbbf211e28f2f50a8486211ecae1/node_modules/next/dist/next-devtools/userspace/app/errors/intercept-console-error.js:57
+[   31269ms] [LOG] [Fast Refresh] done in 1970ms @ webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.5.28_@types+node@25_c5a2fbbf211e28f2f50a8486211ecae1/node_modules/next/dist/client/dev/report-hmr-latency.js:14

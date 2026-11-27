@@ -1,0 +1,6 @@
+[     442ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.5.28_@types+node@25_c5a2fbbf211e28f2f50a8486211ecae1/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:25631
+[     769ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/examIntro.mp3:1
+[     877ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/examIntro.mp3:1
+[     965ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/examIntro.wav:1
+[    2984ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/examRules.mp3:1
+[    3082ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3100/audio/event/examRules.wav:1

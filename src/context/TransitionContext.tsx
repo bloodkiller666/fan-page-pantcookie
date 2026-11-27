@@ -1,6 +1,5 @@
 'use client';
 import React, { createContext, useContext, useRef, ReactNode, useEffect, useState } from 'react';
-import { useRouter as usePagesRouter } from 'next/router';
 import { useRouter as useAppRouter, usePathname } from 'next/navigation';
 
 interface TransitionContextType {
@@ -12,26 +11,14 @@ interface TransitionContextType {
 const TransitionContext = createContext<TransitionContextType | undefined>(undefined);
 
 export function TransitionProvider({ children }: { children: ReactNode }) {
-  // We try to detect which router we are using
-  let pagesRouter: any = null;
-  try {
-    pagesRouter = usePagesRouter();
-  } catch (e) {
-    // Not in Pages router
-  }
-
-  const appRouter = useAppRouter();
+  const router = useAppRouter();
   const pathname = usePathname();
   
   const revealerRef = useRef<any>(null);
   const isManualTransition = useRef(false);
 
   const transitionTo = async (href: string) => {
-    // Determine current path and router based on environment
-    const currentPath = pagesRouter ? pagesRouter.asPath : pathname;
-    const router = pagesRouter || appRouter;
-
-    if (href === currentPath || isManualTransition.current) return;
+    if (href === pathname || isManualTransition.current) return;
 
     if (revealerRef.current) {
       isManualTransition.current = true;

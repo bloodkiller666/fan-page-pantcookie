@@ -1,0 +1,161 @@
+- generic [ref=e1]:
+  - dialog "Evento" [ref=e2]:
+    - button "Silenciar voz" [ref=e4] [cursor=pointer]
+    - generic [ref=e20]:
+      - heading "Hay algo esperándote" [level=2] [ref=e21]
+      - button "Toca para entrar" [ref=e22] [cursor=pointer]
+  - generic [ref=e27]:
+    - navigation "Principal" [ref=e28]:
+      - generic [ref=e29]:
+        - link "SHAKE-GANG" [ref=e30] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e32]:
+            - generic [ref=e33]: Shake-Gang
+            - generic [ref=e34]: Community Network
+        - generic [ref=e35]:
+          - button "es" [ref=e37] [cursor=pointer]
+          - button "Light mode" [ref=e50] [cursor=pointer]
+          - button "Menu" [ref=e54] [cursor=pointer]
+      - dialog "Menu" [ref=e58]:
+        - generic [ref=e59]:
+          - generic [ref=e60]: Menu
+          - button "Close" [ref=e61] [cursor=pointer]
+        - list [ref=e65]:
+          - listitem [ref=e66]:
+            - link "Inicio" [ref=e67] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=e69]:
+            - link [ref=e70] [cursor=pointer]:
+              - /url: /multimedia
+              - generic [ref=e71]:
+                - text: Multimedia
+                - img "cerrado" [ref=e72]
+            - list [ref=e75]:
+              - listitem [ref=e76]:
+                - link "Fotos" [ref=e77] [cursor=pointer]:
+                  - /url: /multimedia?tab=images
+              - listitem [ref=e78]:
+                - link "Videos" [ref=e79] [cursor=pointer]:
+                  - /url: /multimedia?tab=videos
+              - listitem [ref=e80]:
+                - link "Covers" [ref=e81] [cursor=pointer]:
+                  - /url: /multimedia?tab=covers
+          - listitem [ref=e82]:
+            - link "Juegos" [ref=e83] [cursor=pointer]:
+              - /url: /games
+            - list [ref=e85]:
+              - listitem [ref=e86]:
+                - link "Rompecabezas" [ref=e87] [cursor=pointer]:
+                  - /url: /games?game=puzzle
+              - listitem [ref=e88]:
+                - link "Trivias" [ref=e89] [cursor=pointer]:
+                  - /url: /games?game=trivia
+              - listitem [ref=e90]:
+                - link "Shura Run" [ref=e91] [cursor=pointer]:
+                  - /url: /games?game=shuraRun
+          - listitem [ref=e92]:
+            - link [ref=e93] [cursor=pointer]:
+              - /url: /chat
+              - generic [ref=e94]:
+                - text: Chat
+                - img "cerrado" [ref=e95]
+          - listitem [ref=e98]:
+            - link [ref=e99] [cursor=pointer]:
+              - /url: /mensajes
+              - generic [ref=e100]:
+                - text: Mensajes
+                - img "cerrado" [ref=e101]
+            - list [ref=e104]:
+              - listitem [ref=e105]:
+                - link "Escribir Mensaje" [ref=e106] [cursor=pointer]:
+                  - /url: /mensajes?view=write
+              - listitem [ref=e107]:
+                - link "Leer Mensajes" [ref=e108] [cursor=pointer]:
+                  - /url: /mensajes?view=read
+          - listitem [ref=e109]:
+            - link [ref=e110] [cursor=pointer]:
+              - /url: /about
+              - generic [ref=e111]:
+                - text: Sobre nosotros
+                - img "cerrado" [ref=e112]
+        - generic [ref=e116]:
+          - button "Español" [pressed] [ref=e117] [cursor=pointer]
+          - button "English" [ref=e127] [cursor=pointer]
+          - button "日本語" [ref=e135] [cursor=pointer]
+          - button "Français" [ref=e141] [cursor=pointer]
+    - main [ref=e148]:
+      - generic [ref=e151]:
+        - generic [ref=e153]:
+          - heading "¿Qué quieres jugar?" [level=1] [ref=e154]
+          - paragraph [ref=e155]: Elige un juego para comenzar
+        - generic [ref=e156]:
+          - button "Nuevo El Examen Un formulario sorpresa. Quince segundos por pregunta. Jugar" [ref=e157] [cursor=pointer]:
+            - generic [ref=e160]:
+              - generic [ref=e161]: Nuevo
+              - generic [ref=e163]:
+                - heading "El Examen" [level=2] [ref=e164]
+                - paragraph [ref=e165]: Un formulario sorpresa. Quince segundos por pregunta.
+                - generic [ref=e166]: Jugar
+          - button "Vuelve después del evento Rompecabezas Elige el tamaño del tablero para comenzar tu desafío Vuelve después del evento" [disabled] [ref=e171]:
+            - generic [ref=e174]:
+              - generic [ref=e175]: Vuelve después del evento
+              - generic [ref=e181]:
+                - heading "Rompecabezas" [level=2] [ref=e182]
+                - paragraph [ref=e183]: Elige el tamaño del tablero para comenzar tu desafío
+                - generic [ref=e184]: Vuelve después del evento
+          - button "Vuelve después del evento Trivia ¿Eres capaz de responder todas las preguntas en sus tres modalidades? Vuelve después del evento" [disabled] [ref=e189]:
+            - generic [ref=e192]:
+              - generic [ref=e193]: Vuelve después del evento
+              - generic [ref=e199]:
+                - heading "Trivia" [level=2] [ref=e200]
+                - paragraph [ref=e201]: ¿Eres capaz de responder todas las preguntas en sus tres modalidades?
+                - generic [ref=e202]: Vuelve después del evento
+          - button "Vuelve después del evento Shura Run ¡Corre con Shura, evita a los haters y recolecta ingredientes! ¿Qué tan lejos llegarás? Vuelve después del evento" [disabled] [ref=e207]:
+            - generic [ref=e210]:
+              - generic [ref=e211]: Vuelve después del evento
+              - generic [ref=e217]:
+                - heading "Shura Run" [level=2] [ref=e218]
+                - paragraph [ref=e219]: ¡Corre con Shura, evita a los haters y recolecta ingredientes! ¿Qué tan lejos llegarás?
+                - generic [ref=e220]: Vuelve después del evento
+          - generic [ref=e226]: COMING SOON
+    - contentinfo [ref=e231]:
+      - generic [ref=e233]:
+        - generic [ref=e236]:
+          - heading "¡Gracias por ser parte de la comunidad!" [level=2] [ref=e237]
+          - paragraph [ref=e238]: Este espacio especial está dedicado a ShuraHiwa y a todos los pantcakes que hacen de esta comunidad algo único.
+        - generic [ref=e239]:
+          - heading "Legal" [level=3] [ref=e240]
+          - list [ref=e241]:
+            - listitem [ref=e242]:
+              - link "Términos y Condiciones" [ref=e243] [cursor=pointer]:
+                - /url: /legal/terms
+            - listitem [ref=e244]:
+              - link "Privacidad" [ref=e245] [cursor=pointer]:
+                - /url: /legal/privacy
+        - generic [ref=e246]:
+          - heading "Ayuda" [level=3] [ref=e247]
+          - list [ref=e248]:
+            - listitem [ref=e249]:
+              - link "FAQ" [ref=e250] [cursor=pointer]:
+                - /url: /legal/faq
+      - generic [ref=e252]:
+        - paragraph [ref=e253]: © 2025 Fan Page Shake-Gang. Creado con ❤️ para la comunidad.
+        - paragraph [ref=e254]:
+          - text: Made with
+          - img "love" [ref=e255]
+          - text: by
+          - generic [ref=e258]: pantcakes
+  - button "Open Next.js Dev Tools" [ref=e264] [cursor=pointer]
+  - alert [ref=e268]
+  - dialog "¡BIENVENIDO JUGADOR!" [active] [ref=e270]:
+    - generic [ref=e273]:
+      - heading "¡BIENVENIDO JUGADOR!" [level=2] [ref=e275]
+      - generic [ref=e276]:
+        - paragraph [ref=e277]: INGRESA TU NICKNAME PARA GUARDAR TUS RÉCORDS
+        - generic [ref=e278]:
+          - textbox [aria-hidden] [ref=e279]
+          - generic [ref=e280]:
+            - generic [ref=e281]: Nombre del Jugador
+            - textbox "Nombre del Jugador" [ref=e283]:
+              - /placeholder: Escribe tu nickname...
+          - button "Comenzar Juego" [ref=e284] [cursor=pointer]

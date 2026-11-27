@@ -1,0 +1,87 @@
+{
+  "secondsPerQuestion": 15,
+  "passMinRatio": 0.5,
+  "questions": [
+    {
+      "id": "ejemplo-debut",
+      "text": "EJEMPLO. ¿En qué fecha debutó ShuraHiwa?",
+      "multiple": false,
+      "options": [
+        { "id": "a", "text": "11 de junio de 2023", "correct": true },
+        { "id": "b", "text": "18 de diciembre de 2022", "correct": false },
+        { "id": "c", "text": "1 de enero de 2024", "correct": false }
+      ]
+    },
+    {
+      "id": "ejemplo-cumple",
+      "text": "EJEMPLO. ¿Qué día es el cumpleaños de Shura?",
+      "multiple": false,
+      "options": [
+        { "id": "a", "text": "11 de junio", "correct": false },
+        { "id": "b", "text": "18 de diciembre", "correct": true },
+        { "id": "c", "text": "25 de diciembre", "correct": false },
+        { "id": "d", "text": "31 de octubre", "correct": false }
+      ]
+    },
+    {
+      "id": "ejemplo-mascota",
+      "text": "EJEMPLO. ¿Cómo se llama la mascota de Shura?",
+      "multiple": false,
+      "options": [
+        { "id": "a", "text": "Motogato", "correct": false },
+        { "id": "b", "text": "Motoperro", "correct": true },
+        { "id": "c", "text": "Pantcake", "correct": false },
+        { "id": "d", "text": "Tamagotchi", "correct": false }
+      ]
+    },
+    {
+      "id": "ejemplo-gustos",
+      "text": "EJEMPLO. Marca TODO lo que le gusta a Shura.",
+      "multiple": true,
+      "options": [
+        { "id": "a", "text": "El salmón ahumado", "correct": true },
+        { "id": "b", "text": "Tocar batería", "correct": true },
+        { "id": "c", "text": "El tomate", "correct": false },
+        { "id": "d", "text": "El pozole", "correct": false }
+      ]
+    },
+    {
+      "id": "ejemplo-plataformas",
+      "text": "EJEMPLO. ¿En qué plataformas hace stream?",
+      "multiple": true,
+      "options": [
+        { "id": "a", "text": "Twitch", "correct": true },
+        { "id": "b", "text": "YouTube", "correct": true },
+        { "id": "c", "text": "Kick", "correct": false }
+      ]
+    },
+    {
+      "id": "ejemplo-fans",
+      "text": "EJEMPLO. ¿Cómo se llama la comunidad de fans?",
+      "multiple": false,
+      "options": [
+        { "id": "a", "text": "Pantcakes", "correct": true },
+        { "id": "b", "text": "Panteritas", "correct": false }
+      ]
+    },
+    {
+      "id": "ejemplo-nolegusta",
+      "text": "EJEMPLO. ¿Qué NO le gusta a Shura?",
+      "multiple": true,
+      "options": [
+        { "id": "a", "text": "La sangre", "correct": true },
+        { "id": "b", "text": "Los shooters", "correct": true },
+        { "id": "c", "text": "Los perros", "correct": false },
+        { "id": "d", "text": "La repostería", "correct": false }
+      ]
+    },
+    {
+      "id": "ejemplo-si",
+      "text": "EJEMPLO. ¿Shura es una pantera motociclista?",
+      "multiple": false,
+      "options": [
+        { "id": "a", "text": "Sí", "correct": true }
+      ]
+    }
+  ]
+}

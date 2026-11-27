@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
+import { MdDone, MdInfo } from 'react-icons/md';
 import { useLanguage } from '../../context/LanguageContext';
 import { useGameSounds } from '../../hooks/useGameSounds';
-import { MdDone, MdInfo } from 'react-icons/md';
 
-const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { image: string, difficulty: string, onComplete: () => void, isCompleted?: boolean }) => {
+const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { image: string; difficulty: string; onComplete: () => void; isCompleted?: boolean }) => {
     const { t } = useLanguage();
     const { playSelect, playSwap, playIncorrect, playCorrect } = useGameSounds();
     const [tiles, setTiles] = useState<number[]>([]);
@@ -22,22 +22,19 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
         const img = new Image();
 
         img.onload = () => {
-            // Artificial delay for smooth transition and ensuring image is cached
+            // Short delay for a smooth transition and so the image is cached
             setTimeout(() => {
                 initializePuzzle();
                 setIsLoading(false);
             }, 500);
         };
         img.src = image;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [image, difficulty]);
 
     const initializePuzzle = () => {
-        // Create ordered array [0, 1, 2, ..., totalTiles-1]
-        const newTiles = Array.from({ length: totalTiles }, (_, i) => i);
-
-        // Shuffle tiles
-        const shuffled = shuffleArray(newTiles);
-        setTiles(shuffled);
+        const ordered = Array.from({ length: totalTiles }, (_, i) => i);
+        setTiles(shuffleArray(ordered));
         setSelectedTileIndex(null);
     };
 
@@ -48,47 +45,35 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
             const j = Math.floor(Math.random() * (i + 1));
             [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-
-        // Ensure it's not already solved by random chance (highly unlikely for large grids but good practice)
+        // Never hand the player an already-solved board
         if (isPuzzleComplete(arr)) {
-            // Swap first two
             [arr[0], arr[1]] = [arr[1], arr[0]];
         }
-
         return arr;
     };
 
     const handleTileClick = (index: number) => {
         if (isCompleted) return;
 
-        // Prevent moving tiles that are already in correct position
-        const tileNumber = tiles[index];
-        if (tileNumber === index) {
+        // Tiles already in the right place are locked
+        if (tiles[index] === index) {
             playIncorrect();
             return;
         }
 
         if (selectedTileIndex === null) {
-            // Select first tile
             playSelect();
             setSelectedTileIndex(index);
-        } else {
-            // Selected second tile, swap them
-            if (selectedTileIndex === index) {
-                // Deselect if clicking same tile
-                playSelect();
-                setSelectedTileIndex(null);
-                return;
-            }
-
-            // Check if second tile is locked
-            if (tiles[index] === index) {
-                playIncorrect();
-                return;
-            }
-
-            swapTiles(selectedTileIndex, index);
+            return;
         }
+
+        if (selectedTileIndex === index) {
+            playSelect();
+            setSelectedTileIndex(null);
+            return;
+        }
+
+        swapTiles(selectedTileIndex, index);
     };
 
     const swapTiles = (index1: number, index2: number) => {
@@ -99,27 +84,17 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
         setTiles(newTiles);
         setSelectedTileIndex(null);
 
-        // Check completion
         if (isPuzzleComplete(newTiles)) {
-            playCorrect(); // Play mini success sound
-            setTimeout(() => {
-                onComplete();
-            }, 300);
+            playCorrect();
+            setTimeout(() => onComplete(), 300);
         }
     };
 
-    const isPuzzleComplete = (tilesArray: number[]) => {
-        for (let i = 0; i < tilesArray.length; i++) {
-            if (tilesArray[i] !== i) return false;
-        }
-        return true;
-    };
+    const isPuzzleComplete = (tilesArray: number[]) => tilesArray.every((tile, i) => tile === i);
 
     const getTileStyle = (tileNumber: number) => {
-        // Calculate original row/col of the tile part
         const row = Math.floor(tileNumber / gridSize);
         const col = tileNumber % gridSize;
-
         const xPos = gridSize > 1 ? (col / (gridSize - 1)) * 100 : 0;
         const yPos = gridSize > 1 ? (row / (gridSize - 1)) * 100 : 0;
 
@@ -132,92 +107,64 @@ const PuzzleBoard = ({ image, difficulty, onComplete, isCompleted = false }: { i
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center h-96">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary-pink dark:border-primary-pink mx-auto mb-4"></div>
-                    <p className="text-gray-600 dark:text-gray-300 font-semibold">{t('games.puzzle.loading')}</p>
-                </div>
+            <div className="flex h-96 flex-col items-center justify-center gap-5" role="status">
+                <div className="hud-bar hud-bar--pink w-64 animate-pulse" style={{ ['--v' as string]: 60 }} />
+                <p className="score text-xs">{t('games.puzzle.loading')}</p>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col items-center w-full">
+        <div className="flex w-full flex-col items-center">
             <div
-                className={`grid transition-all duration-700 bg-background-dark/40 p-3 rounded-2xl shadow-3xl border-2 border-primary/30 overflow-hidden relative
-                    ${isCompleted ? 'gap-0 ring-4 ring-primary shadow-[0_0_50px_rgba(13,185,242,0.3)]' : 'gap-1.5'}`}
-                style={{
-                    gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-                    width: '100%',
-                    maxWidth: '800px',
-                    aspectRatio: '1',
-                }}
+                className={`relative grid w-full max-w-[800px] border-[3px] border-[var(--line)] bg-[var(--line)] p-[3px] shadow-[8px_8px_0_var(--shadow)] transition-[gap] duration-700 ${isCompleted ? 'gap-0' : 'gap-[3px]'}`}
+                style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)`, aspectRatio: '1' }}
             >
                 {tiles.map((tileNumber, index) => {
                     const isSelected = selectedTileIndex === index;
-                    const isCorrectPosition = tileNumber === index;
+                    const inPlace = tileNumber === index;
 
                     return (
-                        <div
+                        <button
+                            type="button"
                             key={index}
                             onClick={() => handleTileClick(index)}
-                            className={`
-                                relative transition-all duration-300 overflow-hidden rounded-md
-                                ${isCompleted
-                                    ? 'z-0 opacity-100 cursor-default'
-                                    : isCorrectPosition
-                                        ? 'z-0 cursor-default ring-2 ring-primary/20 hover:brightness-110'
-                                        : 'cursor-pointer hover:scale-[1.03] hover:brightness-110 hover:z-10'
-                                }
-                                ${isSelected && !isCompleted ? 'z-20 ring-4 ring-primary shadow-[0_0_25px_rgba(13,185,242,0.8)] scale-90 rounded-xl' : ''}
-                            `}
+                            disabled={isCompleted}
+                            aria-disabled={inPlace}
+                            aria-pressed={isSelected}
+                            aria-label={`${index + 1}`}
+                            className={`relative overflow-hidden transition-transform duration-150 ${
+                                isCompleted
+                                    ? 'cursor-default'
+                                    : inPlace
+                                      ? 'cursor-default'
+                                      : 'cursor-pointer hover:z-10 hover:brightness-110'
+                            } ${isSelected && !isCompleted ? 'z-20 scale-[0.88] outline outline-[4px] outline-[var(--pink)]' : ''}`}
                             style={getTileStyle(tileNumber)}
                         >
-                            {/* Correct Position Indicator */}
-                            {isCorrectPosition && !isCompleted && (
-                                <div className="absolute inset-0 ring-inset ring-2 ring-[#00ff66]/30 pointer-events-none transition-all duration-500">
-                                    <div className="absolute top-2 right-2 w-6 h-6 bg-[#00ff66] rounded-full shadow-[0_0_15px_rgba(0,255,102,0.8)] animate-pulse flex items-center justify-center">
-                                        <MdDone className="text-slate-900 text-xs font-black" />
-                                    </div>
-                                </div>
+                            {inPlace && !isCompleted && (
+                                <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center border-2 border-[var(--ink)] bg-[var(--cyan)] text-[var(--ink)]" aria-hidden>
+                                    <MdDone className="text-sm" />
+                                </span>
                             )}
-
-                            {/* Selection Overlay */}
-                            {isSelected && !isCompleted && (
-                                <div className="absolute inset-0 bg-primary/20 backdrop-blur-[1px] pointer-events-none animate-pulse"></div>
-                            )}
-
-                            {/* Hover effect for movable tiles */}
-                            {!isCorrectPosition && !isCompleted && (
-                                <div className="absolute inset-0 bg-white/5 opacity-0 hover:opacity-100 transition-opacity pointer-events-none"></div>
-                            )}
-                        </div>
+                            {isSelected && !isCompleted && <span className="absolute inset-0 bg-[var(--pink)]/25" aria-hidden />}
+                        </button>
                     );
                 })}
-
-                {/* Border Glow for completed puzzle */}
-                {isCompleted && (
-                    <div className="absolute inset-0 pointer-events-none border-[12px] border-primary/5 rounded-xl"></div>
-                )}
             </div>
 
             {!isCompleted && (
-                <div className="mt-8 flex flex-col md:flex-row items-center gap-4 bg-primary/5 px-6 py-3 rounded-2xl border border-primary/20 backdrop-blur-sm animate-fade-in shadow-sm dark:shadow-none">
-                    <div className="flex items-center gap-3">
-                        <MdInfo className="text-primary" />
-                        <p className="text-sm font-black uppercase tracking-widest text-slate-600 dark:text-slate-400">
-                            {t('games.puzzle.instruction') || 'Intercambia piezas para completar la imagen'}
-                        </p>
-                    </div>
-                    <div className="h-4 w-[1px] bg-primary/20 hidden md:block"></div>
-                    <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-[#00ff66] rounded-full animate-pulse shadow-[0_0_8px_rgba(0,255,102,1)] flex items-center justify-center">
-                            <MdDone className="text-[6px] text-slate-900 font-black" />
-                        </div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-[#00ff66]">
-                            Piezas en posición correcta
-                        </p>
-                    </div>
+                <div className="mt-8 flex flex-col items-center gap-3 border-[3px] border-[var(--line)] bg-[var(--surface)] px-5 py-3 md:flex-row md:gap-6">
+                    <p className="flex items-center gap-2 font-display text-sm font-bold uppercase tracking-[0.08em]">
+                        <MdInfo className="text-xl text-[var(--blue)]" aria-hidden />
+                        {t('games.puzzle.instruction')}
+                    </p>
+                    <p className="flex items-center gap-2 font-display text-sm font-bold uppercase tracking-[0.08em] text-[var(--muted)]">
+                        <span className="flex h-5 w-5 items-center justify-center border-2 border-[var(--ink)] bg-[var(--cyan)] text-[var(--ink)]" aria-hidden>
+                            <MdDone className="text-sm" />
+                        </span>
+                        {t('games.puzzle.correctPieces')}
+                    </p>
                 </div>
             )}
         </div>

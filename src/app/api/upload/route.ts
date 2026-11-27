@@ -1,5 +1,15 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
+import { getIP, rateLimit } from "@/utils/rateLimit";
+
+const MAX_BYTES = 20 * 1024 * 1024;
+const ALLOWED_TYPES: Record<string, string> = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+    "image/gif": "gif",
+};
 
 const r2 = new S3Client({
     region: "auto",
@@ -11,30 +21,35 @@ const r2 = new S3Client({
 });
 
 export async function POST(request: Request) {
-    try {
-        const formData = await request.formData();
-        const file = formData.get("file") as File;
+    if (!rateLimit(`upload:${getIP(request)}`, 5, 60_000).success) {
+        return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
 
-        if (!file) {
+    try {
+        const file = (await request.formData()).get("file");
+
+        if (!(file instanceof File)) {
             return NextResponse.json({ error: "No file provided" }, { status: 400 });
         }
+        const ext = ALLOWED_TYPES[file.type];
+        if (!ext) {
+            return NextResponse.json({ error: "Unsupported file type" }, { status: 415 });
+        }
+        if (file.size > MAX_BYTES) {
+            return NextResponse.json({ error: "File too large" }, { status: 413 });
+        }
 
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const fileName = `${Date.now()}-${file.name}`;
+        // Never trust the client-provided name: use a random key and the validated extension.
+        const key = `wall/${randomUUID()}.${ext}`;
 
-        const command = new PutObjectCommand({
+        await r2.send(new PutObjectCommand({
             Bucket: process.env.R2_BUCKET_NAME,
-            Key: fileName,
-            Body: buffer,
+            Key: key,
+            Body: Buffer.from(await file.arrayBuffer()),
             ContentType: file.type,
-        });
+        }));
 
-        await r2.send(command);
-
-        // Assuming a public bucket or a configured public domain
-        const publicUrl = `${process.env.R2_PUBLIC_DOMAIN}/${fileName}`;
-
-        return NextResponse.json({ success: true, url: publicUrl, name: file.name });
+        return NextResponse.json({ success: true, url: `${process.env.R2_PUBLIC_DOMAIN}/${key}` });
     } catch (error) {
         console.error("R2 Upload Error:", error);
         return NextResponse.json({ error: "Upload failed" }, { status: 500 });

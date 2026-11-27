@@ -2,6 +2,7 @@ import { Groq } from 'groq-sdk';
 import { NextResponse } from 'next/server';
 import { getBotResponse } from '@/utils/botLogic';
 import { z } from 'zod';
+import { getIP, rateLimit } from '@/utils/rateLimit';
 
 import knowledge from '@/data/botKnowledge.json';
 
@@ -87,6 +88,10 @@ ${JSON.stringify(knowledge.conversation)}
 `;
 
 export async function POST(req: Request) {
+    if (!rateLimit(`chat:${getIP(req)}`, 20, 60_000).success) {
+        return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     let body;
     try {
         body = await req.json();

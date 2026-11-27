@@ -2,105 +2,96 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 
+const LOGO = 'https://pub-bdbaaa8e6a3e405c965b621a6503229c.r2.dev/Shura%20HiwaLogo%206.png';
+
+/**
+ * First-visit console boot: a cartridge slots in, the HUD bar fills, then the
+ * whole screen scrolls away upward (the "auto-scroll" reveal of the page).
+ * One GSAP timeline drives everything; counter and bar are written straight to
+ * the DOM so React never re-renders during the 100 ticks.
+ */
 export default function LoadingScreen() {
-    const [counter, setCounter] = useState(0);
-    const [isVisible, setIsVisible] = useState(true);
-    const [isMounted, setIsMounted] = useState(false);
-    const [statusText, setStatusText] = useState('INICIANDO SISTEMA...');
-    const containerRef = useRef<HTMLDivElement>(null);
-    const loadingMessages = [
-        { pct: 0, text: "DESCARGANDO ACTUALIZACIÓN..." },
-        { pct: 25, text: "INSTALANDO ACTUALIZACIÓN..." },
-        { pct: 50, text: "CARGANDO SISTEMA..." },
-        { pct: 75, text: "PREPARANDO SISTEMA..." },
-        { pct: 90, text: "SISTEMA COMPLETADO." },
-    ];
+    const [visible, setVisible] = useState(true);
+    const rootRef = useRef<HTMLDivElement>(null);
+    const counterRef = useRef<HTMLSpanElement>(null);
+    const barRef = useRef<HTMLDivElement>(null);
+    const statusRef = useRef<HTMLParagraphElement>(null);
 
     useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-    useEffect(() => {
-        if (!isMounted) return;
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const state = { pct: 0 };
 
         const ctx = gsap.context(() => {
-            const tl = gsap.timeline();
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    setVisible(false);
+                    window.dispatchEvent(new Event('loading_complete'));
+                },
+            });
 
-            const timer = setInterval(() => {
-                setCounter(prev => {
-                    if (prev >= 100) {
-                        clearInterval(timer);
+            // Cartridge drops into the slot
+            tl.from('.boot-cart', { y: -140, opacity: 0, duration: 0.7, ease: 'bounce.out' });
+            tl.from('.boot-slot', { scaleX: 0, duration: 0.4, ease: 'power3.out' }, 0);
 
-                        setTimeout(() => {
-                            tl.to(containerRef.current, {
-                                yPercent: -100,
-                                duration: 1.5,
-                                ease: "power4.inOut",
-                                onComplete: () => {
-                                    setIsVisible(false);
-                                    window.dispatchEvent(new Event('loading_complete'));
-                                }
-                            });
-                        }, 800);
+            // Counter + segmented bar
+            tl.to(state, {
+                pct: 100,
+                duration: reduce ? 0.4 : 2.2,
+                ease: 'power1.inOut',
+                onUpdate: () => {
+                    const v = Math.round(state.pct);
+                    if (counterRef.current) counterRef.current.textContent = String(v).padStart(3, '0');
+                    barRef.current?.style.setProperty('--v', String(v));
+                    if (statusRef.current) statusRef.current.textContent = v < 100 ? 'LOADING' : 'READY';
+                },
+            }, '-=0.2');
 
-                        return 100;
-                    }
-
-                    const nextVal = prev + 1;
-                    const currentMessage = [...loadingMessages].reverse().find(m => nextVal >= m.pct);
-                    if (currentMessage) setStatusText(currentMessage.text);
-
-                    return nextVal;
-                });
-            }, 50);
-
-            return () => clearInterval(timer);
-        }, containerRef);
+            // Ready blink, then the screen scrolls up and away
+            tl.to('.boot-ready', { opacity: 1, duration: 0.01 });
+            tl.to('.boot-ready', { opacity: 0.2, duration: 0.12, repeat: 5, yoyo: true, ease: 'steps(1)' });
+            tl.to(rootRef.current, { yPercent: -100, duration: 0.9, ease: 'power4.inOut' }, '+=0.1');
+        }, rootRef);
 
         return () => ctx.revert();
-    }, [isMounted]);
+    }, []);
 
-    if (!isMounted || !isVisible) return null;
+    if (!visible) return null;
 
     return (
         <div
-            ref={containerRef}
-            className="fixed inset-0 z-[9999] bg-[#1a0f16] flex flex-col items-center justify-center overflow-hidden"
+            ref={rootRef}
+            role="status"
+            aria-label="Loading"
+            className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#180917] text-[#fde0f6] [--line:#fde0f6] [--shadow:var(--pink)]"
         >
-            <div className="relative">
-                <div className="text-[15vw] font-black text-white/[0.03] uppercase tracking-tighter select-none leading-none">
-                    SHAKEGANG
+            <div className="boot-cart cart-shell">
+                <div className="cart">
+                    <div className="cart__face w-[min(78vw,320px)] bg-[var(--surface)] p-5 text-[var(--text)]" style={{ background: '#261325' }}>
+                        <div className="relative aspect-square w-full overflow-hidden border-[3px] border-[#fde0f6] bg-[var(--pink)]">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={LOGO} alt="" className="h-full w-full object-cover" />
+                        </div>
+                        <p className="mt-4 text-center font-display text-xl font-bold uppercase tracking-tight">
+                            Shake<span className="text-[var(--pink)]">-</span>Gang
+                        </p>
+                    </div>
                 </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-8xl md:text-[10vw] font-black text-primary-pink tracking-tighter italic drop-shadow-[0_0_20px_rgba(255,0,127,0.4)]">
-                        {counter}%
+                <div className="pins" aria-hidden />
+            </div>
+
+            <div className="boot-slot mt-2 h-3 w-[min(86vw,380px)] origin-center border-[3px] border-[#fde0f6] bg-black" aria-hidden />
+
+            <div className="mt-10 w-[min(86vw,380px)]">
+                <div ref={barRef} className="hud-bar hud-bar--cyan" style={{ ['--v' as string]: 0 }} />
+                <div className="mt-4 flex items-end justify-between">
+                    <p ref={statusRef} className="score text-[0.7rem] text-[var(--cyan)]">LOADING</p>
+                    <span className="score text-2xl text-[var(--yellow)]">
+                        <span ref={counterRef}>000</span>%
                     </span>
                 </div>
             </div>
 
-            {/* Mensajes Dinámicos Inferiores - AJUSTAR TAMAÑO Y COLOR AQUÍ */}
-            <div className="absolute bottom-16 left-10 right-10 flex flex-col items-center text-white font-pixel text-[22px] uppercase tracking-[0.4em]">
-                <div className="overflow-hidden h-10">
-                    <p key={statusText} className="animate-fade-in-up">
-                        {statusText}
-                    </p>
-                </div>
-            </div>
-
-            <div className="absolute bottom-10 left-10 right-10 flex justify-between items-end text-white/10 font-mono text-[9px] uppercase tracking-[0.2em]">
-                <div>
-                    <div>System.v2025</div>
-                    <div>Core: v3.7.7_beta</div>
-                </div>
-                <div className="text-right">
-                    <div>© 2025 Fan Page Shake-Gang</div>
-                    <div>Connection: Stable</div>
-                </div>
-            </div>
-            <div
-                className="absolute bottom-0 left-0 h-1 bg-primary-pink transition-all duration-100 ease-linear shadow-[0_0_20px_rgba(255,0,127,0.8)]"
-                style={{ width: `${counter}%` }}
-            />
+            <p className="boot-ready score absolute bottom-[12vh] text-xs text-[var(--pink)] opacity-0 sm:text-sm">PRESS START</p>
         </div>
     );
 }

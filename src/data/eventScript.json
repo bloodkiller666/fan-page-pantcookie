@@ -1,0 +1,97 @@
+{
+  "_help": "Lines spoken and subtitled during the 18-Dec event. `id` is also the audio file name in public/audio/event (mp3 or wav). Edit the text, then run: npm run audio:event",
+  "lines": {
+    "again": {
+      "text": "¿Tú otra vez? ¿Qué estás haciendo aquí? Se supone que no deberías estar haciendo actividades ni tareas panteriles.",
+      "voice": "es-MX-JorgeNeural",
+      "rate": "+6%",
+      "pitch": "-2Hz"
+    },
+    "date": {
+      "text": "Oh, espera... ¿es dieciocho de diciembre?",
+      "voice": "es-MX-JorgeNeural",
+      "rate": "+0%",
+      "pitch": "+0Hz"
+    },
+    "yes": {
+      "text": "Perdón, perdón, perdón. Es que casi no tenemos nada nuevo por acá, excepto una actividad sorpresa para ti, de parte de Salaverde y Log.",
+      "voice": "es-MX-DaliaNeural",
+      "rate": "+4%",
+      "pitch": "+0Hz"
+    },
+    "no": {
+      "text": "Entonces no hay nada que ver aquí. Anda, vete a dormir, que el dinero es oro, y con ese dinero les vas a comprar los regalos de Navidad a los pankokis.",
+      "voice": "es-MX-JorgeNeural",
+      "rate": "+8%",
+      "pitch": "-4Hz"
+    },
+    "examIntro": {
+      "text": "Bien, bien. Este es un formulario planteado por Salaverde, armado por Log y ejecutado por bloodkiller. Lo que tienes que hacer es responder las preguntas que se van apareciendo en pantalla.",
+      "voice": "es-MX-JorgeNeural",
+      "rate": "+4%",
+      "pitch": "+0Hz"
+    },
+    "examRules": {
+      "text": "Spoiler: son preguntas dateras sobre ti, los pankokis, la actividad, el stream y más. Tienes quince segundos por cada una. Suerte.",
+      "voice": "es-MX-DaliaNeural",
+      "rate": "+6%",
+      "pitch": "+0Hz"
+    },
+    "examPass": {
+      "text": "¡Aprobado! Hasta Salaverde se sorprendió.",
+      "voice": "es-MX-DaliaNeural",
+      "rate": "+8%",
+      "pitch": "+2Hz"
+    },
+    "examFail": {
+      "text": "Reprobado. Pero tranquilo, puedes volver a intentarlo. Los pankokis de verdad no se rinden.",
+      "voice": "es-MX-JorgeNeural",
+      "rate": "+4%",
+      "pitch": "-3Hz"
+    }
+  },
+  "ui": {
+    "gateTitle": "Hay algo esperándote",
+    "gateButton": "Toca para entrar",
+    "yes": "Sí",
+    "no": "No",
+    "continue": "Continuar",
+    "mistake": "Me equivoqué",
+    "skip": "Saltar voz",
+    "mute": "Silenciar voz",
+    "unmute": "Activar voz",
+    "closedTitle": "Zona cerrada",
+    "closedBody": "Esta sección está cerrada por actividades panteriles. Vuelve cuando se acabe la fiesta.",
+    "closedCta": "Ir a Juegos",
+    "closedHome": "Volver al inicio",
+    "lockedGame": "Vuelve después del evento",
+    "newTag": "Nuevo",
+    "examTitle": "El Examen",
+    "examDesc": "Un formulario sorpresa. Quince segundos por pregunta.",
+    "spoiler": "Spoiler",
+    "rules": [
+      "Son preguntas dateras sobre ti, los pankokis, la actividad, el stream y más.",
+      "Tienes 15 segundos por pregunta. Si se acaba el tiempo, se cuenta lo que hayas marcado.",
+      "Cada pregunta tiene de 1 a 4 alternativas. Algunas aceptan más de una respuesta.",
+      "No se puede volver atrás.",
+      "Al final se califica tu hoja: si tienes más correctas que incorrectas, apruebas."
+    ],
+    "rulesFooter": "Es anónimo: no guardamos tus respuestas ni tu nombre.",
+    "start": "Entendido, empezar",
+    "confirm": "Confirmar",
+    "pickMany": "Marca todas las que apliquen",
+    "grading": "Calificando tu hoja...",
+    "gradingError": "No pudimos calificar tu hoja. Tus respuestas siguen aquí.",
+    "retry": "Reintentar",
+    "loadError": "No pudimos cargar el examen.",
+    "passed": "Aprobado",
+    "failed": "Reprobado",
+    "again": "Volver a jugar",
+    "backToGames": "Volver a Juegos",
+    "yourAnswer": "Tu respuesta",
+    "noAnswer": "Sin respuesta",
+    "lastTry": "Tu último intento",
+    "skipAnimation": "Saltar animación",
+    "play": "Jugar"
+  }
+}

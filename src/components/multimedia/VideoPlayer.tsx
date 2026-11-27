@@ -1,552 +1,337 @@
 'use client';
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { FiPlay, FiPause, FiVolume2, FiVolumeX, FiMaximize, FiDownload, FiX, FiSettings } from 'react-icons/fi';
-import { getCloudinaryVideo } from '../../utils/cloudinary';
-import { format } from '@cloudinary/url-gen/actions/delivery';
+import { MdClose, MdDownload, MdFullscreen, MdPause, MdPlayArrow, MdReplay, MdVolumeOff, MdVolumeUp } from 'react-icons/md';
 import { useLanguage } from '../../context/LanguageContext';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
+import videoList from '../../data/videos.json';
+import { downloadUrl, hdUrl, originalUrl, posterUrl } from '../../utils/videoUrls';
 
-const VideoPlayer = ({ query = '' }) => {
+type Quality = 'hd' | 'original';
+type Phase = 'loading' | 'ready' | 'buffering' | 'error';
+
+const SLOW_AFTER_MS = 7000;
+
+const formatTime = (time: number) => {
+    if (!Number.isFinite(time)) return '0:00';
+    const m = Math.floor(time / 60);
+    const s = Math.floor(time % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+};
+
+interface VideoItem {
+    id: string;
+    title: string;
+}
+
+/** The modal player. Mounted only while a video is open, so nothing downloads until then. */
+function VideoModal({ video, onClose }: { video: VideoItem; onClose: () => void }) {
     const { t } = useLanguage();
-    const [playingIndex, setPlayingIndex] = useState<number | null>(null);
-    const [progress, setProgress] = useState<Record<number, { current: number, duration: number, percent: number }>>({});
-    const [volumes, setVolumes] = useState<Record<number, { level: number; muted: boolean }>>({}); // Volume per video { level: 1, muted: false }
-    const videoRefs = useRef<HTMLVideoElement[]>([]);
-    const containerRefs = useRef<HTMLDivElement[]>([]);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const resumeRef = useRef<{ time: number; play: boolean } | null>(null);
 
-    const videoList = [
-        { id: 'La_creadora_de_la_grasa_yrci3z', title: 'Un video muy grisi' },
-        { id: 'Shura_descuido_v2syi0', title: 'Shura Descuido' },
-        { id: 'vod-2363747114-offset-2196_bnqebg', title: 'Vuela alto Vomori' },
-        { id: 'video-1080_jlejtp', title: 'Vomori vs Rihsuri' },
-        { id: 'ULTIMA_CHARLA_CON_MAMA_HIWA_0_t3pihy', title: 'Charlando con Mama Hiwa' },
-        { id: 'Atrapado_con_las_patas_en_la_masa_rubfeo', title: 'Poder perruno' },
-        { id: 'Shura_Fuera_de_Contexto_pt._1_koknsu', title: 'Fuera de Contexto PARTE 1' },
-        { id: 'ssstwitter.com_1776117025001_uo9ul6', title: '¿Chicos, ahora el Vtubing es así?' },
-        { id: 'Shura_Fuera_de_Contexto_pt._2_ei6pfl', title: 'Fuera de Contexto PARTE 2' },
-        { id: 'Y_es_por_eso_no_hay_casa_diebfk', title: 'Y nunca hubo casa' },
-        { id: 'Hay_animales_en_chile_widi7n', title: '¿Hay animales en Chile?' },
-        { id: 'Mi_alarma_favorita_ymtkvd', title: 'Mi alarma favorita' }
-    ];
+    const [quality, setQuality] = useState<Quality>('hd');
+    const [phase, setPhase] = useState<Phase>('loading');
+    const [slow, setSlow] = useState(false);
+    const [playing, setPlaying] = useState(false);
+    const [current, setCurrent] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [volume, setVolume] = useState(1);
+    const [muted, setMuted] = useState(false);
 
-    const videos = useMemo(() => videoList.map((video, index) => ({
-        id: index,
-        src: getCloudinaryVideo(video.id),
-        downloadUrl: getCloudinaryVideo(video.id).delivery(format('mp4')).toURL() + '?fl_attachment',
-        title: video.title
-    })), []);
+    const src = quality === 'hd' ? hdUrl(video.id) : originalUrl(video.id);
 
-    const filtered = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        if (!q) return videos;
-        return videos.filter(v =>
-            v.title.toLowerCase().includes(q)
-        );
-    }, [videos, query]);
-
-    // Helper to format time
-    const formatTime = (time: number) => {
-        if (isNaN(time)) return "0:00";
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds} `;
-    };
-
-    const togglePlay = (index: number) => {
-        const video = videoRefs.current[index];
-        if (!video) return;
-
-        if (playingIndex === index && !video.paused) {
-            video.pause();
-            setPlayingIndex(null);
-        } else {
-            if (playingIndex !== null && playingIndex !== index) {
-                videoRefs.current[playingIndex]?.pause();
-            }
-            video.play()
-                .then(() => setPlayingIndex(index))
-                .catch(err => console.error("Error playing:", err));
-        }
-    };
-
-    const handleTimeUpdate = (index: number) => {
-        const video = videoRefs.current[index];
-        if (video) {
-            const current = video.currentTime;
-            const duration = video.duration || 1;
-            const percent = (current / duration) * 100;
-            setProgress(prev => ({
-                ...prev,
-                [index]: { current, duration, percent }
-            }));
-        }
-    };
-
-    const handleSeek = (index: number, e: any) => {
-        const video = videoRefs.current[index];
-        const newTime = (e.target.value / 100) * (video.duration || 0);
-        video.currentTime = newTime;
-    };
-
-    const handleVolumeChange = (index: number, e: any) => {
-        const newVolume = parseFloat(e.target.value);
-        const video = videoRefs.current[index];
-        video.volume = newVolume;
-        video.muted = newVolume === 0;
-
-        setVolumes(prev => ({
-            ...prev,
-            [index]: { level: newVolume, muted: newVolume === 0 }
-        }));
-    };
-
-    const toggleMute = (index: number) => {
-        const video = videoRefs.current[index];
-        const currentVol = volumes[index] || { level: 1, muted: false };
-
-        if (currentVol.muted) {
-            video.muted = false;
-            video.volume = currentVol.level || 1;
-            setVolumes(prev => ({
-                ...prev,
-                [index]: { ...prev[index], muted: false }
-            }));
-        } else {
-            video.muted = true;
-            setVolumes(prev => ({
-                ...prev,
-                [index]: { ...prev[index], muted: true }
-            }));
-        }
-    };
-
-    const handleFullscreen = async (index: number) => {
-        const container = containerRefs.current[index];
-        if (container) {
-            if (!document.fullscreenElement) {
-                try {
-                    await container.requestFullscreen();
-
-                    if (screen.orientation && (screen.orientation as any).lock) {
-                        try {
-                            await (screen.orientation as any).lock('landscape');
-                        } catch (err) {
-                            console.log("Orientation lock not supported:", err);
-                        }
-                    }
-                } catch (err) {
-                    console.error("Fullscreen error:", err);
-                }
-            } else {
-                document.exitFullscreen();
-                if (screen.orientation && (screen.orientation as any).unlock) {
-                    (screen.orientation as any).unlock();
-                }
-            }
-        }
-    };
-
-    const [modalVideoIndex, setModalVideoIndex] = useState<number | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [showSettings, setShowSettings] = useState(false);
-    const [currentQuality, setCurrentQuality] = useState('auto');
-    const [videoSrc, setVideoSrc] = useState('');
-    const [showControls, setShowControls] = useState(true);
-    const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const modalContainerRef = useRef<HTMLDivElement>(null);
-
-    const qualities = [
-        { label: 'Auto', value: 'auto' },
-        { label: '1080p', value: '1080' },
-        { label: '720p', value: '720' },
-        { label: '480p', value: '480' },
-        { label: '360p', value: '360' },
-        { label: '240p', value: '240' },
-    ];
-
+    // A load that drags on gets a visible explanation and a way out, never a silent black box.
     useEffect(() => {
-        if (modalVideoIndex !== null) {
-            setVideoSrc(videos[modalVideoIndex].src.toURL());
-            setCurrentQuality('auto');
-            setShowSettings(false);
-            setShowControls(true);
+        if (phase === 'ready' || phase === 'error') {
+            setSlow(false);
+            return;
         }
-    }, [modalVideoIndex, videos]);
+        const timer = setTimeout(() => setSlow(true), SLOW_AFTER_MS);
+        return () => clearTimeout(timer);
+    }, [phase, src]);
 
-    const resetControlsTimeout = () => {
-        setShowControls(true);
-        if (controlsTimeoutRef.current) {
-            clearTimeout(controlsTimeoutRef.current);
-        }
-        if (modalVideoIndex !== null && playingIndex === modalVideoIndex) {
-            controlsTimeoutRef.current = setTimeout(() => {
-                setShowControls(false);
-            }, 3000);
-        }
+    const switchQuality = useCallback((next: Quality) => {
+        const el = videoRef.current;
+        resumeRef.current = el ? { time: el.currentTime, play: !el.paused } : null;
+        setPhase('loading');
+        setQuality(next);
+    }, []);
+
+    const retry = () => {
+        const el = videoRef.current;
+        setPhase('loading');
+        el?.load();
     };
 
-    const handleMouseMove = () => {
-        resetControlsTimeout();
-    };
+    const togglePlay = useCallback(() => {
+        const el = videoRef.current;
+        if (!el) return;
+        if (el.paused) el.play().catch(() => {});
+        else el.pause();
+    }, []);
 
-    const handleMouseLeave = () => {
-        if (modalVideoIndex !== null && playingIndex === modalVideoIndex) {
-            setShowControls(false);
-        }
-    };
+    const toggleFullscreen = useCallback(() => {
+        const box = containerRef.current;
+        if (!box) return;
+        if (!document.fullscreenElement) box.requestFullscreen?.().catch(() => {});
+        else document.exitFullscreen?.();
+    }, []);
 
-    const handleModalFullscreen = async () => {
-        if (modalContainerRef.current) {
-            if (!document.fullscreenElement) {
-                try {
-                    await modalContainerRef.current.requestFullscreen();
-                } catch (err) {
-                    console.error("Fullscreen error:", err);
-                }
-            } else {
-                document.exitFullscreen();
-            }
-        }
-    };
-
+    // Keyboard: space/k play, f fullscreen, m mute, arrows seek, Esc close
     useEffect(() => {
-        if (playingIndex === modalVideoIndex) {
-            resetControlsTimeout();
-        } else {
-            setShowControls(true);
-            if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
-        }
-    }, [playingIndex, modalVideoIndex]);
-
-
-    const handleQualityChange = (quality: string) => {
-        if (modalVideoIndex === null) return;
-
-        const video = videoRefs.current[modalVideoIndex];
-        const currentTime = video ? video.currentTime : 0;
-        const wasPlaying = video ? !video.paused : false;
-
-        setIsLoading(true);
-        setCurrentQuality(quality);
-        setShowSettings(false);
-
-        let originalUrl = videos[modalVideoIndex].src.toURL();
-        let newUrl = originalUrl;
-
-        if (quality !== 'auto') {
-            newUrl = originalUrl.replace(/\/upload\//, `/upload/h_${quality},c_scale/`);
-        }
-
-        setVideoSrc(newUrl);
-    };
-
-    const restoreTimeRef = useRef(0);
-    const restorePlayRef = useRef(false);
-
-    const changeQuality = (q: string) => {
-        if (modalVideoIndex === null) return;
-        const video = videoRefs.current[modalVideoIndex];
-        if (video) {
-            restoreTimeRef.current = video.currentTime;
-            restorePlayRef.current = !video.paused;
-        }
-        handleQualityChange(q);
-    }
-
-    const openVideoModal = (index: number) => {
-        setModalVideoIndex(index);
-        setIsLoading(true);
-        document.body.style.overflow = 'hidden'; // Lock scroll
-        setTimeout(() => {
-            setIsLoading(false);
-            const vid = videoRefs.current[index];
-            if (vid) vid.play().catch(() => { });
-        }, 1500);
-    };
-
-    const closeVideoModal = () => {
-        if (modalVideoIndex !== null) {
-            const vid = videoRefs.current[modalVideoIndex];
-            if (vid) vid.pause();
-        }
-
-        setModalVideoIndex(null);
-        setPlayingIndex(null);
-        document.body.style.overflow = 'unset'; // Unlock scroll
-    };
-
-    // Close on Escape
-    useEffect(() => {
-        const handleKeyDown = (e: any) => {
-            if (e.key === 'Escape' && modalVideoIndex !== null) {
-                closeVideoModal();
-            }
+        const onKey = (e: KeyboardEvent) => {
+            const el = videoRef.current;
+            if (e.key === 'Escape' && !document.fullscreenElement) return onClose();
+            if (!el || (e.target as HTMLElement)?.tagName === 'INPUT') return;
+            if (e.key === ' ' || e.key.toLowerCase() === 'k') {
+                if ((e.target as HTMLElement)?.closest('button')) return;
+                e.preventDefault();
+                togglePlay();
+            } else if (e.key.toLowerCase() === 'f') toggleFullscreen();
+            else if (e.key.toLowerCase() === 'm') setMuted((m) => !m);
+            else if (e.key === 'ArrowRight') el.currentTime = Math.min(el.duration || 0, el.currentTime + 5);
+            else if (e.key === 'ArrowLeft') el.currentTime = Math.max(0, el.currentTime - 5);
         };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [modalVideoIndex]);
+        window.addEventListener('keydown', onKey);
+        document.body.style.overflow = 'hidden';
+        return () => {
+            window.removeEventListener('keydown', onKey);
+            document.body.style.overflow = '';
+        };
+    }, [onClose, togglePlay, toggleFullscreen]);
 
-    const handleDownload = async (videoUrl: string, filename: string) => {
-        try {
-            const response = await fetch(videoUrl);
-            const blob = await response.blob();
+    useEffect(() => {
+        const el = videoRef.current;
+        if (el) {
+            el.volume = volume;
+            el.muted = muted;
+        }
+    }, [volume, muted]);
 
-            // Try File System Access API
-            if ('showSaveFilePicker' in window) {
-                try {
-                    const handle = await (window as any).showSaveFilePicker({
-                        suggestedName: filename,
-                        types: [{
-                            description: 'Video File',
-                            accept: { 'video/mp4': ['.mp4'] },
-                        }],
-                    });
-                    const writable = await handle.createWritable();
-                    await writable.write(blob);
-                    await writable.close();
-                    return; // Success
-                } catch (err: any) {
-                    if (err.name !== 'AbortError') {
-                        console.error('SaveFilePicker failed:', err);
-                    }
-                    // Fallback if user cancels or errors (excluding abort)
-                    if (err.name === 'AbortError') return;
-                }
-            }
-
-            // Fallback: Blob URL
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-
-        } catch (error) {
-            console.error("Download failed:", error);
-            // Fallback: Direct Link
-            const link = document.createElement('a');
-            link.href = videoUrl;
-            link.setAttribute('download', filename);
-            link.setAttribute('target', '_blank');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+    const onLoadedData = () => {
+        const el = videoRef.current;
+        if (el && resumeRef.current) {
+            el.currentTime = resumeRef.current.time;
+            if (resumeRef.current.play) el.play().catch(() => {});
+            resumeRef.current = null;
         }
     };
 
-    const modalContent = modalVideoIndex !== null ? (
-        <div
-            className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-10"
-            onClick={closeVideoModal}
-        >
-            {/* Close Button */}
-            <button
-                onClick={closeVideoModal}
-                className={`absolute top-6 right-6 text-white/50 hover:text-white hover:bg-white/10 p-3 rounded-full transition-all duration-300 z-[120] ${showControls ? 'opacity-100' : 'opacity-0'}`}
-            >
-                <FiX className="w-10 h-10" />
-            </button>
+    const onError = () => {
+        // The processed version can fail or time out; the original file is always there.
+        if (quality === 'hd') {
+            switchQuality('original');
+        } else {
+            setPhase('error');
+        }
+    };
 
-            <div
-                ref={modalContainerRef}
-                className="w-full max-w-[85vw] aspect-video relative bg-black rounded-xl shadow-2xl overflow-hidden border border-white/10 group/modal"
-                onClick={e => e.stopPropagation()}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-            >
-                {isLoading ? (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900 text-white z-20">
-                        <div className="w-16 h-16 border-4 border-[#ff00ff] border-t-transparent rounded-full animate-spin mb-4"></div>
-                        <p className="animate-pulse tracking-widest uppercase text-xs font-bold text-[#00ffff]">
-                            {t('Cargando Experiencia') || 'LOADING EXPERIENCE...'}
-                        </p>
-                    </div>
-                ) : null}
+    const busy = phase === 'loading' || phase === 'buffering';
 
-                <video
-                    src={videoSrc || undefined}
-                    className="w-full h-full object-contain"
-                    // Removed controls, using custom overlay
-                    ref={el => { if (el && modalVideoIndex !== null) videoRefs.current[modalVideoIndex] = el; }}
-                    onTimeUpdate={() => modalVideoIndex !== null && handleTimeUpdate(modalVideoIndex)}
-                    onLoadedData={() => {
-                        setIsLoading(false);
-                        const video = videoRefs.current[modalVideoIndex];
-                        if (video && restoreTimeRef.current > 0) {
-                            video.currentTime = restoreTimeRef.current;
-                            restoreTimeRef.current = 0; // Reset
-                            if (restorePlayRef.current) video.play().catch(() => { });
-                        }
-                    }}
-                    onClick={() => togglePlay(modalVideoIndex)}
-                    onPlay={() => setPlayingIndex(modalVideoIndex)}
-                    onPause={() => setPlayingIndex(null)}
-                >
-                    {t('common.videoNotSupported')}
-                </video>
-
-                {/* Custom Controls Overlay (Always visible or hover) */}
-                <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent flex flex-col justify-end p-6 md:p-10 transition-opacity duration-300 ${isLoading ? 'opacity-0' : (showControls ? 'opacity-100 cursor-auto' : 'opacity-0 cursor-none')}`}>
-
-                    {/* Big Play Button Center (if paused) */}
-                    {playingIndex !== modalVideoIndex && !isLoading && (
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <button
-                                onClick={() => togglePlay(modalVideoIndex)}
-                                className="bg-primary-pink/90 text-white rounded-full p-6 transform hover:scale-110 transition-transform pointer-events-auto shadow-[0_0_30px_rgba(255,0,255,0.4)]"
-                            >
-                                <FiPlay className="w-12 h-12 fill-current translate-x-1" />
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Bottom Bar */}
-                    <div className="flex flex-col gap-4 transform translate-y-4 group-hover/modal:translate-y-0 transition-transform duration-300">
-                        {/* Title Area */}
-                        <div className="flex justify-between items-end">
-                            <div>
-                                <h2 className="text-2xl font-bold text-white mb-1 drop-shadow-md">{videos[modalVideoIndex].title}</h2>
-                                <p className="text-gray-400 text-sm">{t('Reproduciendo en Modo Cine') || 'Playing in Cinema Mode'}</p>
-                            </div>
-                            <button
-                                onClick={() => handleDownload(videos[modalVideoIndex].downloadUrl, `Video_${modalVideoIndex + 1}.mp4`)}
-                                className="bg-white/10 hover:bg-[#ff00ff] text-white px-4 py-2 rounded-lg backdrop-blur-md transition-colors flex items-center gap-2 text-sm font-bold border border-white/10"
-                            >
-                                <FiDownload />
-                                <span>{t('Descargar') || 'Download'}</span>
-                            </button>
-                        </div>
-
-                        {/* Progress Bar */}
-                        <div className="flex items-center gap-4">
-                            <span className="text-xs font-mono text-white/80 w-10 text-right">
-                                {formatTime(progress[modalVideoIndex]?.current || 0)}
-                            </span>
-                            <input
-                                type="range"
-                                min="0"
-                                max="100"
-                                value={progress[modalVideoIndex]?.percent || 0}
-                                onChange={(e) => handleSeek(modalVideoIndex, e)}
-                                className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-[#ff00ff] hover:h-3 transition-all"
-                            />
-                            <span className="text-xs font-mono text-white/80 w-10">
-                                {formatTime(progress[modalVideoIndex]?.duration || 0)}
-                            </span>
-                        </div>
-
-                        {/* Controls Row */}
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-6">
-                                <button
-                                    onClick={() => togglePlay(modalVideoIndex)}
-                                    className="text-white hover:text-primary-pink transition-colors"
-                                >
-                                    {playingIndex === modalVideoIndex ? <FiPause className="w-8 h-8 fill-current" /> : <FiPlay className="w-8 h-8 fill-current" />}
+    return createPortal(
+        <div className="fixed inset-0 z-[12000] flex items-center justify-center overflow-y-auto bg-black/85 p-3 sm:p-8" onClick={onClose} role="dialog" aria-modal="true" aria-label={video.title}>
+            <div ref={containerRef} className="w-full max-w-5xl bg-[var(--bg)] outline-none" onClick={(e) => e.stopPropagation()}>
+                <div className="cart-shell">
+                    <div className="cart">
+                        <div className="cart__face">
+                            <div className="flex items-center justify-between gap-4 border-b-[3px] border-[var(--ink)] bg-[var(--pink)] px-5 py-3 text-[var(--ink)]">
+                                <h2 className="truncate font-display text-xl font-bold uppercase leading-none sm:text-2xl">{video.title}</h2>
+                                <button type="button" autoFocus onClick={onClose} aria-label={t('multimedia.video.close')} className="flex h-11 w-11 shrink-0 items-center justify-center border-[3px] border-[var(--ink)] bg-[var(--yellow)]">
+                                    <MdClose className="text-2xl" />
                                 </button>
+                            </div>
 
-                                <div className="flex items-center gap-3">
-                                    <button onClick={() => toggleMute(modalVideoIndex)} className="text-white hover:text-gray-300">
-                                        {(volumes[modalVideoIndex]?.muted || (volumes[modalVideoIndex]?.level === 0)) ?
-                                            <FiVolumeX className="w-6 h-6" /> :
-                                            <FiVolume2 className="w-6 h-6" />
-                                        }
+                            {/* Screen */}
+                            <div className="relative aspect-video bg-black">
+                                <video
+                                    ref={videoRef}
+                                    key={src}
+                                    src={src}
+                                    poster={posterUrl(video.id)}
+                                    className="h-full w-full object-contain"
+                                    preload="auto"
+                                    playsInline
+                                    autoPlay
+                                    onClick={togglePlay}
+                                    onLoadStart={() => setPhase('loading')}
+                                    onLoadedData={onLoadedData}
+                                    onCanPlay={() => setPhase('ready')}
+                                    onPlaying={() => {
+                                        setPhase('ready');
+                                        setPlaying(true);
+                                    }}
+                                    onPause={() => setPlaying(false)}
+                                    onWaiting={() => setPhase('buffering')}
+                                    onStalled={() => setPhase((p) => (p === 'ready' ? 'buffering' : p))}
+                                    onError={onError}
+                                    onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
+                                    onDurationChange={(e) => setDuration(e.currentTarget.duration)}
+                                />
+
+                                {busy && (
+                                    <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/40" role="status">
+                                        <span className="h-14 w-14 animate-spin border-[5px] border-[#fde0f6] border-t-[var(--pink)]" aria-hidden />
+                                        <p className="score text-[0.6rem] text-[#fde0f6]">{phase === 'loading' ? t('multimedia.video.loading') : t('multimedia.video.buffering')}</p>
+                                    </div>
+                                )}
+
+                                {slow && busy && (
+                                    <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-center justify-center gap-3 bg-black/80 p-4 text-center" role="status">
+                                        <p className="font-display text-base font-bold uppercase text-[#fde0f6]">{t('multimedia.video.slow')}</p>
+                                        {quality === 'hd' && (
+                                            <button type="button" onClick={() => switchQuality('original')} className="btn btn--yellow !min-h-10 !px-4 !py-2 !text-sm">
+                                                {t('multimedia.video.tryOriginal')}
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+
+                                {phase === 'error' && (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 bg-[#180917] p-6 text-center" role="alert">
+                                        <p className="font-display text-2xl font-bold uppercase text-[#fde0f6]">{t('multimedia.video.error')}</p>
+                                        <button type="button" onClick={retry} className="btn">
+                                            <MdReplay className="text-2xl" aria-hidden />
+                                            {t('multimedia.video.retry')}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {!playing && phase === 'ready' && (
+                                    <button type="button" onClick={togglePlay} aria-label={t('multimedia.video.play')} className="absolute inset-0 flex items-center justify-center">
+                                        <span className="flex h-20 w-20 items-center justify-center border-[3px] border-[var(--ink)] bg-[var(--pink)] text-[var(--ink)] shadow-[6px_6px_0_var(--ink)]">
+                                            <MdPlayArrow className="text-5xl" />
+                                        </span>
                                     </button>
+                                )}
+                            </div>
+
+                            {/* Controls */}
+                            <div className="space-y-3 p-4 sm:p-5">
+                                <div className="flex items-center gap-3">
+                                    <span className="score w-12 text-right text-[0.55rem]">{formatTime(current)}</span>
                                     <input
                                         type="range"
-                                        min="0"
-                                        max="1"
-                                        step="0.05"
-                                        value={volumes[modalVideoIndex]?.muted ? 0 : (volumes[modalVideoIndex]?.level ?? 1)}
-                                        onChange={(e) => handleVolumeChange(modalVideoIndex, e)}
-                                        className="w-24 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-white hover:accent-primary-pink"
+                                        aria-label={t('multimedia.video.seek')}
+                                        min={0}
+                                        max={duration || 0}
+                                        step={0.1}
+                                        value={Math.min(current, duration || 0)}
+                                        onChange={(e) => {
+                                            const el = videoRef.current;
+                                            if (el) el.currentTime = Number(e.target.value);
+                                        }}
+                                        className="h-3 flex-1 cursor-pointer accent-[var(--pink)]"
                                     />
+                                    <span className="score w-12 text-[0.55rem]">{formatTime(duration)}</span>
                                 </div>
 
-                                {/* Quality Selector */}
-                                <div className="relative">
-                                    <button
-                                        onClick={() => setShowSettings(!showSettings)}
-                                        className="text-white hover:text-primary-pink transition-colors p-2 hover:bg-white/10 rounded-full"
-                                    >
-                                        <FiSettings className={`w-6 h-6 ${showSettings ? 'rotate-90 text-primary-pink' : ''} transition-all duration-300`} />
-                                    </button>
+                                <div className="flex flex-wrap items-center justify-between gap-3">
+                                    <div className="flex items-center gap-3">
+                                        <button type="button" onClick={togglePlay} aria-label={playing ? t('multimedia.video.pause') : t('multimedia.video.play')} className="btn !min-h-11 !px-4 !py-2">
+                                            {playing ? <MdPause className="text-2xl" /> : <MdPlayArrow className="text-2xl" />}
+                                        </button>
+                                        <button type="button" onClick={() => setMuted((m) => !m)} aria-label={muted ? t('multimedia.video.unmute') : t('multimedia.video.mute')} className="flex h-11 w-11 items-center justify-center border-[3px] border-[var(--line)] bg-[var(--surface-2)]">
+                                            {muted || volume === 0 ? <MdVolumeOff className="text-2xl" /> : <MdVolumeUp className="text-2xl" />}
+                                        </button>
+                                        <input
+                                            type="range"
+                                            aria-label={t('multimedia.video.volume')}
+                                            min={0}
+                                            max={1}
+                                            step={0.05}
+                                            value={muted ? 0 : volume}
+                                            onChange={(e) => {
+                                                setVolume(Number(e.target.value));
+                                                setMuted(false);
+                                            }}
+                                            className="hidden h-2 w-24 cursor-pointer accent-[var(--cyan)] sm:block"
+                                        />
+                                    </div>
 
-                                    {/* Settings Menu */}
-                                    {showSettings && (
-                                        <div className="absolute bottom-full right-0 mb-4 bg-black/90 backdrop-blur-xl border border-white/10 rounded-xl p-2 min-w-[120px] shadow-2xl animate-fade-in z-50">
-                                            <div className="text-xs font-bold text-gray-500 uppercase px-3 py-2 mb-1 border-b border-white/5">
-                                                {t('Calidad') || 'Quality'}
-                                            </div>
-                                            {qualities.map((q) => (
+                                    <div className="flex items-center gap-3">
+                                        <div role="group" aria-label={t('multimedia.video.quality')} className="flex border-[3px] border-[var(--line)]">
+                                            {(['hd', 'original'] as const).map((q) => (
                                                 <button
-                                                    key={q.value}
-                                                    onClick={() => changeQuality(q.value)}
-                                                    className={`w-full text-left px-3 py-2 rounded-lg text-sm font-bold transition-all flex items-center justify-between ${currentQuality === q.value
-                                                        ? 'bg-primary-pink text-white shadow-[0_0_10px_rgba(255,0,255,0.4)]'
-                                                        : 'text-gray-300 hover:bg-white/10 hover:text-white'
-                                                        }`}
+                                                    key={q}
+                                                    type="button"
+                                                    aria-pressed={quality === q}
+                                                    onClick={() => quality !== q && switchQuality(q)}
+                                                    className={`min-h-10 px-3 font-display text-sm font-bold uppercase ${quality === q ? 'bg-[var(--yellow)] text-[var(--ink)]' : 'bg-[var(--surface-2)]'}`}
                                                 >
-                                                    <span>{q.label}</span>
-                                                    {currentQuality === q.value && <div className="w-2 h-2 rounded-full bg-white ml-2" />}
+                                                    {q === 'hd' ? t('multimedia.video.qualityHd') : t('multimedia.video.qualityOriginal')}
                                                 </button>
                                             ))}
                                         </div>
-                                    )}
+                                        <a href={downloadUrl(video.id)} download className="btn btn--ghost !min-h-11 !px-3 !py-2" aria-label={t('multimedia.video.download')} title={t('multimedia.video.download')}>
+                                            <MdDownload className="text-2xl" />
+                                        </a>
+                                        <button type="button" onClick={toggleFullscreen} aria-label={t('multimedia.video.fullscreen')} className="btn btn--ghost !min-h-11 !px-3 !py-2">
+                                            <MdFullscreen className="text-2xl" />
+                                        </button>
+                                    </div>
                                 </div>
-                                {/* Fullscreen Button */}
-                                <button
-                                    onClick={handleModalFullscreen}
-                                    className="text-white hover:text-primary-pink transition-colors p-2 hover:bg-white/10 rounded-full"
-                                >
-                                    <FiMaximize className="w-6 h-6" />
-                                </button>
                             </div>
+                            <div className="pins" aria-hidden />
                         </div>
                     </div>
                 </div>
             </div>
-        </div >
-    ) : null;
+        </div>,
+        document.body
+    );
+}
+
+const VideoPlayer = ({ query = '' }: { query?: string }) => {
+    const { t, language } = useLanguage();
+    const [openId, setOpenId] = useState<string | null>(null);
+    const rootRef = useRef<HTMLUListElement>(null);
+
+    const filtered = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        return q ? (videoList as VideoItem[]).filter((v) => v.title.toLowerCase().includes(q)) : (videoList as VideoItem[]);
+    }, [query]);
+
+    useScrollReveal(rootRef, [filtered.length, language]);
+
+    const open = (videoItem: VideoItem) => setOpenId(videoItem.id);
+    const openVideo = (videoList as VideoItem[]).find((v) => v.id === openId);
+
+    if (filtered.length === 0) {
+        return <p className="py-16 text-center font-display text-2xl font-bold uppercase text-[var(--muted)]">{t('multimedia.noResults')}</p>;
+    }
 
     return (
         <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ul ref={rootRef} className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
                 {filtered.map((video) => (
-                    <div
-                        key={video.id}
-                        className="group relative overflow-hidden rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-black aspect-video transition-all duration-500 cursor-pointer"
-                        onClick={() => openVideoModal(video.id)} // Click card to open modal
-                    >
-                        <video
-                            src={video.src.toURL()}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                            muted
-                            loop
-                            onMouseOver={e => (e.target as HTMLVideoElement).play().catch(() => { })}
-                            onMouseOut={e => { (e.target as HTMLVideoElement).pause(); (e.target as HTMLVideoElement).currentTime = 0; }}
-                        />
-
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                            <div className="w-16 h-16 bg-primary-pink/90 backdrop-blur-md rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-[0_0_20px_rgba(255,0,255,0.6)] border border-white/30">
-                                <FiPlay className="w-8 h-8 text-white fill-current translate-x-1" />
+                    <li key={video.id} data-reveal>
+                        <button type="button" onClick={() => open(video)} className="group block w-full text-left outline-offset-8">
+                            <div className="cart-shell is-interactive">
+                                <div className="cart">
+                                    <div className="cart__face">
+                                        <div className="relative aspect-video overflow-hidden bg-[var(--ink)]">
+                                            {/* A still frame instead of a <video>: nothing streams until the visitor presses play. */}
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img src={posterUrl(video.id)} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105" />
+                                            <span className="absolute bottom-3 left-3 flex h-12 w-12 items-center justify-center border-[3px] border-[var(--ink)] bg-[var(--pink)] text-[var(--ink)] shadow-[3px_3px_0_var(--ink)]" aria-hidden>
+                                                <MdPlayArrow className="text-3xl" />
+                                            </span>
+                                        </div>
+                                        <h3 className="line-clamp-2 px-5 py-4 font-display text-lg font-bold uppercase leading-tight">{video.title}</h3>
+                                        <div className="pins" aria-hidden />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/80 to-transparent translate-y-full group-hover:translate-y-0 transition-transform">
-                            <h3 className="text-white font-bold truncate">{video.title}</h3>
-                        </div>
-                    </div>
+                        </button>
+                    </li>
                 ))}
-            </div>
+            </ul>
 
-            {/* Cinema Mode Modal Portal */}
-            {modalVideoIndex !== null && createPortal(modalContent, document.body)}
+            {openVideo && <VideoModal video={openVideo} onClose={() => setOpenId(null)} />}
         </>
     );
-}
-export default VideoPlayer
+};
+
+export default VideoPlayer;

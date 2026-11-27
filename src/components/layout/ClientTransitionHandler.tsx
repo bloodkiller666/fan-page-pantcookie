@@ -1,10 +1,11 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useTransition } from '../../context/TransitionContext';
 import ShakeGangRevealer from '../ui/ShakeGangRevealer';
 
-export default function ClientTransitionHandler({ children }: { children: React.ReactNode }) {
+// Isolated so that reading search params only suspends this leaf, not the whole page.
+function RouteChangeWatcher() {
     const { revealerRef } = useTransition();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -12,17 +13,24 @@ export default function ClientTransitionHandler({ children }: { children: React.
     useEffect(() => {
         // Trigger animateOut whenever the pathname OR searchParams change
         const timer = setTimeout(() => {
-            if (revealerRef.current) {
-                revealerRef.current.animateOut();
-            }
+            revealerRef.current?.animateOut();
         }, 300);
 
         return () => clearTimeout(timer);
     }, [pathname, searchParams, revealerRef]);
 
+    return null;
+}
+
+export default function ClientTransitionHandler({ children }: { children: React.ReactNode }) {
+    const { revealerRef } = useTransition();
+
     return (
         <>
             <ShakeGangRevealer ref={revealerRef} />
+            <Suspense fallback={null}>
+                <RouteChangeWatcher />
+            </Suspense>
             {children}
         </>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
+import { MdCheck, MdStar } from 'react-icons/md';
 import { useLanguage } from '../../context/LanguageContext';
-import { MdLocalFlorist, MdBolt, MdPsychology } from 'react-icons/md';
 
 interface DifficultySelectorProps {
     difficulty: string;
@@ -8,81 +8,64 @@ interface DifficultySelectorProps {
     disabled: boolean;
 }
 
+const LEVELS = [
+    { value: 'easy', size: 4, tone: 'cyan' },
+    { value: 'medium', size: 6, tone: 'yellow', recommended: true },
+    { value: 'hard', size: 8, tone: 'pink' },
+] as const;
+
+/** Each option previews the board it creates: a size x size grid of tiles. */
 const DifficultySelector = ({ difficulty, onSelectDifficulty, disabled }: DifficultySelectorProps) => {
     const { t } = useLanguage();
-    const difficulties = [
-        { 
-            value: 'easy', 
-            label: t('games.difficultyOptions.easy'), 
-            grid: '4x4', 
-            icon: <MdLocalFlorist />,
-            color: 'from-primary to-cyan-400' 
-        },
-        { 
-            value: 'medium', 
-            label: t('games.difficultyOptions.medium'), 
-            grid: '6x6', 
-            icon: <MdBolt />,
-            recommended: true,
-            color: 'from-primary to-blue-500' 
-        },
-        { 
-            value: 'hard', 
-            label: t('games.difficultyOptions.hard'), 
-            grid: '8x8', 
-            icon: <MdPsychology />,
-            color: 'from-primary to-indigo-600' 
-        },
-    ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {difficulties.map((diff) => (
-                <button
-                    key={diff.value}
-                    onClick={() => onSelectDifficulty(diff.value)}
-                    disabled={disabled}
-                    className={`group relative flex flex-col items-center justify-center p-8 rounded-2xl transition-all duration-500 border-2 overflow-hidden 
-                        ${difficulty === diff.value 
-                            ? 'bg-primary/10 border-primary shadow-[0_0_25px_rgba(13,185,242,0.2)] scale-[1.02]' 
-                            : 'bg-white dark:bg-slate-900/40 border-primary/20 hover:border-primary/50 shadow-lg dark:shadow-none'
-                        } 
-                        ${disabled && difficulty !== diff.value ? 'opacity-40 cursor-not-allowed grayscale' : ''}
-                    `}
-                >
-                    {/* Icon with Glow Effect */}
-                    <div className={`mb-6 p-4 rounded-full transition-all duration-500 
-                        ${difficulty === diff.value 
-                            ? 'bg-primary text-background-dark shadow-[0_0_20px_rgba(13,185,242,0.4)]' 
-                            : 'bg-primary/10 text-primary opacity-60 group-hover:opacity-100 group-hover:scale-110'
-                        }`}
+        <div role="radiogroup" aria-label={t('common.difficulty')} className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-3">
+            {LEVELS.map(({ value, size, tone, ...rest }) => {
+                const selected = difficulty === value;
+                const recommended = 'recommended' in rest;
+                return (
+                    <button
+                        key={value}
+                        type="button"
+                        role="radio"
+                        aria-checked={selected}
+                        onClick={() => onSelectDifficulty(value)}
+                        disabled={disabled && !selected}
+                        className={`text-left outline-offset-8 ${disabled && !selected ? 'cursor-not-allowed opacity-40' : ''}`}
                     >
-                        {diff.icon}
-                    </div>
-
-                    {/* Label and Grid */}
-                    <div className="text-center relative z-10">
-                        <h3 className={`text-2xl font-black uppercase italic tracking-tighter mb-1 transition-colors 
-                            ${difficulty === diff.value ? 'text-primary' : 'text-slate-700 dark:text-slate-300'}
-                        `}>
-                            {diff.label}
-                        </h3>
-                        <p className={`font-bold tracking-[0.2em] text-sm 
-                            ${difficulty === diff.value ? 'text-slate-600 dark:text-slate-200' : 'text-primary/60'}
-                        `}>
-                            {diff.grid}
-                        </p>
-                    </div>
-
-                    {/* Selection Backdrop */}
-                    {difficulty === diff.value && (
-                        <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent animate-pulse"></div>
-                    )}
-                    
-                    {/* Hover Glow */}
-                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
-                </button>
-            ))}
+                        <div className={`cart-shell ${disabled && !selected ? '' : 'is-interactive'}`}>
+                            <div className={`cart ${selected ? `cart--${tone}` : ''}`}>
+                                <div className="cart__face flex flex-col items-center gap-5 p-6">
+                                    <div
+                                        className="grid w-28 gap-[3px] border-[3px] border-[var(--line)] bg-[var(--line)] p-[3px]"
+                                        style={{ gridTemplateColumns: `repeat(${size}, 1fr)` }}
+                                        aria-hidden
+                                    >
+                                        {Array.from({ length: size * size }).map((_, i) => (
+                                            <span
+                                                key={i}
+                                                className={`aspect-square ${(Math.floor(i / size) + (i % size)) % 2 ? 'bg-[var(--surface-2)]' : 'bg-[var(--surface)]'}`}
+                                            />
+                                        ))}
+                                    </div>
+                                    <div className="text-center">
+                                        <h3 className="font-display text-2xl font-bold uppercase leading-none">{t(`games.difficultyOptions.${value}`)}</h3>
+                                        <p className="score mt-3 text-xs">{size}x{size}</p>
+                                    </div>
+                                    {selected && (
+                                        <span className="tag !bg-[var(--ink)] !text-[var(--yellow)]">
+                                            <MdCheck aria-hidden />
+                                            OK
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="pins" aria-hidden />
+                            </div>
+                        </div>
+                        {recommended && !selected && <span className="tag tag--pink -mt-2 ml-5 relative z-10 inline-flex -rotate-2"><MdStar aria-label="recommended" /></span>}
+                    </button>
+                );
+            })}
         </div>
     );
 };

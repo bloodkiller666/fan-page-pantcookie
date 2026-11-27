@@ -1,26 +1,42 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { scrambleText } from '../../utils/animations';
+import { useLanguage } from '../../context/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const NAV_OFFSET = 72;
+const GROUP = { useGrouping: 'always' } as const;
+const DISCORD_INVITE_CODE = 'UxvGN36qhX';
+
+type Tone = 'pink' | 'blue' | 'cyan' | 'yellow' | 'plain';
+
+interface Stat {
+    platform: string;
+    icon: string;
+    count: number;
+    label: string;
+    tone: Tone;
+}
+
 export default function SocialStats() {
+    const { t, language } = useLanguage();
     const [subscribers, setSubscribers] = useState<number | null>(null);
-    const [twitchFollowers, setTwitchFollowers] = useState<number>(22003);
-    const [discordMembers, setDiscordMembers] = useState<number>(1058);
-    const [tiktokFollowers, setTiktokFollowers] = useState<number>(17550);
-    const [twitterFollowers, setTwitterFollowers] = useState<number>(17570);
+    // Fallbacks shown until live data arrives (TikTok and X are not fetched live).
+    const [twitchFollowers, setTwitchFollowers] = useState(22003);
+    const [discordMembers, setDiscordMembers] = useState(1058);
+    const tiktokFollowers = 17550;
+    const twitterFollowers = 17570;
 
     const sectionRef = useRef<HTMLElement>(null);
-    const cardsContainerRef = useRef<HTMLDivElement>(null);
-    const titleRef = useRef<HTMLHeadingElement>(null);
-    const narrativeRef = useRef<HTMLParagraphElement>(null);
+    const stageRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+    const numRefs = useRef<(HTMLSpanElement | null)[]>([]);
+    const counted = useRef<boolean[]>([]);
 
     const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY || '';
     const CHANNEL_ID = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID || '';
-    const DISCORD_INVITE_CODE = "UxvGN36qhX";
 
     useEffect(() => {
         const fetchYoutubeStats = async () => {
@@ -30,232 +46,224 @@ export default function SocialStats() {
                     `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${CHANNEL_ID}&key=${API_KEY}`
                 );
                 const data = await res.json();
-                if (data.items && data.items.length > 0) {
-                    const stats = data.items[0].statistics;
-                    setSubscribers(parseInt(stats.subscriberCount));
-                }
-            } catch (e) { console.error("Error fetching YouTube stats:", e); }
+                if (data.items?.length > 0) setSubscribers(parseInt(data.items[0].statistics.subscriberCount));
+            } catch (e) {
+                console.error('Error fetching YouTube stats:', e);
+            }
         };
 
         const fetchDiscordStats = async () => {
             try {
                 const res = await fetch(`https://discord.com/api/v10/invites/${DISCORD_INVITE_CODE}?with_counts=true`);
                 const data = await res.json();
-                if (data.approximate_member_count) {
-                    setDiscordMembers(data.approximate_member_count);
-                }
-            } catch (e) { console.error("Error fetching Discord stats:", e); }
+                if (data.approximate_member_count) setDiscordMembers(data.approximate_member_count);
+            } catch (e) {
+                console.error('Error fetching Discord stats:', e);
+            }
         };
 
         const fetchTwitchStats = async () => {
             try {
                 const res = await fetch('/api/twitch/stats');
                 const data = await res.json();
-                if (data.total) {
-                    setTwitchFollowers(data.total);
-                }
-            } catch (e) { console.error("Error fetching Twitch stats:", e); }
+                if (data.total) setTwitchFollowers(data.total);
+            } catch (e) {
+                console.error('Error fetching Twitch stats:', e);
+            }
         };
 
         fetchYoutubeStats();
         fetchDiscordStats();
         fetchTwitchStats();
 
-        // 4. Auto-sync (Background)
-        const triggerAutoSync = async () => {
-            try {
-                // We just "poke" the endpoint, it will decide if a sync is needed.
-                await fetch('/api/social/auto-sync');
-            } catch (e) {
-                // Silently fail as this is a background task
-            }
-        };
-        triggerAutoSync();
+        // Background daily sync: the endpoint decides whether anything needs doing.
+        fetch('/api/social/auto-sync').catch(() => {});
     }, [API_KEY, CHANNEL_ID]);
 
+    const stats: Stat[] = useMemo(
+        () => [
+            { platform: 'YouTube', icon: 'hn-youtube', count: subscribers || 18900, label: t('home.subscribers'), tone: 'pink' },
+            { platform: 'Twitch', icon: 'hn-twitch', count: twitchFollowers, label: t('home.followers'), tone: 'blue' },
+            { platform: 'Discord', icon: 'hn-discord', count: discordMembers, label: t('home.members'), tone: 'cyan' },
+            { platform: 'TikTok', icon: 'hn-tiktok', count: tiktokFollowers, label: t('home.followers'), tone: 'yellow' },
+            { platform: 'X', icon: 'hn-twitter', count: twitterFollowers, label: t('home.followers'), tone: 'plain' },
+        ],
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [subscribers, twitchFollowers, discordMembers, language]
+    );
+
+    const statsRef = useRef(stats);
+    statsRef.current = stats;
+
+    // Numbers are written imperatively so GSAP and React never fight over a text node.
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            const cards = gsap.utils.toArray('.stat-card');
-            
-            // 1. Efecto Pin y Scroll Horizontal
-            if (cardsContainerRef.current && sectionRef.current) {
-                gsap.to(cardsContainerRef.current, {
-                    x: () => -((cardsContainerRef.current as HTMLElement).offsetWidth - window.innerWidth),
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        pin: true,
-                        start: "top top",
-                        end: () => `+=${(cardsContainerRef.current as HTMLElement).offsetWidth}`,
-                        scrub: 1,
-                        snap: {
-                            snapTo: 1 / (cards.length - 1), // Ajustado para que la última tarjeta quede centrada
-                            duration: { min: 0.2, max: 0.5 },
-                            delay: 0.1,
-                            ease: "power2.inOut"
-                        },
-                        invalidateOnRefresh: true
-                    }
-                });
-
-                // 2. Efecto Parallax en el título
-                gsap.to(titleRef.current, {
-                    yPercent: 30,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: "top top",
-                        end: "bottom top",
-                        scrub: true
-                    }
-                });
-
-                // 3. Animación de los contadores
-                const counters = document.querySelectorAll('.stat-number');
-                counters.forEach(counter => {
-                    const targetValue = parseInt(counter.getAttribute('data-target') || '0');
-                    
-                    gsap.to(counter, {
-                        innerText: targetValue,
-                        duration: 2,
-                        snap: { innerText: 1 },
-                        scrollTrigger: {
-                            trigger: counter,
-                            start: "top 90%",
-                            toggleActions: "play none none reverse"
-                        },
-                        ease: "power4.out",
-                        onUpdate: function() {
-                            counter.innerHTML = Math.ceil(Number(this.targets()[0].innerText)).toLocaleString();
-                        }
-                    });
-                });
-
-                // 4. Scramble para la narrativa
-                if (narrativeRef.current) {
-                    scrambleText(narrativeRef.current, "SYSTEM.v2026 // ESTABILIZANDO LA MATRIX DE LA SHAKEGANG...", 3);
-                }
-
-                // 5. Brillo al pasar el mouse por iconos
-                const icons = document.querySelectorAll('.social-icon');
-                icons.forEach(icon => {
-                    icon.addEventListener('mouseenter', () => {
-                        gsap.to(icon, {
-                            filter: "drop-shadow(0 0 20px currentColor)",
-                            scale: 1.2,
-                            duration: 0.3
-                        });
-                    });
-                    icon.addEventListener('mouseleave', () => {
-                        gsap.to(icon, {
-                            filter: "drop-shadow(0 0 0px currentColor)",
-                            scale: 1,
-                            duration: 0.3
-                        });
-                    });
-                });
+        numRefs.current.forEach((el, i) => {
+            if (el && (counted.current[i] === undefined || counted.current[i])) {
+                el.textContent = stats[i].count.toLocaleString(language, GROUP);
             }
-        }, sectionRef);
-        return () => ctx.revert();
-    }, [subscribers, discordMembers, twitchFollowers]);
+        });
+    }, [stats, language]);
 
-    const stats = [
-        {
-            platform: 'YouTube',
-            icon: 'hn-youtube',
-            count: subscribers || 18900,
-            label: 'Suscriptores',
-            color: 'text-red-600',
-            glow: 'shadow-[0_0_30px_rgba(220,38,38,0.15)]',
-            message: '¡Gracias por el increíble apoyo! Superamos los 18,900 suscriptores.'
-        },
-        {
-            platform: 'Twitch',
-            icon: 'hn-twitch',
-            count: twitchFollowers,
-            label: 'Seguidores',
-            color: 'text-purple-600',
-            glow: 'shadow-[0_0_30px_rgba(147,51,234,0.15)]',
-            message: '¡ShakeGang a tope! Gracias por acompañarme en cada directo.'
-        },
-        {
-            platform: 'Discord',
-            icon: 'hn-discord',
-            count: discordMembers,
-            label: 'Miembros',
-            color: 'text-indigo-600',
-            glow: 'shadow-[0_0_30px_rgba(79,70,229,0.15)]',
-            message: 'Nuestra casa digital sigue creciendo. ¡Gracias por ser parte de la familia!'
-        },
-        {
-            platform: 'TikTok',
-            icon: 'hn-tiktok',
-            count: tiktokFollowers,
-            label: 'Seguidores',
-            color: 'text-gray-100',
-            glow: 'shadow-[0_0_30px_rgba(243,244,246,0.15)]',
-            message: '¡La energía es de otro nivel! Gracias por compartir cada locura.'
-        },
-        {
-            platform: 'Twitter',
-            icon: 'hn-twitter',
-            count: twitterFollowers,
-            label: 'Seguidores',
-            color: 'text-blue-400',
-            glow: 'shadow-[0_0_30px_rgba(96,165,250,0.15)]',
-            message: '¡Gracias por estar siempre conectados y al tanto de todo!'
-        }
-    ];
+    useEffect(() => {
+        const section = sectionRef.current;
+        const track = trackRef.current;
+        const stage = stageRef.current;
+        if (!section || !track || !stage) return;
+
+        const countUp = (i: number) => {
+            const el = numRefs.current[i];
+            if (!el || counted.current[i] !== undefined) return;
+            counted.current[i] = false;
+            const proxy = { v: 0 };
+            gsap.to(proxy, {
+                v: statsRef.current[i].count,
+                duration: 1.6,
+                ease: 'power3.out',
+                onUpdate: () => {
+                    el.textContent = Math.round(proxy.v).toLocaleString(document.documentElement.lang || 'es', GROUP);
+                },
+                onComplete: () => {
+                    counted.current[i] = true;
+                    el.textContent = statsRef.current[i].count.toLocaleString(document.documentElement.lang || 'es', GROUP);
+                },
+            });
+        };
+
+        const mm = gsap.matchMedia();
+
+        // Desktop: pinned horizontal run through the cartridges
+        mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+            const distance = () => Math.max(0, track.scrollWidth - document.documentElement.clientWidth);
+
+            const run = gsap.to(track, {
+                x: () => -distance(),
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: stage,
+                    start: `top top+=${NAV_OFFSET}`,
+                    end: () => `+=${distance()}`,
+                    pin: true,
+                    scrub: 0.6,
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true,
+                    onUpdate: (self) => stage.style.setProperty('--run', String(Math.round(self.progress * 100))),
+                },
+            });
+
+            gsap.to('.stats__ghost', {
+                x: () => -distance() * 0.35,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: stage,
+                    start: `top top+=${NAV_OFFSET}`,
+                    end: () => `+=${distance()}`,
+                    scrub: true,
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            gsap.utils.toArray<HTMLElement>('.stat-card').forEach((card, i) => {
+                gsap.from(card.querySelector('.cart-shell'), {
+                    y: 70,
+                    rotate: i % 2 ? 3 : -3,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power3.out',
+                    scrollTrigger: { trigger: card, containerAnimation: run, start: 'left 92%', once: true },
+                });
+                if (i > 0) {
+                    ScrollTrigger.create({
+                        trigger: card,
+                        containerAnimation: run,
+                        start: 'left 85%',
+                        once: true,
+                        onEnter: () => countUp(i - 1),
+                    });
+                }
+            });
+        });
+
+        // Phones and tablets: plain vertical stack with staggered entrances
+        mm.add('(max-width: 1023px)', () => {
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            gsap.utils.toArray<HTMLElement>('.stat-card').forEach((card, i) => {
+                if (!reduce) {
+                    gsap.from(card, {
+                        y: 50,
+                        opacity: 0,
+                        duration: 0.7,
+                        ease: 'power3.out',
+                        scrollTrigger: { trigger: card, start: 'top 90%', once: true },
+                    });
+                }
+                if (i > 0) {
+                    ScrollTrigger.create({ trigger: card, start: 'top 85%', once: true, onEnter: () => countUp(i - 1) });
+                }
+            });
+        });
+
+        return () => mm.revert();
+    }, []);
+
+    const toneClass: Record<Tone, string> = {
+        pink: 'cart--pink',
+        blue: 'cart--blue',
+        cyan: 'cart--cyan',
+        yellow: 'cart--yellow',
+        plain: '',
+    };
 
     return (
-        <section ref={sectionRef} className="social-section relative w-full bg-black py-0 overflow-hidden">
-            {/* Capa de Título y Narrativa (PROTAGONISTA) */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 px-4 pointer-events-none">
-                <h2 ref={titleRef} className="text-[15vw] font-black text-white/5 uppercase tracking-tighter select-none leading-none -mb-10">
-                    COMUNIDAD
-                </h2>
-                <p ref={narrativeRef} className="text-gray-600 font-mono text-xs md:text-sm uppercase tracking-[0.3em] max-w-lg mt-6">
-                    {/* Se rellena con scramble */}
+        <section ref={sectionRef} className="relative overflow-hidden border-b-[3px] border-[var(--line)] bg-[var(--bg)]">
+            <div ref={stageRef} className="relative lg:flex lg:h-[calc(100svh-var(--nav-h))] lg:items-center" style={{ ['--run' as string]: 0 }}>
+                {/* Oversized ghost word behind the run */}
+                <p
+                    aria-hidden
+                    className="stats__ghost pointer-events-none absolute left-[4vw] top-1/2 hidden -translate-y-1/2 select-none whitespace-nowrap font-display text-[24vw] font-bold uppercase leading-none text-[var(--surface-2)] lg:block"
+                >
+                    PANTCAKE
                 </p>
-            </div>
 
-            {/* Capa de Tarjetas (SCROLLABLE) */}
-            <div 
-                ref={cardsContainerRef}
-                className="relative z-20 flex flex-nowrap gap-12 px-[10vw] h-screen items-center"
-                style={{ width: 'fit-content' }}
-            >
-                {/* Intro Slide */}
-                <div className="stat-card min-w-[40vw] flex flex-col items-center justify-center p-12 text-center">
-                    <h2 className="text-6xl md:text-8xl font-black uppercase italic tracking-tighter text-white mb-4">
-                        SHAKE<span className="text-primary-pink">GANG</span>
-                    </h2>
-                    <div className="w-24 h-1 bg-primary-pink mt-4" />
+                <div
+                    ref={trackRef}
+                    className="relative z-10 flex flex-col gap-10 px-4 py-20 sm:px-6 lg:w-max lg:flex-row lg:items-center lg:gap-14 lg:px-[8vw] lg:py-0"
+                >
+                    <div className="stat-card shrink-0 lg:w-[34vw]">
+                        <h2 className="font-display text-[clamp(3rem,8vw,7rem)] font-bold uppercase leading-[0.9] tracking-[-0.02em]">
+                            {t('home.communityTitle')}
+                        </h2>
+                        <div className="mt-6 flex gap-2" aria-hidden>
+                            <span className="h-3 w-16 bg-[var(--pink)]" />
+                            <span className="h-3 w-8 bg-[var(--blue)]" />
+                            <span className="h-3 w-4 bg-[var(--cyan)]" />
+                        </div>
+                    </div>
+
+                    {stats.map((stat, i) => (
+                        <div key={stat.platform} className="stat-card shrink-0 lg:w-[26vw] lg:max-w-[420px]">
+                            <div className="cart-shell">
+                                <div className={`cart ${toneClass[stat.tone]}`}>
+                                    <div className="cart__face flex flex-col gap-8 p-7 sm:p-9">
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-display text-xl font-bold uppercase tracking-wide">{stat.platform}</span>
+                                            <i className={`hn ${stat.icon} text-5xl`} aria-hidden />
+                                        </div>
+                                        <p className="score text-[clamp(1.6rem,3.2vw,2.6rem)] leading-none">
+                                            <span ref={(el) => { numRefs.current[i] = el; }}>{stat.count.toLocaleString('es', GROUP)}</span>
+                                        </p>
+                                        <p className="font-display text-lg font-semibold uppercase tracking-[0.08em]">{stat.label}</p>
+                                    </div>
+                                    <div className="pins" aria-hidden />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
 
-                {stats.map((stat, index) => (
-                    <div 
-                        key={index}
-                        className={`stat-card min-w-[80vw] md:min-w-[35vw] p-8 md:p-12 rounded-[2rem] bg-gradient-to-br from-white/10 to-transparent border border-white/10 backdrop-blur-xl flex flex-col items-center gap-8 text-center ${stat.glow} transition-all duration-500`}
-                    >
-                        <div className={`social-icon text-7xl ${stat.color} transition-all duration-300`}>
-                            <i className={`hn ${stat.icon}`} />
-                        </div>
-                        
-                        <div className="space-y-4">
-                            <h3 className="text-6xl md:text-8xl font-black text-white italic tracking-tighter leading-none font-mono">
-                                <span className="stat-number" data-target={stat.count}>0</span>
-                            </h3>
-                            <p className="text-xl font-bold uppercase tracking-[0.4em] text-gray-500">
-                                {stat.label}
-                            </p>
-                        </div>
-
-                        <p className="text-lg md:text-xl font-medium text-gray-400 mt-4 max-w-sm">
-                            {stat.message}
-                        </p>
-                    </div>
-                ))}
+                {/* Run progress, HUD style */}
+                <div className="absolute inset-x-[8vw] bottom-8 z-10 hidden lg:block" aria-hidden>
+                    <div className="hud-bar hud-bar--cyan" style={{ ['--v' as string]: 'var(--run)' }} />
+                </div>
             </div>
         </section>
     );
