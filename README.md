@@ -15,7 +15,7 @@ Una plataforma interactiva de alto rendimiento dedicada a la comunidad de **Shur
 
 ## 🛠️ Stack Tecnológico
 
-- **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
+- **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
 - **Lenguaje**: [TypeScript](https://www.typescriptlang.org/)
 - **Estilos**: [Tailwind CSS](https://tailwindcss.com/)
 - **Animaciones**: [GSAP](https://greensock.com/gsap/) + [ScrollTrigger](https://greensock.com/scrolltrigger/)
@@ -30,18 +30,23 @@ Una plataforma interactiva de alto rendimiento dedicada a la comunidad de **Shur
    git clone https://github.com/bloodkiller666/fan-page-pantcake.git
    ```
 
-2. **Instalar dependencias**:
+2. **Instalar dependencias** (solo con [pnpm](https://pnpm.io/); la versión está fijada en `packageManager` dentro de `package.json`):
    ```bash
-   npm install
+   pnpm install
    ```
+   Las reglas de seguridad de dependencias están en `pnpm-workspace.yaml`. No uses `npm install`: ignora esas reglas.
 
 3. **Configurar variables de entorno**:
    Crea un archivo `.env.local` basado en los servicios utilizados (Supabase, Firebase, Cloudinary, AWS).
 
 4. **Ejecutar en desarrollo**:
    ```bash
-   npm run dev
+   pnpm dev
    ```
+
+### Despliegue en Vercel
+
+Añade la variable de entorno `ENABLE_EXPERIMENTAL_COREPACK=1` para que Vercel use la versión de pnpm indicada en `packageManager`.
 
 ## 🔒 Seguridad
 

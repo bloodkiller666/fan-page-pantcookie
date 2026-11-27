@@ -1,4 +1,28 @@
+# Seguridad de la cadena de suministro
+minimumReleaseAge: 4320 # no instalar versiones publicadas hace menos de 3 días
+blockExoticSubdeps: true # sin dependencias transitivas desde git o URLs
+trustPolicy: no-downgrade # falla si un paquete pierde su firma/procedencia
+# Ignora esa regla en versiones de más de 1 año: parches antiguos de ramas viejas
+# (p. ej. semver@6.3.1) se publicaron sin firma y dan falsos positivos
+trustPolicyIgnoreAfter: 525600
+strictDepBuilds: true # falla si aparece un script de instalación sin revisar
+
+# Scripts de instalación revisados: false = no se ejecutan
 allowBuilds:
-  '@firebase/util': set this to true or false
-  protobufjs: set this to true or false
-  unrs-resolver: set this to true or false
+  '@firebase/util': false
+  protobufjs: false
+  unrs-resolver: false
+
+# Versiones mínimas seguras (pnpm no lee "overrides" de package.json)
+overrides:
+  '@grpc/grpc-js': ^1.13.6 # Firebase pide ~1.9.0, con vulnerabilidades
+  postcss: ^8.5.10
+  braces: ^3.0.3
+  micromatch: ^4.0.8
+  cookie: ^0.7.0
+  path-to-regexp: ^6.3.0
+  send: ^0.19.0
+  serialize-javascript: ^6.0.2
+  terser: ^5.31.0
+  protobufjs: ^7.5.8
+  '@protobufjs/utf8': ^1.1.1

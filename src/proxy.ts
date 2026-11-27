@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { EVENT, isEventActive, isLockedApi, isLockedGame, isLockedRoute } from './lib/event';
+import { createPreviewToken, isValidPreviewToken } from './lib/previewToken';
 
 /**
  * Event mode. The server decides what is closed, so hiding a link is never the only protection:
@@ -9,25 +10,35 @@ import { EVENT, isEventActive, isLockedApi, isLockedGame, isLockedRoute } from '
  * Rehearsal: open any page with ?ensayo=<EVENT_PREVIEW_KEY> to switch ONLY your browser into
  * event mode, and ?ensayo=off to leave it.
  */
-export function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
     const { nextUrl } = req;
+    const key = process.env.EVENT_PREVIEW_KEY;
 
     const rehearsal = nextUrl.searchParams.get('ensayo');
     if (rehearsal) {
         const clean = nextUrl.clone();
         clean.searchParams.delete('ensayo');
         const res = NextResponse.redirect(clean);
-        const key = process.env.EVENT_PREVIEW_KEY;
         if (rehearsal === 'off') {
             res.cookies.delete(EVENT.previewCookie);
+            res.cookies.delete(EVENT.previewUiCookie);
         } else if (key && rehearsal === key) {
-            res.cookies.set(EVENT.previewCookie, '1', { path: '/', maxAge: 60 * 60 * 8, sameSite: 'lax' });
+            const options = { path: '/', maxAge: 60 * 60 * 8, sameSite: 'lax', secure: nextUrl.protocol === 'https:' } as const;
+            res.cookies.set(EVENT.previewCookie, await createPreviewToken(key), { ...options, httpOnly: true });
+            res.cookies.set(EVENT.previewUiCookie, '1', options);
         }
         return res;
     }
 
-    const preview = req.cookies.get(EVENT.previewCookie)?.value === '1';
-    const active = isEventActive(Date.now(), preview);
+    const preview = await isValidPreviewToken(req.cookies.get(EVENT.previewCookie)?.value, key);
+    const res = route(req, isEventActive(Date.now(), preview));
+    // A hand-made interface cookie is removed before the page can read it
+    if (!preview && req.cookies.has(EVENT.previewUiCookie)) res.cookies.delete(EVENT.previewUiCookie);
+    return res;
+}
+
+function route(req: NextRequest, active: boolean): NextResponse {
+    const { nextUrl } = req;
     const path = nextUrl.pathname;
 
     if (!active) {

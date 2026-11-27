@@ -1,4 +1,4 @@
-// Shared by the middleware (edge), API routes and client components: no Node-only APIs here.
+// Shared by the proxy, API routes and client components: no Node-only APIs here.
 
 export const EVENT = {
     /**
@@ -10,8 +10,10 @@ export const EVENT = {
     /** Optional end (ISO). Empty = the event mode stays on after the 18th. */
     endsAt: process.env.NEXT_PUBLIC_EVENT_END || '',
 
-    /** Cookie that switches a single browser into event mode for rehearsals (?ensayo=KEY). */
+    /** Signed, httpOnly cookie that switches a single browser into event mode for rehearsals (?ensayo=KEY). */
     previewCookie: 'evento_ensayo',
+    /** Readable companion so the interface can follow. It grants nothing: the server only trusts the signed one. */
+    previewUiCookie: 'evento_ensayo_ui',
     /** localStorage flag: the intro modals are shown once. */
     introSeenKey: 'evento_intro_visto',
 

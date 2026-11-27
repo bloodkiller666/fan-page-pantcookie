@@ -16,7 +16,7 @@ Every entry point (API Route) is protected by a **Zod Validation Layer**:
 - **Admin APIs**: Validated using strict schemas to prevent malformed data from reaching the database or AI services.
 
 ### 3. Global Security Middleware
-A centralized `middleware.ts` handles:
+A centralized `src/proxy.ts` handles:
 - **Bot Filtering**: Blocks known malicious user-agents and scrapers.
 - **CSRF Protection**: Performs basic origin checks on state-changing requests (`POST`, `PUT`, `DELETE`).
 - **Security Headers**: Enforces strict `Referrer-Policy` and `X-Permitted-Cross-Domain-Policies`.
@@ -44,5 +44,6 @@ The application only communicates with trusted providers:
 
 ## 🚀 Automated Scanning
 - **CI/CD Pipeline**: A GitHub Action (`security-scan.yml`) runs on every push to `main`, performing:
-    - `npm audit`: Scans for vulnerable dependencies.
-    - `next lint`: Ensures no unsafe code patterns (like `eval()`) are introduced.
+    - `pnpm audit`: Scans for vulnerable dependencies.
+    - `pnpm lint`: ESLint with `eslint-plugin-security`, to flag unsafe code patterns.
+- **Supply chain** (`pnpm-workspace.yaml`): 3-day minimum release age, reviewed install scripts only, no git/URL transitive dependencies, and a trust-downgrade check for releases from the last year.

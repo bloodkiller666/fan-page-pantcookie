@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
+    agentRules: false, // evita que `next dev` genere AGENTS.md
 
     async headers() {
         return [
@@ -58,17 +59,6 @@ const nextConfig = {
         ],
     },
 
-    webpack: (config, { isServer }) => {
-        if (!isServer) {
-            config.resolve.fallback = {
-                ...config.resolve.fallback,
-                fs: false,
-                net: false,
-                tls: false,
-            };
-        }
-        return config;
-    },
 };
 
 export default nextConfig;
