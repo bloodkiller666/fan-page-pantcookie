@@ -3,10 +3,6 @@ import Groq from 'groq-sdk';
 import { z } from 'zod';
 import { getIP, rateLimit } from '@/utils/rateLimit';
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
-
 const ModerationSchema = z.object({
   text: z.string().min(1).max(2000),
 });
@@ -30,6 +26,9 @@ export async function POST(req: NextRequest) {
     }
 
     const { text } = result.data;
+
+    // Created per request: a missing key must not break the build. Here it throws and the message is held.
+    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
     const completion = await groq.chat.completions.create({
       messages: [
